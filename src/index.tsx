@@ -3,15 +3,33 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { Game } from "./Game";
+import { Provider } from 'react-redux';
+import store from './store';
+
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
-  <React.StrictMode>
+
+  <Provider store={store}>
     <App />
-  </React.StrictMode>
+  </Provider>
+
 );
+
+export let mainGameObject = new Game();
+
+let ts = Date.now();
+function update(timestamp: number) {
+  const diff = timestamp - ts;
+  ts = timestamp;
+  mainGameObject.update(diff); // which updates all the plants and resources
+  requestAnimationFrame(update);
+}
+
+requestAnimationFrame(update);
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
