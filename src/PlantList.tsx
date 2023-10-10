@@ -1,7 +1,6 @@
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from './store';
-import { useDispatch } from 'react-redux';
-import { absorbSunlight, absorbWater } from './plantSlice';
+import { absorbSunlight, absorbWater, toggleSugarProduction, buyLeaves, buyRoots } from './plantSlice'; // Import the toggleSugarProduction action
 
 interface PlantListProps {
     biomeId: string;
@@ -28,6 +27,26 @@ function PlantList({ biomeId }: PlantListProps) {
         dispatch(absorbWater({ plantId, amount }));
     };
 
+    // Handle toggling sugar production
+    const handleToggleSugarProduction = (plantId: string) => {
+        dispatch(toggleSugarProduction({ plantId }));
+    };
+
+    // Handle buying roots
+    const handleBuyRoots = (plantId: string) => {
+        // Define the cost of roots
+        const cost = 10; // Replace with your cost
+        dispatch(buyRoots({ plantId, cost }));
+    };
+
+    // Handle buying leaves
+    const handleBuyLeaves = (plantId: string) => {
+        // Define the cost of leaves
+        const cost = 5; // Replace with your cost
+        dispatch(buyLeaves({ plantId, cost }));
+    };
+
+
     return (
         <div>
             {Array.isArray(filteredPlants) ? (
@@ -36,22 +55,35 @@ function PlantList({ biomeId }: PlantListProps) {
                         <table className="plant-info-table">
                             <tbody>
                                 <tr>
-                                    <td>Plant ID:</td>
-                                    <td>{plant.id}</td>
-                                </tr>
-                                <tr>
-                                    <td>Sunlight:</td>
+                                    <td><button onClick={() => handleSunlightAbsorption(plant.id)}>Absorb Sunlight</button></td>
                                     <td>{plant.sunlight}</td>
                                 </tr>
                                 <tr>
-                                    <td>Water:</td>
+                                    <td><button onClick={() => handleWaterAbsorption(plant.id)}>Absorb Water</button></td>
                                     <td>{plant.water}</td>
+                                </tr>
+                                <tr>
+                                    <td>Produce Sugar?:</td>
+                                    <td>
+                                        <input
+                                            type="checkbox"
+                                            checked={plant.is_sugar_production_on}
+                                            onChange={() => handleToggleSugarProduction(plant.id)}
+                                        />
+                                    </td>                                    
+                                    <td>{plant.sugar}</td>
+                                </tr>
+                                <tr>
+                                    <td><button onClick={() => handleBuyRoots(plant.id)}>Buy Roots</button></td>
+                                    <td>{plant.roots}</td>
+                                </tr>
+                                <tr>
+                                    <td><button onClick={() => handleBuyLeaves(plant.id)}>Buy Leaves</button></td>
+                                    <td>{plant.leaves}</td>
                                 </tr>
                             </tbody>
                         </table>
                         <div className="plant-buttons">
-                            <button onClick={() => handleSunlightAbsorption(plant.id)}>Absorb Sunlight</button>
-                            <button onClick={() => handleWaterAbsorption(plant.id)}>Absorb Water</button>
                         </div>
                     </div>
                 ))
@@ -61,8 +93,6 @@ function PlantList({ biomeId }: PlantListProps) {
             )}
         </div>
     );
-    
-    
 }
 
 export default PlantList;

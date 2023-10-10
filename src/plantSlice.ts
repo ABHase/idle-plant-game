@@ -21,6 +21,8 @@ interface PlantState {
     taproot: number;
     pheromones: number;
     thorns: number;
+    sugarProduced: number;
+    lastProductionTimestamp: number;
 }
 
 const INITIAL_PLANT_CONFIG: PlantState = {
@@ -42,7 +44,9 @@ const INITIAL_PLANT_CONFIG: PlantState = {
     resin: 0,
     taproot: 0,
     pheromones: 0,
-    thorns: 0
+    thorns: 0,
+    sugarProduced: 0,
+    lastProductionTimestamp: 0,
 };
 
 const initialState: PlantState[] = [];
@@ -71,8 +75,99 @@ const plantSlice = createSlice({
                 plant.water += action.payload.amount;
             }
         },
+        // New action to produce sugar
+        produceSugar: (state, action: PayloadAction<{ plantId: string }>) => {
+            const plant = state.find((p) => p.id === action.payload.plantId);
+            if (plant && plant.is_sugar_production_on) {
+                const baseRate = plant.sugar_production_rate;
+                const modifiedRate = baseRate * (1 + 0.1 * plant.maturity_level);
+                const waterConsumption = 10 * (1 + 0.4 * plant.maturity_level);
+                const sunlightConsumption = 10 * (1 + 0.4 * plant.maturity_level);
+        
+                if (plant.water > waterConsumption && plant.sunlight > sunlightConsumption) {
+                    plant.water -= waterConsumption;
+                    plant.sunlight -= sunlightConsumption;
+                    const currentTime = Date.now();
+                    const timeElapsedInSeconds = (currentTime - plant.lastProductionTimestamp) / 1000;
+                    const productionPerSecond = modifiedRate;
+                    const productionPerMinute = productionPerSecond * 60;
+        
+                    // Update sugar production properties
+                    plant.sugarProduced += productionPerSecond * timeElapsedInSeconds;
+                    plant.lastProductionTimestamp = currentTime;
+                    plant.sugar += modifiedRate;
+                }
+            }
+        },
+
+        
+        
+        // New action to update water and sunlight for leaves and roots
+        updateWaterAndSunlight: (state, action: PayloadAction<{ plantId: string }>) => {
+            const plant = state.find((p) => p.id === action.payload.plantId);
+            if (plant) {
+                const waterDecrease = plant.leaves; // 1 water per leaf
+                const rootsSunlightIncrease = plant.roots; // 1 sunlight per root
+                const leavesSunlightIncrease = plant.leaves; // 1 sunlight per leaf
+
+                plant.water += rootsSunlightIncrease - waterDecrease;
+                plant.sunlight += leavesSunlightIncrease;
+            }
+        },
+
+        // New action to grow roots
+        growRoots: (state, action: PayloadAction<{ plantId: string }>) => {
+            const plant = state.find((p) => p.id === action.payload.plantId);
+            if (plant) {
+                // Add logic to increase roots here
+            }
+        },
+
+        // New action to grow leaves
+        growLeaves: (state, action: PayloadAction<{ plantId: string }>) => {
+            const plant = state.find((p) => p.id === action.payload.plantId);
+            if (plant) {
+                // Add logic to increase leaves here
+            }
+        },
+
+        // Toggle sugar production
+        toggleSugarProduction: (state, action: PayloadAction<{ plantId: string }>) => {
+            const plant = state.find((p) => p.id === action.payload.plantId);
+            if (plant) {
+                plant.is_sugar_production_on = !plant.is_sugar_production_on;
+            }
+        },
+        buyRoots: (state, action: PayloadAction<{ plantId: string; cost: number }>) => {
+            const { plantId, cost } = action.payload;
+            const plant = state.find((p) => p.id === plantId);
+            if (plant && plant.sugar >= cost) {
+                plant.sugar -= cost;
+                plant.roots += 1;
+            }
+        },
+
+        buyLeaves: (state, action: PayloadAction<{ plantId: string; cost: number }>) => {
+            const { plantId, cost } = action.payload;
+            const plant = state.find((p) => p.id === plantId);
+            if (plant && plant.sugar >= cost) {
+                plant.sugar -= cost;
+                plant.leaves += 1;
+            }
+        },
     },
 });
 
-export const { initializeNewPlant, absorbSunlight, absorbWater } = plantSlice.actions;
-export default plantSlice.reducer; 
+export const {
+    initializeNewPlant,
+    absorbSunlight,
+    absorbWater,
+    toggleSugarProduction,
+    buyRoots,
+    buyLeaves,
+    produceSugar,
+    growRoots,
+    growLeaves,
+    updateWaterAndSunlight,
+} = plantSlice.actions;
+export default plantSlice.reducer;

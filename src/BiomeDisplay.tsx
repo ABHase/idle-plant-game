@@ -12,9 +12,9 @@ function BiomeDisplay() {
           <div key={biome.id} className="biome">
             <h2>{biome.name}</h2>
             <table>
-              {/* ... other biome details ... */}
+              <PlantList biomeId={biome.id} />
             </table>
-            <PlantList biomeId={biome.id} />
+            
           </div>
         ))}
       </div>
