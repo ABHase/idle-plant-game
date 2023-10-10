@@ -82,12 +82,18 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header">
-        <BiomeDisplay />
-        <PlantTimeDisplay plantTime={plantTime} />
-      </header>
+        <header className="App-header">
+        <div className="App-message">
+                    Hey there!<br />
+                    We've made some significant changes to improve the game.<br />
+                    Due to architectural shifts, we're in the process of rebuilding.<br />
+                    A big shoutout to some amazing people (like hydroflame) for their guidance!
+                </div>
+            <BiomeDisplay />
+            <PlantTimeDisplay plantTime={plantTime} />
+        </header>
     </div>
-  );
+);
 }
 
 export default App;
