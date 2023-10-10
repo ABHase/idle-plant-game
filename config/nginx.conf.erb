@@ -1,0 +1,18 @@
+worker_processes auto;
+pid /tmp/nginx.pid;
+
+events {
+  worker_connections 512;
+}
+
+http {
+  server {
+    listen <%= ENV["PORT"] %>;
+    server_name _;
+    root /app/build;
+
+    location / {
+      try_files $uri $uri/ /index.html;
+    }
+  }
+}
