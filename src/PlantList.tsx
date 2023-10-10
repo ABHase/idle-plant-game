@@ -74,12 +74,28 @@ function PlantList({ biomeId }: PlantListProps) {
                                     <td>{plant.sugar}</td>
                                 </tr>
                                 <tr>
+                                    <td>
+                                        Produce DNA:
+                                    </td>
+                                    <td>
+                                        <input
+                                            type="checkbox"
+                                            checked={plant.is_genetic_marker_production_on}
+                                            onChange={() => handleToggleSugarProduction(plant.id)}
+                                        />
+                                    </td>
+                                </tr>
+                                <tr>
                                     <td><button onClick={() => handleBuyRoots(plant.id)}>Buy Roots</button></td>
                                     <td>{plant.roots}</td>
                                 </tr>
                                 <tr>
                                     <td><button onClick={() => handleBuyLeaves(plant.id)}>Buy Leaves</button></td>
                                     <td>{plant.leaves}</td>
+                                </tr>
+                                <tr>
+                                    <td>Ladybugs: {plant.ladybugs}</td>
+                                    <td>Maturity Level: {plant.maturity_level}</td>
                                 </tr>
                             </tbody>
                         </table>

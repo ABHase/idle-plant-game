@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
+import { SUGAR_THRESHOLD, SECONDARY_SUGAR_THRESHOLD } from './constants';
 
 interface PlantState {
     id: string;
@@ -36,14 +37,14 @@ const INITIAL_PLANT_CONFIG: PlantState = {
     is_secondary_resource_production_on: false,
     sunlight: 0,
     water: 0,
-    sugar: 0,
+    sugar: 50,
     ladybugs: 0,
     roots: 2,
     leaves: 1,
     vacuoles: 1,
     resin: 0,
     taproot: 0,
-    pheromones: 0,
+    pheromones: 50,
     thorns: 0,
     sugarProduced: 0,
     lastProductionTimestamp: 0,
@@ -100,17 +101,15 @@ const plantSlice = createSlice({
             }
         },
 
-        
-        
         // New action to update water and sunlight for leaves and roots
         updateWaterAndSunlight: (state, action: PayloadAction<{ plantId: string }>) => {
             const plant = state.find((p) => p.id === action.payload.plantId);
             if (plant) {
                 const waterDecrease = plant.leaves; // 1 water per leaf
-                const rootsSunlightIncrease = plant.roots; // 1 sunlight per root
+                const rootsWaterIncrease = plant.roots; // 1 sunlight per root
                 const leavesSunlightIncrease = plant.leaves; // 1 sunlight per leaf
 
-                plant.water += rootsSunlightIncrease - waterDecrease;
+                plant.water += rootsWaterIncrease - waterDecrease;
                 plant.sunlight += leavesSunlightIncrease;
             }
         },
@@ -138,6 +137,13 @@ const plantSlice = createSlice({
                 plant.is_sugar_production_on = !plant.is_sugar_production_on;
             }
         },
+        // Toggle genetic marker production
+        toggleGeneticMarkerProduction: (state, action: PayloadAction<{ plantId: string }>) => {
+            const plant = state.find((p) => p.id === action.payload.plantId);
+            if (plant) {
+                plant.is_genetic_marker_production_on = !plant.is_genetic_marker_production_on;
+            }
+        },
         buyRoots: (state, action: PayloadAction<{ plantId: string; cost: number }>) => {
             const { plantId, cost } = action.payload;
             const plant = state.find((p) => p.id === plantId);
@@ -155,6 +161,38 @@ const plantSlice = createSlice({
                 plant.leaves += 1;
             }
         },
+        produceGeneticMarkers: (state, action: PayloadAction<{ plantId: string }>) => {
+            const plant = state.find((p) => p.id === action.payload.plantId);
+            if (plant && plant.sugar >= SUGAR_THRESHOLD) {
+                plant.sugar -= 5;
+            }
+        },
+        
+        produceSecondaryResource: (state, action: PayloadAction<{ plantId: string }>) => {
+            const plant = state.find((p) => p.id === action.payload.plantId);
+            if (plant && plant.is_secondary_resource_production_on && plant.sugar >= SECONDARY_SUGAR_THRESHOLD) {
+                plant.sugar -= SECONDARY_SUGAR_THRESHOLD;
+            }
+        },
+
+        updateMaturityLevel: (state, action: PayloadAction<{ plantId: string }>) => {
+            const plant = state.find((p) => p.id === action.payload.plantId);
+            if (plant) {
+                plant.maturity_level = Math.floor(Math.sqrt(plant.roots + plant.leaves));
+            }
+        },
+        
+        attractLadybugs: (state, action: PayloadAction<{ plantId: string }>) => {
+            const plant = state.find((p) => p.id === action.payload.plantId);
+            if (plant && plant.pheromones > 0) {
+                plant.ladybugs += 1;
+                plant.pheromones -= 1;
+            }
+        },
+
+        handlePest: (state, action: PayloadAction<{ plantId: string, pestType: 'Aphids' | 'Deer' }>) => {
+            // Reducer logic will be added later
+        },
     },
 });
 
@@ -169,5 +207,10 @@ export const {
     growRoots,
     growLeaves,
     updateWaterAndSunlight,
+    produceGeneticMarkers,
+    produceSecondaryResource,
+    updateMaturityLevel,
+    attractLadybugs,
+    handlePest,
 } = plantSlice.actions;
 export default plantSlice.reducer;

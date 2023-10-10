@@ -8,6 +8,9 @@ import { initializeBiome } from './biomesSlice';
 import BiomeDisplay from './BiomeDisplay';
 import { absorbSunlight, absorbWater, initializeNewPlant, produceSugar, updateWaterAndSunlight } from './plantSlice';
 import { createSelector } from 'reselect';
+import { updateGame } from './gameActions';
+import { AppDispatch } from './store';  // Adjust the path if necessary
+import GlobalStateDisplay from './GlobalStateDisplay';
 
 const selectPlants = createSelector(
   (state: RootState) => state.plant,
@@ -31,8 +34,8 @@ function PlantTimeDisplay(props: { plantTime: PlantTimeState }) {
 }
 
 function App() {
+  const dispatch: AppDispatch = useDispatch();
   console.log("App component rendered");
-  const dispatch = useDispatch();
   const totalTime = useSelector((state: RootState) => state.app.totalTime);
   const plantTime = useSelector((state: RootState) => state.plantTime);
   const biome = useSelector((state: RootState) => state.biomes.find(b => b.name === "Beginner's Garden"));
@@ -46,7 +49,18 @@ function App() {
     if (biome) {
       dispatch(initializeNewPlant({ biome_id: biome.id }));
     }
- }, [dispatch, biome]);
+
+    // Call the update function to start the game loop
+    update();
+
+    // Cleanup code: stop the loop when the component unmounts
+    return () => {
+      // You might need to add cleanup logic to stop the requestAnimationFrame loop when component is unmounted
+      // If not stopped, it could lead to memory leaks or unwanted behavior.
+      // Placeholder for now, we can discuss this further if necessary.
+    };
+}, [dispatch, biome]);
+
  
 
   const lastUpdateTimeRef = useRef(Date.now());
@@ -56,29 +70,12 @@ function App() {
     const deltaTime = currentTime - lastUpdateTimeRef.current;
 
     if (deltaTime >= 1000) {
-      const newTime = totalTime + 1;
-      dispatch(updateTime(newTime));
-
-      plants.forEach((plant) => {
-        dispatch(produceSugar({ plantId: plant.id }));
-        dispatch(updateWaterAndSunlight({ plantId: plant.id }));
-      });
-
-      lastUpdateTimeRef.current = currentTime;
+        dispatch(updateGame());  // This will now handle the time update correctly
+        lastUpdateTimeRef.current = currentTime;
     }
 
     requestAnimationFrame(update);
-  }
-
-  useEffect(() => {
-    if (plants.length > 0) {
-      requestAnimationFrame(update);
-    }
-
-    return () => {
-      // Cleanup code if needed
-    };
-  }, [dispatch, plants, totalTime]);
+}
 
   return (
     <div className="App">
@@ -89,6 +86,7 @@ function App() {
                     Due to architectural shifts, we're in the process of rebuilding.<br />
                     A big shoutout to some amazing people (like hydroflame) for their guidance!
                 </div>
+            <GlobalStateDisplay />
             <BiomeDisplay />
             <PlantTimeDisplay plantTime={plantTime} />
         </header>

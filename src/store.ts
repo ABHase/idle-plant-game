@@ -1,8 +1,12 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, Action } from '@reduxjs/toolkit';
+import { ThunkAction } from 'redux-thunk';
+import thunk from 'redux-thunk';  // Ensure you import thunk
+
 import plantTimeReducer from './plantTimeSlice';
-import biomesReducer from './biomesSlice';  // Adjust the path if necessary
-import appReducer from './appSlice';  // Import the app slice reducer
-import plantReducer from './plantSlice';  // Import the plant slice reducer
+import biomesReducer from './biomesSlice';
+import appReducer from './appSlice';
+import plantReducer from './plantSlice';
+import globalStateSlice from './gameStateSlice';
 
 const store = configureStore({
     reducer: {
@@ -10,8 +14,12 @@ const store = configureStore({
         plantTime: plantTimeReducer,
         biomes: biomesReducer,
         plant: plantReducer,
-    }
+        globalState: globalStateSlice,
+    },
+    middleware: getDefaultMiddleware => getDefaultMiddleware().prepend(thunk) // Add thunk to the list of middlewares
 });
 
 export default store;
-export type RootState = ReturnType<typeof store.getState>; // Useful for typing the state in components
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch; // This line will be useful for dispatching thunks from components
+export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, RootState, unknown, Action<string>>;
