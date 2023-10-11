@@ -3,7 +3,6 @@ import { ThunkAction } from 'redux-thunk';
 import thunk from 'redux-thunk';  // Ensure you import thunk
 
 import plantTimeReducer from './plantTimeSlice';
-import biomesReducer from './biomesSlice';
 import appReducer from './appSlice';
 import plantReducer from './plantSlice';
 import globalStateSlice from './gameStateSlice';
@@ -12,7 +11,6 @@ const store = configureStore({
     reducer: {
         app: appReducer,
         plantTime: plantTimeReducer,
-        biomes: biomesReducer,
         plant: plantReducer,
         globalState: globalStateSlice,
     },

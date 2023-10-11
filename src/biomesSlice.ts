@@ -19,7 +19,6 @@ export interface Biome {
     resource_modifiers: ResourceModifiers;
     rain_intensity: number;
     snow_intensity: number;
-    plants: any[];
 }
 
 const initialState: Biome[] = [];
@@ -48,8 +47,7 @@ const biomesSlice = createSlice({
             snowpack: biomeData.snowpack,
             resource_modifiers: biomeData.resource_modifiers,
             rain_intensity: biomeData.rain_intensity,
-            snow_intensity: biomeData.snow_intensity,
-            plants: []
+            snow_intensity: biomeData.snow_intensity
           });
         }
       }

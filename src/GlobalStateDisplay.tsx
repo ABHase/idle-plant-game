@@ -1,8 +1,7 @@
-//GlobalStateDisplay.tsx
-
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from './store';  // Adjust the import path if needed
+import { Grid, Typography } from '@mui/material';
 
 const GlobalStateDisplay: React.FC = () => {
     const {
@@ -19,15 +18,9 @@ const GlobalStateDisplay: React.FC = () => {
 
     return (
         <div className="global-state-display">
-            <h3>Global State</h3>
-            <p>Genetic Marker Progress: {geneticMarkerProgress}/{geneticMarkerThreshold}</p>
-            <p>Genetic Markers: {geneticMarkers}</p>
-            <p>Seeds: {seeds}</p>
-            <p>Silica: {silica}</p>
-            <p>Tannins: {tannins}</p>
-            <p>Calcium: {calcium}</p>
-            <p>Fulvic: {fulvic}</p>
-            <p>Cost Modifier: {costModifier}</p>
+            <Grid container spacing={2} alignItems="center">
+                <Grid item><Typography>Genetic Markers: {geneticMarkers}</Typography></Grid>
+            </Grid>
         </div>
     );
 };

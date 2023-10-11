@@ -19,37 +19,19 @@ export const updateGame = (): ThunkAction<void, RootState, unknown, Action<strin
         // Dispatch updateTime with newTotalTime
         dispatch(updateTime(newTotalTime));
 
-        const biomes = getState().biomes;  // Get all biomes from the state
+        const plant = getState().plant;
 
-        const plants = getState().plant;  // Get all plants from the state
-
-        plants.forEach(plant => {
-            // If a plant is set to produce genetic markers and has enough sugar
-            if (plant.is_genetic_marker_production_on && plant.sugar >= SUGAR_THRESHOLD) {  // Use a constant for this threshold if you have one defined
-                dispatch(produceGeneticMarkers({ plantId: plant.id }));
-                dispatch(updateGeneticMarkerProgress());
-            }
-            if (plant.is_secondary_resource_production_on && plant.sugar >= SECONDARY_SUGAR_THRESHOLD) {
-                const associatedBiome = biomes.find(biome => biome.id === plant.biome_id);
-                if (associatedBiome) {
-                    dispatch(produceSecondaryResource({ plantId: plant.id }));
-                    dispatch(updateSecondaryResources({ biomeName: associatedBiome.name }));
-                }
-            }
-            // Update the maturity level for the plant
-            dispatch(updateMaturityLevel({ plantId: plant.id }));
-
-            // Try to attract ladybugs for the plant
-            dispatch(attractLadybugs({ plantId: plant.id }));
-
-            // Update water and sunlight for the plant
-            dispatch(updateWaterAndSunlight({ plantId: plant.id }));
-
-            //Dispatch produce sugar for the plant
-            dispatch(produceSugar({ plantId: plant.id }));
-
-
-        });
+        if (plant.is_genetic_marker_production_on && plant.sugar >= SUGAR_THRESHOLD) {
+            dispatch(produceGeneticMarkers());
+            dispatch(updateGeneticMarkerProgress());
+        }
+        if (plant.is_secondary_resource_production_on && plant.sugar >= SECONDARY_SUGAR_THRESHOLD) {
+            dispatch(produceSecondaryResource());
+        }
+        dispatch(updateMaturityLevel());
+        dispatch(attractLadybugs());
+        dispatch(updateWaterAndSunlight());
+        dispatch(produceSugar());
 
         // ... [other logic and dispatches as needed]
     };

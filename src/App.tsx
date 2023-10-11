@@ -1,55 +1,54 @@
 import React, { useEffect, useRef  } from 'react';
 import './App.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateTime } from './appSlice';
 import { RootState } from './store';
-import { PlantTimeState } from './plantTimeSlice';
-import { initializeBiome } from './biomesSlice';
-import BiomeDisplay from './BiomeDisplay';
 import { absorbSunlight, absorbWater, initializeNewPlant, produceSugar, updateWaterAndSunlight } from './plantSlice';
 import { createSelector } from 'reselect';
 import { updateGame } from './gameActions';
 import { AppDispatch } from './store';  // Adjust the path if necessary
 import GlobalStateDisplay from './GlobalStateDisplay';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { Box } from '@mui/material';
+import PlantTimeDisplay from './PlantTimeDisplay';
+import PlantList from './PlantList';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#4CAF50',  // A more vibrant forest green for buttons and highlights
+    },
+    secondary: {
+      main: '#607D8B',  // Bluish-grey, reminiscent of a night sky or moonlit water
+    },
+    background: {
+      default: '#1f1107',  // A very dark green, almost black, like deep woods at night
+      paper: '#2E4A38',  // A slightly lighter green, like forest undergrowth in moonlight
+    },
+    text: {
+      primary: '#FFFFFF',  // Pure white for text to ensure good contrast against the dark background
+      secondary: '#B0BEC5',  // A lighter grey, used for secondary text elements
+    }
+  },
+  typography: {
+    fontFamily: "'YOUR_FONT_NAME', sans-serif", // Remember to replace 'YOUR_FONT_NAME'
+  },
+  // Add any other theme customizations here
+});
+
 
 const selectPlants = createSelector(
   (state: RootState) => state.plant,
   (plant) => Object.values(plant)
 );
 
-
-function Time(props: { totalTime: number }) {
-  return <p>{props.totalTime}</p>;
-}
-
-function PlantTimeDisplay(props: { plantTime: PlantTimeState }) {
-  return (
-    <div>
-      <p>Year: {props.plantTime.year}</p>
-      <p>Season: {props.plantTime.season}</p>
-      <p>Day: {props.plantTime.day}</p>
-      <p>Hour: {props.plantTime.hour}:{props.plantTime.update_counter}</p>
-    </div>
-  );
-}
-
 function App() {
   const dispatch: AppDispatch = useDispatch();
   console.log("App component rendered");
   const totalTime = useSelector((state: RootState) => state.app.totalTime);
   const plantTime = useSelector((state: RootState) => state.plantTime);
-  const biome = useSelector((state: RootState) => state.biomes.find(b => b.name === "Beginner's Garden"));
   const plants = useSelector(selectPlants);
 
   useEffect(() => {
-    if (!biome) {
-      console.log("Dispatching initializeBiome action");
-      dispatch(initializeBiome("Beginner's Garden"));
-    }
-    if (biome) {
-      dispatch(initializeNewPlant({ biome_id: biome.id }));
-    }
-
     // Call the update function to start the game loop
     update();
 
@@ -59,7 +58,7 @@ function App() {
       // If not stopped, it could lead to memory leaks or unwanted behavior.
       // Placeholder for now, we can discuss this further if necessary.
     };
-}, [dispatch, biome]);
+}, [dispatch]);
 
  
 
@@ -77,20 +76,28 @@ function App() {
     requestAnimationFrame(update);
 }
 
-  return (
-    <div className="App">
+return (
+  <ThemeProvider theme={theme}>
+    
+        <Box 
+      display="flex" 
+      flexDirection="column" 
+      //alignItems="flex-start"  // This will align content to the left
+      justifyContent="flex-start"  // This will align content to the top
+      height="100vh" 
+      bgcolor="background.default"
+      color="text.primary"
+    >
         <header className="App-header">
-        <div className="App-message">
-                    Hey there!<br />
-                    We've made some significant changes to improve the game.<br />
-                    Due to architectural shifts, we're in the process of rebuilding.<br />
-                    A big shoutout to some amazing people (like hydroflame) for their guidance!
-                </div>
+          
+            
+            <PlantList />
             <GlobalStateDisplay />
-            <BiomeDisplay />
-            <PlantTimeDisplay plantTime={plantTime} />
+          <PlantTimeDisplay plantTime={plantTime} />  
         </header>
-    </div>
+    </Box>
+
+    </ThemeProvider>
 );
 }
 
