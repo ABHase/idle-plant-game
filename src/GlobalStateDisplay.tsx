@@ -19,7 +19,7 @@ const GlobalStateDisplay: React.FC = () => {
     return (
         <div className="global-state-display">
             <Grid container spacing={2} alignItems="center">
-                <Grid item><Typography>Genetic Markers: {geneticMarkers}</Typography></Grid>
+                <Grid item><Typography>DNA: {geneticMarkers}</Typography></Grid>
             </Grid>
         </div>
     );

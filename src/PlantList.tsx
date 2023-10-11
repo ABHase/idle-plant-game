@@ -17,6 +17,7 @@ import {
     IconButton,
     Tooltip,
     Box,
+    LinearProgress,
 } from '@mui/material';
 import { Add, ArrowForwardIos, Clear } from '@mui/icons-material';
 import { LEAF_COST, ROOT_COST } from './constants';
@@ -66,119 +67,139 @@ function PlantList() {
                     margin= "0 auto"
                 >
                 <Grid container spacing={2} alignItems="center">
+                <Grid item xs={4}>
                 
-                    <Grid item xs={3}>
-                        <Typography>Water + Sunlight</Typography>
-                    </Grid>
-                    <Grid item xs={3}>
-                    <Tooltip title={plant.is_sugar_production_on ? "Turn off Sugar Production" : "Turn on Sugar Production"}>
-                        <Button 
-                        sx={{ 
-                        border: "1px solid #aaa", 
-                        borderRadius: "4px",
-                        backgroundColor: '#424532',
-                        color: '#B5D404' 
-                        }}
-                        onClick={() => handleToggleSugarProduction()}>
-                            {plant.is_sugar_production_on ? (
-                                <ArrowForwardIos />
-                            ) : (
-                                <Clear />
-                            )}
-                        </Button>
-                    </Tooltip>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <Typography>Sugar: </Typography>
-                    </Grid>
-                    <Grid item xs={2}>
+                <Tooltip title={`Absorbing ${plant.roots - plant.leaves}/Second`}>
+                    <Box border={1} borderColor="grey.300" borderRadius={2} padding={1}>
+                        <Typography>Water:</Typography>
+                        <Typography>{formatNumber(plant.water)}</Typography>
+                    </Box>
+                </Tooltip>
+                </Grid>
+                <Grid item xs={4}>
+                <Tooltip title={`Absorbing ${plant.leaves}/second`}>
+                    <Box border={1} borderColor="grey.300" borderRadius={2} padding={1}>
+                        <Typography>Sunlight:</Typography>
+                        <Typography>{formatNumber(plant.sunlight)}</Typography>
+                    </Box>
+                </Tooltip>
+                </Grid>
+                <Grid item xs={4}>
+                    <Box border={1} borderColor="grey.300" borderRadius={2} padding={1}>
+                        <Typography>Sugar:</Typography>
                         <Typography>{formatNumber(plant.sugar)}</Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                    <Divider sx={{ backgroundColor: 'white' }} />
-                            </Grid> 
-                    <Grid item xs={3}>
-                        <Typography>Sugar - 100</Typography>
-                    </Grid>
-                    <Grid item xs={3}>
-                    <Tooltip title={plant.is_genetic_marker_production_on ? "Turn off Genetic Marker Production" : "Turn on Genetic Marker Production"}>
-                        <Button 
-                        sx={{ 
-                            border: "1px solid #aaa", 
-                            borderRadius: "4px",
-                            backgroundColor: '#424532',
-                            color: '#B5D404' 
-                            }}
-                        onClick={() => handleToggleGeneticMarkerProduction()}>
-                            {plant.is_genetic_marker_production_on ? (
-                                <ArrowForwardIos />
-                            ) : (
-                                <Clear />
-                            )}
-                        </Button>
-                    </Tooltip>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <Typography>Genetic Marker Progress</Typography>
-                    </Grid>
+                    </Box>
+                </Grid>
 
-                    <Grid item xs={2}><Typography>{geneticMarkerProgress}/{geneticMarkerThreshold}</Typography></Grid>
+                <Grid item xs={12}>
+                    <Typography>Choose Production:</Typography>
+                </Grid>
 
-                    <Grid item xs={12}>
-        <Typography variant="h6">Grow Using Sugar:</Typography>
-    </Grid>
-
-    {/* Leaves Section */}
-    <Grid item xs={6}>
-        <Typography>{plant.leaves} Leaves</Typography>
-    </Grid>
-    <Grid item xs={6}>
-        <Tooltip title="Buy Leaves">
-            <Button 
+<Grid item xs={12}>
+    <Tooltip title={plant.is_sugar_production_on ? "Turn off Sugar Production" : "Turn on Sugar Production"}>
+        <Button 
+            fullWidth
             sx={{ 
                 border: "1px solid #aaa", 
                 borderRadius: "4px",
                 backgroundColor: '#424532',
                 color: '#B5D404' 
-                }}
+            }}
+            onClick={() => handleToggleSugarProduction()}>
+            Photosynthesize: {plant.is_sugar_production_on ? "Stop" : "Start"}
+        </Button>
+    </Tooltip>
+</Grid>
+
+
+<Grid item xs={12}>
+    <Tooltip title={plant.is_genetic_marker_production_on ? "Turn off Genetic Marker Production" : "Turn on Genetic Marker Production"}>
+        <Button 
+            fullWidth
+            sx={{ 
+                border: "1px solid #aaa", 
+                borderRadius: "4px",
+                backgroundColor: '#424532',
+                color: '#B5D404' 
+            }}
+            onClick={() => handleToggleGeneticMarkerProduction()}>
+            Convert 100 Sugar → DNA: {plant.is_genetic_marker_production_on ? "Stop" : "Start"}
+        </Button>
+    </Tooltip>
+</Grid>
+
+<Grid item xs={12}>
+    <Box position="relative" display="inline-flex" width="100%">
+        <LinearProgress 
+            variant="determinate" 
+            value={(geneticMarkerProgress / geneticMarkerThreshold) * 100} 
+            sx={{width: '100%'}}
+        />
+        <Box 
+            sx={{
+                position: "absolute",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+                color: "white",
+            }}
+        >
+            <Typography variant="body2" color="inherit">
+                {geneticMarkerProgress}/{geneticMarkerThreshold}
+            </Typography>
+        </Box>
+    </Box>
+</Grid>
+
+
+<Grid item xs={12}>
+    <Divider sx={{ backgroundColor: 'white' }} />
+</Grid> 
+
+                    <Grid item xs={12}>
+        <Typography>Grow Using Sugar:</Typography>
+    </Grid>
+
+{/* Leaves Section */}
+<Grid item xs={12}>
+    <Tooltip title="Buy Leaves">
+        <Button 
+            fullWidth
+            sx={{ 
+                border: "1px solid #aaa", 
+                borderRadius: "4px",
+                backgroundColor: '#424532',
+                color: '#B5D404' 
+            }}
             onClick={() => handleBuyLeaves()}>
-                <Add />
-            </Button>
-        </Tooltip>
-    </Grid>
-    <Grid item xs={12}>
-        <Typography>{LEAF_COST} Sugar</Typography>
-    </Grid>
+            Buy Leaves: 1 Leaf for {LEAF_COST} Sugar
+        </Button>
+    </Tooltip>
+</Grid>
 
-    {/* Roots Section */}
-    <Grid item xs={6}>
-        <Typography>{plant.roots} Roots</Typography>
-    </Grid>
-    <Grid item xs={6}>
-        <Tooltip title="Buy Roots">
-            <Button 
+{/* Roots Section */}
+<Grid item xs={12}>
+    <Tooltip title="Buy Roots">
+        <Button 
+            fullWidth
             sx={{ 
                 border: "1px solid #aaa", 
                 borderRadius: "4px",
                 backgroundColor: '#424532',
                 color: '#B5D404' 
-                }}
+            }}
             onClick={() => handleBuyRoots()}>
-                <Add />
-            </Button>
-        </Tooltip>
-    </Grid>
-    <Grid item xs={12}>
-        <Typography>{ROOT_COST} Sugar</Typography>
-    </Grid>
+            Buy Roots: 1 Root for {ROOT_COST} Sugar
+        </Button>
+    </Tooltip>
+</Grid>
+
             <Grid item xs={12}>
             <Divider sx={{ backgroundColor: 'white' }} />
         </Grid>
 
-        <Grid style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent: 'center'}} item xs={6}>
-            <Tooltip title={`Absorbing ${plant.roots - plant.leaves}/Second`}>
-                <Typography>{formatNumber(plant.water)} Water</Typography>
-            </Tooltip>
+        <Grid item xs={6}>
             <Tooltip title="Absorb Water">
                 <IconButton 
                 sx={{ 
@@ -188,14 +209,11 @@ function PlantList() {
                     color: '#B5D404' 
                     }}
                 onClick={() => handleWaterAbsorption()}>
-                    <Add />
+                    Absorb 10 Water
                 </IconButton>
             </Tooltip>
         </Grid>
-        <Grid style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent: 'center'}} item xs={6}>
-            <Tooltip title={`Absorbing ${plant.leaves}/second`}>
-                <Typography>{formatNumber(plant.sunlight)} Sunlight</Typography>
-            </Tooltip>
+        <Grid item xs={6}>
             <Tooltip title="Absorb Sunlight">
                 <IconButton 
                 sx={{ 
@@ -205,7 +223,7 @@ function PlantList() {
                     color: '#B5D404' 
                     }}
                 onClick={() => handleSunlightAbsorption()}>
-                    <Add />
+                    Absorb 10 Sunlight
                 </IconButton>
             </Tooltip>
         </Grid>
