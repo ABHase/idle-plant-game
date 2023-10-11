@@ -146,7 +146,7 @@ function PlantList() {
                 }, 
             }}
             onClick={() => handleToggleGeneticMarkerProduction()}>
-            Convert 100 Sugar → DNA: {plant.is_genetic_marker_production_on ? "Stop" : "Start"}
+            Convert {formatNumber(geneticMarkerThreshold * 100)} Sugar → DNA: {plant.is_genetic_marker_production_on ? "Stop" : "Start"}
         </Button>
     </Tooltip>
 </Grid>
