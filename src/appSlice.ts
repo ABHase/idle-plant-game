@@ -13,12 +13,13 @@ const appSlice = createSlice({
     name: 'app',
     initialState,
     reducers: {
+        resetApp: () => initialState,
         updateTime: (state, action: PayloadAction<number>) => {
             state.totalTime = action.payload;
         }
     }
 });
 
-export const { updateTime } = appSlice.actions;
+export const { updateTime, resetApp } = appSlice.actions;
 
 export default appSlice.reducer;

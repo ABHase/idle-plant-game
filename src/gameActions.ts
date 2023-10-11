@@ -1,7 +1,7 @@
 // gameActions.ts
 
 import { ThunkAction } from 'redux-thunk';
-import { RootState } from './store';
+import { RootState } from './rootReducer';
 import { Action } from '@reduxjs/toolkit';  // Import Action
 import { updateTime } from './appSlice';
 import { attractLadybugs, produceGeneticMarkers, produceSecondaryResource, produceSugar, updateMaturityLevel, updateWaterAndSunlight } from './plantSlice';

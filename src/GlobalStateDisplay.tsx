@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from './store';  // Adjust the import path if needed
+import { RootState } from  './rootReducer' // Adjust the import path if needed
 import { Box, Grid, LinearProgress, Typography } from '@mui/material';
 
 const GlobalStateDisplay: React.FC = () => {

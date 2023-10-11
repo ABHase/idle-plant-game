@@ -2,9 +2,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
 import { SUGAR_THRESHOLD, SECONDARY_SUGAR_THRESHOLD } from './constants';
 import { createSelector } from '@reduxjs/toolkit';
-import { RootState } from './store';
 
-interface PlantState {
+export interface PlantState {
     id: string;
     maturity_level: number;
     sugar_production_rate: number;
@@ -57,6 +56,8 @@ const plantSlice = createSlice({
     name: 'plant',
     initialState,
     reducers: {
+        resetPlant: () => initialState,
+
         initializeNewPlant: (state, action: PayloadAction<{ biome_id: string }>) => {
             return {
                 ...INITIAL_PLANT_CONFIG, 
@@ -158,5 +159,6 @@ export const {
     updateMaturityLevel,
     attractLadybugs,
     handlePest,
+    resetPlant,
 } = plantSlice.actions;
 export default plantSlice.reducer;

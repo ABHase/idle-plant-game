@@ -1,16 +1,24 @@
 import React, { useEffect, useRef  } from 'react';
 import './App.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from './store';
+import { RootState } from './rootReducer';
 import { absorbSunlight, absorbWater, initializeNewPlant, produceSugar, updateWaterAndSunlight } from './plantSlice';
 import { createSelector } from 'reselect';
 import { updateGame } from './gameActions';
-import { AppDispatch } from './store';  // Adjust the path if necessary
+import store, { AppDispatch } from './store';  // Adjust the path if necessary
 import GlobalStateDisplay from './GlobalStateDisplay';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Box } from '@mui/material';
 import PlantTimeDisplay from './PlantTimeDisplay';
 import PlantList from './PlantList';
+import { clearState, saveState } from './localStorage';
+import ConfirmDeleteDialog from './ConfirmDeleteDialog';
+import { Button } from '@mui/material';
+import { resetApp } from './appSlice';
+import { resetGlobalState } from './gameStateSlice';
+import { resetPlant } from './plantSlice';
+import { resetPlantTime } from './plantTimeSlice';
+
 
 const theme = createTheme({
   palette: {
@@ -47,11 +55,27 @@ function App() {
   const totalTime = useSelector((state: RootState) => state.app.totalTime);
   const plantTime = useSelector((state: RootState) => state.plantTime);
   const plants = useSelector(selectPlants);
+  const [openDialog, setOpenDialog] = React.useState(false);
+
+  const handleDeleteConfirm = () => {
+    clearState(); // Clear the state from localStorage
+  
+    // Reset state for each slice
+    dispatch(resetApp());
+    dispatch(resetGlobalState());
+    dispatch(resetPlant());
+    dispatch(resetPlantTime());
+  
+    // Optionally, refresh the page
+    window.location.reload();
+  
+    // Any other logic you want to run upon confirmation
+  };
+  
 
   useEffect(() => {
     // Call the update function to start the game loop
     update();
-
     // Cleanup code: stop the loop when the component unmounts
     return () => {
       // You might need to add cleanup logic to stop the requestAnimationFrame loop when component is unmounted
@@ -63,41 +87,69 @@ function App() {
  
 
   const lastUpdateTimeRef = useRef(Date.now());
+  const saveCounterRef = useRef(0);
+
 
   function update() {
     const currentTime = Date.now();
     const deltaTime = currentTime - lastUpdateTimeRef.current;
 
     if (deltaTime >= 1000) {
-        dispatch(updateGame());  // This will now handle the time update correctly
+        dispatch(updateGame());
         lastUpdateTimeRef.current = currentTime;
+
+        // Increment the save counter
+        saveCounterRef.current += 1;
+
+        // Check if the save counter reaches 30
+        if (saveCounterRef.current === 30) {
+            // Save the state to localStorage
+            saveState(store.getState());
+
+            // Reset the counter
+            saveCounterRef.current = 0;
+        }
     }
 
     requestAnimationFrame(update);
 }
 
+
 return (
   <ThemeProvider theme={theme}>
-    
-        <Box 
+    <Box 
       display="flex" 
-      flexDirection="column" 
-      //alignItems="flex-start"  // This will align content to the left
-      justifyContent="flex-start"  // This will align content to the top
+      flexDirection="column"
+      justifyContent="flex-start"
       height="100vh" 
       bgcolor="background.default"
       color="text.primary"
     >
-        <header className="App-header">        
-            <PlantTimeDisplay plantTime={plantTime} /> 
-            <GlobalStateDisplay />
-            <PlantList />
-           
-        </header>
-    </Box>
+      <header className="App-header">        
+        <PlantTimeDisplay plantTime={plantTime} /> 
+        <GlobalStateDisplay />
+        <PlantList />
+      </header>
+      
+      {/* Spacer */}
+      <Box flexGrow={1}></Box>
 
-    </ThemeProvider>
+      {/* Button at the bottom */}
+      <Box pb={2} textAlign="center">
+      <Button onClick={() => setOpenDialog(true)} style={{ position: 'absolute', bottom: '10px', left: '10px' }}>
+        Purge Save
+      </Button>
+      <ConfirmDeleteDialog 
+        open={openDialog} 
+        onClose={() => setOpenDialog(false)} 
+        onConfirm={handleDeleteConfirm}
+      />
+      </Box>
+    </Box>
+  </ThemeProvider>
 );
+
 }
 
 export default App;
+

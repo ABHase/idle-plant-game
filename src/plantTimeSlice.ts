@@ -23,7 +23,9 @@ const initialPlantTimeState: PlantTimeState = {
 const plantTimeSlice = createSlice({
     name: 'plantTime',
     initialState: initialPlantTimeState,
-    reducers: {},
+    reducers: {
+      resetPlantTime: () => initialPlantTimeState,
+    },
     extraReducers: (builder) => {
       builder.addCase(updateTime, (state, action: PayloadAction<number>) => {
         // Increase update_counter by 5
@@ -57,5 +59,5 @@ const plantTimeSlice = createSlice({
       });
     }
 });
-
+export const {resetPlantTime} = plantTimeSlice.actions;
 export default plantTimeSlice.reducer;

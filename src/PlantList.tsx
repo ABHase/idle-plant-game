@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from './store';
+import { RootState } from './rootReducer';
 import {
     absorbSunlight,
     absorbWater,
@@ -98,7 +98,7 @@ function PlantList() {
                 
                 </Grid>
                 <Grid item xs={4}>
-                <Tooltip title={`Converts ${waterConsumption} water and ${sunlightConsumption} sunlight into ${modifiedRate} sugar per cycle.`}>
+                <Tooltip title={`Converts ${formatNumberWithDecimals(waterConsumption)} water and ${formatNumberWithDecimals(sunlightConsumption)} sunlight into ${formatNumberWithDecimals(modifiedRate)} sugar per cycle.`}>
                     <Box border={1} borderColor="grey.300" borderRadius={2} padding={.1}>
                         <Typography>Sugar: {formatNumber(plant.sugar)}</Typography>
                     </Box>
@@ -259,6 +259,15 @@ function formatNumber(value: number): string {
     }
 }
 
+function formatNumberWithDecimals(value: number): string {
+    if (value >= 1_000_000) {
+        return (value / 1_000_000).toFixed(2) + 'M';
+    } else if (value >= 1_000) {
+        return (value / 1_000).toFixed(2) + 'K';
+    } else {
+        return value.toFixed(2);
+    }
+}
 
 
 

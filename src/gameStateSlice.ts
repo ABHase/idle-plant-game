@@ -30,6 +30,8 @@ const globalStateSlice = createSlice({
     name: 'gameState',
     initialState,
     reducers: {
+        resetGlobalState: () => initialState,
+
         updateGeneticMarkerProgress: (state) => {
             state.geneticMarkerProgress += 1;
 
@@ -61,5 +63,5 @@ const globalStateSlice = createSlice({
     }
 });
 
-export const { updateGeneticMarkerProgress } = globalStateSlice.actions;
+export const { updateGeneticMarkerProgress, resetGlobalState } = globalStateSlice.actions;
 export default globalStateSlice.reducer;
