@@ -95,6 +95,9 @@ function PlantList() {
                     <Box border={1} borderColor="grey.300" borderRadius={2} padding={.1}>
                         <Typography>Sugar: {formatNumber(plant.sugar)}</Typography>
                     </Box>
+                    <Box border={1} borderColor="grey.300" borderRadius={2} padding={.1}>
+                        <Typography>Height: {formatNumber(plant.maturity_level)}</Typography>
+                    </Box>
                 </Grid>
 
                 <Grid item xs={12}>
