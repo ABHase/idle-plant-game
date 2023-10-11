@@ -30,7 +30,7 @@ const theme = createTheme({
     }
   },
   typography: {
-    fontFamily: "'YOUR_FONT_NAME', sans-serif", // Remember to replace 'YOUR_FONT_NAME'
+    fontFamily: "'YOUR_FONT_NAME', lato", // Remember to replace 'YOUR_FONT_NAME'
   },
   // Add any other theme customizations here
 });
@@ -88,12 +88,11 @@ return (
       bgcolor="background.default"
       color="text.primary"
     >
-        <header className="App-header">
-          
-            
-            <PlantList />
+        <header className="App-header">        
+            <PlantTimeDisplay plantTime={plantTime} /> 
             <GlobalStateDisplay />
-          <PlantTimeDisplay plantTime={plantTime} />  
+            <PlantList />
+           
         </header>
     </Box>
 

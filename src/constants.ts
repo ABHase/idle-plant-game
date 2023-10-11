@@ -1,7 +1,7 @@
 // constants.ts
 
 // Sugar related constants
-export const SUGAR_THRESHOLD = 5;
+export const SUGAR_THRESHOLD = 100;
 export const SECONDARY_SUGAR_THRESHOLD = 10;
 
 // Biome names

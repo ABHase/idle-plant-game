@@ -79,12 +79,6 @@ const plantSlice = createSlice({
                 if (state.water > waterConsumption && state.sunlight > sunlightConsumption) {
                     state.water -= waterConsumption;
                     state.sunlight -= sunlightConsumption;
-                    const currentTime = Date.now();
-                    const timeElapsedInSeconds = (currentTime - state.lastProductionTimestamp) / 1000;
-                    const productionPerSecond = modifiedRate;
-    
-                    state.sugarProduced += productionPerSecond * timeElapsedInSeconds;
-                    state.lastProductionTimestamp = currentTime;
                     state.sugar += modifiedRate;
                 }
             }

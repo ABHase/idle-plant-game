@@ -62,32 +62,38 @@ function PlantList() {
                     border={1} 
                     borderColor="grey.300" 
                     borderRadius={2}
-                    width="80%" // or a fixed value like "500px"
-                    padding={2}
+                    width="320px"
+                    padding={1}
                     margin= "0 auto"
                 >
-                <Grid container spacing={2} alignItems="center">
+                <Grid container spacing={1} alignItems="center">
                 <Grid item xs={4}>
                 
                 <Tooltip title={`Absorbing ${plant.roots - plant.leaves}/Second`}>
-                    <Box border={1} borderColor="grey.300" borderRadius={2} padding={1}>
-                        <Typography>Water:</Typography>
-                        <Typography>{formatNumber(plant.water)}</Typography>
+                    <Box border={1} borderColor="grey.300" borderRadius={2} padding={0.2}>
+                        <Typography>Water: {formatNumber(plant.water)}</Typography>
                     </Box>
-                </Tooltip>
+                    </Tooltip>
+                    <Box border={1} borderColor="grey.300" borderRadius={2} padding={0.2}>
+                        <Typography>Roots: {formatNumber(plant.roots)}</Typography>
+                    </Box>
+               
                 </Grid>
                 <Grid item xs={4}>
                 <Tooltip title={`Absorbing ${plant.leaves}/second`}>
-                    <Box border={1} borderColor="grey.300" borderRadius={2} padding={1}>
-                        <Typography>Sunlight:</Typography>
-                        <Typography>{formatNumber(plant.sunlight)}</Typography>
+                    <Box border={1} borderColor="grey.300" borderRadius={2} padding={.1}>
+                        <Typography>Sunlight: {formatNumber(plant.sunlight)}</Typography>
                     </Box>
-                </Tooltip>
+                </Tooltip>    
+                    <Box border={1} borderColor="grey.300" borderRadius={2} padding={.1}>
+                        <Typography>Leaves: {formatNumber(plant.leaves)}</Typography>
+                    </Box>
+
+                
                 </Grid>
                 <Grid item xs={4}>
-                    <Box border={1} borderColor="grey.300" borderRadius={2} padding={1}>
-                        <Typography>Sugar:</Typography>
-                        <Typography>{formatNumber(plant.sugar)}</Typography>
+                    <Box border={1} borderColor="grey.300" borderRadius={2} padding={.1}>
+                        <Typography>Sugar: {formatNumber(plant.sugar)}</Typography>
                     </Box>
                 </Grid>
 
@@ -103,7 +109,10 @@ function PlantList() {
                 border: "1px solid #aaa", 
                 borderRadius: "4px",
                 backgroundColor: '#424532',
-                color: '#B5D404' 
+                color: '#B5D404',
+                '&:active, &:focus': {
+                    backgroundColor: '#424532',  // Or any other style reset
+                },
             }}
             onClick={() => handleToggleSugarProduction()}>
             Photosynthesize: {plant.is_sugar_production_on ? "Stop" : "Start"}
@@ -119,8 +128,11 @@ function PlantList() {
             sx={{ 
                 border: "1px solid #aaa", 
                 borderRadius: "4px",
-                backgroundColor: '#424532',
-                color: '#B5D404' 
+                backgroundColor: '#332932',
+                color: '#DEA4FC',
+                '&:active, &:focus': {
+                    backgroundColor: '#332932',  // Or any other style reset
+                }, 
             }}
             onClick={() => handleToggleGeneticMarkerProduction()}>
             Convert 100 Sugar → DNA: {plant.is_genetic_marker_production_on ? "Stop" : "Start"}
@@ -128,29 +140,7 @@ function PlantList() {
     </Tooltip>
 </Grid>
 
-<Grid item xs={12}>
-    <Box position="relative" display="inline-flex" width="100%">
-        <LinearProgress 
-            variant="determinate" 
-            value={(geneticMarkerProgress / geneticMarkerThreshold) * 100} 
-            sx={{width: '100%'}}
-        />
-        <Box 
-            sx={{
-                position: "absolute",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: "100%",
-                color: "white",
-            }}
-        >
-            <Typography variant="body2" color="inherit">
-                {geneticMarkerProgress}/{geneticMarkerThreshold}
-            </Typography>
-        </Box>
-    </Box>
-</Grid>
+
 
 
 <Grid item xs={12}>
@@ -170,7 +160,10 @@ function PlantList() {
                 border: "1px solid #aaa", 
                 borderRadius: "4px",
                 backgroundColor: '#424532',
-                color: '#B5D404' 
+                color: '#B5D404',
+                '&:active, &:focus': {
+                    backgroundColor: '#424532',  // Or any other style reset
+                }, 
             }}
             onClick={() => handleBuyLeaves()}>
             Buy Leaves: 1 Leaf for {LEAF_COST} Sugar
@@ -186,8 +179,11 @@ function PlantList() {
             sx={{ 
                 border: "1px solid #aaa", 
                 borderRadius: "4px",
-                backgroundColor: '#424532',
-                color: '#B5D404' 
+                backgroundColor: '#363534',
+                color: '#C7B08B',
+                '&:active, &:focus': {
+                    backgroundColor: '#C7B08B',  // Or any other style reset
+                },
             }}
             onClick={() => handleBuyRoots()}>
             Buy Roots: 1 Root for {ROOT_COST} Sugar
@@ -201,30 +197,36 @@ function PlantList() {
 
         <Grid item xs={6}>
             <Tooltip title="Absorb Water">
-                <IconButton 
+                <Button 
                 sx={{ 
                     border: "1px solid #aaa", 
                     borderRadius: "4px",
-                    backgroundColor: '#424532',
-                    color: '#B5D404' 
+                    backgroundColor: '#0F4A52',
+                    color: '#34F7E1',
+                    '&:active, &:focus': {
+                        backgroundColor: '#0F4A52',  // Or any other style reset
+                    }, 
                     }}
                 onClick={() => handleWaterAbsorption()}>
-                    Absorb 10 Water
-                </IconButton>
+                    Absorb Water 
+                </Button>
             </Tooltip>
         </Grid>
         <Grid item xs={6}>
             <Tooltip title="Absorb Sunlight">
-                <IconButton 
+                <Button 
                 sx={{ 
                     border: "1px solid #aaa", 
                     borderRadius: "4px",
-                    backgroundColor: '#424532',
-                    color: '#B5D404' 
+                    backgroundColor: '#633912',
+                    color: '#FFC64D',
+                    '&:active, &:focus': {
+                        backgroundColor: '#633912',  // Or any other style reset
+                    }, 
                     }}
                 onClick={() => handleSunlightAbsorption()}>
-                    Absorb 10 Sunlight
-                </IconButton>
+                    Absorb Sunlight
+                </Button>
             </Tooltip>
         </Grid>
     </Grid>

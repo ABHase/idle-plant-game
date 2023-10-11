@@ -1,7 +1,7 @@
 // PlantTimeDisplay.tsx
 
 import React from 'react';
-import { Grid, Typography } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 
 interface PlantTimeProps {
   plantTime: {
@@ -16,12 +16,21 @@ interface PlantTimeProps {
 const PlantTimeDisplay: React.FC<PlantTimeProps> = ({ plantTime }) => {
   return (
     <div className="plant-time-display">
-      <Grid container spacing={2} alignItems="center">
-        <Grid item><Typography>Year: {plantTime.year}</Typography></Grid>
-        <Grid item><Typography>Season: {plantTime.season}</Typography></Grid>
-        <Grid item><Typography>Day: {plantTime.day}</Typography></Grid>
+                      <Box 
+                    border={1} 
+                    borderColor="grey.300" 
+                    borderRadius={2}
+                    width="320px"
+                    padding={1}
+                    margin= "0 auto"
+                >
+      <Grid container spacing={0.5} alignItems="center">
+        <Grid item><Typography>Year: {plantTime.year}|</Typography></Grid>
+        <Grid item><Typography>Season: {plantTime.season}|</Typography></Grid>
+        <Grid item><Typography>Day: {plantTime.day}|</Typography></Grid>
         <Grid item><Typography>Hour: {plantTime.hour}:{plantTime.update_counter}</Typography></Grid>
       </Grid>
+      </Box>
     </div>
   );
 };
