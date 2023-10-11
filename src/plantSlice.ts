@@ -29,7 +29,7 @@ interface PlantState {
 
 const INITIAL_PLANT_CONFIG: PlantState = {
     id: uuidv4(),  // Will be overridden when initialized
-    maturity_level: 0,
+    maturity_level: 1,
     sugar_production_rate: 1,
     genetic_marker_production_rate: 1,
     is_sugar_production_on: false,

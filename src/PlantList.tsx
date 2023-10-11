@@ -29,6 +29,12 @@ function PlantList() {
     const { geneticMarkerProgress, geneticMarkerThreshold } = useSelector(
         (state: RootState) => state.globalState
     );
+    const plantState = useSelector((state: RootState) => state.plant);
+
+    const baseRate = plantState.sugar_production_rate;
+    const modifiedRate = baseRate * (1 + 0.1 * plantState.maturity_level);
+    const waterConsumption = 10 * (1 + 0.4 * plantState.maturity_level);
+    const sunlightConsumption = 10 * (1 + 0.4 * plantState.maturity_level);
 
     const handleSunlightAbsorption = () => {
         const amount = 10;
@@ -92,9 +98,11 @@ function PlantList() {
                 
                 </Grid>
                 <Grid item xs={4}>
+                <Tooltip title={`Converts ${waterConsumption} water and ${sunlightConsumption} sunlight into ${modifiedRate} sugar per cycle.`}>
                     <Box border={1} borderColor="grey.300" borderRadius={2} padding={.1}>
                         <Typography>Sugar: {formatNumber(plant.sugar)}</Typography>
                     </Box>
+                </Tooltip>
                     <Box border={1} borderColor="grey.300" borderRadius={2} padding={.1}>
                         <Typography>Height: {formatNumber(plant.maturity_level)}</Typography>
                     </Box>
@@ -185,7 +193,7 @@ function PlantList() {
                 backgroundColor: '#363534',
                 color: '#C7B08B',
                 '&:active, &:focus': {
-                    backgroundColor: '#C7B08B',  // Or any other style reset
+                    backgroundColor: '#363534',  // Or any other style reset
                 },
             }}
             onClick={() => handleBuyRoots()}>
