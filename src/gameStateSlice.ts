@@ -31,6 +31,9 @@ const globalStateSlice = createSlice({
     initialState,
     reducers: {
         resetGlobalState: () => initialState,
+        deductGeneticMarkers: (state, action: PayloadAction<number>) => {
+            state.geneticMarkers -= action.payload;
+        },
 
         updateGeneticMarkerProgress: (state) => {
             state.geneticMarkerProgress += 1;
@@ -63,5 +66,5 @@ const globalStateSlice = createSlice({
     }
 });
 
-export const { updateGeneticMarkerProgress, resetGlobalState } = globalStateSlice.actions;
+export const { updateGeneticMarkerProgress, resetGlobalState, deductGeneticMarkers  } = globalStateSlice.actions;
 export default globalStateSlice.reducer;

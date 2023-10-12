@@ -1,4 +1,4 @@
-import React, { useEffect, useRef  } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './App.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from './rootReducer';
@@ -13,11 +13,14 @@ import PlantTimeDisplay from './PlantTimeDisplay';
 import PlantList from './PlantList';
 import { clearState, saveState } from './localStorage';
 import ConfirmDeleteDialog from './ConfirmDeleteDialog';
+import ConfirmEvolveDialog from './ConfirmEvolveDialog';
 import { Button } from '@mui/material';
 import { resetApp } from './appSlice';
 import { resetGlobalState } from './gameStateSlice';
 import { resetPlant } from './plantSlice';
 import { resetPlantTime } from './plantTimeSlice';
+import { evolvePlant } from './plantSlice';
+import UpgradeModal from './UpgradeModal';
 
 
 const theme = createTheme({
@@ -56,6 +59,7 @@ function App() {
   const plantTime = useSelector((state: RootState) => state.plantTime);
   const plants = useSelector(selectPlants);
   const [openDialog, setOpenDialog] = React.useState(false);
+  const purchasedUpgrades = useSelector((state: RootState) => state.upgrades.purchased);
 
   const handleDeleteConfirm = () => {
     clearState(); // Clear the state from localStorage
@@ -66,10 +70,15 @@ function App() {
     dispatch(resetPlant());
     dispatch(resetPlantTime());
   
-    // Optionally, refresh the page
+
     window.location.reload();
   
-    // Any other logic you want to run upon confirmation
+  };
+
+  const [evolveDialogOpen, setEvolveDialogOpen] = useState(false);
+
+  const handleEvolve = () => {
+      dispatch(evolvePlant(purchasedUpgrades));
   };
   
 
@@ -78,9 +87,7 @@ function App() {
     update();
     // Cleanup code: stop the loop when the component unmounts
     return () => {
-      // You might need to add cleanup logic to stop the requestAnimationFrame loop when component is unmounted
-      // If not stopped, it could lead to memory leaks or unwanted behavior.
-      // Placeholder for now, we can discuss this further if necessary.
+
     };
 }, [dispatch]);
 
@@ -114,6 +121,16 @@ function App() {
     requestAnimationFrame(update);
 }
 
+const [modalOpen, setModalOpen] = useState(false);
+
+const handleOpenModal = () => {
+  setModalOpen(true);
+};
+
+const handleCloseModal = () => {
+  setModalOpen(false);
+};
+
 
 return (
   <ThemeProvider theme={theme}>
@@ -125,10 +142,39 @@ return (
       bgcolor="background.default"
       color="text.primary"
     >
-      <header className="App-header">        
+      <header className="App-header">
+      <Box 
+        border={1} 
+        borderColor="grey.300" 
+        borderRadius={2}
+        width="320px"
+        padding={1}
+        margin= "0 auto"
+      >
+        <Button 
+            variant="contained" 
+            color="primary" 
+            onClick={() => setEvolveDialogOpen(true)}
+            sx={{ mr: 8 }}
+        >
+            Plant Seed
+        </Button>
+        <Button variant="contained" color="primary" onClick={handleOpenModal}>
+          Evolve Traits
+        </Button>
+
+        <ConfirmEvolveDialog
+            open={evolveDialogOpen}
+            onClose={() => setEvolveDialogOpen(false)}
+            onConfirm={handleEvolve}
+        />
+      </Box>        
         <PlantTimeDisplay plantTime={plantTime} /> 
         <GlobalStateDisplay />
         <PlantList />
+
+
+      <UpgradeModal open={modalOpen} onClose={handleCloseModal} />
       </header>
       
       {/* Spacer */}

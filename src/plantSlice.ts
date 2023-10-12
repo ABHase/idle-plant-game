@@ -2,6 +2,9 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
 import { SUGAR_THRESHOLD, SECONDARY_SUGAR_THRESHOLD } from './constants';
 import { createSelector } from '@reduxjs/toolkit';
+import { RootState } from './rootReducer'; // This needs to be the actual path to your rootReducer
+import { UPGRADE_FUNCTIONS, UPGRADES } from './upgrades'; // Assuming you have UPGRADES defined in an 'upgrades.ts' file
+
 
 export interface PlantState {
     id: string;
@@ -64,6 +67,23 @@ const plantSlice = createSlice({
                 id: uuidv4(),
             };
         },
+
+        evolvePlant: (state, action: PayloadAction<string[]>) => {
+            // Use the purchased upgrades from the action payload
+            const purchasedUpgrades = action.payload;
+        
+            // Modify the properties of the state directly
+            Object.assign(state, INITIAL_PLANT_CONFIG);
+            state.id = uuidv4();
+        
+            purchasedUpgrades.forEach(upgradeId => {
+                const upgradeFunction = UPGRADE_FUNCTIONS[upgradeId];
+                if (upgradeFunction) {
+                    upgradeFunction(state);
+                }
+            });
+        },      
+          
         absorbSunlight: (state, action: PayloadAction<{ amount: number }>) => {
             state.sunlight += action.payload.amount;
         },
@@ -160,5 +180,6 @@ export const {
     attractLadybugs,
     handlePest,
     resetPlant,
+    evolvePlant,
 } = plantSlice.actions;
 export default plantSlice.reducer;

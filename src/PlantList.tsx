@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from './rootReducer';
 import {
@@ -25,6 +25,7 @@ import { LEAF_COST, ROOT_COST } from './constants';
 function PlantList() {
     const dispatch = useDispatch();
     const plant = useSelector((state: RootState) => state.plant);
+    const [multiplier, setMultiplier] = useState<number>(1);  // default is 1
 
     const { geneticMarkerProgress, geneticMarkerThreshold } = useSelector(
         (state: RootState) => state.globalState
@@ -51,16 +52,29 @@ function PlantList() {
     };
 
     const handleBuyRoots = () => {
+        for (let i = 0; i < multiplier; i++){
         dispatch(buyRoots({ cost: ROOT_COST }));
+        }
     };
 
     const handleBuyLeaves = () => {
+        for (let i = 0; i < multiplier; i++){
         dispatch(buyLeaves({ cost: LEAF_COST }));
+        }
     };
 
     const handleToggleGeneticMarkerProduction = () => {
         dispatch(toggleGeneticMarkerProduction());
     };
+
+    const toggleMultiplier = (value: number) => {
+        if (multiplier === value) {
+            setMultiplier(1);  // If the clicked multiplier is the same as the current multiplier, reset to 1
+        } else {
+            setMultiplier(value);  // Otherwise, set to the clicked value
+        }
+    };
+    
 
     return (
             <div key={plant.id} className="plant-container">
@@ -154,13 +168,51 @@ function PlantList() {
 
 
 
-<Grid item xs={12}>
-    <Divider sx={{ backgroundColor: 'white' }} />
-</Grid> 
+            <Grid item xs={12}>
+                <Divider sx={{ backgroundColor: 'white' }} />
+            </Grid> 
 
-                    <Grid item xs={12}>
-        <Typography>Grow Using Sugar:</Typography>
-    </Grid>
+            <Grid item xs={12}>
+                <Typography>Grow Using Sugar:</Typography>
+            </Grid>
+            <Grid item xs={3}>
+            <Button 
+                onClick={() => toggleMultiplier(1)} 
+                variant={multiplier === 1 ? "contained" : "outlined"}
+                sx={{ 
+                    padding: '4px 8px' }}  
+            >
+                x1
+            </Button>
+            </Grid>
+            <Grid item xs={3}>
+            <Button 
+                onClick={() => toggleMultiplier(10)} 
+                variant={multiplier === 10 ? "contained" : "outlined"}
+                sx={{ 
+                    padding: '4px 8px' }}  
+            >
+                x10
+            </Button>
+            </Grid>
+            <Grid item xs={3}>
+            <Button 
+                onClick={() => toggleMultiplier(100)} 
+                variant={multiplier === 100 ? "contained" : "outlined"}
+                sx={{ padding: '4px 8px' }}  
+            >
+                x100
+            </Button>
+            </Grid>
+            <Grid item xs={3}>
+            <Button 
+                onClick={() => toggleMultiplier(1000)} 
+                variant={multiplier === 1000 ? "contained" : "outlined"}
+                sx={{ padding: '4px 8px' }}  
+            >
+                x1000
+            </Button>
+            </Grid>
 
 {/* Leaves Section */}
 <Grid item xs={12}>
@@ -177,7 +229,7 @@ function PlantList() {
                 }, 
             }}
             onClick={() => handleBuyLeaves()}>
-            Buy Leaves: 1 Leaf for {LEAF_COST} Sugar
+            Buy Leaves: {multiplier} Leaf for {LEAF_COST * multiplier} Sugar
         </Button>
     </Tooltip>
 </Grid>
@@ -197,7 +249,7 @@ function PlantList() {
                 },
             }}
             onClick={() => handleBuyRoots()}>
-            Buy Roots: 1 Root for {ROOT_COST} Sugar
+            Buy Roots: {multiplier} Root for {ROOT_COST * multiplier} Sugar
         </Button>
     </Tooltip>
 </Grid>

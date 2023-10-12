@@ -7,6 +7,8 @@ import { updateTime } from './appSlice';
 import { attractLadybugs, produceGeneticMarkers, produceSecondaryResource, produceSugar, updateMaturityLevel, updateWaterAndSunlight } from './plantSlice';
 import { updateGeneticMarkerProgress } from './gameStateSlice';
 import { SECONDARY_SUGAR_THRESHOLD, SUGAR_THRESHOLD } from './constants';
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import { UPGRADES } from './upgrades';
 
 //... [other imports]
 
@@ -40,3 +42,22 @@ function updateSecondaryResources(arg0: { biomeName: string; }): any {
     throw new Error('Function not implemented.');
 }
 
+export const purchaseUpgradeThunk = createAsyncThunk<void, string, { state: RootState }>(
+    'upgrades/purchase',
+    async (upgradeId, thunkAPI) => {
+      const state = thunkAPI.getState();
+      const upgrade = UPGRADES.find(u => u.id === upgradeId);
+      
+      if (!upgrade) {
+        throw new Error('Upgrade not found');
+      }
+  
+      if (state.globalState.geneticMarkers < upgrade.cost) {
+
+        throw new Error('Not enough genetic markers');
+      }
+  
+      thunkAPI.dispatch({ type: 'globalState/deductGeneticMarkers', payload: upgrade.cost });
+      thunkAPI.dispatch({ type: 'upgrades/purchaseUpgrade', payload: upgradeId });
+    }
+  );

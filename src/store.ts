@@ -6,6 +6,7 @@ import thunk from 'redux-thunk';
 import plantTimeReducer from './plantTimeSlice';
 import appReducer from './appSlice';
 import plantReducer from './plantSlice';
+import upgradesReducer from './upgradesSlice';
 import globalStateSlice from './gameStateSlice';
 import { loadState, saveState } from './localStorage';
 import { RootState } from './rootReducer';
@@ -20,6 +21,8 @@ const store = configureStore({
         plantTime: plantTimeReducer,
         plant: plantReducer,
         globalState: globalStateSlice,
+        upgrades: upgradesReducer,
+        
     },
     middleware: getDefaultMiddleware => getDefaultMiddleware().prepend(thunk)
 });
