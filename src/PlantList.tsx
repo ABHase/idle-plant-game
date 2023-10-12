@@ -105,18 +105,18 @@ function PlantList() {
                 <Grid container spacing={1} alignItems="center">
                 <Grid item xs={4}>
                 
-                <Tooltip title={`${netWaterRate}/Second`}>
+                <Tooltip title={`${formatNumberWithDecimals(netWaterRate)}/Second`}>
                     <Box border={1} borderColor="grey.300" borderRadius={2} padding={0.2}>
                         <Typography><OpacityIcon sx={{ fontSize: 22, color: 'blue' }} /> {formatNumberWithDecimals(plant.water)}</Typography>
                     </Box>
                     </Tooltip>
                     <Box border={1} borderColor="grey.300" borderRadius={2} padding={0.2}>
-                        <Typography><GrassIcon sx={{ fontSize: 22, color: 'brown' }}/> {formatNumberWithDecimals(plant.roots)}</Typography>
+                        <Typography><GrassIcon sx={{ fontSize: 22, color: 'brown', transform: 'rotate(180deg)' }}/> {formatNumberWithDecimals(plant.roots)}</Typography>
                     </Box>
                
                 </Grid>
                 <Grid item xs={4}>
-                <Tooltip title={`Absorbing ${netSunlightRate}/second`}>
+                <Tooltip title={`${formatNumberWithDecimals(netSunlightRate)}/second`}>
                     <Box border={1} borderColor="grey.300" borderRadius={2} padding={.1}>
                         <Typography><WbSunnyIcon sx={{ fontSize: 22, color: 'orange' }} /> {formatNumberWithDecimals(plant.sunlight)}</Typography>
                     </Box>
