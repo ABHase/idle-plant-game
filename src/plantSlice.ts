@@ -107,8 +107,7 @@ const plantSlice = createSlice({
         updateWaterAndSunlight: (state) => {
             const waterDecrease = state.leaves;
             const rootsWaterIncrease = state.roots * state.water_absorption_multiplier;
-            const leavesSunlightIncrease = state.leaves * state.sunlight_absorption_multiplier;
-            
+            const leavesSunlightIncrease = state.leaves * state.sunlight_absorption_multiplier;            
             state.water = Math.max(0, state.water + rootsWaterIncrease - waterDecrease);
             state.sunlight += leavesSunlightIncrease;
         },        
