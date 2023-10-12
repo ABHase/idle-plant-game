@@ -16,8 +16,10 @@ export interface PlantState {
     is_secondary_resource_production_on: boolean;
     sunlight: number;
     sunlight_absorption_rate: number;
+    sunlight_efficiency_multiplier: number;
     water: number;
     water_absorption_rate: number;
+    water_efficiency_multiplier: number;
     sunlight_absorption_multiplier: number;
     water_absorption_multiplier: number;
     sugar: number;
@@ -41,6 +43,8 @@ const INITIAL_PLANT_CONFIG: PlantState = {
     sunlight_absorption_rate: 10,
     water: 0,
     water_absorption_rate: 10,
+    sunlight_efficiency_multiplier: 1,
+    water_efficiency_multiplier: 1,
     sunlight_absorption_multiplier: 1,
     water_absorption_multiplier: 1,
     sugar: 0,
