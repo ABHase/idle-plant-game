@@ -38,15 +38,13 @@ function PlantList() {
     const sunlightConsumption = 10 * (1 + 0.9 * plantState.maturity_level);
 
     const handleSunlightAbsorption = () => {
-        const amount = 10;
-        dispatch(absorbSunlight({ amount }));
+        dispatch(absorbSunlight());
     };
-
+    
     const handleWaterAbsorption = () => {
-        const amount = 10;
-        dispatch(absorbWater({ amount }));
+        dispatch(absorbWater());
     };
-
+    
     const handleToggleSugarProduction = () => {
         dispatch(toggleSugarProduction());
     };
@@ -89,7 +87,7 @@ function PlantList() {
                 <Grid container spacing={1} alignItems="center">
                 <Grid item xs={4}>
                 
-                <Tooltip title={`Absorbing ${plant.roots - plant.leaves}/Second`}>
+                <Tooltip title={`Absorbing ${(plant.roots - plant.leaves)*plant.water_absorption_multiplier}/Second`}>
                     <Box border={1} borderColor="grey.300" borderRadius={2} padding={0.2}>
                         <Typography>Water: {formatNumber(plant.water)}</Typography>
                     </Box>
@@ -100,9 +98,9 @@ function PlantList() {
                
                 </Grid>
                 <Grid item xs={4}>
-                <Tooltip title={`Absorbing ${plant.leaves}/second`}>
+                <Tooltip title={`Absorbing ${plant.leaves*plant.sunlight_absorption_multiplier}/second`}>
                     <Box border={1} borderColor="grey.300" borderRadius={2} padding={.1}>
-                        <Typography>Sunlight: {formatNumber(plant.sunlight)}</Typography>
+                        <Typography>Light: {formatNumber(plant.sunlight)}</Typography>
                     </Box>
                 </Tooltip>    
                     <Box border={1} borderColor="grey.300" borderRadius={2} padding={.1}>
@@ -303,13 +301,14 @@ function PlantList() {
 
 function formatNumber(value: number): string {
     if (value >= 1_000_000) {
-        return Math.round(value / 1_000_000) + 'M';
+        return (value / 1_000_000).toFixed(1) + 'M';
     } else if (value >= 1_000) {
-        return Math.round(value / 1_000) + 'K';
+        return (value / 1_000).toFixed(1) + 'K';
     } else {
         return Math.round(value).toString();
     }
 }
+
 
 function formatNumberWithDecimals(value: number): string {
     if (value >= 1_000_000) {

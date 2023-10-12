@@ -15,16 +15,16 @@ export interface PlantState {
     is_genetic_marker_production_on: boolean;
     is_secondary_resource_production_on: boolean;
     sunlight: number;
+    sunlight_absorption_rate: number;
     water: number;
+    water_absorption_rate: number;
+    sunlight_absorption_multiplier: number;
+    water_absorption_multiplier: number;
     sugar: number;
     ladybugs: number;
     roots: number;
     leaves: number;
-    vacuoles: number;
     resin: number;
-    taproot: number;
-    pheromones: number;
-    thorns: number;
     sugarProduced: number;
     lastProductionTimestamp: number;
 }
@@ -38,16 +38,16 @@ const INITIAL_PLANT_CONFIG: PlantState = {
     is_genetic_marker_production_on: false,
     is_secondary_resource_production_on: false,
     sunlight: 0,
+    sunlight_absorption_rate: 10,
     water: 0,
+    water_absorption_rate: 10,
+    sunlight_absorption_multiplier: 1,
+    water_absorption_multiplier: 1,
     sugar: 0,
     ladybugs: 0,
     roots: 2,
     leaves: 1,
-    vacuoles: 1,
     resin: 0,
-    taproot: 0,
-    pheromones: 0,
-    thorns: 0,
     sugarProduced: 0,
     lastProductionTimestamp: 0,
 };
@@ -84,11 +84,11 @@ const plantSlice = createSlice({
             });
         },      
           
-        absorbSunlight: (state, action: PayloadAction<{ amount: number }>) => {
-            state.sunlight += action.payload.amount;
+        absorbSunlight: (state) => {
+            state.sunlight += state.sunlight_absorption_rate;
         },
-        absorbWater: (state, action: PayloadAction<{ amount: number }>) => {
-            state.water += action.payload.amount;
+        absorbWater: (state) => {
+            state.water += state.water_absorption_rate;
         },
         produceSugar: (state) => {
             if (state.is_sugar_production_on) {
@@ -106,12 +106,12 @@ const plantSlice = createSlice({
         },
         updateWaterAndSunlight: (state) => {
             const waterDecrease = state.leaves;
-            const rootsWaterIncrease = state.roots;
-            const leavesSunlightIncrease = state.leaves;
-    
+            const rootsWaterIncrease = state.roots * state.water_absorption_multiplier;
+            const leavesSunlightIncrease = state.leaves * state.sunlight_absorption_multiplier;
+            
             state.water = Math.max(0, state.water + rootsWaterIncrease - waterDecrease);
             state.sunlight += leavesSunlightIncrease;
-        },
+        },        
         growRoots: (state) => {
             // Logic to increase roots here
         },
@@ -149,12 +149,6 @@ const plantSlice = createSlice({
         updateMaturityLevel: (state) => {
             state.maturity_level = Math.floor(Math.sqrt(state.roots + state.leaves));
         },
-        attractLadybugs: (state) => {
-            if (state.pheromones > 0) {
-                state.ladybugs += 1;
-                state.pheromones -= 1;
-            }
-        },
         handlePest: (state, action: PayloadAction<{ pestType: 'Aphids' | 'Deer' }>) => {
             // Reducer logic will be added later
         },
@@ -177,7 +171,6 @@ export const {
     produceGeneticMarkers,
     produceSecondaryResource,
     updateMaturityLevel,
-    attractLadybugs,
     handlePest,
     resetPlant,
     evolvePlant,

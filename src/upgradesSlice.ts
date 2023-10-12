@@ -29,9 +29,16 @@ const upgradesSlice = createSlice({
         state.purchased.push(upgradeId);
       }
     },
+    sellUpgrade: (state, action: PayloadAction<string>) => {
+        const upgradeId = action.payload;
+        const index = state.purchased.indexOf(upgradeId);
+        if (index > -1) {
+            state.purchased.splice(index, 1);
+        }
+    },
     resetUpgrades: () => initialState,
   },
 });
 
-export const { purchaseUpgrade, resetUpgrades } = upgradesSlice.actions;
+export const { purchaseUpgrade, resetUpgrades, sellUpgrade } = upgradesSlice.actions;
 export default upgradesSlice.reducer;
