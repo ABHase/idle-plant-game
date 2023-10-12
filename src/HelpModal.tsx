@@ -49,7 +49,7 @@ const HelpModal: React.FC<HelpModalProps> = ({ open, onClose }) => {
             <SpaIcon sx={{ fontSize: 22, color: 'green' }}  /><Typography variant="body2"> - Leaves passively absorb sunlight.</Typography>
         </Box>
         <Box display="flex" alignItems="center" mb={1}>
-            <GrassIcon sx={{ fontSize: 22, color: 'brown', transform: 'rotate(180deg)' }} /><Typography variant="body2"> - Roots passively absorb water.</Typography>
+            <GrassIcon sx={{ fontSize: 22, color: 'grey', transform: 'rotate(180deg)' }} /><Typography variant="body2"> - Roots passively absorb water.</Typography>
         </Box>
 
         <Box display="flex" alignItems="center" mb={1}>

@@ -65,6 +65,12 @@ export type Upgrade = {
         cost: 10,
     },
     {
+        id: 'toggle_genetic_marker_upgrade',
+        name: 'Turbo DNA',
+        description: 'Double the rate of genetic marker production, and quadruple the sugar cost',
+        cost: 10,
+    },
+    {
         id: 'boost_water_absorption_tier_2',
         name: 'Water Absorption Boost Tier 2',
         description: 'Increase manual water absorption by 100%',
@@ -139,6 +145,9 @@ export type Upgrade = {
     },
     boost_water_efficiency_multiplier_tier_2: (plant) => {
         plant.water_efficiency_multiplier *= 0.8;
+    },
+    toggle_genetic_marker_upgrade: (plant) => {
+        plant.geneticMarkerUpgradeActive = !plant.geneticMarkerUpgradeActive;
     },
 
     

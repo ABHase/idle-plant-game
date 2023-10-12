@@ -27,7 +27,8 @@ export const updateGame = (): ThunkAction<void, RootState, unknown, Action<strin
 
         if (plant.is_genetic_marker_production_on && plant.sugar >= SUGAR_THRESHOLD) {
             dispatch(produceGeneticMarkers());
-            dispatch(updateGeneticMarkerProgress());
+            const plant = getState().plant;
+            dispatch(updateGeneticMarkerProgress({ geneticMarkerUpgradeActive: plant.geneticMarkerUpgradeActive }));
         }
         if (plant.is_secondary_resource_production_on && plant.sugar >= SECONDARY_SUGAR_THRESHOLD) {
             dispatch(produceSecondaryResource());

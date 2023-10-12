@@ -38,15 +38,16 @@ const globalStateSlice = createSlice({
             state.geneticMarkers += action.payload;
         },
 
-        updateGeneticMarkerProgress: (state) => {
-            state.geneticMarkerProgress += 1;
-
+        updateGeneticMarkerProgress: (state, action: PayloadAction<{ geneticMarkerUpgradeActive: boolean }>) => {
+            const multiplier = action.payload.geneticMarkerUpgradeActive ? 2 : 1;
+            state.geneticMarkerProgress += multiplier;
+        
             if (state.geneticMarkerProgress >= state.geneticMarkerThreshold) {
                 state.geneticMarkers += 1;
                 state.geneticMarkerProgress = 0;
-                state.geneticMarkerThreshold *= 2;
+                state.geneticMarkerThreshold *= 1.1;
             }
-        },
+        },        
         updateSecondaryResources: (state, action: PayloadAction<{ biomeName: string }>) => {
             switch(action.payload.biomeName) {
                 case 'Desert':

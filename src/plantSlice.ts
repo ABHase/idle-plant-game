@@ -4,6 +4,14 @@ import { SUGAR_THRESHOLD, SECONDARY_SUGAR_THRESHOLD } from './constants';
 import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from './rootReducer'; // This needs to be the actual path to your rootReducer
 import { UPGRADE_FUNCTIONS, UPGRADES } from './upgrades'; // Assuming you have UPGRADES defined in an 'upgrades.ts' file
+import {
+    MATURITY_SUGAR_PRODUCTION_MODIFIER,
+    MATURITY_WATER_CONSUMPTION_MODIFIER,
+    MATURITY_SUNLIGHT_CONSUMPTION_MODIFIER,
+    BASE_WATER_CONSUMPTION,
+    BASE_SUNLIGHT_CONSUMPTION,
+} from './constants';
+
 
 
 export interface PlantState {
@@ -32,6 +40,7 @@ export interface PlantState {
     totalWaterAbsorbed: number;
     totalSunlightAbsorbed: number;
     totalSugarCreated: number;
+    geneticMarkerUpgradeActive: boolean;
 }
 
 const INITIAL_PLANT_CONFIG: PlantState = {
@@ -60,6 +69,7 @@ const INITIAL_PLANT_CONFIG: PlantState = {
     totalWaterAbsorbed: 0,
     totalSunlightAbsorbed: 0,
     totalSugarCreated: 0,
+    geneticMarkerUpgradeActive: false,
 };
 
 const initialState: PlantState = INITIAL_PLANT_CONFIG;
@@ -105,10 +115,10 @@ const plantSlice = createSlice({
         produceSugar: (state) => {
             if (state.is_sugar_production_on) {
                 const baseRate = state.sugar_production_rate;
-                const modifiedRate = baseRate * (1 + 0.5 * state.maturity_level);
-                const waterConsumption = 10 * (1 + 0.6 * state.maturity_level);
-                const sunlightConsumption = 10 * (1 + 0.9 * state.maturity_level);
-    
+                const modifiedRate = baseRate * (1 + MATURITY_SUGAR_PRODUCTION_MODIFIER * state.maturity_level);
+                const waterConsumption = BASE_WATER_CONSUMPTION * (1 + MATURITY_WATER_CONSUMPTION_MODIFIER * state.maturity_level);
+                const sunlightConsumption = BASE_SUNLIGHT_CONSUMPTION * (1 + MATURITY_SUNLIGHT_CONSUMPTION_MODIFIER * state.maturity_level);
+        
                 if (state.water > waterConsumption && state.sunlight > sunlightConsumption) {
                     state.water -= waterConsumption;
                     state.sunlight -= sunlightConsumption;
@@ -151,8 +161,10 @@ const plantSlice = createSlice({
             }
         },
         produceGeneticMarkers: (state) => {
-            if (state.sugar >= SUGAR_THRESHOLD) {
-                state.sugar -= SUGAR_THRESHOLD;
+            const costMultiplier = state.geneticMarkerUpgradeActive ? 4 : 1;
+            const neededSugar = SUGAR_THRESHOLD * costMultiplier;
+            if (state.sugar >= neededSugar) {
+                state.sugar -= neededSugar;
             }
         },
         produceSecondaryResource: (state) => {
@@ -165,6 +177,9 @@ const plantSlice = createSlice({
         },
         handlePest: (state, action: PayloadAction<{ pestType: 'Aphids' | 'Deer' }>) => {
             // Reducer logic will be added later
+        },
+        toggleGeneticMarkerUpgrade: (state) => {
+            state.geneticMarkerUpgradeActive = !state.geneticMarkerUpgradeActive;
         },
     },
     

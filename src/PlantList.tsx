@@ -27,6 +27,13 @@ import GrainIcon from '@mui/icons-material/Grain';
 import GrassIcon from '@mui/icons-material/Grass';
 import SpaIcon from '@mui/icons-material/Spa';
 import ParkIcon from '@mui/icons-material/Park';
+import {
+    MATURITY_SUGAR_PRODUCTION_MODIFIER,
+    MATURITY_WATER_CONSUMPTION_MODIFIER,
+    MATURITY_SUNLIGHT_CONSUMPTION_MODIFIER,
+    BASE_WATER_CONSUMPTION,
+    BASE_SUNLIGHT_CONSUMPTION,
+} from './constants';
 
 function PlantList() {
     const dispatch = useDispatch();
@@ -39,21 +46,21 @@ function PlantList() {
     const plantState = useSelector((state: RootState) => state.plant);
 
     const baseRate = plantState.sugar_production_rate;
-    const modifiedRate = baseRate * (1 + 0.1 * plantState.maturity_level);
-    const waterConsumption = 10 * (1 + 0.6 * plantState.maturity_level);
-    const sunlightConsumption = 10 * (1 + 0.9 * plantState.maturity_level);
-
+    const modifiedRate = baseRate * (1 + MATURITY_SUGAR_PRODUCTION_MODIFIER * plantState.maturity_level);
+    const waterConsumption = BASE_WATER_CONSUMPTION * (1 + MATURITY_WATER_CONSUMPTION_MODIFIER * plant.maturity_level);
+    const sunlightConsumption = BASE_SUNLIGHT_CONSUMPTION * (1 + MATURITY_SUNLIGHT_CONSUMPTION_MODIFIER * plant.maturity_level);
+    
     const netWaterRate = plant.is_sugar_production_on && 
-                     plant.water > 10 * (1 + 0.6 * plant.maturity_level) && 
-                     plant.sunlight > 10 * (1 + 0.9 * plant.maturity_level) 
-    ? (plant.roots - plant.leaves - 10 * (1 + 0.6 * plant.maturity_level)) * plant.water_absorption_multiplier 
-    : (plant.roots - plant.leaves) * plant.water_absorption_multiplier;
-
+                         plant.water > BASE_WATER_CONSUMPTION * (1 + MATURITY_WATER_CONSUMPTION_MODIFIER * plant.maturity_level) && 
+                         plant.sunlight > BASE_SUNLIGHT_CONSUMPTION * (1 + MATURITY_SUNLIGHT_CONSUMPTION_MODIFIER * plant.maturity_level) 
+        ? (plant.roots - plant.leaves - BASE_WATER_CONSUMPTION * (1 + MATURITY_WATER_CONSUMPTION_MODIFIER * plant.maturity_level)) * plant.water_absorption_multiplier 
+        : (plant.roots - plant.leaves) * plant.water_absorption_multiplier;
+    
     const netSunlightRate = plant.is_sugar_production_on && 
-                        plant.water > 10 * (1 + 0.6 * plant.maturity_level) && 
-                        plant.sunlight > 10 * (1 + 0.9 * plant.maturity_level) 
-    ? (plant.leaves - 10 * (1 + 0.9 * plant.maturity_level)) * plant.sunlight_absorption_multiplier 
-    : plant.leaves * plant.sunlight_absorption_multiplier;
+                            plant.water > BASE_WATER_CONSUMPTION * (1 + MATURITY_WATER_CONSUMPTION_MODIFIER * plant.maturity_level) && 
+                            plant.sunlight > BASE_SUNLIGHT_CONSUMPTION * (1 + MATURITY_SUNLIGHT_CONSUMPTION_MODIFIER * plant.maturity_level) 
+        ? (plant.leaves - BASE_SUNLIGHT_CONSUMPTION * (1 + MATURITY_SUNLIGHT_CONSUMPTION_MODIFIER * plant.maturity_level)) * plant.sunlight_absorption_multiplier 
+        : plant.leaves * plant.sunlight_absorption_multiplier;
 
     const handleSunlightAbsorption = () => {
         dispatch(absorbSunlight());
@@ -113,7 +120,7 @@ function PlantList() {
 
                     <Tooltip title='Roots'>
                     <Box border={1} borderColor="grey.300" borderRadius={2} padding={0.2}>
-                        <Typography><GrassIcon sx={{ fontSize: 22, color: 'brown', transform: 'rotate(180deg)' }}/> {formatNumberWithDecimals(plant.roots)}</Typography>
+                        <Typography><GrassIcon sx={{ fontSize: 22, color: 'grey', transform: 'rotate(180deg)' }}/> {formatNumberWithDecimals(plant.roots)}</Typography>
                     </Box>
                </Tooltip>
 
