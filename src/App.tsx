@@ -127,7 +127,7 @@ const handleEvolve = () => {
 
 const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
 const [historyModalOpen, setHistoryModalOpen] = useState(false);
-const [helpModalOpen, setHelpModalOpen] = useState(false);
+const [helpModalOpen, setHelpModalOpen] = useState(true);
 
 
 const handleOpenUpgradeModal = () => {

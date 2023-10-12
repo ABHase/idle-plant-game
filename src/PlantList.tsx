@@ -241,7 +241,7 @@ function PlantList() {
 
 {/* Leaves Section */}
 <Grid item xs={12}>
-    <Tooltip title="Groww Leaves">
+    <Tooltip title="Grow Leaves">
         <Button 
             fullWidth
             sx={{ 
