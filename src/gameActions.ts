@@ -57,7 +57,7 @@ export const purchaseUpgradeThunk = createAsyncThunk<void, string, { state: Root
         throw new Error('Not enough genetic markers');
       }
   
-      thunkAPI.dispatch({ type: 'globalState/deductGeneticMarkers', payload: upgrade.cost });
+      thunkAPI.dispatch({ type: 'gameState/deductGeneticMarkers', payload: upgrade.cost });
       thunkAPI.dispatch({ type: 'upgrades/purchaseUpgrade', payload: upgradeId });
     }
   );
