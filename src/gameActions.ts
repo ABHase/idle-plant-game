@@ -4,11 +4,13 @@ import { ThunkAction } from 'redux-thunk';
 import { RootState } from './rootReducer';
 import { Action } from '@reduxjs/toolkit';  // Import Action
 import { updateTime } from './appSlice';
-import { produceGeneticMarkers, produceSecondaryResource, produceSugar, updateMaturityLevel, updateWaterAndSunlight } from './plantSlice';
+import { evolvePlant, produceGeneticMarkers, produceSecondaryResource, produceSugar, updateMaturityLevel, updateWaterAndSunlight } from './plantSlice';
 import { updateGeneticMarkerProgress } from './gameStateSlice';
 import { SECONDARY_SUGAR_THRESHOLD, SUGAR_THRESHOLD } from './constants';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { UPGRADES } from './upgrades';
+import { PlantHistoryEntry, addPlantToHistory } from './plantHistorySlice';
+
 
 //... [other imports]
 
@@ -82,3 +84,34 @@ export const purchaseUpgradeThunk = createAsyncThunk<void, string, { state: Root
         thunkAPI.dispatch({ type: 'upgrades/sellUpgrade', payload: upgradeId });
     }
 );
+
+
+export const evolveAndRecordPlant = (upgrades: string[]): ThunkAction<void, RootState, unknown, Action<string>> => {
+    return (dispatch, getState) => {
+      // Get the current state of the plant and other relevant states
+      const plant = getState().plant;
+      const plantTime = getState().plantTime;
+      const plantHistory = getState().plantHistory.entries;
+
+      // If there's a previous history entry, use its dayReplaced as datePlanted for current plant
+      const lastPlantDayReplaced = plantHistory.length > 0 ? plantHistory[plantHistory.length - 1].dayReplaced : null;
+      const datePlanted = lastPlantDayReplaced || `Year 1-Spring-1`;
+
+      // Create a history entry for the current plant
+      const historyEntry: PlantHistoryEntry = {
+        plantID: plant.id,
+        datePlanted: datePlanted,
+        dayReplaced: `Year ${plantTime.year}-${plantTime.season}-${plantTime.day}`, 
+        sizeReached: plant.maturity_level,
+        totalWaterAbsorbed: plant.totalWaterAbsorbed,
+        totalSunlightAbsorbed: plant.totalSunlightAbsorbed,
+        totalSugarCreated: plant.totalSugarCreated
+      };
+
+      // Dispatch the action to add the current state of the plant to history
+      dispatch(addPlantToHistory(historyEntry));
+
+      // Dispatch the action to evolve the plant with the passed upgrades
+      dispatch(evolvePlant(upgrades));
+    };
+};

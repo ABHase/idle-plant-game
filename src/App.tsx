@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from './rootReducer';
 import { absorbSunlight, absorbWater, initializeNewPlant, produceSugar, updateWaterAndSunlight } from './plantSlice';
 import { createSelector } from 'reselect';
-import { updateGame } from './gameActions';
+import { evolveAndRecordPlant, updateGame } from './gameActions';
 import store, { AppDispatch } from './store';  // Adjust the path if necessary
 import GlobalStateDisplay from './GlobalStateDisplay';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -21,6 +21,9 @@ import { resetPlant } from './plantSlice';
 import { resetPlantTime } from './plantTimeSlice';
 import { evolvePlant } from './plantSlice';
 import UpgradeModal from './UpgradeModal';
+import { resetUpgrades } from './upgradesSlice';
+import HistoryModal from './HistoryModal';
+import HelpModal from './HelpModal';
 
 
 const theme = createTheme({
@@ -69,6 +72,7 @@ function App() {
     dispatch(resetGlobalState());
     dispatch(resetPlant());
     dispatch(resetPlantTime());
+    dispatch(resetUpgrades());
   
 
     window.location.reload();
@@ -77,9 +81,9 @@ function App() {
 
   const [evolveDialogOpen, setEvolveDialogOpen] = useState(false);
 
-  const handleEvolve = () => {
-      dispatch(evolvePlant(purchasedUpgrades));
-  };
+const handleEvolve = () => {
+  dispatch(evolveAndRecordPlant(purchasedUpgrades));
+};
   
 
   useEffect(() => {
@@ -121,14 +125,35 @@ function App() {
     requestAnimationFrame(update);
 }
 
-const [modalOpen, setModalOpen] = useState(false);
+const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
+const [historyModalOpen, setHistoryModalOpen] = useState(false);
+const [helpModalOpen, setHelpModalOpen] = useState(false);
 
-const handleOpenModal = () => {
-  setModalOpen(true);
+
+const handleOpenUpgradeModal = () => {
+  setUpgradeModalOpen(true);
 };
 
-const handleCloseModal = () => {
-  setModalOpen(false);
+const handleCloseUpgradeModal = () => {
+
+  setUpgradeModalOpen(false);
+};
+
+const handleOpenHistoryModal = () => {
+  setHistoryModalOpen(true);
+};
+
+const handleCloseHistoryModal = () => {
+  console.log("Closing History Modal");
+  setHistoryModalOpen(false);
+};
+
+const handleOpenHelpModal = () => {
+  setHelpModalOpen(true);
+};
+
+const handleCloseHelpModal = () => {
+  setHelpModalOpen(false);
 };
 
 
@@ -159,7 +184,7 @@ return (
         >
             Plant Seed
         </Button>
-        <Button variant="contained" color="primary" onClick={handleOpenModal}>
+        <Button variant="contained" color="primary" onClick={handleOpenUpgradeModal}>
           Evolve Traits
         </Button>
 
@@ -174,7 +199,8 @@ return (
         <PlantList />
 
 
-      <UpgradeModal open={modalOpen} onClose={handleCloseModal} />
+      <UpgradeModal open={upgradeModalOpen} onClose={handleCloseUpgradeModal} />
+      
       </header>
       
       {/* Spacer */}
@@ -190,7 +216,15 @@ return (
         onClose={() => setOpenDialog(false)} 
         onConfirm={handleDeleteConfirm}
       />
+      <HistoryModal open={historyModalOpen} onClose={handleCloseHistoryModal} />
+      <Button onClick={handleOpenHistoryModal} style={{ position: 'absolute', bottom: '10px', right: '10px' }}>
+        Plant History
+      </Button>
       </Box>
+      <HelpModal open={helpModalOpen} onClose={handleCloseHelpModal} />
+      <Button onClick={handleOpenHelpModal} style={{ position: 'absolute', bottom: '10px', left: '150px' }}>
+        Help
+      </Button>
     </Box>
   </ThemeProvider>
 );

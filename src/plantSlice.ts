@@ -29,6 +29,9 @@ export interface PlantState {
     resin: number;
     sugarProduced: number;
     lastProductionTimestamp: number;
+    totalWaterAbsorbed: number;
+    totalSunlightAbsorbed: number;
+    totalSugarCreated: number;
 }
 
 const INITIAL_PLANT_CONFIG: PlantState = {
@@ -54,6 +57,9 @@ const INITIAL_PLANT_CONFIG: PlantState = {
     resin: 0,
     sugarProduced: 0,
     lastProductionTimestamp: 0,
+    totalWaterAbsorbed: 0,
+    totalSunlightAbsorbed: 0,
+    totalSugarCreated: 0,
 };
 
 const initialState: PlantState = INITIAL_PLANT_CONFIG;
@@ -90,9 +96,11 @@ const plantSlice = createSlice({
           
         absorbSunlight: (state) => {
             state.sunlight += state.sunlight_absorption_rate;
+            state.totalSunlightAbsorbed += state.sunlight_absorption_rate;
         },
         absorbWater: (state) => {
             state.water += state.water_absorption_rate;
+            state.totalWaterAbsorbed += state.water_absorption_rate;
         },
         produceSugar: (state) => {
             if (state.is_sugar_production_on) {
@@ -105,6 +113,7 @@ const plantSlice = createSlice({
                     state.water -= waterConsumption;
                     state.sunlight -= sunlightConsumption;
                     state.sugar += modifiedRate;
+                    state.totalSugarCreated += modifiedRate;
                 }
             }
         },
@@ -113,7 +122,9 @@ const plantSlice = createSlice({
             const rootsWaterIncrease = state.roots * state.water_absorption_multiplier;
             const leavesSunlightIncrease = state.leaves * state.sunlight_absorption_multiplier;            
             state.water = Math.max(0, state.water + rootsWaterIncrease - waterDecrease);
+            state.totalWaterAbsorbed += rootsWaterIncrease;
             state.sunlight += leavesSunlightIncrease;
+            state.totalSunlightAbsorbed += leavesSunlightIncrease;
         },        
         growRoots: (state) => {
             // Logic to increase roots here

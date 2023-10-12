@@ -110,32 +110,41 @@ function PlantList() {
                         <Typography><OpacityIcon sx={{ fontSize: 22, color: 'blue' }} /> {formatNumberWithDecimals(plant.water)}</Typography>
                     </Box>
                     </Tooltip>
+
+                    <Tooltip title='Roots'>
                     <Box border={1} borderColor="grey.300" borderRadius={2} padding={0.2}>
                         <Typography><GrassIcon sx={{ fontSize: 22, color: 'brown', transform: 'rotate(180deg)' }}/> {formatNumberWithDecimals(plant.roots)}</Typography>
                     </Box>
-               
+               </Tooltip>
+
                 </Grid>
+
                 <Grid item xs={4}>
                 <Tooltip title={`${formatNumberWithDecimals(netSunlightRate)}/second`}>
                     <Box border={1} borderColor="grey.300" borderRadius={2} padding={.1}>
                         <Typography><WbSunnyIcon sx={{ fontSize: 22, color: 'orange' }} /> {formatNumberWithDecimals(plant.sunlight)}</Typography>
                     </Box>
-                </Tooltip>    
+                </Tooltip>  
+                
+                <Tooltip title='Leaves'>
                     <Box border={1} borderColor="grey.300" borderRadius={2} padding={.1}>
                         <Typography><SpaIcon sx={{ fontSize: 22, color: 'green' }} /> {formatNumberWithDecimals(plant.leaves)}</Typography>
                     </Box>
-
+                </Tooltip>
                 
                 </Grid>
+
                 <Grid item xs={4}>
                 <Tooltip title={`Converts ${formatNumberWithDecimals(waterConsumption)} water and ${formatNumberWithDecimals(sunlightConsumption)} sunlight into ${formatNumberWithDecimals(modifiedRate)} sugar per cycle.`}>
                     <Box border={1} borderColor="grey.300" borderRadius={2} padding={.1}>
                         <Typography><GrainIcon sx={{ fontSize: 22, color: 'white' }} /> {formatNumberWithDecimals(plant.sugar)}</Typography>
                     </Box>
                 </Tooltip>
+                <Tooltip title='Size'>
                     <Box border={1} borderColor="grey.300" borderRadius={2} padding={.1}>
                         <Typography><ParkIcon sx={{ fontSize: 22, color: 'green' }} /> {formatNumber(plant.maturity_level)}</Typography>
                     </Box>
+                </Tooltip>
                 </Grid>
 
                 <Grid item xs={12}>

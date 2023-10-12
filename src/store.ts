@@ -10,6 +10,7 @@ import upgradesReducer from './upgradesSlice';
 import globalStateSlice from './gameStateSlice';
 import { loadState, saveState } from './localStorage';
 import { RootState } from './rootReducer';
+import plantHistoryReducer from './plantHistorySlice';
 
 
 const persistedState: RootState | undefined = loadState();
@@ -22,6 +23,7 @@ const store = configureStore({
         plant: plantReducer,
         globalState: globalStateSlice,
         upgrades: upgradesReducer,
+        plantHistory: plantHistoryReducer,
         
     },
     middleware: getDefaultMiddleware => getDefaultMiddleware().prepend(thunk)
