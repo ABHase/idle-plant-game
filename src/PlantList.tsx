@@ -21,6 +21,12 @@ import {
 } from '@mui/material';
 import { Add, ArrowForwardIos, Clear } from '@mui/icons-material';
 import { LEAF_COST, ROOT_COST } from './constants';
+import WbSunnyIcon from '@mui/icons-material/WbSunny';
+import OpacityIcon from '@mui/icons-material/Opacity';
+import GrainIcon from '@mui/icons-material/Grain';
+import GrassIcon from '@mui/icons-material/Grass';
+import SpaIcon from '@mui/icons-material/Spa';
+import ParkIcon from '@mui/icons-material/Park';
 
 function PlantList() {
     const dispatch = useDispatch();
@@ -36,6 +42,18 @@ function PlantList() {
     const modifiedRate = baseRate * (1 + 0.1 * plantState.maturity_level);
     const waterConsumption = 10 * (1 + 0.6 * plantState.maturity_level);
     const sunlightConsumption = 10 * (1 + 0.9 * plantState.maturity_level);
+
+    const netWaterRate = plant.is_sugar_production_on && 
+                     plant.water > 10 * (1 + 0.6 * plant.maturity_level) && 
+                     plant.sunlight > 10 * (1 + 0.9 * plant.maturity_level) 
+    ? (plant.roots - plant.leaves - 10 * (1 + 0.6 * plant.maturity_level)) * plant.water_absorption_multiplier 
+    : (plant.roots - plant.leaves) * plant.water_absorption_multiplier;
+
+    const netSunlightRate = plant.is_sugar_production_on && 
+                        plant.water > 10 * (1 + 0.6 * plant.maturity_level) && 
+                        plant.sunlight > 10 * (1 + 0.9 * plant.maturity_level) 
+    ? (plant.leaves - 10 * (1 + 0.9 * plant.maturity_level)) * plant.sunlight_absorption_multiplier 
+    : plant.leaves * plant.sunlight_absorption_multiplier;
 
     const handleSunlightAbsorption = () => {
         dispatch(absorbSunlight());
@@ -87,24 +105,24 @@ function PlantList() {
                 <Grid container spacing={1} alignItems="center">
                 <Grid item xs={4}>
                 
-                <Tooltip title={`Absorbing ${(plant.roots - plant.leaves)*plant.water_absorption_multiplier}/Second`}>
+                <Tooltip title={`${netWaterRate}/Second`}>
                     <Box border={1} borderColor="grey.300" borderRadius={2} padding={0.2}>
-                        <Typography>Water: {formatNumber(plant.water)}</Typography>
+                        <Typography><OpacityIcon sx={{ fontSize: 22, color: 'blue' }} /> {formatNumberWithDecimals(plant.water)}</Typography>
                     </Box>
                     </Tooltip>
                     <Box border={1} borderColor="grey.300" borderRadius={2} padding={0.2}>
-                        <Typography>Roots: {formatNumber(plant.roots)}</Typography>
+                        <Typography><GrassIcon sx={{ fontSize: 22, color: 'brown' }}/> {formatNumberWithDecimals(plant.roots)}</Typography>
                     </Box>
                
                 </Grid>
                 <Grid item xs={4}>
-                <Tooltip title={`Absorbing ${plant.leaves*plant.sunlight_absorption_multiplier}/second`}>
+                <Tooltip title={`Absorbing ${netSunlightRate}/second`}>
                     <Box border={1} borderColor="grey.300" borderRadius={2} padding={.1}>
-                        <Typography>Light: {formatNumber(plant.sunlight)}</Typography>
+                        <Typography><WbSunnyIcon sx={{ fontSize: 22, color: 'orange' }} /> {formatNumberWithDecimals(plant.sunlight)}</Typography>
                     </Box>
                 </Tooltip>    
                     <Box border={1} borderColor="grey.300" borderRadius={2} padding={.1}>
-                        <Typography>Leaves: {formatNumber(plant.leaves)}</Typography>
+                        <Typography><SpaIcon sx={{ fontSize: 22, color: 'green' }} /> {formatNumberWithDecimals(plant.leaves)}</Typography>
                     </Box>
 
                 
@@ -112,11 +130,11 @@ function PlantList() {
                 <Grid item xs={4}>
                 <Tooltip title={`Converts ${formatNumberWithDecimals(waterConsumption)} water and ${formatNumberWithDecimals(sunlightConsumption)} sunlight into ${formatNumberWithDecimals(modifiedRate)} sugar per cycle.`}>
                     <Box border={1} borderColor="grey.300" borderRadius={2} padding={.1}>
-                        <Typography>Sugar: {formatNumber(plant.sugar)}</Typography>
+                        <Typography><GrainIcon sx={{ fontSize: 22, color: 'white' }} /> {formatNumberWithDecimals(plant.sugar)}</Typography>
                     </Box>
                 </Tooltip>
                     <Box border={1} borderColor="grey.300" borderRadius={2} padding={.1}>
-                        <Typography>Height: {formatNumber(plant.maturity_level)}</Typography>
+                        <Typography><ParkIcon sx={{ fontSize: 22, color: 'green' }} /> {formatNumber(plant.maturity_level)}</Typography>
                     </Box>
                 </Grid>
 
@@ -214,7 +232,7 @@ function PlantList() {
 
 {/* Leaves Section */}
 <Grid item xs={12}>
-    <Tooltip title="Buy Leaves">
+    <Tooltip title="Groww Leaves">
         <Button 
             fullWidth
             sx={{ 
@@ -227,14 +245,14 @@ function PlantList() {
                 }, 
             }}
             onClick={() => handleBuyLeaves()}>
-            Buy Leaves: {multiplier} Leaf for {LEAF_COST * multiplier} Sugar
+            Grow Leaves: {multiplier} Leaf for {LEAF_COST * multiplier} Sugar
         </Button>
     </Tooltip>
 </Grid>
 
 {/* Roots Section */}
 <Grid item xs={12}>
-    <Tooltip title="Buy Roots">
+    <Tooltip title="Grow Roots">
         <Button 
             fullWidth
             sx={{ 
@@ -247,7 +265,7 @@ function PlantList() {
                 },
             }}
             onClick={() => handleBuyRoots()}>
-            Buy Roots: {multiplier} Root for {ROOT_COST * multiplier} Sugar
+            Grow Roots: {multiplier} Root for {ROOT_COST * multiplier} Sugar
         </Button>
     </Tooltip>
 </Grid>
