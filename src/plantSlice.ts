@@ -73,9 +73,9 @@ const plantSlice = createSlice({
         produceSugar: (state) => {
             if (state.is_sugar_production_on) {
                 const baseRate = state.sugar_production_rate;
-                const modifiedRate = baseRate * (1 + 0.1 * state.maturity_level);
-                const waterConsumption = 10 * (1 + 0.4 * state.maturity_level);
-                const sunlightConsumption = 10 * (1 + 0.4 * state.maturity_level);
+                const modifiedRate = baseRate * (1 + 0.5 * state.maturity_level);
+                const waterConsumption = 10 * (1 + 0.6 * state.maturity_level);
+                const sunlightConsumption = 10 * (1 + 0.9 * state.maturity_level);
     
                 if (state.water > waterConsumption && state.sunlight > sunlightConsumption) {
                     state.water -= waterConsumption;
@@ -89,7 +89,7 @@ const plantSlice = createSlice({
             const rootsWaterIncrease = state.roots;
             const leavesSunlightIncrease = state.leaves;
     
-            state.water += rootsWaterIncrease - waterDecrease;
+            state.water = Math.max(0, state.water + rootsWaterIncrease - waterDecrease);
             state.sunlight += leavesSunlightIncrease;
         },
         growRoots: (state) => {
@@ -118,7 +118,7 @@ const plantSlice = createSlice({
         },
         produceGeneticMarkers: (state) => {
             if (state.sugar >= SUGAR_THRESHOLD) {
-                state.sugar -= 5;
+                state.sugar -= SUGAR_THRESHOLD;
             }
         },
         produceSecondaryResource: (state) => {

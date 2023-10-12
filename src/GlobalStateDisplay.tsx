@@ -3,6 +3,8 @@ import { useSelector } from 'react-redux';
 import { RootState } from  './rootReducer' // Adjust the import path if needed
 import { Box, Grid, LinearProgress, Typography } from '@mui/material';
 
+
+
 const GlobalStateDisplay: React.FC = () => {
     const {
         geneticMarkerProgress,
@@ -15,6 +17,8 @@ const GlobalStateDisplay: React.FC = () => {
         fulvic,
         costModifier,
     } = useSelector((state: RootState) => state.globalState);
+
+    const percentage = Math.floor((geneticMarkerProgress / geneticMarkerThreshold) * 100);
 
     return (
         <div className="global-state-display">
@@ -49,7 +53,7 @@ const GlobalStateDisplay: React.FC = () => {
                 }}
             >
                 <Typography variant="caption" color="black">
-                    {geneticMarkerProgress}/{geneticMarkerThreshold}
+                    {percentage}%
                 </Typography>
             </Box>
         </Box>

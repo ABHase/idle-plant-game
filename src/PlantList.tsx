@@ -33,8 +33,8 @@ function PlantList() {
 
     const baseRate = plantState.sugar_production_rate;
     const modifiedRate = baseRate * (1 + 0.1 * plantState.maturity_level);
-    const waterConsumption = 10 * (1 + 0.4 * plantState.maturity_level);
-    const sunlightConsumption = 10 * (1 + 0.4 * plantState.maturity_level);
+    const waterConsumption = 10 * (1 + 0.6 * plantState.maturity_level);
+    const sunlightConsumption = 10 * (1 + 0.9 * plantState.maturity_level);
 
     const handleSunlightAbsorption = () => {
         const amount = 10;
@@ -146,7 +146,7 @@ function PlantList() {
                 }, 
             }}
             onClick={() => handleToggleGeneticMarkerProduction()}>
-            Convert {formatNumber(geneticMarkerThreshold * 100)} Sugar → DNA: {plant.is_genetic_marker_production_on ? "Stop" : "Start"}
+            Convert Sugar → DNA: {plant.is_genetic_marker_production_on ? "Stop" : "Start"}
         </Button>
     </Tooltip>
 </Grid>

@@ -28,7 +28,13 @@ const PlantTimeDisplay: React.FC<PlantTimeProps> = ({ plantTime }) => {
         <Grid item><Typography>Year: {plantTime.year}|</Typography></Grid>
         <Grid item><Typography>Season: {plantTime.season}|</Typography></Grid>
         <Grid item><Typography>Day: {plantTime.day}|</Typography></Grid>
-        <Grid item><Typography>Hour: {plantTime.hour}:{plantTime.update_counter}</Typography></Grid>
+        
+        <Grid item>
+            <Typography>
+                Hour: {plantTime.hour.toString().padStart(2, '0')}:{plantTime.update_counter.toString().padStart(2, '0')}
+            </Typography>
+        </Grid>
+
       </Grid>
       </Box>
     </div>
