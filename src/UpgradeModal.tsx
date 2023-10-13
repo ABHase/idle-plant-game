@@ -12,6 +12,7 @@ import { purchaseUpgradeThunk, sellUpgradeThunk } from "./gameActions";
 import { ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
 import { ButtonBase } from "@mui/material";
+import { DNA } from "./Components/DNA";
 
 interface UpgradeModalProps {
   open: boolean;
@@ -22,7 +23,7 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, onClose }) => {
   const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
   const purchased = useSelector((state: RootState) => state.upgrades.purchased);
   const geneticMarkers = useSelector(
-    (state: RootState) => state.globalState.geneticMarkers,
+    (state: RootState) => state.globalState.geneticMarkers
   );
 
   return (
@@ -47,7 +48,7 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, onClose }) => {
       >
         {/* This is the header Box that won't scroll */}
         <Box>
-          <Typography variant="body1">DNA: {geneticMarkers}</Typography>
+          <DNA amount={geneticMarkers} />
           <Typography id="upgrade-modal-title" variant="h6">
             Traits for Future Seeds:
           </Typography>
@@ -90,8 +91,8 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, onClose }) => {
             >
               <Box>
                 <Typography variant="body1">{upgrade.name}</Typography>
-                <Typography variant="body2">
-                  Cost: {upgrade.cost} DNA
+                <Typography variant="body2" sx={{ display: "flex" }}>
+                  Cost: <DNA amount={upgrade.cost} />
                 </Typography>
                 <Typography variant="body2">{upgrade.description}</Typography>
                 <Typography variant="body2" fontWeight="bold">
