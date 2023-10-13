@@ -107,23 +107,28 @@ const handleEvolve = () => {
 
   function update() {
     const currentTime = Date.now();
-    const deltaTime = currentTime - lastUpdateTimeRef.current;
+    const timeElapsed = currentTime - lastUpdateTimeRef.current;
 
-    if (!isTimeBoostActive && deltaTime >= 1000) {
-        dispatch(updateGame());
-        lastUpdateTimeRef.current = currentTime;
+    if (!isTimeBoostActive && timeElapsed >= 1000) {
+        const numTicksMissed = Math.floor(timeElapsed / 1000);
+        
+        for (let i = 0; i < numTicksMissed; i++) {
+            dispatch(updateGame());
+            
+            // Increment the save counter
+            saveCounterRef.current += 1;
 
-        // Increment the save counter
-        saveCounterRef.current += 1;
-
-        // Check if the save counter reaches 30
-        if (saveCounterRef.current === 30) {
-            // Save the state to localStorage
-            saveState(store.getState());
-
-            // Reset the counter
-            saveCounterRef.current = 0;
+            // Check if the save counter reaches 30
+            if (saveCounterRef.current === 30) {
+                // Save the state to localStorage
+                saveState(store.getState());
+                
+                // Reset the counter
+                saveCounterRef.current = 0;
+            }
         }
+        
+        lastUpdateTimeRef.current = currentTime;
     }
 
     requestAnimationFrame(update);
