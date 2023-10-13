@@ -281,7 +281,7 @@ function PlantList() {
                 }, 
             }}
             onClick={() => handleBuyLeaves()}>
-            Grow Leaves: <Leaves amount={multiplier} /> <Sugar amount={LEAF_COST * multiplier} />
+            Grow Leaves: <Leaves amount={multiplier} />&nbsp;for <Sugar amount={LEAF_COST * multiplier} />
         </Button>
     </Tooltip>
 </Grid>
