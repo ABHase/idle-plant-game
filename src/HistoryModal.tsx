@@ -41,14 +41,26 @@ const PlantHistoryModal: React.FC<PlantHistoryModalProps> = ({ open, onClose }) 
                 <Typography variant="body2">Planted: {entry.datePlanted}</Typography>
                 <Typography variant="body2">Replaced: {entry.dayReplaced}</Typography>
                 <Typography variant="body2">Size Reached: {entry.sizeReached}</Typography>
-                <Typography variant="body2">Total Water Absorbed: {entry.totalWaterAbsorbed}</Typography>
-                <Typography variant="body2">Total Sunlight Absorbed: {entry.totalSunlightAbsorbed}</Typography>
-                <Typography variant="body2">Total Sugar Created: {entry.totalSugarCreated}</Typography>
+                <Typography variant="body2">Total Water Absorbed: {formatNumberWithDecimals(entry.totalWaterAbsorbed)}</Typography>
+                <Typography variant="body2">Total Sunlight Absorbed: {formatNumberWithDecimals(entry.totalSunlightAbsorbed)}</Typography>
+                <Typography variant="body2">Total Sugar Created: {formatNumberWithDecimals(entry.totalSugarCreated)}</Typography>
             </Box>
         ))}
       </Box>
     </Modal>
   );
 };
+
+function formatNumberWithDecimals(value: number): string {
+    if (value >= 1_000_000) {
+        return (value / 1_000_000).toFixed(2) + 'M';
+    } else if (value >= 1_000) {
+        return (value / 1_000).toFixed(2) + 'K';
+    } else {
+        return value.toFixed(2);
+    }
+}
+
+
 
 export default PlantHistoryModal;

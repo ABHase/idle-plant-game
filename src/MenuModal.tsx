@@ -70,6 +70,20 @@ const MenuModal: React.FC<Props> = (props) => {
         >
             Help
         </Button>
+        <a 
+            href="https://discord.gg/eNNEjSBE" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            style={{ textDecoration: 'none', width: '100%', marginTop: '10px' }}
+        >
+            <Button 
+                variant="contained" 
+                sx={{ backgroundColor: '#7289DA' }} // Discord's color
+                fullWidth
+            >
+                Join Discord
+            </Button>
+        </a>
         <Button 
             variant="contained" 
             sx={{ backgroundColor: '#942e25', marginTop: '10px' }} 
