@@ -12,91 +12,91 @@ export type Upgrade = {
   export const UPGRADES: Upgrade[] = [
     {
       id: 'boost_sugar',
-      name: 'Sugar Boost',
+      name: 'Cam Pathway',
       description: 'Increase base sugar production by 50%',
       cost: 1,
     },
     {
         id: 'boost_sunlight_absorption',
-        name: 'Sunlight Absorption Boost',
+        name: 'Trichomes',
         description: 'Increase manual sunlight absorption by 50%',
         cost: 1,
       },
       {
         id: 'boost_water_absorption',
-        name: 'Water Absorption Boost',
+        name: 'Aquaporins',
         description: 'Increase manual water absorption by 50%',
         cost: 1,
       },
       {
         id: 'boost_sunlight_multiplier',
-        name: 'Efficient Leaves',
+        name: 'Heliotropism',
         description: 'Increase passive sunlight absorption efficiency by 20%',
         cost: 3,
     },
     {
         id: 'boost_water_multiplier',
-        name: 'Efficient Roots',
+        name: 'Root Hairs',
         description: 'Increase passive water absorption efficiency by 20%',
         cost: 3,
     },
     {
         id: 'boost_sunlight_efficiency_multiplier',
-        name: 'Efficient Leaves',
+        name: 'Extra Chlorophyll',
         description: 'Reduce the base sunlight to sugar ratio by 10%',
         cost: 7,
     },
     {
         id: 'boost_water_efficiency_multiplier',
-        name: 'Efficient Roots',
+        name: 'Stomatal Regulation',
         description: 'Reduce the base water to sugar ratio by 10%',
         cost: 7,
     },
     {
         id: 'boost_sugar_tier_2',
-        name: 'Sugar Boost Tier 2',
+        name: 'Cam Pathway Tier 2',
         description: 'Increase base sugar production by 100%',
         cost: 10,
     },
     {
         id: 'boost_sunlight_absorption_tier_2',
-        name: 'Sunlight Absorption Boost Tier 2',
+        name: 'Trichomes Tier 2',
         description: 'Increase manual sunlight absorption by 100%',
         cost: 10,
     },
     {
         id: 'toggle_genetic_marker_upgrade',
-        name: 'Turbo DNA',
+        name: 'Nutrient Recycling',
         description: 'Double the rate of genetic marker production, and quadruple the sugar cost',
         cost: 10,
     },
     {
         id: 'boost_water_absorption_tier_2',
-        name: 'Water Absorption Boost Tier 2',
+        name: 'Aquaporins Tier 2',
         description: 'Increase manual water absorption by 100%',
         cost: 10,
     },
     {
         id: 'boost_sunlight_multiplier_tier_2',
-        name: 'Efficient Leaves Tier 2',
+        name: 'Heliotropism Tier 2',
         description: 'Increase passive sunlight absorption efficiency by 40%',
         cost: 20,
     },
     {
         id: 'boost_water_multiplier_tier_2',
-        name: 'Efficient Roots Tier 2',
+        name: 'Root Hairs Tier 2',
         description: 'Increase passive water absorption efficiency by 40%',
         cost: 20,
     },
     {
         id: 'boost_sunlight_efficiency_multiplier_tier_2',
-        name: 'Efficient Leaves Tier 2',
+        name: 'Extra Chlorophyll Tier 2',
         description: 'Reduce the base sunlight to sugar ratio by 20%',
         cost: 50,
     },
     {
         id: 'boost_water_efficiency_multiplier_tier_2',
-        name: 'Efficient Roots Tier 2',
+        name: 'Stomatal Regulation Tier 2',
         description: 'Reduce the base water to sugar ratio by 20%',
         cost: 50,
     },
@@ -106,6 +106,30 @@ export type Upgrade = {
         description: 'Increase the root rot threshold by 100%',
         cost: 100,
     },
+    {
+        id: 'bloom',
+        name: 'Spring Bloom',
+        description: 'Double Spring Bonus',
+        cost: 250,
+    },
+    {
+        id: 'thermophilic',
+        name: 'Thermophilic',
+        description: 'Double Summer Bonus',
+        cost: 250,
+    },
+    {
+        id: 'bountiful_harvest',
+        name: 'Bountiful Harvest',
+        description: 'Double Autumn Bonus',
+        cost: 500,
+    },
+    {
+        id: 'coniferous',
+        name: 'Coniferous',
+        description: 'Reduce Winter penalty by 50%',
+        cost: 1000,
+    }
     // ... other upgrades
   ];
   
@@ -158,6 +182,18 @@ export type Upgrade = {
     increase_root_rot_threshold: (plant) => {
         plant.rootRotThreshold *= 2;
     },
+    bloom: (plant) => {
+        plant.springModifier *= 2;
+    },
+    thermophilic: (plant) => {
+        plant.summerModifier *= 2;
+    },
+    bountiful_harvest: (plant) => {
+        plant.autumnModifier *= 2;
+    },
+    coniferous: (plant) => {
+        plant.winterModifier *= 2;
+    }
 
     
     // ... other upgrade functions

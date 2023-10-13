@@ -36,7 +36,7 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({ open, onClose
                     const trait = UPGRADES.find(upgrade => upgrade.id === id);
                     return (
                         <Typography key={id} variant="body2">
-                            - {trait?.name}
+                            - {trait?.name} ({trait?.description})
                         </Typography>
                     );
                 })}

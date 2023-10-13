@@ -38,7 +38,7 @@ const theme = createTheme({
       main: '#607D8B',  // Bluish-grey, reminiscent of a night sky or moonlit water
     },
     background: {
-      default: '#1f1107',  // A very dark green, almost black, like deep woods at night
+      default: '#1f1107',  // A very dark brown, almost black, like deep woods at night
       paper: '#2E4A38',  // A slightly lighter green, like forest undergrowth in moonlight
     },
     text: {
