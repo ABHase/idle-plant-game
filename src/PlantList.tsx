@@ -292,7 +292,14 @@ function PlantList() {
                 }}
                 onClick={() => handleToggleGeneticMarkerProduction()}
               >
-                Convert Sugar → DNA:{" "}
+                <Sugar amount={100} />
+                /s{" "}
+                <ArrowForwardIcon
+                  sx={{
+                    color: plant.is_genetic_marker_production_on ? "" : "red",
+                  }}
+                />{" "}
+                <DNA amount={(1 / geneticMarkerThreshold) * 100} /> %{" "}
                 {plant.is_genetic_marker_production_on ? "Stop" : "Start"}
               </Button>
             </Tooltip>
