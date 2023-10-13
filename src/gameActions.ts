@@ -19,6 +19,7 @@ export const updateGame = (): ThunkAction<void, RootState, unknown, Action<strin
         
         const currentTotalTime = getState().app.totalTime;
         const newTotalTime = currentTotalTime + 1;
+        const currentSeason = getState().plantTime.season;
 
         // Dispatch updateTime with newTotalTime
         dispatch(updateTime(newTotalTime));
@@ -46,8 +47,11 @@ export const updateGame = (): ThunkAction<void, RootState, unknown, Action<strin
 
 
         dispatch(updateMaturityLevel());
-        dispatch(updateWaterAndSunlight());
-        dispatch(produceSugar());
+        
+
+        dispatch(updateWaterAndSunlight({ season: currentSeason }));
+        dispatch(produceSugar({ season: currentSeason }));
+
 
         // ... [other logic and dispatches as needed]
     };

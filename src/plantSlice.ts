@@ -43,6 +43,10 @@ export interface PlantState {
     geneticMarkerUpgradeActive: boolean;
     rootRot: number;
     rootRotThreshold: number;
+    springModifier: number;
+    summerModifier: number;
+    autumnModifier: number;
+    winterModifier: number;
 }
 
 const INITIAL_PLANT_CONFIG: PlantState = {
@@ -74,6 +78,10 @@ const INITIAL_PLANT_CONFIG: PlantState = {
     geneticMarkerUpgradeActive: false,
     rootRot: 0,
     rootRotThreshold: 100,
+    springModifier: 1.5,
+    summerModifier: 1.5,
+    autumnModifier: 1.5,
+    winterModifier: 0.25,
 };
 
 const initialState: PlantState = INITIAL_PLANT_CONFIG;
@@ -116,7 +124,15 @@ const plantSlice = createSlice({
             state.water += state.water_absorption_rate;
             state.totalWaterAbsorbed += state.water_absorption_rate;
         },
-        produceSugar: (state) => {
+        produceSugar: (state, action: PayloadAction<{ season: string }>) => {
+            const season = action.payload.season;
+            let sugarModifier = 1; // default
+            if (season === 'Autumn') {
+            sugarModifier = state.autumnModifier;
+            } else if (season === 'Winter') {
+            sugarModifier = state.winterModifier; // reduced in winter
+            }
+
             if (state.is_sugar_production_on) {
                 const baseRate = state.sugar_production_rate;
                 const modifiedRate = baseRate * (1 + MATURITY_SUGAR_PRODUCTION_MODIFIER * state.maturity_level);
@@ -126,19 +142,37 @@ const plantSlice = createSlice({
                 if (state.water > waterConsumption && state.sunlight > sunlightConsumption) {
                     state.water -= waterConsumption;
                     state.sunlight -= sunlightConsumption;
-                    state.sugar += modifiedRate;
-                    state.totalSugarCreated += modifiedRate;
+                    state.sugar += modifiedRate * sugarModifier;
+                    state.totalSugarCreated += modifiedRate * sugarModifier;
                 }
             }
         },
-        updateWaterAndSunlight: (state) => {
+        updateWaterAndSunlight: (state, action: PayloadAction<{ season: string }>) => {
+            const season = action.payload.season;
+            let waterModifier = 1; // default
+            if (season === 'Spring') {
+            waterModifier = state.springModifier;
+            } else if (season === 'Winter') {
+            waterModifier = state.winterModifier; // reduced in winter
+            }
+
+            let sunlightModifier = 1; // default
+            if (season === 'Summer') {
+            sunlightModifier = state.summerModifier;
+            } else if (season === 'Winter') {
+            sunlightModifier = state.winterModifier; // reduced in winter
+            }
+
             const waterDecrease = state.leaves;
             const rootsWaterIncrease = state.roots * state.water_absorption_multiplier;
-            const leavesSunlightIncrease = state.leaves * state.sunlight_absorption_multiplier;            
-            state.water = Math.max(0, state.water + rootsWaterIncrease - waterDecrease);
-            state.totalWaterAbsorbed += rootsWaterIncrease;
-            state.sunlight += leavesSunlightIncrease;
-            state.totalSunlightAbsorbed += leavesSunlightIncrease;
+            const leavesSunlightIncrease = state.leaves * state.sunlight_absorption_multiplier; 
+            const seasonModifiedWaterIncrease = rootsWaterIncrease * waterModifier;
+            const seasonModifiedSunlightIncrease = leavesSunlightIncrease * sunlightModifier;
+
+            state.water = Math.max(0, state.water + seasonModifiedWaterIncrease - waterDecrease);
+            state.totalWaterAbsorbed += seasonModifiedWaterIncrease;
+            state.sunlight += seasonModifiedSunlightIncrease;
+            state.totalSunlightAbsorbed += seasonModifiedSunlightIncrease;
         },        
         growRoots: (state) => {
             // Logic to increase roots here

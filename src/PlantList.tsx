@@ -45,22 +45,53 @@ function PlantList() {
     );
     const plantState = useSelector((state: RootState) => state.plant);
 
-    const baseRate = plantState.sugar_production_rate;
-    const modifiedRate = baseRate * (1 + MATURITY_SUGAR_PRODUCTION_MODIFIER * plantState.maturity_level);
-    const waterConsumption = BASE_WATER_CONSUMPTION * (1 + MATURITY_WATER_CONSUMPTION_MODIFIER * plant.maturity_level);
-    const sunlightConsumption = BASE_SUNLIGHT_CONSUMPTION * (1 + MATURITY_SUNLIGHT_CONSUMPTION_MODIFIER * plant.maturity_level);  
+    // Extract season from state (Assuming you have access to the state here)
+    const { season } = useSelector(
+        (state: RootState) => state.plantTime
+    );
+    
 
-    const isSugarProductionPossible = plant.is_sugar_production_on && 
-                                    plant.water > waterConsumption && 
-                                    plant.sunlight > sunlightConsumption;
+    // Sugar Modifier
+    let sugarModifier = 1; // default
+    if (season === 'Autumn') {
+        sugarModifier = plantState.autumnModifier;
+    } else if (season === 'Winter') {
+        sugarModifier = plantState.winterModifier;
+    }
+
+    // Water Modifier
+    let waterModifier = 1; // default
+    if (season === 'Spring') {
+        waterModifier = plantState.springModifier;
+    } else if (season === 'Winter') {
+        waterModifier = plantState.winterModifier;
+    }
+
+    // Sunlight Modifier
+    let sunlightModifier = 1; // default
+    if (season === 'Summer') {
+        sunlightModifier = plantState.summerModifier;
+    } else if (season === 'Winter') {
+        sunlightModifier = plantState.winterModifier;
+    }
+
+    const baseRate = plantState.sugar_production_rate;
+    const modifiedRate = baseRate * (1 + MATURITY_SUGAR_PRODUCTION_MODIFIER * plantState.maturity_level) * sugarModifier;
+    const waterConsumption = BASE_WATER_CONSUMPTION * (1 + MATURITY_WATER_CONSUMPTION_MODIFIER * plantState.maturity_level);
+    const sunlightConsumption = BASE_SUNLIGHT_CONSUMPTION * (1 + MATURITY_SUNLIGHT_CONSUMPTION_MODIFIER * plantState.maturity_level);  
+
+    const isSugarProductionPossible = plantState.is_sugar_production_on && 
+                                    plantState.water > waterConsumption && 
+                                    plantState.sunlight > sunlightConsumption;
 
     const netSunlightRate = isSugarProductionPossible
-        ? (plant.leaves - sunlightConsumption) * plant.sunlight_absorption_multiplier 
-        : plant.leaves * plant.sunlight_absorption_multiplier;
+        ? (plantState.leaves - sunlightConsumption) * plantState.sunlight_absorption_multiplier * sunlightModifier
+        : plantState.leaves * plantState.sunlight_absorption_multiplier * sunlightModifier;
 
     const netWaterRate = isSugarProductionPossible
-        ? (plant.roots - plant.leaves - waterConsumption) * plant.water_absorption_multiplier 
-        : (plant.roots - plant.leaves) * plant.water_absorption_multiplier;
+        ? (plantState.roots - plantState.leaves - waterConsumption) * plantState.water_absorption_multiplier * waterModifier
+        : (plantState.roots - plantState.leaves) * plantState.water_absorption_multiplier * waterModifier;
+
 
 
 
