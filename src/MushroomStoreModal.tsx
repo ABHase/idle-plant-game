@@ -10,6 +10,7 @@ import { ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import { Sugar } from "./Components/Sugar";
 
 interface MushroomStoreModalProps {
   open: boolean;
@@ -60,7 +61,9 @@ const MushroomStoreModal: React.FC<MushroomStoreModalProps> = ({
           <Box key={item.id} mt={2}>
             <Typography variant="body1">{item.name}</Typography>
             <Typography variant="body2">{item.description}</Typography>
-            <Typography variant="body2">Cost: {item.cost} sugar</Typography>
+            <Typography variant="body2" sx={{ display: "flex" }}>
+              Cost: <Sugar amount={item.cost} />
+            </Typography>
             <Button
               variant="contained"
               color="primary"
