@@ -5,10 +5,10 @@ export const SUGAR_THRESHOLD = 100;
 export const SECONDARY_SUGAR_THRESHOLD = 10;
 
 // Biome names
-export const DESERT = 'Desert';
-export const TROPICAL_FOREST = 'Tropical Forest';
-export const MOUNTAIN = 'Mountain';
-export const SWAMP = 'Swamp';
+export const DESERT = "Desert";
+export const TROPICAL_FOREST = "Tropical Forest";
+export const MOUNTAIN = "Mountain";
+export const SWAMP = "Swamp";
 
 //Plant Part Costs
 export const ROOT_COST = 10;
