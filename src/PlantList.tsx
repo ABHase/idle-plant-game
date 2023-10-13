@@ -166,11 +166,15 @@ function PlantList() {
         <Grid container spacing={1} alignItems="center">
           <Grid item xs={4}>
             <Tooltip title={`${formatNumberWithDecimals(netWaterRate)}/Second`}>
-              <Water amount={plant.water} />
+              <Box>
+                <Water amount={plant.water} />
+              </Box>
             </Tooltip>
 
             <Tooltip title="Roots">
-              <Roots amount={plant.roots} />
+              <Box>
+                <Roots amount={plant.roots} />
+              </Box>
             </Tooltip>
           </Grid>
 
@@ -178,11 +182,15 @@ function PlantList() {
             <Tooltip
               title={`${formatNumberWithDecimals(netSunlightRate)}/second`}
             >
-              <Sunlight amount={plant.sunlight} />
+              <Box>
+                <Sunlight amount={plant.sunlight} />
+              </Box>
             </Tooltip>
 
             <Tooltip title="Leaves">
-              <Leaves amount={plant.leaves} />
+              <Box>
+                <Leaves amount={plant.leaves} />
+              </Box>
             </Tooltip>
           </Grid>
 
@@ -196,10 +204,14 @@ function PlantList() {
                 modifiedRate
               )} sugar per cycle.`}
             >
-              <Sugar amount={plant.sugar} />
+              <Box>
+                <Sugar amount={plant.sugar} />
+              </Box>
             </Tooltip>
             <Tooltip title="Size">
-              <Maturity amount={plant.maturity_level} />
+              <Box>
+                <Maturity amount={plant.maturity_level} />
+              </Box>
             </Tooltip>
           </Grid>
 
