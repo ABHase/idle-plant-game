@@ -181,6 +181,11 @@ const plantSlice = createSlice({
         toggleGeneticMarkerUpgrade: (state) => {
             state.geneticMarkerUpgradeActive = !state.geneticMarkerUpgradeActive;
         },
+        deductSugar: (state, action: PayloadAction<number>) => {
+            const deductionAmount = action.payload;
+            state.sugar = Math.max(0, state.sugar - deductionAmount);
+        },
+        
     },
     
 });
@@ -203,5 +208,6 @@ export const {
     handlePest,
     resetPlant,
     evolvePlant,
+    deductSugar,
 } = plantSlice.actions;
 export default plantSlice.reducer;

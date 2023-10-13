@@ -24,6 +24,9 @@ import UpgradeModal from './UpgradeModal';
 import { resetUpgrades } from './upgradesSlice';
 import HistoryModal from './HistoryModal';
 import HelpModal from './HelpModal';
+import MenuModal from './MenuModal';
+import MushroomStoreModal from './MushroomStoreModal';
+
 
 
 const theme = createTheme({
@@ -63,6 +66,7 @@ function App() {
   const plants = useSelector(selectPlants);
   const [openDialog, setOpenDialog] = React.useState(false);
   const purchasedUpgrades = useSelector((state: RootState) => state.upgrades.purchased);
+  const isTimeBoostActive = useSelector((state: RootState) => state.timeBoost);
 
   const handleDeleteConfirm = () => {
     clearState(); // Clear the state from localStorage
@@ -105,7 +109,7 @@ const handleEvolve = () => {
     const currentTime = Date.now();
     const deltaTime = currentTime - lastUpdateTimeRef.current;
 
-    if (deltaTime >= 1000) {
+    if (!isTimeBoostActive && deltaTime >= 1000) {
         dispatch(updateGame());
         lastUpdateTimeRef.current = currentTime;
 
@@ -128,7 +132,16 @@ const handleEvolve = () => {
 const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
 const [historyModalOpen, setHistoryModalOpen] = useState(false);
 const [helpModalOpen, setHelpModalOpen] = useState(true);
+const [menuModalOpen, setMenuModalOpen] = useState(false);
+const [mushroomStoreModalOpen, setMushroomStoreModalOpen] = useState(false);
 
+const handleOpenMushroomStoreModal = () => {
+  setMushroomStoreModalOpen(true);
+}
+
+const handleCloseMushroomStoreModal = () => {
+  setMushroomStoreModalOpen(false);
+}
 
 const handleOpenUpgradeModal = () => {
   setUpgradeModalOpen(true);
@@ -169,31 +182,22 @@ return (
     >
       <header className="App-header">
       <Box 
-        border={1} 
-        borderColor="grey.300" 
-        borderRadius={2}
-        width="320px"
-        padding={1}
-        margin= "0 auto"
-      >
-        <Button 
-            variant="contained" 
-            color="primary" 
-            onClick={() => setEvolveDialogOpen(true)}
-            sx={{ mr: 8 }}
-        >
-            Plant Seed
-        </Button>
-        <Button variant="contained" color="primary" onClick={handleOpenUpgradeModal}>
-          Evolve Traits
-        </Button>
-
-        <ConfirmEvolveDialog
-            open={evolveDialogOpen}
-            onClose={() => setEvolveDialogOpen(false)}
-            onConfirm={handleEvolve}
-        />
-      </Box>        
+    border={1} 
+    borderColor="grey.300" 
+    borderRadius={2}
+    width="320px"
+    padding={1}
+    margin="0 auto"
+>
+      <Button 
+              variant="contained" 
+              onClick={() => setMenuModalOpen(true)}
+              sx={{ width: '100%', mt: 1, mb: 1 }}  // This will set the width to 90% of the parent and add some margin at the top and bottom
+          >
+              Open Menu
+          </Button>
+      </Box>
+        
         <PlantTimeDisplay plantTime={plantTime} /> 
         <GlobalStateDisplay />
         <PlantList />
@@ -202,29 +206,39 @@ return (
       <UpgradeModal open={upgradeModalOpen} onClose={handleCloseUpgradeModal} />
       
       </header>
-      
-      {/* Spacer */}
-      <Box flexGrow={1}></Box>
-
-      {/* Button at the bottom */}
-      <Box pb={2} textAlign="center">
-      <Button onClick={() => setOpenDialog(true)} style={{ position: 'absolute', bottom: '10px', left: '10px' }}>
-        Purge Save
-      </Button>
       <ConfirmDeleteDialog 
         open={openDialog} 
         onClose={() => setOpenDialog(false)} 
         onConfirm={handleDeleteConfirm}
       />
       <HistoryModal open={historyModalOpen} onClose={handleCloseHistoryModal} />
-      <Button onClick={handleOpenHistoryModal} style={{ position: 'absolute', bottom: '10px', right: '10px' }}>
-        Plant History
-      </Button>
-      </Box>
       <HelpModal open={helpModalOpen} onClose={handleCloseHelpModal} />
-      <Button onClick={handleOpenHelpModal} style={{ position: 'absolute', bottom: '10px', left: '150px' }}>
-        Help
-      </Button>
+      <ConfirmEvolveDialog
+            open={evolveDialogOpen}
+            onClose={() => setEvolveDialogOpen(false)}
+            onConfirm={handleEvolve}
+        />
+        <MenuModal
+          open={menuModalOpen}
+          onClose={() => setMenuModalOpen(false)}
+          onOpenUpgrade={handleOpenUpgradeModal}
+          onPlantSeed={() => setEvolveDialogOpen(true)}
+          historyModalOpen={historyModalOpen}
+          handleOpenHistoryModal={handleOpenHistoryModal}
+          handleCloseHistoryModal={handleCloseHistoryModal}
+          helpModalOpen={helpModalOpen}
+          handleOpenHelpModal={handleOpenHelpModal}
+          handleCloseHelpModal={handleCloseHelpModal}
+          openDialog={openDialog}
+          setOpenDialog={setOpenDialog}
+          onOpenMushroomStore={handleOpenMushroomStoreModal}
+
+          
+
+        />
+        <MushroomStoreModal open={mushroomStoreModalOpen} onClose={handleCloseMushroomStoreModal} />
+
+      
     </Box>
   </ThemeProvider>
 );

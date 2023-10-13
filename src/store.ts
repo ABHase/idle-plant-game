@@ -11,6 +11,7 @@ import globalStateSlice from './gameStateSlice';
 import { loadState, saveState } from './localStorage';
 import { RootState } from './rootReducer';
 import plantHistoryReducer from './plantHistorySlice';
+import timeBoostReducer from './timeBoostSlice';  // Adjust the path if it's located elsewhere
 
 
 const persistedState: RootState | undefined = loadState();
@@ -24,6 +25,7 @@ const store = configureStore({
         globalState: globalStateSlice,
         upgrades: upgradesReducer,
         plantHistory: plantHistoryReducer,
+        timeBoost: timeBoostReducer,
         
     },
     middleware: getDefaultMiddleware => getDefaultMiddleware().prepend(thunk)

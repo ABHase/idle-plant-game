@@ -31,11 +31,11 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, onClose }) => {
       <Box
         sx={{
             position: 'absolute',
-            top: '35%',
+            top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
             width: 220,
-            height: 300,
+            height: 550,
             bgcolor: 'background.paper',
             border: '2px solid #000',
             borderRadius: 3,
