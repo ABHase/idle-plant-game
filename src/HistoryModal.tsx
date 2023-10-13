@@ -33,6 +33,7 @@ const PlantHistoryModal: React.FC<PlantHistoryModalProps> = ({ open, onClose }) 
             boxShadow: 24,
             p: 2,
             overflow: 'auto',
+            color: 'text.primary',
         }}
         >
         <Typography id="plant-history-modal-title" variant="h6">Plant Growth History:</Typography>

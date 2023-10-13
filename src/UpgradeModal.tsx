@@ -42,6 +42,7 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, onClose }) => {
             boxShadow: 24,
             p: 2,
             overflow: 'auto',
+            color: 'text.primary',
         }}
         >
         <Typography id="upgrade-modal-title" variant="h6">Traits for Future Seeds:</Typography>

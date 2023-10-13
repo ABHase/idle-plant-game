@@ -50,6 +50,7 @@ const MushroomStoreModal: React.FC<MushroomStoreModalProps> = ({ open, onClose }
                     boxShadow: 24,
                     p: 2,
                     overflow: 'auto',
+                    color: 'text.primary',
                 }}
             >
                 <Typography id="mushroom-store-modal-title" variant="h6">Mushroom Store:</Typography>

@@ -20,7 +20,7 @@ const HelpModal: React.FC<HelpModalProps> = ({ open, onClose }) => {
     const [currentPage, setCurrentPage] = useState(0);
   
     const pages = [
-      <Box>
+      <Box sx={{color: 'text.primary',}}>
         <Typography variant="h6" mb={2}>Game Basics:</Typography>
         <Box display="flex" alignItems="center" mb={1}>
           <WbSunnyIcon sx={{ fontSize: 22, color: 'orange' }} />
@@ -47,12 +47,12 @@ const HelpModal: React.FC<HelpModalProps> = ({ open, onClose }) => {
           <Typography variant="body2"> - The size of your plant represents its health. A bigger plant produces more sugar, but growth requires more resources.</Typography>
         </Box>
       </Box>,
-      <Box>
+      <Box sx={{color: 'text.primary',}}>
         <Typography variant="h6" mb={2}>Mushroom Store:</Typography>
         <Typography variant="body2" mb={2}>Trade with The Mushroom to gain advantages. However, trading excessively will cause fungus to rot your roots. The rot will strangle all of your roots.</Typography>
         <Typography variant="body2">To heal your plant, let your roots dry out completely, by reducing water level to zero.  Or let the plant rot right before planting a new seed.</Typography>
       </Box>,
-      <Box>
+      <Box sx={{color: 'text.primary',}}>
         <Typography variant="h6" mb={2}>Strategy:</Typography>
         <Typography variant="body2">Use water and sunlight wisely. Balance growth with resource consumption. Remember, each new seed inherits past traits, but starts its growth journey anew. Your old plants are recorded in the history tab.</Typography>
       </Box>
