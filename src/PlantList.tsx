@@ -310,8 +310,7 @@ function PlantList() {
             <Divider sx={{ backgroundColor: 'white' }} />
         </Grid>
 
-        <Grid item xs={6}>
-            <Tooltip title="Absorb Water">
+<Grid item xs={12} sx={{display:'flex', justifyContent: 'space-evenly'}}>
                 <Button 
                 sx={{ 
                     border: "1px solid #aaa", 
@@ -323,12 +322,8 @@ function PlantList() {
                     }, 
                     }}
                 onClick={() => handleWaterAbsorption()}>
-                    Absorb Water 
+                    + <Water amount={plant.water_absorption_rate} />
                 </Button>
-            </Tooltip>
-        </Grid>
-        <Grid item xs={6}>
-            <Tooltip title="Absorb Sunlight">
                 <Button 
                 sx={{ 
                     border: "1px solid #aaa", 
@@ -340,10 +335,9 @@ function PlantList() {
                     }, 
                     }}
                 onClick={() => handleSunlightAbsorption()}>
-                    Absorb Sunlight
+                    + <Sunlight amount={plant.sunlight_absorption_rate} />
                 </Button>
-            </Tooltip>
-        </Grid>
+            </Grid>
         <Grid item xs={12}>
             <Divider sx={{ backgroundColor: 'white' }} />
         </Grid>
