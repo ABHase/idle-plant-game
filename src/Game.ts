@@ -1,7 +1,7 @@
 export class Game {
-    totalTime = 0;
+  totalTime = 0;
 
-    update(diff: number) {
-      this.totalTime += diff;
-    }
+  update(diff: number) {
+    this.totalTime += diff;
+  }
 }

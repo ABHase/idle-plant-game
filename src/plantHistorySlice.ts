@@ -1,9 +1,9 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 // Define the state for a single plant history entry
 export interface PlantHistoryEntry {
-    plantID: string;
-  datePlanted: string;  
+  plantID: string;
+  datePlanted: string;
   dayReplaced: string;
   sizeReached: number;
   totalWaterAbsorbed: number;
@@ -21,7 +21,7 @@ const initialPlantHistoryState: PlantHistoryState = {
 };
 
 const plantHistorySlice = createSlice({
-  name: 'plantHistory',
+  name: "plantHistory",
   initialState: initialPlantHistoryState,
   reducers: {
     addPlantToHistory: (state, action: PayloadAction<PlantHistoryEntry>) => {
@@ -31,5 +31,6 @@ const plantHistorySlice = createSlice({
   },
 });
 
-export const { addPlantToHistory, resetPlantHistory } = plantHistorySlice.actions;
+export const { addPlantToHistory, resetPlantHistory } =
+  plantHistorySlice.actions;
 export default plantHistorySlice.reducer;
