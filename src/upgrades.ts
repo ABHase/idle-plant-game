@@ -100,6 +100,12 @@ export type Upgrade = {
         description: 'Reduce the base water to sugar ratio by 20%',
         cost: 50,
     },
+    {
+        id: 'increase_root_rot_threshold',
+        name: 'Symboisis',
+        description: 'Increase the root rot threshold by 100%',
+        cost: 100,
+    },
     // ... other upgrades
   ];
   
@@ -148,6 +154,9 @@ export type Upgrade = {
     },
     toggle_genetic_marker_upgrade: (plant) => {
         plant.geneticMarkerUpgradeActive = !plant.geneticMarkerUpgradeActive;
+    },
+    increase_root_rot_threshold: (plant) => {
+        plant.rootRotThreshold *= 2;
     },
 
     

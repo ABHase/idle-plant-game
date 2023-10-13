@@ -4,7 +4,7 @@ import { ThunkAction } from 'redux-thunk';
 import { RootState } from './rootReducer';
 import { Action } from '@reduxjs/toolkit';  // Import Action
 import { updateTime } from './appSlice';
-import { evolvePlant, produceGeneticMarkers, produceSecondaryResource, produceSugar, updateMaturityLevel, updateWaterAndSunlight } from './plantSlice';
+import { evolvePlant, produceGeneticMarkers, produceSecondaryResource, produceSugar, updateMaturityLevel, updateWaterAndSunlight, resetRootRot, removeRoots } from './plantSlice';
 import { updateGeneticMarkerProgress } from './gameStateSlice';
 import { SECONDARY_SUGAR_THRESHOLD, SUGAR_THRESHOLD } from './constants';
 import { createAsyncThunk } from '@reduxjs/toolkit';
@@ -33,6 +33,18 @@ export const updateGame = (): ThunkAction<void, RootState, unknown, Action<strin
         if (plant.is_secondary_resource_production_on && plant.sugar >= SECONDARY_SUGAR_THRESHOLD) {
             dispatch(produceSecondaryResource());
         }
+
+        //Check if the plant has zero water and if so dispatch resetRootRot
+        if (plant.water <= 0) {
+            dispatch(resetRootRot());
+        }
+
+        // Check if the plant has more root rot than root rot threshold, if so dispatch removeRoots
+        if (plant.rootRot >= plant.rootRotThreshold) {
+            dispatch(removeRoots());
+        }
+
+
         dispatch(updateMaturityLevel());
         dispatch(updateWaterAndSunlight());
         dispatch(produceSugar());

@@ -41,6 +41,8 @@ export interface PlantState {
     totalSunlightAbsorbed: number;
     totalSugarCreated: number;
     geneticMarkerUpgradeActive: boolean;
+    rootRot: number;
+    rootRotThreshold: number;
 }
 
 const INITIAL_PLANT_CONFIG: PlantState = {
@@ -70,6 +72,8 @@ const INITIAL_PLANT_CONFIG: PlantState = {
     totalSunlightAbsorbed: 0,
     totalSugarCreated: 0,
     geneticMarkerUpgradeActive: false,
+    rootRot: 0,
+    rootRotThreshold: 100,
 };
 
 const initialState: PlantState = INITIAL_PLANT_CONFIG;
@@ -185,6 +189,21 @@ const plantSlice = createSlice({
             const deductionAmount = action.payload;
             state.sugar = Math.max(0, state.sugar - deductionAmount);
         },
+        //Reducer to increase root rot by payload
+        increaseRootRot: (state, action: PayloadAction<number>) => {
+            state.rootRot += action.payload;
+            if (state.rootRot > state.rootRotThreshold) {
+                state.rootRot = state.rootRotThreshold;
+            }
+        },
+        //Reducer to reset root rot to 0
+        resetRootRot: (state) => {
+            state.rootRot = 0;
+        },
+        //Reducer to remove all roots
+        removeRoots: (state) => {
+            state.roots = Math.max(0, state.roots - 1);
+        },
         
     },
     
@@ -209,5 +228,8 @@ export const {
     resetPlant,
     evolvePlant,
     deductSugar,
+    increaseRootRot,
+    resetRootRot,
+    removeRoots,
 } = plantSlice.actions;
 export default plantSlice.reducer;

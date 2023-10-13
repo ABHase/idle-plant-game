@@ -5,7 +5,7 @@ import { Action } from '@reduxjs/toolkit';
 import { RootState } from './rootReducer';
 import { updateGame } from './gameActions';
 import { addGeneticMarkers } from './gameStateSlice';  // Assume you have deductSugar function in gameStateSlice
-import { PlantState, deductSugar } from "./plantSlice";
+import { PlantState, deductSugar, increaseRootRot } from "./plantSlice";
 import { activateTimeBoost, deactivateTimeBoost } from './timeBoostSlice';
 
 export type MushroomItem = {
@@ -25,6 +25,7 @@ export const MUSHROOM_ITEMS: MushroomItem[] = [
         effect: (dispatch, getState) => {
             dispatch(activateTimeBoost()); // Activate time boost
             dispatch(deductSugar(1000));  // Deduct sugar cost
+            dispatch(increaseRootRot(70));  // Increase root rot by 7
             
             let counter = 0;
             const intervalId = setInterval(() => {
@@ -47,6 +48,7 @@ export const MUSHROOM_ITEMS: MushroomItem[] = [
             const sugar = getState().plant.sugar;  // Get sugar from plant slice
             if (sugar >= 500) {
                 dispatch(deductSugar(500));  // Deduct sugar cost
+                dispatch(increaseRootRot(60));  // Increase root rot by 1
                 dispatch(addGeneticMarkers(1));  // Add 1 DNA
             } else {
                 console.error('Not enough sugar to buy DNA');

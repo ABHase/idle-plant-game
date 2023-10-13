@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -9,6 +9,7 @@ import GrainIcon from '@mui/icons-material/Grain';
 import GrassIcon from '@mui/icons-material/Grass';
 import SpaIcon from '@mui/icons-material/Spa';
 import ParkIcon from '@mui/icons-material/Park';
+import { Button } from '@mui/material';
 
 interface HelpModalProps {
     open: boolean;
@@ -16,14 +17,55 @@ interface HelpModalProps {
 }
 
 const HelpModal: React.FC<HelpModalProps> = ({ open, onClose }) => {
-  return (
-    <Modal
-      open={open}
-      onClose={onClose}
-      aria-labelledby="help-modal-title"
-    >
-      <Box
-        sx={{
+    const [currentPage, setCurrentPage] = useState(0);
+  
+    const pages = [
+      <Box>
+        <Typography variant="h6" mb={2}>Game Basics:</Typography>
+        <Box display="flex" alignItems="center" mb={1}>
+          <WbSunnyIcon sx={{ fontSize: 22, color: 'orange' }} />
+          <Typography variant="body2"> - Sunlight mixes with water to make sugar during photosynthesis.</Typography>
+        </Box>
+        <Box display="flex" alignItems="center" mb={1}>
+          <OpacityIcon sx={{ fontSize: 22, color: 'blue' }} />
+          <Typography variant="body2"> - Water mixes with sunlight to make sugar, it also is consumed by leaves.</Typography>
+        </Box>
+        <Box display="flex" alignItems="center" mb={1}>
+          <SpaIcon sx={{ fontSize: 22, color: 'green' }} />
+          <Typography variant="body2"> - Leaves passively absorb sunlight.</Typography>
+        </Box>
+        <Box display="flex" alignItems="center" mb={1}>
+          <GrassIcon sx={{ fontSize: 22, color: 'grey', transform: 'rotate(180deg)' }} />
+          <Typography variant="body2"> - Roots passively absorb water.</Typography>
+        </Box>
+        <Box display="flex" alignItems="center" mb={1}>
+          <GrainIcon color="primary" />
+          <Typography variant="body2"> - Sugar is used to buy roots and leaves, and to convert to DNA in batches of 100.</Typography>
+        </Box>
+        <Box display="flex" alignItems="center" mb={1}>
+          <ParkIcon sx={{ fontSize: 22, color: 'green' }} />
+          <Typography variant="body2"> - The size of your plant represents its health. A bigger plant produces more sugar, but growth requires more resources.</Typography>
+        </Box>
+      </Box>,
+      <Box>
+        <Typography variant="h6" mb={2}>Mushroom Store:</Typography>
+        <Typography variant="body2" mb={2}>Trade with The Mushroom to gain advantages. However, trading excessively will cause fungus to rot your roots. The rot will strangle all of your roots.</Typography>
+        <Typography variant="body2">To heal your plant, let your roots dry out completely, by reducing water level to zero.  Or let the plant rot right before planting a new seed.</Typography>
+      </Box>,
+      <Box>
+        <Typography variant="h6" mb={2}>Strategy:</Typography>
+        <Typography variant="body2">Use water and sunlight wisely. Balance growth with resource consumption. Remember, each new seed inherits past traits, but starts its growth journey anew. Your old plants are recorded in the history tab.</Typography>
+      </Box>
+    ];
+  
+    return (
+      <Modal
+        open={open}
+        onClose={onClose}
+        aria-labelledby="help-modal-title"
+      >
+        <Box
+          sx={{
             position: 'absolute',
             top: '50%',
             left: '50%',
@@ -36,35 +78,29 @@ const HelpModal: React.FC<HelpModalProps> = ({ open, onClose }) => {
             boxShadow: 24,
             p: 2,
             overflow: 'auto',
-        }}
+          }}
         >
-        <Typography id="help-modal-title" variant="h6" mb={2}>Game Guide:</Typography>
-        <Box display="flex" alignItems="center" mb={1}>
-            <WbSunnyIcon sx={{ fontSize: 22, color: 'orange' }}  /><Typography variant="body2"> - Sunlight mixes with water to make sugar during photosynthesis.</Typography>
+          {pages[currentPage]}
+  
+          <Box mt={2} display="flex" justifyContent="space-between">
+            <Button
+              variant="outlined"
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}
+              disabled={currentPage === 0}
+            >
+              Back
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, pages.length - 1))}
+              disabled={currentPage === pages.length - 1}
+            >
+              Next
+            </Button>
+          </Box>
         </Box>
-        <Box display="flex" alignItems="center" mb={1}>
-            <OpacityIcon sx={{ fontSize: 22, color: 'blue' }} /><Typography variant="body2"> - Water mixes with sunlight to make sugar, it also is consumed by leaves.</Typography>
-        </Box>
-        <Box display="flex" alignItems="center" mb={1}>
-            <SpaIcon sx={{ fontSize: 22, color: 'green' }}  /><Typography variant="body2"> - Leaves passively absorb sunlight.</Typography>
-        </Box>
-        <Box display="flex" alignItems="center" mb={1}>
-            <GrassIcon sx={{ fontSize: 22, color: 'grey', transform: 'rotate(180deg)' }} /><Typography variant="body2"> - Roots passively absorb water.</Typography>
-        </Box>
-
-        <Box display="flex" alignItems="center" mb={1}>
-            <GrainIcon color="primary" /><Typography variant="body2"> - Sugar is used to buy roots and leaves, and to convert to DNA in batches of 100.</Typography>
-        </Box>
-        <Box display="flex" alignItems="center" mb={1}>
-        <ParkIcon sx={{ fontSize: 22, color: 'green' }}  /><Typography variant="body2"> - This represents the size of your plant. A bigger plant is better for producing sugar, but as it grows, creating more sugar will require more sunlight and water.</Typography>
-        </Box>
-        <Box display="flex" alignItems="center" mb={1}>
-        <Typography variant="body2">Use water and sunlight to produce sugar, which lets you grow roots and leaves. Collect DNA and invest in traits to enhance future seeds. Each new seed inherits past traits but starts over.  Your old plants are gone but remembered in the history tab.</Typography>
-        </Box>
-      </Box>
-    </Modal>
-  );
-};
-
-export default HelpModal;
-
+      </Modal>
+    );
+  };
+  
+  export default HelpModal;

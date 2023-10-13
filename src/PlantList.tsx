@@ -48,19 +48,22 @@ function PlantList() {
     const baseRate = plantState.sugar_production_rate;
     const modifiedRate = baseRate * (1 + MATURITY_SUGAR_PRODUCTION_MODIFIER * plantState.maturity_level);
     const waterConsumption = BASE_WATER_CONSUMPTION * (1 + MATURITY_WATER_CONSUMPTION_MODIFIER * plant.maturity_level);
-    const sunlightConsumption = BASE_SUNLIGHT_CONSUMPTION * (1 + MATURITY_SUNLIGHT_CONSUMPTION_MODIFIER * plant.maturity_level);
-    
-    const netWaterRate = plant.is_sugar_production_on && 
-                         plant.water > BASE_WATER_CONSUMPTION * (1 + MATURITY_WATER_CONSUMPTION_MODIFIER * plant.maturity_level) && 
-                         plant.sunlight > BASE_SUNLIGHT_CONSUMPTION * (1 + MATURITY_SUNLIGHT_CONSUMPTION_MODIFIER * plant.maturity_level) 
-        ? (plant.roots - plant.leaves - BASE_WATER_CONSUMPTION * (1 + MATURITY_WATER_CONSUMPTION_MODIFIER * plant.maturity_level)) * plant.water_absorption_multiplier 
-        : (plant.roots - plant.leaves) * plant.water_absorption_multiplier;
-    
-    const netSunlightRate = plant.is_sugar_production_on && 
-                            plant.water > BASE_WATER_CONSUMPTION * (1 + MATURITY_WATER_CONSUMPTION_MODIFIER * plant.maturity_level) && 
-                            plant.sunlight > BASE_SUNLIGHT_CONSUMPTION * (1 + MATURITY_SUNLIGHT_CONSUMPTION_MODIFIER * plant.maturity_level) 
-        ? (plant.leaves - BASE_SUNLIGHT_CONSUMPTION * (1 + MATURITY_SUNLIGHT_CONSUMPTION_MODIFIER * plant.maturity_level)) * plant.sunlight_absorption_multiplier 
+    const sunlightConsumption = BASE_SUNLIGHT_CONSUMPTION * (1 + MATURITY_SUNLIGHT_CONSUMPTION_MODIFIER * plant.maturity_level);  
+
+    const isSugarProductionPossible = plant.is_sugar_production_on && 
+                                    plant.water > waterConsumption && 
+                                    plant.sunlight > sunlightConsumption;
+
+    const netSunlightRate = isSugarProductionPossible
+        ? (plant.leaves - sunlightConsumption) * plant.sunlight_absorption_multiplier 
         : plant.leaves * plant.sunlight_absorption_multiplier;
+
+    const netWaterRate = isSugarProductionPossible
+        ? (plant.roots - plant.leaves - waterConsumption) * plant.water_absorption_multiplier 
+        : (plant.roots - plant.leaves) * plant.water_absorption_multiplier;
+
+
+
 
     const handleSunlightAbsorption = () => {
         dispatch(absorbSunlight());
@@ -154,10 +157,6 @@ function PlantList() {
                 </Tooltip>
                 </Grid>
 
-                <Grid item xs={12}>
-                    <Typography>Choose Production:</Typography>
-                </Grid>
-
 <Grid item xs={12}>
     <Tooltip title={plant.is_sugar_production_on ? "Turn off Sugar Production" : "Turn on Sugar Production"}>
         <Button 
@@ -203,10 +202,6 @@ function PlantList() {
             <Grid item xs={12}>
                 <Divider sx={{ backgroundColor: 'white' }} />
             </Grid> 
-
-            <Grid item xs={12}>
-                <Typography>Grow Using Sugar:</Typography>
-            </Grid>
             <Grid item xs={3}>
             <Button 
                 onClick={() => toggleMultiplier(1)} 
@@ -323,6 +318,42 @@ function PlantList() {
                     Absorb Sunlight
                 </Button>
             </Tooltip>
+        </Grid>
+        <Grid item xs={12}>
+            <Divider sx={{ backgroundColor: 'white' }} />
+        </Grid>
+        <Grid item xs={12}>
+        <Box position="relative" display="inline-flex" width="100%">
+            <LinearProgress 
+                variant="determinate" 
+                value={(plant.rootRot / plant.rootRotThreshold) * 100} 
+                sx={{ 
+                    width: '100%', 
+                    height: '22px', 
+                    marginTop: '4px',
+                    backgroundColor: '#f0a6a2', // This is a lighter red for the unfilled portion
+                    '& .MuiLinearProgress-barColorPrimary': {
+                        backgroundColor: '#942e25',
+                    }
+                }}
+            />
+
+
+            <Box 
+                sx={{
+                    position: "absolute",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "100%",
+                    color: "white",
+                }}
+            >
+                <Typography color="black">
+                    Root Rot from Fungus
+                </Typography>
+            </Box>
+        </Box>
         </Grid>
     </Grid>
     </Box>
