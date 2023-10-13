@@ -45,6 +45,8 @@ import { Roots } from "./Components/Roots";
 import { Leaves } from "./Components/Leaves";
 import { Sugar } from "./Components/Sugar";
 import { Maturity } from "./Components/Maturity";
+import { DNAIcon } from "./icons/dna";
+import { DNA } from "./Components/DNA";
 
 function PlantList() {
   const dispatch = useDispatch();
@@ -53,7 +55,7 @@ function PlantList() {
   const [multiplier, setMultiplier] = useState<number>(1); // default is 1
 
   const { geneticMarkerProgress, geneticMarkerThreshold } = useSelector(
-    (state: RootState) => state.globalState,
+    (state: RootState) => state.globalState
   );
   const plantState = useSelector((state: RootState) => state.plant);
 
@@ -193,15 +195,14 @@ function PlantList() {
               </Box>
             </Tooltip>
           </Grid>
-
           <Grid item xs={4}>
             <Tooltip
               title={`Converts ${formatNumberWithDecimals(
-                waterConsumption,
+                waterConsumption
               )} water and ${formatNumberWithDecimals(
-                sunlightConsumption,
+                sunlightConsumption
               )} sunlight into ${formatNumberWithDecimals(
-                modifiedRate,
+                modifiedRate
               )} sugar per cycle.`}
             >
               <Box>
@@ -245,13 +246,13 @@ function PlantList() {
                 >
                   <Water
                     amount={photosynthesisWaterConsumption(
-                      plant.maturity_level,
+                      plant.maturity_level
                     )}
                   />
                   /s +{" "}
                   <Sunlight
                     amount={photosynthesisSunlightConsumption(
-                      plant.maturity_level,
+                      plant.maturity_level
                     )}
                   />
                   /s{" "}
@@ -261,7 +262,7 @@ function PlantList() {
                   <Sugar
                     amount={photosynthesisSugarProduction(
                       plant,
-                      plantTime.season,
+                      plantTime.season
                     )}
                   />
                   /s
