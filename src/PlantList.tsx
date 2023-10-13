@@ -8,6 +8,9 @@ import {
   buyLeaves,
   buyRoots,
   toggleGeneticMarkerProduction,
+  photosynthesisWaterConsumption,
+  photosynthesisSunlightConsumption,
+  photosynthesisSugarProduction,
 } from "./plantSlice";
 import {
   Grid,
@@ -27,6 +30,8 @@ import GrainIcon from "@mui/icons-material/Grain";
 import GrassIcon from "@mui/icons-material/Grass";
 import SpaIcon from "@mui/icons-material/Spa";
 import ParkIcon from "@mui/icons-material/Park";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import CloseIcon from "@mui/icons-material/Close";
 import {
   MATURITY_SUGAR_PRODUCTION_MODIFIER,
   MATURITY_WATER_CONSUMPTION_MODIFIER,
@@ -44,6 +49,7 @@ import { Maturity } from "./Components/Maturity";
 function PlantList() {
   const dispatch = useDispatch();
   const plant = useSelector((state: RootState) => state.plant);
+  const plantTime = useSelector((state: RootState) => state.plantTime);
   const [multiplier, setMultiplier] = useState<number>(1); // default is 1
 
   const { geneticMarkerProgress, geneticMarkerThreshold } = useSelector(
@@ -218,8 +224,36 @@ function PlantList() {
                 }}
                 onClick={() => handleToggleSugarProduction()}
               >
-                Photosynthesize:{" "}
-                {plant.is_sugar_production_on ? "Stop" : "Start"}
+                <Box
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <Water
+                    amount={photosynthesisWaterConsumption(
+                      plant.maturity_level
+                    )}
+                  />
+                  /s +{" "}
+                  <Sunlight
+                    amount={photosynthesisSunlightConsumption(
+                      plant.maturity_level
+                    )}
+                  />
+                  /s{" "}
+                  <ArrowForwardIcon
+                    sx={{ color: plant.is_sugar_production_on ? "" : "red" }}
+                  />{" "}
+                  <Sugar
+                    amount={photosynthesisSugarProduction(
+                      plant,
+                      plantTime.season
+                    )}
+                  />
+                  /s
+                </Box>
               </Button>
             </Tooltip>
           </Grid>
