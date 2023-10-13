@@ -34,6 +34,12 @@ import {
     BASE_WATER_CONSUMPTION,
     BASE_SUNLIGHT_CONSUMPTION,
 } from './constants';
+import { Water } from './Components/Water';
+import { Sunlight } from './Components/Sunlight';
+import { Roots } from './Components/Roots';
+import { Leaves } from './Components/Leaves';
+import { Sugar } from './Components/Sugar';
+import { Maturity } from './Components/Maturity';
 
 function PlantList() {
     const dispatch = useDispatch();
@@ -147,44 +153,32 @@ function PlantList() {
                 <Grid item xs={4}>
                 
                 <Tooltip title={`${formatNumberWithDecimals(netWaterRate)}/Second`}>
-                    <Box border={1} borderColor="grey.300" borderRadius={2} padding={0.2}>
-                        <Typography><OpacityIcon sx={{ fontSize: 22, color: 'blue' }} /> {formatNumberWithDecimals(plant.water)}</Typography>
-                    </Box>
+                        <Water amount={plant.water} />
                     </Tooltip>
 
                     <Tooltip title='Roots'>
-                    <Box border={1} borderColor="grey.300" borderRadius={2} padding={0.2}>
-                        <Typography><GrassIcon sx={{ fontSize: 22, color: 'grey', transform: 'rotate(180deg)' }}/> {formatNumberWithDecimals(plant.roots)}</Typography>
-                    </Box>
+                        <Roots amount={plant.roots} />
                </Tooltip>
 
                 </Grid>
 
                 <Grid item xs={4}>
                 <Tooltip title={`${formatNumberWithDecimals(netSunlightRate)}/second`}>
-                    <Box border={1} borderColor="grey.300" borderRadius={2} padding={.1}>
-                        <Typography><WbSunnyIcon sx={{ fontSize: 22, color: 'orange' }} /> {formatNumberWithDecimals(plant.sunlight)}</Typography>
-                    </Box>
+                        <Sunlight amount={plant.sunlight} />
                 </Tooltip>  
                 
                 <Tooltip title='Leaves'>
-                    <Box border={1} borderColor="grey.300" borderRadius={2} padding={.1}>
-                        <Typography><SpaIcon sx={{ fontSize: 22, color: 'green' }} /> {formatNumberWithDecimals(plant.leaves)}</Typography>
-                    </Box>
+                    <Leaves amount={plant.leaves} />
                 </Tooltip>
                 
                 </Grid>
 
                 <Grid item xs={4}>
                 <Tooltip title={`Converts ${formatNumberWithDecimals(waterConsumption)} water and ${formatNumberWithDecimals(sunlightConsumption)} sunlight into ${formatNumberWithDecimals(modifiedRate)} sugar per cycle.`}>
-                    <Box border={1} borderColor="grey.300" borderRadius={2} padding={.1}>
-                        <Typography><GrainIcon sx={{ fontSize: 22, color: 'white' }} /> {formatNumberWithDecimals(plant.sugar)}</Typography>
-                    </Box>
+                        <Sugar amount={plant.sugar} />
                 </Tooltip>
                 <Tooltip title='Size'>
-                    <Box border={1} borderColor="grey.300" borderRadius={2} padding={.1}>
-                        <Typography><ParkIcon sx={{ fontSize: 22, color: 'green' }} /> {formatNumber(plant.maturity_level)}</Typography>
-                    </Box>
+                        <Maturity amount={plant.maturity_level} />
                 </Tooltip>
                 </Grid>
 
@@ -287,7 +281,7 @@ function PlantList() {
                 }, 
             }}
             onClick={() => handleBuyLeaves()}>
-            Grow Leaves: {multiplier} Leaf for {LEAF_COST * multiplier} Sugar
+            Grow Leaves: <Leaves amount={multiplier} />&nbsp;for <Sugar amount={LEAF_COST * multiplier} />
         </Button>
     </Tooltip>
 </Grid>
@@ -307,7 +301,7 @@ function PlantList() {
                 },
             }}
             onClick={() => handleBuyRoots()}>
-            Grow Roots: {multiplier} Root for {ROOT_COST * multiplier} Sugar
+            Grow Roots: <Roots amount={multiplier} />&nbsp;for <Sugar amount={ROOT_COST * multiplier} />
         </Button>
     </Tooltip>
 </Grid>
@@ -395,7 +389,7 @@ function PlantList() {
 
         
 
-function formatNumber(value: number): string {
+export function formatNumber(value: number): string {
     if (value >= 1_000_000) {
         return (value / 1_000_000).toFixed(1) + 'M';
     } else if (value >= 1_000) {
@@ -406,7 +400,7 @@ function formatNumber(value: number): string {
 }
 
 
-function formatNumberWithDecimals(value: number): string {
+export function formatNumberWithDecimals(value: number): string {
     if (value >= 1_000_000) {
         return (value / 1_000_000).toFixed(2) + 'M';
     } else if (value >= 1_000) {
