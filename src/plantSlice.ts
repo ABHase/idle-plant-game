@@ -86,18 +86,18 @@ const INITIAL_PLANT_CONFIG: PlantState = {
 const initialState: PlantState = INITIAL_PLANT_CONFIG;
 
 export const photosynthesisWaterConsumption = (
-  maturity_level: number,
+  maturity_level: number
 ): number =>
   BASE_WATER_CONSUMPTION *
   (1 + MATURITY_WATER_CONSUMPTION_MODIFIER * maturity_level);
 export const photosynthesisSunlightConsumption = (
-  maturity_level: number,
+  maturity_level: number
 ): number =>
   BASE_SUNLIGHT_CONSUMPTION *
   (1 + MATURITY_SUNLIGHT_CONSUMPTION_MODIFIER * maturity_level);
 export const photosynthesisSugarProduction = (
   plant: PlantState,
-  season: string,
+  season: string
 ): number => {
   let sugarModifier = 1; // default
   if (season === "Autumn") {
@@ -111,6 +111,11 @@ export const photosynthesisSugarProduction = (
   return modifiedRate * sugarModifier;
 };
 
+export const geneticSugarConsumption = (plant: PlantState): number => {
+  const costMultiplier = plant.geneticMarkerUpgradeActive ? 4 : 1;
+  return SUGAR_THRESHOLD * costMultiplier;
+};
+
 const plantSlice = createSlice({
   name: "plant",
   initialState,
@@ -119,7 +124,7 @@ const plantSlice = createSlice({
 
     initializeNewPlant: (
       state,
-      action: PayloadAction<{ biome_id: string }>,
+      action: PayloadAction<{ biome_id: string }>
     ) => {
       return {
         ...INITIAL_PLANT_CONFIG,
@@ -154,10 +159,10 @@ const plantSlice = createSlice({
     produceSugar: (state, action: PayloadAction<{ season: string }>) => {
       if (state.is_sugar_production_on) {
         const waterConsumption = photosynthesisWaterConsumption(
-          state.maturity_level,
+          state.maturity_level
         );
         const sunlightConsumption = photosynthesisSunlightConsumption(
-          state.maturity_level,
+          state.maturity_level
         );
 
         if (
@@ -168,7 +173,7 @@ const plantSlice = createSlice({
           state.sunlight -= sunlightConsumption;
           const sugars = photosynthesisSugarProduction(
             state,
-            action.payload.season,
+            action.payload.season
           );
           state.sugar += sugars;
           state.totalSugarCreated += sugars;
@@ -177,7 +182,7 @@ const plantSlice = createSlice({
     },
     updateWaterAndSunlight: (
       state,
-      action: PayloadAction<{ season: string }>,
+      action: PayloadAction<{ season: string }>
     ) => {
       const season = action.payload.season;
       let waterModifier = 1; // default
@@ -205,7 +210,7 @@ const plantSlice = createSlice({
 
       state.water = Math.max(
         0,
-        state.water + seasonModifiedWaterIncrease - waterDecrease,
+        state.water + seasonModifiedWaterIncrease - waterDecrease
       );
       state.totalWaterAbsorbed += seasonModifiedWaterIncrease;
       state.sunlight += seasonModifiedSunlightIncrease;
@@ -237,8 +242,7 @@ const plantSlice = createSlice({
       }
     },
     produceGeneticMarkers: (state) => {
-      const costMultiplier = state.geneticMarkerUpgradeActive ? 4 : 1;
-      const neededSugar = SUGAR_THRESHOLD * costMultiplier;
+      const neededSugar = geneticSugarConsumption(state);
       if (state.sugar >= neededSugar) {
         state.sugar -= neededSugar;
       }
@@ -256,7 +260,7 @@ const plantSlice = createSlice({
     },
     handlePest: (
       state,
-      action: PayloadAction<{ pestType: "Aphids" | "Deer" }>,
+      action: PayloadAction<{ pestType: "Aphids" | "Deer" }>
     ) => {
       // Reducer logic will be added later
     },

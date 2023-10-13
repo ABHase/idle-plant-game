@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "./rootReducer"; // Adjust the import path if needed
 import { Box, Grid, LinearProgress, Typography } from "@mui/material";
+import { DNA } from "./Components/DNA";
 
 const GlobalStateDisplay: React.FC = () => {
   const {
@@ -17,7 +18,7 @@ const GlobalStateDisplay: React.FC = () => {
   } = useSelector((state: RootState) => state.globalState);
 
   const percentage = Math.floor(
-    (geneticMarkerProgress / geneticMarkerThreshold) * 100,
+    (geneticMarkerProgress / geneticMarkerThreshold) * 100
   );
 
   return (
@@ -32,7 +33,7 @@ const GlobalStateDisplay: React.FC = () => {
       >
         <Grid container spacing={0} alignItems="center">
           <Grid item xs={3}>
-            <Typography variant="body1">DNA: {geneticMarkers}</Typography>
+            <DNA amount={geneticMarkers} />
           </Grid>
           <Grid item xs={9}>
             <Box position="relative" display="inline-flex" width="100%">
