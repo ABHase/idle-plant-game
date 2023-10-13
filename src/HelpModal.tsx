@@ -55,6 +55,10 @@ const HelpModal: React.FC<HelpModalProps> = ({ open, onClose }) => {
       <Box sx={{color: 'text.primary',}}>
         <Typography variant="h6" mb={2}>Strategy:</Typography>
         <Typography variant="body2">Use water and sunlight wisely. Balance growth with resource consumption. Remember, each new seed inherits past traits, but starts its growth journey anew. Your old plants are recorded in the history tab.</Typography>
+      </Box>,
+      <Box sx={{color: 'text.primary',}}>
+        <Typography variant="h6" mb={2}>Seasons:</Typography>
+        <Typography variant="body2">In the spring water will be absorbed faster, and in the summer sunlight will be absorbed faster.  In the harvest time of autumn, sugar is produced faster. In the winter everything is much slower.</Typography>
       </Box>
     ];
   
