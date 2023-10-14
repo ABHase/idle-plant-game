@@ -30,8 +30,9 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
       <DialogTitle>{"Evolve Plant?"}</DialogTitle>
       <DialogContent style={{ maxHeight: "300px", overflowY: "auto" }}>
         <DialogContentText>
-          Are you sure you want to plant a new seed? This action cannot be
-          undone, and will start a new plant with the following traits:
+          Are you sure you want to plant a new seed, DNA progress will not be
+          reset with plant resources. This action cannot be undone, and will
+          start a new plant with the following traits:
         </DialogContentText>
         {/* Display purchased traits */}
         {purchased.map((id) => {
