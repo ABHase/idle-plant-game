@@ -22,6 +22,8 @@ import { PlantHistoryEntry, addPlantToHistory } from "./plantHistorySlice";
 
 //... [other imports]
 
+let ticksSinceLadybugActivation = 0;
+
 export const updateGame = (): ThunkAction<
   void,
   RootState,
@@ -32,11 +34,29 @@ export const updateGame = (): ThunkAction<
     const currentTotalTime = getState().app.totalTime;
     const newTotalTime = currentTotalTime + 1;
     const currentSeason = getState().plantTime.season;
+    const currentMinute = getState().plantTime.update_counter;
 
     // Dispatch updateTime with newTotalTime
     dispatch(updateTime(newTotalTime));
 
+    console.log(currentMinute);
+
     const plant = getState().plant;
+
+    // Check if ladybugs are less than 1
+    if (plant.ladybugs < 1) {
+      // Increment the local tick count for ladybug activation
+      ticksSinceLadybugActivation++;
+      //dispatch deductAllAphids
+      dispatch({ type: "plant/deductAllAphids" });
+
+      // Check if 7 days (2016 ticks) have passed
+      if (ticksSinceLadybugActivation >= 2016) {
+        dispatch({ type: "plant/resetLadybugTax" });
+        // Reset the local tick count
+        ticksSinceLadybugActivation = 0;
+      }
+    }
 
     if (
       plant.is_genetic_marker_production_on &&
@@ -47,7 +67,7 @@ export const updateGame = (): ThunkAction<
       dispatch(
         updateGeneticMarkerProgress({
           geneticMarkerUpgradeActive: plant.geneticMarkerUpgradeActive,
-        }),
+        })
       );
     }
     if (
@@ -65,6 +85,20 @@ export const updateGame = (): ThunkAction<
     // Check if the plant has more root rot than root rot threshold, if so dispatch removeRoots
     if (plant.rootRot >= plant.rootRotThreshold) {
       dispatch(removeRoots());
+    }
+
+    // If the plant has more than 1000 sugar add one aphid every 12th cycle but only if ladybugs are not less than 1
+    if (
+      plant.ladybugs === 1 &&
+      plant.sugar >= 1000 &&
+      currentMinute % 15 === 0
+    ) {
+      dispatch({ type: "plant/increaseAphids", payload: 1 });
+    }
+
+    // Dispatch deduct sugar with a payload equal to the number of aphids and if the plant has 0 sugar dispatch deduct aphids with payload equal to the number of aphids
+    if (plant.aphids > 0) {
+      dispatch({ type: "plant/deductSugar", payload: plant.aphids });
     }
 
     dispatch(updateMaturityLevel());
@@ -129,7 +163,7 @@ export const sellUpgradeThunk = createAsyncThunk<
 });
 
 export const evolveAndRecordPlant = (
-  upgrades: string[],
+  upgrades: string[]
 ): ThunkAction<void, RootState, unknown, Action<string>> => {
   return (dispatch, getState) => {
     // Get the current state of the plant and other relevant states
