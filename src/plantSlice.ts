@@ -11,7 +11,11 @@ import {
   BASE_WATER_CONSUMPTION,
   BASE_SUNLIGHT_CONSUMPTION,
 } from "./constants";
-import { PlantTimeState } from "./plantTimeSlice";
+import {
+  calculateWaterAndSunlight,
+  calculateSugarPhotosynthesis,
+  geneticSugarConsumption,
+} from "./formulas";
 
 export interface PlantState {
   id: string;
@@ -60,7 +64,7 @@ const INITIAL_PLANT_CONFIG: PlantState = {
   is_secondary_resource_production_on: false,
   sunlight: 0,
   sunlight_absorption_rate: 10,
-  water: 0,
+  water: 1,
   water_absorption_rate: 10,
   sunlight_efficiency_multiplier: 1,
   water_efficiency_multiplier: 1,
@@ -88,37 +92,6 @@ const INITIAL_PLANT_CONFIG: PlantState = {
 };
 
 const initialState: PlantState = INITIAL_PLANT_CONFIG;
-
-export const photosynthesisWaterConsumption = (
-  maturity_level: number
-): number =>
-  BASE_WATER_CONSUMPTION *
-  (1 + MATURITY_WATER_CONSUMPTION_MODIFIER * maturity_level);
-export const photosynthesisSunlightConsumption = (
-  maturity_level: number
-): number =>
-  BASE_SUNLIGHT_CONSUMPTION *
-  (1 + MATURITY_SUNLIGHT_CONSUMPTION_MODIFIER * maturity_level);
-export const photosynthesisSugarProduction = (
-  plant: PlantState,
-  season: string
-): number => {
-  let sugarModifier = 1; // default
-  if (season === "Autumn") {
-    sugarModifier = plant.autumnModifier;
-  } else if (season === "Winter") {
-    sugarModifier = plant.winterModifier; // reduced in winter
-  }
-  const baseRate = plant.sugar_production_rate;
-  const modifiedRate =
-    baseRate * (1 + MATURITY_SUGAR_PRODUCTION_MODIFIER * plant.maturity_level);
-  return modifiedRate * sugarModifier;
-};
-
-export const geneticSugarConsumption = (plant: PlantState): number => {
-  const costMultiplier = plant.geneticMarkerUpgradeActive ? 4 : 1;
-  return SUGAR_THRESHOLD * costMultiplier;
-};
 
 const plantSlice = createSlice({
   name: "plant",
@@ -162,27 +135,15 @@ const plantSlice = createSlice({
     },
     produceSugar: (state, action: PayloadAction<{ season: string }>) => {
       if (state.is_sugar_production_on) {
-        const waterConsumption = photosynthesisWaterConsumption(
-          state.maturity_level
-        );
-        const sunlightConsumption = photosynthesisSunlightConsumption(
-          state.maturity_level
+        const results = calculateSugarPhotosynthesis(
+          state,
+          action.payload.season
         );
 
-        if (
-          state.water > waterConsumption &&
-          state.sunlight > sunlightConsumption
-        ) {
-          state.water -= waterConsumption;
-          state.sunlight -= sunlightConsumption;
-          const sugars = photosynthesisSugarProduction(
-            state,
-            action.payload.season
-          );
-
-          state.sugar += sugars;
-          state.totalSugarCreated += sugars;
-        }
+        state.sugar = results.sugar;
+        state.totalSugarCreated = results.totalSugarCreated;
+        state.water = results.water;
+        state.sunlight = results.sunlight;
       }
     },
     updateWaterAndSunlight: (
@@ -190,43 +151,11 @@ const plantSlice = createSlice({
       action: PayloadAction<{ season: string }>
     ) => {
       const season = action.payload.season;
-      let waterModifier = 1; // default
-      if (season === "Spring") {
-        waterModifier = state.springModifier;
-      } else if (season === "Winter") {
-        waterModifier = state.winterModifier; // reduced in winter
-      }
-
-      let sunlightModifier = 1; // default
-      if (season === "Summer") {
-        sunlightModifier = state.summerModifier;
-      } else if (season === "Winter") {
-        sunlightModifier = state.winterModifier; // reduced in winter
-      }
-
-      const waterDecrease = state.leaves;
-      const rootsWaterIncrease =
-        state.roots * state.water_absorption_multiplier;
-
-      const leavesSunlightIncrease =
-        state.leaves * state.sunlight_absorption_multiplier;
-
-      const seasonModifiedWaterIncrease = rootsWaterIncrease * waterModifier;
-
-      const seasonModifiedSunlightIncrease =
-        leavesSunlightIncrease * sunlightModifier;
-
-      const ladybugsTaxWater = state.ladybugs * seasonModifiedWaterIncrease;
-      const ladybugsTaxSunlight =
-        state.ladybugs * seasonModifiedSunlightIncrease;
-
-      state.water = Math.max(0, state.water + ladybugsTaxWater - waterDecrease);
-
-      state.totalWaterAbsorbed += ladybugsTaxWater;
-
-      state.sunlight += ladybugsTaxSunlight;
-
-      state.totalSunlightAbsorbed += ladybugsTaxSunlight;
+      const results = calculateWaterAndSunlight(state, season);
+      state.water = results.water;
+      state.totalWaterAbsorbed = results.totalWaterAbsorbed;
+      state.sunlight = results.sunlight;
+      state.totalSunlightAbsorbed = results.totalSunlightAbsorbed;
     },
 
     growRoots: (state) => {
@@ -253,6 +182,10 @@ const plantSlice = createSlice({
         state.sugar -= action.payload.cost;
         state.leaves += 1;
       }
+    },
+    //Reducer to decrease leaves by payload
+    removeLeaves: (state, action: PayloadAction<number>) => {
+      state.leaves = Math.max(0, state.leaves - action.payload);
     },
     produceGeneticMarkers: (state) => {
       const neededSugar = geneticSugarConsumption(state);
@@ -342,5 +275,6 @@ export const {
   setLadybugs,
   resetLadybugTax,
   deductAllAphids,
+  removeLeaves,
 } = plantSlice.actions;
 export default plantSlice.reducer;
