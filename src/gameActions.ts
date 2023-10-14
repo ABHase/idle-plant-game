@@ -39,8 +39,6 @@ export const updateGame = (): ThunkAction<
     // Dispatch updateTime with newTotalTime
     dispatch(updateTime(newTotalTime));
 
-    console.log(currentMinute);
-
     const plant = getState().plant;
 
     // Check if ladybugs are less than 1
@@ -94,6 +92,11 @@ export const updateGame = (): ThunkAction<
       currentMinute % 15 === 0
     ) {
       dispatch({ type: "plant/increaseAphids", payload: 1 });
+    }
+
+    // If the plant has 0 water dispatch removeLeaves with a payload of 1 every time the currentMinute is 0
+    if (plant.water <= 0 && currentMinute % 30 === 0) {
+      dispatch({ type: "plant/removeLeaves", payload: 1 });
     }
 
     // Dispatch deduct sugar with a payload equal to the number of aphids and if the plant has 0 sugar dispatch deduct aphids with payload equal to the number of aphids

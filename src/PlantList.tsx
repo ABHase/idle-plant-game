@@ -8,9 +8,6 @@ import {
   buyLeaves,
   buyRoots,
   toggleGeneticMarkerProduction,
-  photosynthesisWaterConsumption,
-  photosynthesisSunlightConsumption,
-  photosynthesisSugarProduction,
 } from "./plantSlice";
 import {
   Grid,
@@ -47,6 +44,12 @@ import { Sugar } from "./Components/Sugar";
 import { Maturity } from "./Components/Maturity";
 import { DNAIcon } from "./icons/dna";
 import { DNA } from "./Components/DNA";
+import {
+  calculatePhotosynthesisSunlightConsumption,
+  calculatePhotosynthesisWaterConsumption,
+  determinePhotosynthesisSugarProduction,
+  itemizedReport,
+} from "./formulas";
 
 type PlantListProps = {
   setLadybugModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -56,7 +59,7 @@ const PlantList: React.FC<PlantListProps> = ({ setLadybugModalOpen }) => {
   const dispatch = useDispatch();
   const plant = useSelector((state: RootState) => state.plant);
   const plantTime = useSelector((state: RootState) => state.plantTime);
-  const [multiplier, setMultiplier] = useState<number>(1); // default is 1
+  const [multiplier, setMultiplier] = useState<number>(1);
 
   const { geneticMarkerProgress, geneticMarkerThreshold } = useSelector(
     (state: RootState) => state.globalState
@@ -65,6 +68,7 @@ const PlantList: React.FC<PlantListProps> = ({ setLadybugModalOpen }) => {
 
   // Extract season from state (Assuming you have access to the state here)
   const { season } = useSelector((state: RootState) => state.plantTime);
+  const report = itemizedReport(plant, season);
 
   // Sugar Modifier
   let sugarModifier = 1; // default
@@ -115,16 +119,6 @@ const PlantList: React.FC<PlantListProps> = ({ setLadybugModalOpen }) => {
     : plantState.leaves *
       plantState.sunlight_absorption_multiplier *
       sunlightModifier *
-      plant.ladybugs;
-
-  const netWaterRate = isSugarProductionPossible
-    ? (plantState.roots - plantState.leaves - waterConsumption) *
-      plantState.water_absorption_multiplier *
-      waterModifier *
-      plant.ladybugs
-    : (plantState.roots - plantState.leaves) *
-      plantState.water_absorption_multiplier *
-      waterModifier *
       plant.ladybugs;
 
   const handleSunlightAbsorption = () => {
@@ -198,7 +192,11 @@ const PlantList: React.FC<PlantListProps> = ({ setLadybugModalOpen }) => {
           ) : null}
 
           <Grid item xs={4}>
-            <Tooltip title={`${formatNumberWithDecimals(netWaterRate)}/Second`}>
+            <Tooltip
+              title={`${formatNumberWithDecimals(
+                report.water.netWaterProduction
+              )}/second.`}
+            >
               <Box>
                 <Water amount={plant.water} />
               </Box>
@@ -213,7 +211,9 @@ const PlantList: React.FC<PlantListProps> = ({ setLadybugModalOpen }) => {
 
           <Grid item xs={4}>
             <Tooltip
-              title={`${formatNumberWithDecimals(netSunlightRate)}/second`}
+              title={`${formatNumberWithDecimals(
+                report.sunlight.netSunlightProduction
+              )}/second.`}
             >
               <Box>
                 <Sunlight amount={plant.sunlight} />
@@ -276,13 +276,13 @@ const PlantList: React.FC<PlantListProps> = ({ setLadybugModalOpen }) => {
                   }}
                 >
                   <Water
-                    amount={photosynthesisWaterConsumption(
+                    amount={calculatePhotosynthesisWaterConsumption(
                       plant.maturity_level
                     )}
                   />
                   /s +{" "}
                   <Sunlight
-                    amount={photosynthesisSunlightConsumption(
+                    amount={calculatePhotosynthesisSunlightConsumption(
                       plant.maturity_level
                     )}
                   />
@@ -291,9 +291,12 @@ const PlantList: React.FC<PlantListProps> = ({ setLadybugModalOpen }) => {
                     sx={{ color: plant.is_sugar_production_on ? "" : "red" }}
                   />{" "}
                   <Sugar
-                    amount={photosynthesisSugarProduction(
-                      plant,
-                      plantTime.season
+                    amount={determinePhotosynthesisSugarProduction(
+                      plant.sugar_production_rate,
+                      plant.maturity_level,
+                      plantTime.season,
+                      plant.autumnModifier,
+                      plant.winterModifier
                     )}
                   />
                   /s

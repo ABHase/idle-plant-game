@@ -15,6 +15,7 @@ interface Props {
   handleOpenHelpModal: () => void;
   handleCloseHelpModal: () => void;
   onOpenMushroomStore: () => void;
+  handleOpenReportModal: () => void;
 }
 
 const MenuModal: React.FC<Props> = (props) => {
@@ -49,6 +50,14 @@ const MenuModal: React.FC<Props> = (props) => {
           style={{ marginTop: "10px" }}
         >
           Mushroom Store
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={props.handleOpenReportModal}
+          style={{ marginTop: "10px" }}
+        >
+          Plant Details
         </Button>
 
         <Button

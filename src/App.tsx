@@ -14,7 +14,7 @@ import { evolveAndRecordPlant, updateGame } from "./gameActions";
 import store, { AppDispatch } from "./store"; // Adjust the path if necessary
 import GlobalStateDisplay from "./GlobalStateDisplay";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { Box } from "@mui/material";
+import { Alert, Box, Snackbar } from "@mui/material";
 import PlantTimeDisplay from "./PlantTimeDisplay";
 import PlantList from "./PlantList";
 import { clearState, saveState } from "./localStorage";
@@ -33,18 +33,20 @@ import HelpModal from "./HelpModal";
 import MenuModal from "./MenuModal";
 import MushroomStoreModal from "./MushroomStoreModal";
 import LadyBugModal from "./LadyBugModal";
+import ReportModal from "./ReportModal";
+import { itemizedReport } from "./formulas";
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#4CAF50", // A more vibrant forest green for buttons and highlights
+      main: "#81b85c", // A more vibrant forest green for buttons and highlights
     },
     secondary: {
       main: "#607D8B", // Bluish-grey, reminiscent of a night sky or moonlit water
     },
     background: {
       default: "#1f1107", // A very dark brown, almost black, like deep woods at night
-      paper: "#2E4A38", // A slightly lighter green, like forest undergrowth in moonlight
+      paper: "#162e13", // A slightly lighter green, like forest undergrowth in moonlight
     },
     text: {
       primary: "#FFFFFF", // Pure white for text to ensure good contrast against the dark background
@@ -62,12 +64,19 @@ const selectPlants = createSelector(
   (plant) => Object.values(plant)
 );
 
+const selectSeason = createSelector(
+  (state: RootState) => state.plantTime.season,
+  (season) => season
+);
+
 function App() {
   const dispatch: AppDispatch = useDispatch();
-  console.log("App component rendered");
   const totalTime = useSelector((state: RootState) => state.app.totalTime);
   const plantTime = useSelector((state: RootState) => state.plantTime);
   const plants = useSelector(selectPlants);
+  const season = useSelector(selectSeason);
+  const totalLeaves = useSelector((state: RootState) => state.plant.leaves); // Assuming `leaves` is a property in your plant state
+
   const [openDialog, setOpenDialog] = React.useState(false);
   const purchasedUpgrades = useSelector(
     (state: RootState) => state.upgrades.purchased
@@ -94,14 +103,23 @@ function App() {
   };
 
   useEffect(() => {
+    // Check if the number of leaves has decreased
+
+    if (previousLeaves.current > totalLeaves) {
+      setShowLeafLossWarning(true);
+      previousLeaves.current = totalLeaves;
+    }
+    // Update previous leaves to current total leaves after checking
+    previousLeaves.current = totalLeaves;
     // Call the update function to start the game loop
     update();
     // Cleanup code: stop the loop when the component unmounts
     return () => {};
-  }, [dispatch]);
+  }, [dispatch, totalLeaves]);
 
   const lastUpdateTimeRef = useRef(Date.now());
   const saveCounterRef = useRef(0);
+  const previousLeaves = useRef(totalLeaves);
 
   function update() {
     const currentTime = Date.now();
@@ -138,6 +156,16 @@ function App() {
   const [menuModalOpen, setMenuModalOpen] = useState(false);
   const [mushroomStoreModalOpen, setMushroomStoreModalOpen] = useState(false);
   const [ladybugModalOpen, setLadybugModalOpen] = useState(false);
+  const [reportModalOpen, setReportModalOpen] = useState(false);
+  const [showLeafLossWarning, setShowLeafLossWarning] = useState(false);
+
+  const handleOpenReportModal = () => {
+    setReportModalOpen(true);
+  };
+
+  const handleCloseReportModal = () => {
+    setReportModalOpen(false);
+  };
 
   const handleOpenMushroomStoreModal = () => {
     setMushroomStoreModalOpen(true);
@@ -160,7 +188,6 @@ function App() {
   };
 
   const handleCloseHistoryModal = () => {
-    console.log("Closing History Modal");
     setHistoryModalOpen(false);
   };
 
@@ -238,11 +265,14 @@ function App() {
           openDialog={openDialog}
           setOpenDialog={setOpenDialog}
           onOpenMushroomStore={handleOpenMushroomStoreModal}
+          handleOpenReportModal={handleOpenReportModal}
         />
         <MushroomStoreModal
           open={mushroomStoreModalOpen}
           onClose={handleCloseMushroomStoreModal}
         />
+        <ReportModal open={reportModalOpen} onClose={handleCloseReportModal} />
+
         {ladybugModalOpen ? (
           <LadyBugModal
             open={ladybugModalOpen}
@@ -250,6 +280,19 @@ function App() {
             // ... any other props you might need
           />
         ) : null}
+        <Snackbar
+          open={showLeafLossWarning}
+          autoHideDuration={3000}
+          onClose={() => setShowLeafLossWarning(false)}
+        >
+          <Alert
+            onClose={() => setShowLeafLossWarning(false)}
+            severity="warning"
+            sx={{ width: "100%" }}
+          >
+            You lost a leaf due to lack of water!
+          </Alert>
+        </Snackbar>
       </Box>
     </ThemeProvider>
   );
