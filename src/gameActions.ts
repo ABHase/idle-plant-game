@@ -50,7 +50,7 @@ export const updateGame = (): ThunkAction<
 
       // Check if 7 days (2016 ticks) have passed
       if (ticksSinceLadybugActivation >= 2016) {
-        dispatch({ type: "plant/resetLadybugTax" });
+        dispatch({ type: "plant/resetLadybugs" });
         // Reset the local tick count
         ticksSinceLadybugActivation = 0;
       }
@@ -102,6 +102,9 @@ export const updateGame = (): ThunkAction<
     // Dispatch deduct sugar with a payload equal to the number of aphids and if the plant has 0 sugar dispatch deduct aphids with payload equal to the number of aphids
     if (plant.aphids > 0) {
       dispatch({ type: "plant/deductSugar", payload: plant.aphids });
+      if (plant.sugar <= 0) {
+        dispatch({ type: "plant/deductAllAphids" });
+      }
     }
 
     dispatch(updateMaturityLevel());

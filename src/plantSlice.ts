@@ -242,9 +242,9 @@ const plantSlice = createSlice({
     setLadybugs: (state) => {
       state.ladybugs = state.ladybugTax;
     },
-    //Set ladybug tax to 1
-    resetLadybugTax: (state) => {
-      state.ladybugTax = 1;
+    //Reducer to reset ladybugs to 1
+    resetLadybugs: (state) => {
+      state.ladybugs = 1;
     },
   },
 });
@@ -273,8 +273,8 @@ export const {
   increaseAphids,
   removeAphids,
   setLadybugs,
-  resetLadybugTax,
   deductAllAphids,
   removeLeaves,
+  resetLadybugs,
 } = plantSlice.actions;
 export default plantSlice.reducer;
