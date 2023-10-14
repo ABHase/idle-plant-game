@@ -31,6 +31,7 @@ export interface PlantState {
   water_absorption_multiplier: number;
   sugar: number;
   ladybugs: number;
+  ladybugTax: number;
   roots: number;
   leaves: number;
   resin: number;
@@ -46,6 +47,7 @@ export interface PlantState {
   summerModifier: number;
   autumnModifier: number;
   winterModifier: number;
+  aphids: number;
 }
 
 const INITIAL_PLANT_CONFIG: PlantState = {
@@ -65,7 +67,8 @@ const INITIAL_PLANT_CONFIG: PlantState = {
   sunlight_absorption_multiplier: 1,
   water_absorption_multiplier: 1,
   sugar: 0,
-  ladybugs: 0,
+  ladybugs: 1,
+  ladybugTax: 0.5,
   roots: 2,
   leaves: 1,
   resin: 0,
@@ -81,6 +84,7 @@ const INITIAL_PLANT_CONFIG: PlantState = {
   summerModifier: 1.5,
   autumnModifier: 1.5,
   winterModifier: 0.25,
+  aphids: 0,
 };
 
 const initialState: PlantState = INITIAL_PLANT_CONFIG;
@@ -175,6 +179,7 @@ const plantSlice = createSlice({
             state,
             action.payload.season
           );
+
           state.sugar += sugars;
           state.totalSugarCreated += sugars;
         }
@@ -202,20 +207,28 @@ const plantSlice = createSlice({
       const waterDecrease = state.leaves;
       const rootsWaterIncrease =
         state.roots * state.water_absorption_multiplier;
+
       const leavesSunlightIncrease =
         state.leaves * state.sunlight_absorption_multiplier;
+
       const seasonModifiedWaterIncrease = rootsWaterIncrease * waterModifier;
+
       const seasonModifiedSunlightIncrease =
         leavesSunlightIncrease * sunlightModifier;
 
-      state.water = Math.max(
-        0,
-        state.water + seasonModifiedWaterIncrease - waterDecrease
-      );
-      state.totalWaterAbsorbed += seasonModifiedWaterIncrease;
-      state.sunlight += seasonModifiedSunlightIncrease;
-      state.totalSunlightAbsorbed += seasonModifiedSunlightIncrease;
+      const ladybugsTaxWater = state.ladybugs * seasonModifiedWaterIncrease;
+      const ladybugsTaxSunlight =
+        state.ladybugs * seasonModifiedSunlightIncrease;
+
+      state.water = Math.max(0, state.water + ladybugsTaxWater - waterDecrease);
+
+      state.totalWaterAbsorbed += ladybugsTaxWater;
+
+      state.sunlight += ladybugsTaxSunlight;
+
+      state.totalSunlightAbsorbed += ladybugsTaxSunlight;
     },
+
     growRoots: (state) => {
       // Logic to increase roots here
     },
@@ -258,12 +271,6 @@ const plantSlice = createSlice({
     updateMaturityLevel: (state) => {
       state.maturity_level = Math.floor(Math.sqrt(state.roots + state.leaves));
     },
-    handlePest: (
-      state,
-      action: PayloadAction<{ pestType: "Aphids" | "Deer" }>
-    ) => {
-      // Reducer logic will be added later
-    },
     toggleGeneticMarkerUpgrade: (state) => {
       state.geneticMarkerUpgradeActive = !state.geneticMarkerUpgradeActive;
     },
@@ -286,6 +293,26 @@ const plantSlice = createSlice({
     removeRoots: (state) => {
       state.roots = Math.max(0, state.roots - 1);
     },
+    //Reducer to increase aphids by payload
+    increaseAphids: (state, action: PayloadAction<number>) => {
+      state.aphids += action.payload;
+    },
+    //Reducer to remove aphids by payload
+    removeAphids: (state, action: PayloadAction<number>) => {
+      state.aphids = Math.max(0, state.aphids - action.payload);
+    },
+    //Reducer to set aphids to 0
+    deductAllAphids: (state, action: PayloadAction<number>) => {
+      state.aphids = 0;
+    },
+    //Reduccer to set ladybugs to state.ladybugtax
+    setLadybugs: (state) => {
+      state.ladybugs = state.ladybugTax;
+    },
+    //Set ladybug tax to 1
+    resetLadybugTax: (state) => {
+      state.ladybugTax = 1;
+    },
   },
 });
 
@@ -304,12 +331,16 @@ export const {
   produceGeneticMarkers,
   produceSecondaryResource,
   updateMaturityLevel,
-  handlePest,
   resetPlant,
   evolvePlant,
   deductSugar,
   increaseRootRot,
   resetRootRot,
   removeRoots,
+  increaseAphids,
+  removeAphids,
+  setLadybugs,
+  resetLadybugTax,
+  deductAllAphids,
 } = plantSlice.actions;
 export default plantSlice.reducer;

@@ -32,6 +32,7 @@ import HistoryModal from "./HistoryModal";
 import HelpModal from "./HelpModal";
 import MenuModal from "./MenuModal";
 import MushroomStoreModal from "./MushroomStoreModal";
+import LadyBugModal from "./LadyBugModal";
 
 const theme = createTheme({
   palette: {
@@ -58,7 +59,7 @@ const theme = createTheme({
 
 const selectPlants = createSelector(
   (state: RootState) => state.plant,
-  (plant) => Object.values(plant),
+  (plant) => Object.values(plant)
 );
 
 function App() {
@@ -69,7 +70,7 @@ function App() {
   const plants = useSelector(selectPlants);
   const [openDialog, setOpenDialog] = React.useState(false);
   const purchasedUpgrades = useSelector(
-    (state: RootState) => state.upgrades.purchased,
+    (state: RootState) => state.upgrades.purchased
   );
   const isTimeBoostActive = useSelector((state: RootState) => state.timeBoost);
 
@@ -136,6 +137,7 @@ function App() {
   const [helpModalOpen, setHelpModalOpen] = useState(true);
   const [menuModalOpen, setMenuModalOpen] = useState(false);
   const [mushroomStoreModalOpen, setMushroomStoreModalOpen] = useState(false);
+  const [ladybugModalOpen, setLadybugModalOpen] = useState(false);
 
   const handleOpenMushroomStoreModal = () => {
     setMushroomStoreModalOpen(true);
@@ -200,7 +202,7 @@ function App() {
 
           <PlantTimeDisplay plantTime={plantTime} />
           <GlobalStateDisplay />
-          <PlantList />
+          <PlantList setLadybugModalOpen={setLadybugModalOpen} />
 
           <UpgradeModal
             open={upgradeModalOpen}
@@ -241,6 +243,13 @@ function App() {
           open={mushroomStoreModalOpen}
           onClose={handleCloseMushroomStoreModal}
         />
+        {ladybugModalOpen ? (
+          <LadyBugModal
+            open={ladybugModalOpen}
+            onClose={() => setLadybugModalOpen(false)}
+            // ... any other props you might need
+          />
+        ) : null}
       </Box>
     </ThemeProvider>
   );

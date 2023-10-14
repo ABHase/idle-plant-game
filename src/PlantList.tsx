@@ -48,7 +48,11 @@ import { Maturity } from "./Components/Maturity";
 import { DNAIcon } from "./icons/dna";
 import { DNA } from "./Components/DNA";
 
-function PlantList() {
+type PlantListProps = {
+  setLadybugModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const PlantList: React.FC<PlantListProps> = ({ setLadybugModalOpen }) => {
   const dispatch = useDispatch();
   const plant = useSelector((state: RootState) => state.plant);
   const plantTime = useSelector((state: RootState) => state.plantTime);
@@ -106,18 +110,22 @@ function PlantList() {
   const netSunlightRate = isSugarProductionPossible
     ? (plantState.leaves - sunlightConsumption) *
       plantState.sunlight_absorption_multiplier *
-      sunlightModifier
+      sunlightModifier *
+      plant.ladybugs
     : plantState.leaves *
       plantState.sunlight_absorption_multiplier *
-      sunlightModifier;
+      sunlightModifier *
+      plant.ladybugs;
 
   const netWaterRate = isSugarProductionPossible
     ? (plantState.roots - plantState.leaves - waterConsumption) *
       plantState.water_absorption_multiplier *
-      waterModifier
+      waterModifier *
+      plant.ladybugs
     : (plantState.roots - plantState.leaves) *
       plantState.water_absorption_multiplier *
-      waterModifier;
+      waterModifier *
+      plant.ladybugs;
 
   const handleSunlightAbsorption = () => {
     dispatch(absorbSunlight());
@@ -166,6 +174,29 @@ function PlantList() {
         margin="0 auto"
       >
         <Grid container spacing={1} alignItems="center">
+          {plant.aphids > 1 ? (
+            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                size="medium"
+                fullWidth
+                sx={{
+                  backgroundColor: "#e6842e",
+                  color: "#000000",
+                  "&:hover": {
+                    backgroundColor: "#ba671e", // This is a lighter shade of orange
+                  },
+                  "&:active, &:focus": {
+                    backgroundColor: "#e6842e", // Or any other style reset
+                  },
+                }}
+                onClick={() => setLadybugModalOpen(true)}
+              >
+                <Typography variant="h5">You Have Aphids!</Typography>
+              </Button>
+            </Grid>
+          ) : null}
+
           <Grid item xs={4}>
             <Tooltip title={`${formatNumberWithDecimals(netWaterRate)}/Second`}>
               <Box>
@@ -469,7 +500,7 @@ function PlantList() {
       {/* ... [Rest of the code for displaying other plant info] */}
     </div>
   );
-}
+};
 
 export function formatNumber(value: number): string {
   if (value >= 1_000_000) {
