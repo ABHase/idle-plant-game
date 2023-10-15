@@ -80,17 +80,16 @@ const plantSlice = createSlice({
       }
     },
     evolvePlant: (state, action: PayloadAction<EvolvePlantPayload>) => {
-      // Use the purchased upgrades from the action payload
       const { plantType, upgrades } = action.payload;
       const plantConfig = PLANT_CONFIGS[plantType];
-      console.log(plantType);
 
       if (!plantConfig) {
         console.error(`Unknown plant type: ${plantType}`);
         return;
       }
 
-      const availableUpgrades = UPGRADES[plantType];
+      const availableUpgrades = { ...UPGRADES.Meta, ...UPGRADES[plantType] }; // Combine meta and specific plant upgrades
+
       if (!availableUpgrades) {
         console.error(`No upgrades available for plant type: ${plantType}`);
         return;
@@ -99,6 +98,15 @@ const plantSlice = createSlice({
       Object.assign(state, plantConfig);
       state.id = uuidv4();
 
+      // Apply meta upgrades first
+      upgrades.forEach((upgradeId) => {
+        const metaUpgradeFunction = UPGRADE_FUNCTIONS["Meta"][upgradeId];
+        if (metaUpgradeFunction) {
+          metaUpgradeFunction(state);
+        }
+      });
+
+      // Then apply plant specific upgrades
       upgrades.forEach((upgradeId) => {
         const upgradeFunction = UPGRADE_FUNCTIONS[plantType][upgradeId];
         if (upgradeFunction) {
