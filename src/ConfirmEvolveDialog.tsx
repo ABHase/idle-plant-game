@@ -14,6 +14,7 @@ import { Typography } from "@mui/material";
 import { DNAIcon } from "./icons/dna";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
+import { DNA } from "./Components/DNA";
 
 interface ConfirmEvolveDialogProps {
   open: boolean;
@@ -27,6 +28,12 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
   onConfirm,
 }) => {
   const purchased = useSelector((state: RootState) => state.upgrades.purchased);
+  const geneticMarkers = useSelector(
+    (state: RootState) => state.globalState.geneticMarkers
+  );
+  const geneticMarkersMoss = useSelector(
+    (state: RootState) => state.globalState.geneticMarkersMoss
+  );
   const [plantType, setPlantType] = React.useState<string>("Fern"); // default value as Fern
   const typeSpecificUpgrades = UPGRADES[plantType];
   const metaUpgrades = UPGRADES["Meta"];
@@ -42,8 +49,11 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
       <DialogTitle>{"Evolve Plant?"}</DialogTitle>
       <DialogContent style={{ overflowY: "auto" }}>
         <DialogContentText>
-          Are you sure you want to plant a new seed, <DNAIcon /> DNA progress
-          will not be reset with plant resources. This action cannot be undone.
+          Are you sure you want to plant a new seed, <DNAIcon /> DNA progress is
+          unique to each plant type and will not be reset with plant resources.
+          This action cannot be undone.
+        </DialogContentText>
+        <DialogContentText>
           Choose the type of plant to evolve to:
         </DialogContentText>
         <Select
