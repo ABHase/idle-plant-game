@@ -15,7 +15,6 @@ import { DNAIcon } from "./icons/dna";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 
-
 interface ConfirmEvolveDialogProps {
   open: boolean;
   onClose: () => void;
@@ -42,8 +41,8 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
         <DialogContentText>
           Are you sure you want to plant a new seed, <DNAIcon /> DNA progress
           will not be reset with plant resources. This action cannot be undone,
-          and will start a new plant with the following traits:
-          Choose the type of plant to evolve to:
+          and will start a new plant with the following traits: Choose the type
+          of plant to evolve to:
         </DialogContentText>
         <Select
           value={plantType}
@@ -54,7 +53,9 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
           <MenuItem value="Moss">Moss</MenuItem>
         </Select>
         {purchased.map((id) => {
-          const trait = UPGRADES.find((upgrade) => upgrade.id === id);
+          const trait = UPGRADES[plantType].find(
+            (upgrade) => upgrade.id === id
+          );
           return (
             <Typography key={id} variant="body2">
               - {trait?.name} ({trait?.description})

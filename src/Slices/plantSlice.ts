@@ -90,17 +90,22 @@ const plantSlice = createSlice({
         return;
       }
 
+      const availableUpgrades = UPGRADES[plantType];
+      if (!availableUpgrades) {
+        console.error(`No upgrades available for plant type: ${plantType}`);
+        return;
+      }
+
       Object.assign(state, plantConfig);
       state.id = uuidv4();
 
       upgrades.forEach((upgradeId) => {
-        const upgradeFunction = UPGRADE_FUNCTIONS[upgradeId];
+        const upgradeFunction = UPGRADE_FUNCTIONS[plantType][upgradeId];
         if (upgradeFunction) {
           upgradeFunction(state);
         }
       });
     },
-
     absorbSunlight: (state) => {
       state.sunlight += state.sunlight_absorption_rate;
       state.totalSunlightAbsorbed += state.sunlight_absorption_rate;

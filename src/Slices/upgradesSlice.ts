@@ -15,7 +15,7 @@ export interface UpgradesState {
 }
 
 const initialState: UpgradesState = {
-  available: UPGRADES,
+  available: UPGRADES.Fern,
   purchased: [],
 };
 
@@ -35,6 +35,13 @@ const upgradesSlice = createSlice({
       if (index > -1) {
         state.purchased.splice(index, 1);
       }
+    },
+    //Reducer to change the available upgrades based on the plant type
+    changeAvailableUpgrades: (
+      state,
+      action: PayloadAction<{ plantType: string }>
+    ) => {
+      state.available = UPGRADES[action.payload.plantType];
     },
     resetUpgrades: () => initialState,
   },

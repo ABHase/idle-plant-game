@@ -124,11 +124,13 @@ function updateSecondaryResources(arg0: { biomeName: string }): any {
 
 export const purchaseUpgradeThunk = createAsyncThunk<
   void,
-  string,
+  { plantType: string; upgradeId: string },
   { state: RootState }
->("upgrades/purchase", async (upgradeId, thunkAPI) => {
+>("upgrades/purchase", async ({ plantType, upgradeId }, thunkAPI) => {
   const state = thunkAPI.getState();
-  const upgrade = UPGRADES.find((u) => u.id === upgradeId);
+
+  // Find the right upgrade using the plant type
+  const upgrade = UPGRADES[plantType]?.find((u) => u.id === upgradeId);
 
   if (!upgrade) {
     throw new Error("Upgrade not found");
@@ -147,11 +149,13 @@ export const purchaseUpgradeThunk = createAsyncThunk<
 
 export const sellUpgradeThunk = createAsyncThunk<
   void,
-  string,
+  { plantType: string; upgradeId: string },
   { state: RootState }
->("upgrades/sell", async (upgradeId, thunkAPI) => {
+>("upgrades/sell", async ({ plantType, upgradeId }, thunkAPI) => {
   const state = thunkAPI.getState();
-  const upgrade = UPGRADES.find((u) => u.id === upgradeId);
+
+  // Find the right upgrade using the plant type
+  const upgrade = UPGRADES[plantType]?.find((u) => u.id === upgradeId);
 
   if (!upgrade) {
     throw new Error("Upgrade not found");
