@@ -26,6 +26,8 @@ import MenuModal from "./Modals/MenuModal";
 import MushroomStoreModal from "./Modals/MushroomStoreModal";
 import LadyBugModal from "./Modals/LadyBugModal";
 import ReportModal from "./Modals/ReportModal";
+import MossDisplay from "./MossDisplay";
+import MossDNADisplay from "./MossDNADisplay";
 
 const theme = createTheme({
   palette: {
@@ -64,6 +66,7 @@ function App() {
   const dispatch: AppDispatch = useDispatch();
   const totalTime = useSelector((state: RootState) => state.app.totalTime);
   const plantTime = useSelector((state: RootState) => state.plantTime);
+  const plantDisplayType = useSelector((state: RootState) => state.plant.type);
   const plants = useSelector(selectPlants);
   const season = useSelector(selectSeason);
   const totalLeaves = useSelector((state: RootState) => state.plant.leaves);
@@ -190,6 +193,28 @@ function App() {
     setHelpModalOpen(false);
   };
 
+  const renderPlantComponent = () => {
+    switch (plantDisplayType) {
+      case "Fern":
+        return <PlantList setLadybugModalOpen={setLadybugModalOpen} />;
+      case "Moss":
+        return <MossDisplay setLadybugModalOpen={setLadybugModalOpen} />;
+      default:
+        return null; // or return a default component if desired
+    }
+  };
+
+  const renderDNAComponent = () => {
+    switch (plantDisplayType) {
+      case "Fern":
+        return <GlobalStateDisplay />;
+      case "Moss":
+        return <MossDNADisplay />;
+      default:
+        return null; // or return a default component if desired
+    }
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <Box
@@ -279,8 +304,8 @@ function App() {
             </Box>
 
             <PlantTimeDisplay plantTime={plantTime} />
-            <GlobalStateDisplay />
-            <PlantList setLadybugModalOpen={setLadybugModalOpen} />
+            {renderDNAComponent()}
+            {renderPlantComponent()}
 
             <UpgradeModal
               open={upgradeModalOpen}

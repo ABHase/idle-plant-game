@@ -51,6 +51,7 @@ export interface PlantState {
   autumnModifier: number;
   winterModifier: number;
   aphids: number;
+  leafWaterUsage: boolean;
 }
 
 const initialState: PlantState = PLANT_CONFIGS.Fern; // Setting Fern as the default plant
@@ -147,11 +148,14 @@ const plantSlice = createSlice({
         !state.is_genetic_marker_production_on;
     },
     buyRoots: (state, action: PayloadAction<{ cost: number }>) => {
-      if (state.sugar >= action.payload.cost) {
+      if (state.type === "Moss") {
+        state.roots += 1;
+      } else if (state.sugar >= action.payload.cost) {
         state.sugar -= action.payload.cost;
         state.roots += 1;
       }
     },
+
     buyLeaves: (state, action: PayloadAction<{ cost: number }>) => {
       if (state.sugar >= action.payload.cost) {
         state.sugar -= action.payload.cost;

@@ -37,6 +37,7 @@ export const FERN_INITIAL_CONFIG: PlantState = {
   autumnModifier: 1.5,
   winterModifier: 0.25,
   aphids: 0,
+  leafWaterUsage: true,
 };
 
 export const MOSS_INITIAL_CONFIG: PlantState = {
@@ -52,15 +53,15 @@ export const MOSS_INITIAL_CONFIG: PlantState = {
   sunlight_absorption_rate: 1,
   water: 1,
   water_absorption_rate: 1,
-  sunlight_efficiency_multiplier: 1,
-  water_efficiency_multiplier: 1,
-  sunlight_absorption_multiplier: 1,
-  water_absorption_multiplier: 1,
+  sunlight_efficiency_multiplier: 2,
+  water_efficiency_multiplier: 2,
+  sunlight_absorption_multiplier: 0.1,
+  water_absorption_multiplier: 0.1,
   sugar: 0,
   ladybugs: 1,
   ladybugTax: 0.5,
-  roots: 2,
-  leaves: 2,
+  roots: 5,
+  leaves: 5,
   resin: 0,
   sugarProduced: 0,
   lastProductionTimestamp: 0,
@@ -75,6 +76,7 @@ export const MOSS_INITIAL_CONFIG: PlantState = {
   autumnModifier: 1.5,
   winterModifier: 0.25,
   aphids: 0,
+  leafWaterUsage: false,
 };
 
 export const PLANT_CONFIGS: Record<string, PlantState> = {
