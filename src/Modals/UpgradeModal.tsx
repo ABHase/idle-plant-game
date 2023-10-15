@@ -5,14 +5,14 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 
-import { UPGRADES } from "./upgrades";
-import { purchaseUpgrade } from "./upgradesSlice";
-import { RootState } from "./rootReducer";
-import { purchaseUpgradeThunk, sellUpgradeThunk } from "./gameActions";
+import { UPGRADES } from "../upgrades";
+import { purchaseUpgrade } from "../Slices/upgradesSlice";
+import { RootState } from "../rootReducer";
+import { purchaseUpgradeThunk, sellUpgradeThunk } from "../gameActions";
 import { ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
 import { ButtonBase } from "@mui/material";
-import { DNA } from "./Components/DNA";
+import { DNA } from "../Components/DNA";
 
 interface UpgradeModalProps {
   open: boolean;

@@ -3,15 +3,15 @@
 import { configureStore, Action } from "@reduxjs/toolkit";
 import { ThunkAction } from "redux-thunk";
 import thunk from "redux-thunk";
-import plantTimeReducer from "./plantTimeSlice";
-import appReducer from "./appSlice";
-import plantReducer from "./plantSlice";
-import upgradesReducer from "./upgradesSlice";
-import globalStateSlice from "./gameStateSlice";
+import plantTimeReducer from "./Slices/plantTimeSlice";
+import appReducer from "./Slices/appSlice";
+import plantReducer from "./Slices/plantSlice";
+import upgradesReducer from "./Slices/upgradesSlice";
+import globalStateSlice from "./Slices/gameStateSlice";
 import { loadState, saveState } from "./localStorage";
 import { RootState } from "./rootReducer";
-import plantHistoryReducer from "./plantHistorySlice";
-import timeBoostReducer from "./timeBoostSlice"; // Adjust the path if it's located elsewhere
+import plantHistoryReducer from "./Slices/plantHistorySlice";
+import timeBoostReducer from "./Slices/timeBoostSlice"; // Adjust the path if it's located elsewhere
 
 const persistedState: RootState | undefined = loadState();
 

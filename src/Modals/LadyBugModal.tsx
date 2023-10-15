@@ -4,10 +4,10 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import { RootState } from "./rootReducer";
+import { RootState } from "../rootReducer";
 import { ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
-import { setLadybugs } from "./plantSlice";
+import { setLadybugs } from "../Slices/plantSlice";
 import { Stack } from "@mui/material";
 
 interface LadyBugModalProps {
