@@ -25,17 +25,20 @@ const MenuModal: React.FC<Props> = (props) => {
         border={1}
         borderColor="grey.300"
         borderRadius={2}
-        width="220px"
         padding={1}
-        margin="0 auto"
         display="flex"
         flexDirection="column"
-        gap="16px"
       >
-        <Button variant="contained" color="primary" onClick={props.onPlantSeed}>
+        <Button
+          sx={{ my: 1 }}
+          variant="contained"
+          color="primary"
+          onClick={props.onPlantSeed}
+        >
           Plant Seed
         </Button>
         <Button
+          sx={{ my: 1 }}
           variant="contained"
           color="primary"
           onClick={props.onOpenUpgrade}
@@ -44,33 +47,33 @@ const MenuModal: React.FC<Props> = (props) => {
         </Button>
 
         <Button
+          sx={{ my: 1 }}
           variant="contained"
           color="primary"
           onClick={props.onOpenMushroomStore}
-          style={{ marginTop: "10px" }}
         >
           Mushroom Store
         </Button>
         <Button
+          sx={{ my: 1 }}
           variant="contained"
           color="primary"
           onClick={props.handleOpenReportModal}
-          style={{ marginTop: "10px" }}
         >
           Plant Details
         </Button>
 
         <Button
+          sx={{ my: 1 }}
           variant="contained"
           color="primary"
           onClick={props.handleOpenHistoryModal}
-          style={{ marginTop: "10px" }}
         >
           Plant History
         </Button>
         <Button
           variant="contained"
-          sx={{ backgroundColor: "#4e86e6", marginTop: "10px" }}
+          sx={{ my: 1, backgroundColor: "#4e86e6" }}
           onClick={props.handleOpenHelpModal}
         >
           Help
@@ -79,11 +82,11 @@ const MenuModal: React.FC<Props> = (props) => {
           href="https://discord.gg/eNNEjSBE"
           target="_blank"
           rel="noopener noreferrer"
-          style={{ textDecoration: "none", width: "100%", marginTop: "10px" }}
+          style={{ textDecoration: "none", width: "100%" }}
         >
           <Button
             variant="contained"
-            sx={{ backgroundColor: "#7289DA" }} // Discord's color
+            sx={{ my: 1, backgroundColor: "#7289DA" }} // Discord's color
             fullWidth
           >
             Join Discord
@@ -91,7 +94,7 @@ const MenuModal: React.FC<Props> = (props) => {
         </a>
         <Button
           variant="contained"
-          sx={{ backgroundColor: "#942e25", marginTop: "10px" }}
+          sx={{ my: 1, backgroundColor: "#942e25" }}
           onClick={() => props.setOpenDialog(true)}
         >
           Purge Save
