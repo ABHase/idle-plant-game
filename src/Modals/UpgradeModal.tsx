@@ -27,20 +27,15 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, onClose }) => {
   );
 
   return (
-    <Modal
-      open={open}
-      onClose={onClose}
-      aria-labelledby="upgrade-modal-title"
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
+    <Modal open={open} onClose={onClose} aria-labelledby="upgrade-modal-title">
       <Box
         sx={{
-          maxWidth: "80%",
-          maxHeight: "80%",
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: 220,
+          height: 450,
           bgcolor: "background.paper",
           border: "2px solid #000",
           borderRadius: 3,
