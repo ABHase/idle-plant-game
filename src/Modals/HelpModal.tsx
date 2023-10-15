@@ -109,20 +109,15 @@ const HelpModal: React.FC<HelpModalProps> = ({ open, onClose }) => {
   ];
 
   return (
-    <Modal
-      open={open}
-      onClose={onClose}
-      aria-labelledby="help-modal-title"
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
+    <Modal open={open} onClose={onClose} aria-labelledby="help-modal-title">
       <Box
         sx={{
-          maxWidth: "80%",
-          maxHeight: "80%",
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: 220,
+          height: "auto",
           bgcolor: "background.paper",
           border: "2px solid #000",
           borderRadius: 3,

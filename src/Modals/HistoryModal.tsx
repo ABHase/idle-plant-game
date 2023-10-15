@@ -23,16 +23,15 @@ const PlantHistoryModal: React.FC<PlantHistoryModalProps> = ({
       open={open}
       onClose={onClose}
       aria-labelledby="plant-history-modal-title"
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
     >
       <Box
         sx={{
-          maxWidth: "80%",
-          maxHeight: "80%",
+          position: "absolute",
+          top: "35%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: 220,
+          height: 400,
           bgcolor: "background.paper",
           border: "2px solid #000",
           borderRadius: 3,
