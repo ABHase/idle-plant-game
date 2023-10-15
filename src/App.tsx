@@ -200,6 +200,33 @@ function App() {
         bgcolor="background.default"
         color="text.primary"
       >
+        <header className="App-header">
+          <Box
+            border={1}
+            borderColor="grey.300"
+            borderRadius={2}
+            width="320px"
+            padding={1}
+            margin="0 auto"
+          >
+            <Button
+              variant="contained"
+              onClick={() => setMenuModalOpen(true)}
+              sx={{ width: "100%", mt: 1, mb: 1 }} // This will set the width to 90% of the parent and add some margin at the top and bottom
+            >
+              Open Menu
+            </Button>
+          </Box>
+
+          <PlantTimeDisplay plantTime={plantTime} />
+          <GlobalStateDisplay />
+          <PlantList setLadybugModalOpen={setLadybugModalOpen} />
+
+          <UpgradeModal
+            open={upgradeModalOpen}
+            onClose={handleCloseUpgradeModal}
+          />
+        </header>
         <ConfirmDeleteDialog
           open={openDialog}
           onClose={() => setOpenDialog(false)}
@@ -258,36 +285,6 @@ function App() {
             You lost a leaf due to lack of water!
           </Alert>
         </Snackbar>
-
-        <Box sx={{ display: { xs: "block", sm: "block" } }}>
-          <header className="App-header">
-            <Box
-              border={1}
-              borderColor="grey.300"
-              borderRadius={2}
-              width="320px"
-              padding={1}
-              margin="0 auto"
-            >
-              <Button
-                variant="contained"
-                onClick={() => setMenuModalOpen(true)}
-                sx={{ width: "100%", mt: 1, mb: 1 }} // This will set the width to 90% of the parent and add some margin at the top and bottom
-              >
-                Open Menu
-              </Button>
-            </Box>
-
-            <PlantTimeDisplay plantTime={plantTime} />
-            <GlobalStateDisplay />
-            <PlantList setLadybugModalOpen={setLadybugModalOpen} />
-
-            <UpgradeModal
-              open={upgradeModalOpen}
-              onClose={handleCloseUpgradeModal}
-            />
-          </header>
-        </Box>
       </Box>
     </ThemeProvider>
   );

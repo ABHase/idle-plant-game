@@ -49,9 +49,9 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
           <MenuItem value="Moss">Moss</MenuItem>
         </Select>
         <DialogContentText>
-          Are you sure you want to plant a new seed, <DNAIcon /> DNA progress
-          will not be reset with plant resources. This action cannot be undone,
-          and will start a new plant with the following traits:
+          Are you sure you want to plant a new seed, DNA progress will not be
+          reset with plant resources. This action cannot be undone, and will
+          start a new plant with the following traits:
         </DialogContentText>
         {purchased.map((id) => {
           const trait = UPGRADES.find((upgrade) => upgrade.id === id);
