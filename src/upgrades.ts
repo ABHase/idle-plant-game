@@ -1,6 +1,6 @@
 // upgrades.ts
 
-import { PlantState } from "./plantSlice";
+import { PlantState } from "./Slices/plantSlice";
 
 export type Upgrade = {
   id: string;

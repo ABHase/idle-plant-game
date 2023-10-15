@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { RootState } from "./rootReducer";
+import { RootState } from "../rootReducer";
 
 interface PlantHistoryModalProps {
   open: boolean;
@@ -15,7 +15,7 @@ const PlantHistoryModal: React.FC<PlantHistoryModalProps> = ({
   onClose,
 }) => {
   const plantHistory = useSelector(
-    (state: RootState) => state.plantHistory.entries,
+    (state: RootState) => state.plantHistory.entries
   ); // Adjust the path if your state structure is different
 
   return (

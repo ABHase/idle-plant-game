@@ -1,12 +1,12 @@
 //rootReducer.ts
 
-import { PlantTimeState } from "./plantTimeSlice";
-import { AppState } from "./appSlice";
-import { PlantState } from "./plantSlice";
-import { GlobalState } from "./gameStateSlice";
-import { UpgradesState } from "./upgradesSlice";
-import { PlantHistoryState } from "./plantHistorySlice";
-import { TimeBoostState } from "./timeBoostSlice"; // Assuming you named your state as TimeBoostState in the slice file
+import { PlantTimeState } from "./Slices/plantTimeSlice";
+import { AppState } from "./Slices/appSlice";
+import { PlantState } from "./Slices/plantSlice";
+import { GlobalState } from "./Slices/gameStateSlice";
+import { UpgradesState } from "./Slices/upgradesSlice";
+import { PlantHistoryState } from "./Slices/plantHistorySlice";
+import { TimeBoostState } from "./Slices/timeBoostSlice"; // Assuming you named your state as TimeBoostState in the slice file
 
 export type RootState = {
   plantTime: PlantTimeState;

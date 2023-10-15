@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { PlantState } from "./plantSlice"; // Import this for typing
-import { UPGRADES } from "./upgrades";
+import { UPGRADES } from "../upgrades";
 
 type Upgrade = {
   id: string;

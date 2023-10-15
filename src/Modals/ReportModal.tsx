@@ -4,8 +4,8 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { Button } from "@mui/material";
 import { useSelector } from "react-redux";
-import { RootState } from "./rootReducer";
-import { itemizedReport } from "./formulas";
+import { RootState } from "../rootReducer";
+import { itemizedReport } from "../formulas";
 
 interface ReportModalProps {
   open: boolean;

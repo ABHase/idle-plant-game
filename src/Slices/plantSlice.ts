@@ -1,21 +1,18 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
-import { SUGAR_THRESHOLD, SECONDARY_SUGAR_THRESHOLD } from "./constants";
-import { createSelector } from "@reduxjs/toolkit";
-import { RootState } from "./rootReducer"; // This needs to be the actual path to your rootReducer
-import { UPGRADE_FUNCTIONS, UPGRADES } from "./upgrades"; // Assuming you have UPGRADES defined in an 'upgrades.ts' file
-import {
-  MATURITY_SUGAR_PRODUCTION_MODIFIER,
-  MATURITY_WATER_CONSUMPTION_MODIFIER,
-  MATURITY_SUNLIGHT_CONSUMPTION_MODIFIER,
-  BASE_WATER_CONSUMPTION,
-  BASE_SUNLIGHT_CONSUMPTION,
-} from "./constants";
+import { SUGAR_THRESHOLD, SECONDARY_SUGAR_THRESHOLD } from "../constants";
+import { UPGRADE_FUNCTIONS, UPGRADES } from "../upgrades"; // Assuming you have UPGRADES defined in an 'upgrades.ts' file
 import {
   calculateWaterAndSunlight,
   calculateSugarPhotosynthesis,
   geneticSugarConsumption,
-} from "./formulas";
+} from "../formulas";
+import { PLANT_CONFIGS } from "../plantConfigs";
+
+type EvolvePlantPayload = {
+  plantType: string;
+  upgrades: string[];
+};
 
 export interface PlantState {
   id: string;
@@ -54,44 +51,7 @@ export interface PlantState {
   aphids: number;
 }
 
-const INITIAL_PLANT_CONFIG: PlantState = {
-  id: uuidv4(), // Will be overridden when initialized
-  maturity_level: 1,
-  sugar_production_rate: 1,
-  genetic_marker_production_rate: 1,
-  is_sugar_production_on: false,
-  is_genetic_marker_production_on: false,
-  is_secondary_resource_production_on: false,
-  sunlight: 0,
-  sunlight_absorption_rate: 10,
-  water: 1,
-  water_absorption_rate: 10,
-  sunlight_efficiency_multiplier: 1,
-  water_efficiency_multiplier: 1,
-  sunlight_absorption_multiplier: 1,
-  water_absorption_multiplier: 1,
-  sugar: 0,
-  ladybugs: 1,
-  ladybugTax: 0.5,
-  roots: 2,
-  leaves: 1,
-  resin: 0,
-  sugarProduced: 0,
-  lastProductionTimestamp: 0,
-  totalWaterAbsorbed: 0,
-  totalSunlightAbsorbed: 0,
-  totalSugarCreated: 0,
-  geneticMarkerUpgradeActive: false,
-  rootRot: 0,
-  rootRotThreshold: 100,
-  springModifier: 1.5,
-  summerModifier: 1.5,
-  autumnModifier: 1.5,
-  winterModifier: 0.25,
-  aphids: 0,
-};
-
-const initialState: PlantState = INITIAL_PLANT_CONFIG;
+const initialState: PlantState = PLANT_CONFIGS.Fern; // Setting Fern as the default plant
 
 const plantSlice = createSlice({
   name: "plant",
@@ -101,23 +61,35 @@ const plantSlice = createSlice({
 
     initializeNewPlant: (
       state,
-      action: PayloadAction<{ biome_id: string }>
+      action: PayloadAction<{ plantType: string }>
     ) => {
-      return {
-        ...INITIAL_PLANT_CONFIG,
-        id: uuidv4(),
-      };
+      // This function can now initialize plants based on a provided plantType
+      if (PLANT_CONFIGS[action.payload.plantType]) {
+        return {
+          ...PLANT_CONFIGS[action.payload.plantType],
+          id: uuidv4(),
+        };
+      } else {
+        return {
+          ...PLANT_CONFIGS.Fern,
+          id: uuidv4(),
+        };
+      }
     },
-
-    evolvePlant: (state, action: PayloadAction<string[]>) => {
+    evolvePlant: (state, action: PayloadAction<EvolvePlantPayload>) => {
       // Use the purchased upgrades from the action payload
-      const purchasedUpgrades = action.payload;
+      const { plantType, upgrades } = action.payload;
+      const plantConfig = PLANT_CONFIGS[plantType];
 
-      // Modify the properties of the state directly
-      Object.assign(state, INITIAL_PLANT_CONFIG);
+      if (!plantConfig) {
+        console.error(`Unknown plant type: ${plantType}`);
+        return;
+      }
+
+      Object.assign(state, plantConfig);
       state.id = uuidv4();
 
-      purchasedUpgrades.forEach((upgradeId) => {
+      upgrades.forEach((upgradeId) => {
         const upgradeFunction = UPGRADE_FUNCTIONS[upgradeId];
         if (upgradeFunction) {
           upgradeFunction(state);

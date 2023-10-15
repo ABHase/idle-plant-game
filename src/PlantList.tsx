@@ -8,7 +8,7 @@ import {
   buyLeaves,
   buyRoots,
   toggleGeneticMarkerProduction,
-} from "./plantSlice";
+} from "./Slices/plantSlice";
 import {
   Grid,
   Typography,

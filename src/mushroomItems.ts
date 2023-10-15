@@ -4,9 +4,12 @@ import { ThunkDispatch } from "redux-thunk";
 import { Action } from "@reduxjs/toolkit";
 import { RootState } from "./rootReducer";
 import { updateGame } from "./gameActions";
-import { addGeneticMarkers } from "./gameStateSlice"; // Assume you have deductSugar function in gameStateSlice
-import { PlantState, deductSugar, increaseRootRot } from "./plantSlice";
-import { activateTimeBoost, deactivateTimeBoost } from "./timeBoostSlice";
+import { addGeneticMarkers } from "./Slices/gameStateSlice"; // Assume you have deductSugar function in gameStateSlice
+import { PlantState, deductSugar, increaseRootRot } from "./Slices/plantSlice";
+import {
+  activateTimeBoost,
+  deactivateTimeBoost,
+} from "./Slices/timeBoostSlice";
 
 export type MushroomItem = {
   id: string;
@@ -15,7 +18,7 @@ export type MushroomItem = {
   cost: number;
   effect: (
     dispatch: ThunkDispatch<RootState, unknown, Action<string>>,
-    getState: () => RootState,
+    getState: () => RootState
   ) => void; // The function now takes dispatch and getState
 };
 
@@ -64,16 +67,16 @@ export const MUSHROOM_ITEMS: MushroomItem[] = [
 export const MUSHROOM_ITEM_FUNCTIONS: {
   [key: string]: (
     dispatch: ThunkDispatch<RootState, unknown, Action<string>>,
-    getState: () => RootState,
+    getState: () => RootState
   ) => void;
 } = {
   nitrogen: MUSHROOM_ITEMS.find((item) => item.id === "nitrogen")?.effect as (
     dispatch: ThunkDispatch<RootState, unknown, Action<string>>,
-    getState: () => RootState,
+    getState: () => RootState
   ) => void,
   buyDNA: MUSHROOM_ITEMS.find((item) => item.id === "buyDNA")?.effect as (
     dispatch: ThunkDispatch<RootState, unknown, Action<string>>,
-    getState: () => RootState,
+    getState: () => RootState
   ) => void,
   // ... other mushroom item functions
 };

@@ -4,13 +4,13 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import { MUSHROOM_ITEMS } from "./mushroomItems";
-import { RootState } from "./rootReducer";
+import { MUSHROOM_ITEMS } from "../mushroomItems";
+import { RootState } from "../rootReducer";
 import { ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
-import { Sugar } from "./Components/Sugar";
+import { Sugar } from "../Components/Sugar";
 
 interface MushroomStoreModalProps {
   open: boolean;

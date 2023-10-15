@@ -3,7 +3,7 @@
 import { ThunkAction } from "redux-thunk";
 import { RootState } from "./rootReducer";
 import { Action } from "@reduxjs/toolkit"; // Import Action
-import { updateTime } from "./appSlice";
+import { updateTime } from "./Slices/appSlice";
 import {
   evolvePlant,
   produceGeneticMarkers,
@@ -13,12 +13,15 @@ import {
   updateWaterAndSunlight,
   resetRootRot,
   removeRoots,
-} from "./plantSlice";
-import { updateGeneticMarkerProgress } from "./gameStateSlice";
+} from "./Slices/plantSlice";
+import { updateGeneticMarkerProgress } from "./Slices/gameStateSlice";
 import { SECONDARY_SUGAR_THRESHOLD, SUGAR_THRESHOLD } from "./constants";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { UPGRADES } from "./upgrades";
-import { PlantHistoryEntry, addPlantToHistory } from "./plantHistorySlice";
+import {
+  PlantHistoryEntry,
+  addPlantToHistory,
+} from "./Slices/plantHistorySlice";
 
 //... [other imports]
 
@@ -199,6 +202,11 @@ export const evolveAndRecordPlant = (
     dispatch(addPlantToHistory(historyEntry));
 
     // Dispatch the action to evolve the plant with the passed upgrades
-    dispatch(evolvePlant(upgrades));
+    dispatch(
+      evolvePlant({
+        plantType: "Fern",
+        upgrades: upgrades,
+      })
+    );
   };
 };

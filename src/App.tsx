@@ -2,13 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import "./App.css";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "./rootReducer";
-import {
-  absorbSunlight,
-  absorbWater,
-  initializeNewPlant,
-  produceSugar,
-  updateWaterAndSunlight,
-} from "./plantSlice";
 import { createSelector } from "reselect";
 import { evolveAndRecordPlant, updateGame } from "./gameActions";
 import store, { AppDispatch } from "./store"; // Adjust the path if necessary
@@ -21,20 +14,18 @@ import { clearState, saveState } from "./localStorage";
 import ConfirmDeleteDialog from "./ConfirmDeleteDialog";
 import ConfirmEvolveDialog from "./ConfirmEvolveDialog";
 import { Button } from "@mui/material";
-import { resetApp } from "./appSlice";
-import { resetGlobalState } from "./gameStateSlice";
-import { resetPlant } from "./plantSlice";
-import { resetPlantTime } from "./plantTimeSlice";
-import { evolvePlant } from "./plantSlice";
-import UpgradeModal from "./UpgradeModal";
-import { resetUpgrades } from "./upgradesSlice";
-import HistoryModal from "./HistoryModal";
-import HelpModal from "./HelpModal";
-import MenuModal from "./MenuModal";
-import MushroomStoreModal from "./MushroomStoreModal";
-import LadyBugModal from "./LadyBugModal";
-import ReportModal from "./ReportModal";
-import { itemizedReport } from "./formulas";
+import { resetApp } from "./Slices/appSlice";
+import { resetGlobalState } from "./Slices/gameStateSlice";
+import { resetPlant } from "./Slices/plantSlice";
+import { resetPlantTime } from "./Slices/plantTimeSlice";
+import UpgradeModal from "./Modals/UpgradeModal";
+import { resetUpgrades } from "./Slices/upgradesSlice";
+import HistoryModal from "./Modals/HistoryModal";
+import HelpModal from "./Modals/HelpModal";
+import MenuModal from "./Modals/MenuModal";
+import MushroomStoreModal from "./Modals/MushroomStoreModal";
+import LadyBugModal from "./Modals/LadyBugModal";
+import ReportModal from "./Modals/ReportModal";
 
 const theme = createTheme({
   palette: {
