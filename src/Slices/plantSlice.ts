@@ -8,6 +8,7 @@ import {
   geneticSugarConsumption,
 } from "../formulas";
 import { PLANT_CONFIGS } from "../plantConfigs";
+import { type } from "os";
 
 type EvolvePlantPayload = {
   plantType: string;
@@ -16,6 +17,7 @@ type EvolvePlantPayload = {
 
 export interface PlantState {
   id: string;
+  type: string;
   maturity_level: number;
   sugar_production_rate: number;
   genetic_marker_production_rate: number;
@@ -80,6 +82,7 @@ const plantSlice = createSlice({
       // Use the purchased upgrades from the action payload
       const { plantType, upgrades } = action.payload;
       const plantConfig = PLANT_CONFIGS[plantType];
+      console.log(plantType);
 
       if (!plantConfig) {
         console.error(`Unknown plant type: ${plantType}`);

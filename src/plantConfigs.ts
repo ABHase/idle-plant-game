@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 export const FERN_INITIAL_CONFIG: PlantState = {
   id: uuidv4(), // Will be overridden when initialized
   maturity_level: 1,
+  type: "Fern",
   sugar_production_rate: 1,
   genetic_marker_production_rate: 1,
   is_sugar_production_on: false,
@@ -41,15 +42,16 @@ export const FERN_INITIAL_CONFIG: PlantState = {
 export const MOSS_INITIAL_CONFIG: PlantState = {
   id: uuidv4(), // Will be overridden when initialized
   maturity_level: 1,
-  sugar_production_rate: 1,
-  genetic_marker_production_rate: 1,
+  type: "Moss",
+  sugar_production_rate: 0.1,
+  genetic_marker_production_rate: 0.1,
   is_sugar_production_on: false,
   is_genetic_marker_production_on: false,
   is_secondary_resource_production_on: false,
   sunlight: 0,
-  sunlight_absorption_rate: 10,
+  sunlight_absorption_rate: 1,
   water: 1,
-  water_absorption_rate: 10,
+  water_absorption_rate: 1,
   sunlight_efficiency_multiplier: 1,
   water_efficiency_multiplier: 1,
   sunlight_absorption_multiplier: 1,
@@ -58,7 +60,7 @@ export const MOSS_INITIAL_CONFIG: PlantState = {
   ladybugs: 1,
   ladybugTax: 0.5,
   roots: 2,
-  leaves: 1,
+  leaves: 2,
   resin: 0,
   sugarProduced: 0,
   lastProductionTimestamp: 0,

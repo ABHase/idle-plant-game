@@ -172,6 +172,7 @@ export const sellUpgradeThunk = createAsyncThunk<
 });
 
 export const evolveAndRecordPlant = (
+  plantType: string,
   upgrades: string[]
 ): ThunkAction<void, RootState, unknown, Action<string>> => {
   return (dispatch, getState) => {
@@ -204,7 +205,7 @@ export const evolveAndRecordPlant = (
     // Dispatch the action to evolve the plant with the passed upgrades
     dispatch(
       evolvePlant({
-        plantType: "Fern",
+        plantType: plantType,
         upgrades: upgrades,
       })
     );
