@@ -158,7 +158,7 @@ export const UPGRADE_FUNCTIONS: Record<
   { [key: string]: (plant: PlantState) => void }
 > = {
   Meta: {
-    moss_leaf_bonus: (plant) => {
+    Moss_leaf_bonus: (plant) => {
       plant.leafWaterUsage = false;
     },
   },
