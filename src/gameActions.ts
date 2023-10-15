@@ -14,7 +14,10 @@ import {
   resetRootRot,
   removeRoots,
 } from "./Slices/plantSlice";
-import { updateGeneticMarkerProgress } from "./Slices/gameStateSlice";
+import {
+  increaseGeneticMarkers,
+  updateGeneticMarkerProgress,
+} from "./Slices/gameStateSlice";
 import { SECONDARY_SUGAR_THRESHOLD, SUGAR_THRESHOLD } from "./constants";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { UPGRADES } from "./upgrades";
@@ -59,6 +62,8 @@ export const updateGame = (): ThunkAction<
       }
     }
 
+    //Genetic Marker (DNA) Production Dispatches
+
     if (
       plant.is_genetic_marker_production_on &&
       plant.sugar >= SUGAR_THRESHOLD
@@ -68,19 +73,25 @@ export const updateGame = (): ThunkAction<
       dispatch(
         updateGeneticMarkerProgress({
           geneticMarkerUpgradeActive: plant.geneticMarkerUpgradeActive,
+          plantType: plant.type,
         })
       );
-    }
-    if (
-      plant.is_secondary_resource_production_on &&
-      plant.sugar >= SECONDARY_SUGAR_THRESHOLD
-    ) {
-      dispatch(produceSecondaryResource());
+      dispatch(
+        increaseGeneticMarkers({
+          amount: plant.genetic_marker_production_rate,
+          plantType: plant.type,
+        })
+      );
     }
 
     //Check if the plant has zero water and if so dispatch resetRootRot
     if (plant.water <= 0) {
       dispatch(resetRootRot());
+    }
+
+    // If the plant has 0 water dispatch removeLeaves with a payload of 1 every time the currentMinute is 0
+    if (plant.water <= 0 && currentMinute % 30 === 0) {
+      dispatch({ type: "plant/removeLeaves", payload: 1 });
     }
 
     // Check if the plant has more root rot than root rot threshold, if so dispatch removeRoots
@@ -97,11 +108,6 @@ export const updateGame = (): ThunkAction<
       dispatch({ type: "plant/increaseAphids", payload: 1 });
     }
 
-    // If the plant has 0 water dispatch removeLeaves with a payload of 1 every time the currentMinute is 0
-    if (plant.water <= 0 && currentMinute % 30 === 0) {
-      dispatch({ type: "plant/removeLeaves", payload: 1 });
-    }
-
     // Dispatch deduct sugar with a payload equal to the number of aphids and if the plant has 0 sugar dispatch deduct aphids with payload equal to the number of aphids
     if (plant.aphids > 0) {
       dispatch({ type: "plant/deductSugar", payload: plant.aphids });
@@ -110,17 +116,14 @@ export const updateGame = (): ThunkAction<
       }
     }
 
+    //Plant Production Dispatches
     dispatch(updateMaturityLevel());
-
     dispatch(updateWaterAndSunlight({ season: currentSeason }));
     dispatch(produceSugar({ season: currentSeason }));
 
     // ... [other logic and dispatches as needed]
   };
 };
-function updateSecondaryResources(arg0: { biomeName: string }): any {
-  throw new Error("Function not implemented.");
-}
 
 export const purchaseUpgradeThunk = createAsyncThunk<
   void,

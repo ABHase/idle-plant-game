@@ -134,7 +134,12 @@ export const UPGRADES: Record<string, Upgrade[]> = {
     },
   ],
   Moss: [
-    // ... moss upgrades
+    {
+      id: "bromeliad",
+      name: "Bromeliad",
+      description: "Doubles the amount of sunlight absorbed by Moss",
+      cost: 1,
+    },
   ],
 };
 
@@ -204,6 +209,10 @@ export const UPGRADE_FUNCTIONS: Record<
       plant.winterModifier *= 2;
     },
   },
-  Moss: {},
+  Moss: {
+    bromeliad: (plant) => {
+      plant.sunlight_absorption_multiplier *= 2;
+    },
+  },
   // ... other upgrade functions
 };

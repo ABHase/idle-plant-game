@@ -37,26 +37,72 @@ const globalStateSlice = createSlice({
   initialState,
   reducers: {
     resetGlobalState: () => initialState,
-    deductGeneticMarkers: (state, action: PayloadAction<number>) => {
-      state.geneticMarkers -= action.payload;
+    deductGeneticMarkers: (
+      state,
+      action: PayloadAction<{ amount: number; plantType: string }>
+    ) => {
+      switch (action.payload.plantType) {
+        case "Fern":
+          state.geneticMarkers -= action.payload.amount;
+          break;
+        case "Moss":
+          state.geneticMarkersMoss -= action.payload.amount;
+          break;
+        default:
+          // Handle other types or default behavior if needed
+          break;
+      }
     },
-    increaseGeneticMarkers: (state, action: PayloadAction<number>) => {
-      state.geneticMarkers += action.payload;
+    increaseGeneticMarkers: (
+      state,
+      action: PayloadAction<{ amount: number; plantType: string }>
+    ) => {
+      switch (action.payload.plantType) {
+        case "Fern":
+          state.geneticMarkers += action.payload.amount;
+          break;
+        case "Moss":
+          state.geneticMarkersMoss += action.payload.amount;
+          break;
+        default:
+          // Handle other types or default behavior if needed
+          break;
+      }
     },
 
     updateGeneticMarkerProgress: (
       state,
-      action: PayloadAction<{ geneticMarkerUpgradeActive: boolean }>
+      action: PayloadAction<{
+        geneticMarkerUpgradeActive: boolean;
+        plantType: string;
+      }>
     ) => {
       const multiplier = action.payload.geneticMarkerUpgradeActive ? 2 : 1;
-      state.geneticMarkerProgress += multiplier;
-
-      if (state.geneticMarkerProgress >= state.geneticMarkerThreshold) {
-        state.geneticMarkers += 1;
-        state.geneticMarkerProgress = 0;
-        state.geneticMarkerThreshold *= 1.1;
+      switch (action.payload.plantType) {
+        case "fern":
+          state.geneticMarkerProgress += multiplier;
+          if (state.geneticMarkerProgress >= state.geneticMarkerThreshold) {
+            state.geneticMarkers += 1;
+            state.geneticMarkerProgress = 0;
+            state.geneticMarkerThreshold *= 1.1;
+          }
+          break;
+        case "moss":
+          state.geneticMarkerProgressMoss += multiplier;
+          if (
+            state.geneticMarkerProgressMoss >= state.geneticMarkerThresholdMoss
+          ) {
+            state.geneticMarkersMoss += 1;
+            state.geneticMarkerProgressMoss = 0;
+            state.geneticMarkerThresholdMoss *= 1.1;
+          }
+          break;
+        default:
+          // Handle other types or default behavior if needed
+          break;
       }
     },
+    //Probably going to remove this below
     updateSecondaryResources: (
       state,
       action: PayloadAction<{ biomeName: string }>
@@ -78,8 +124,21 @@ const globalStateSlice = createSlice({
           break;
       }
     },
-    addGeneticMarkers: (state, action: PayloadAction<number>) => {
-      state.geneticMarkers += action.payload;
+    addGeneticMarkers: (
+      state,
+      action: PayloadAction<{ amount: number; plantType: string }>
+    ) => {
+      switch (action.payload.plantType) {
+        case "fern":
+          state.geneticMarkers += action.payload.amount;
+          break;
+        case "moss":
+          state.geneticMarkersMoss += action.payload.amount;
+          break;
+        default:
+          // Handle other types or default behavior if needed
+          break;
+      }
     },
     // Add other reducers as necessary...
   },

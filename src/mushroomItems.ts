@@ -4,7 +4,10 @@ import { ThunkDispatch } from "redux-thunk";
 import { Action } from "@reduxjs/toolkit";
 import { RootState } from "./rootReducer";
 import { updateGame } from "./gameActions";
-import { addGeneticMarkers } from "./Slices/gameStateSlice"; // Assume you have deductSugar function in gameStateSlice
+import {
+  addGeneticMarkers,
+  increaseGeneticMarkers,
+} from "./Slices/gameStateSlice"; // Assume you have deductSugar function in gameStateSlice
 import { PlantState, deductSugar, increaseRootRot } from "./Slices/plantSlice";
 import {
   activateTimeBoost,
@@ -55,7 +58,7 @@ export const MUSHROOM_ITEMS: MushroomItem[] = [
       if (sugar >= 500) {
         dispatch(deductSugar(500)); // Deduct sugar cost
         dispatch(increaseRootRot(60)); // Increase root rot by 1
-        dispatch(addGeneticMarkers(1)); // Add 1 DNA
+        dispatch(increaseGeneticMarkers({ amount: 1, plantType: "Fern" })); // Add 1 DNA
       } else {
         console.error("Not enough sugar to buy DNA");
       }

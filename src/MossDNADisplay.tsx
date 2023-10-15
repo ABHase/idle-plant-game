@@ -16,7 +16,7 @@ const MossDNADisplay: React.FC = () => {
   );
 
   return (
-    <div className="global-state-display">
+    <div className="moss-dna-display">
       <Box
         border={1}
         borderColor="grey.300"

@@ -45,7 +45,7 @@ export const MOSS_INITIAL_CONFIG: PlantState = {
   maturity_level: 1,
   type: "Moss",
   sugar_production_rate: 0.1,
-  genetic_marker_production_rate: 0.1,
+  genetic_marker_production_rate: 1,
   is_sugar_production_on: false,
   is_genetic_marker_production_on: false,
   is_secondary_resource_production_on: false,
@@ -74,7 +74,7 @@ export const MOSS_INITIAL_CONFIG: PlantState = {
   springModifier: 1.5,
   summerModifier: 1.5,
   autumnModifier: 1.5,
-  winterModifier: 0.25,
+  winterModifier: 1,
   aphids: 0,
   leafWaterUsage: false,
 };
