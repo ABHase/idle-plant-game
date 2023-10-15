@@ -16,11 +16,11 @@ type EvolvePlantPayload = {
 };
 
 export interface PlantState {
-  id: string;
-  type: string;
-  maturity_level: number;
-  sugar_production_rate: number;
-  genetic_marker_production_rate: number;
+  id: string; //Unique ID for the plant
+  type: string; //Plant type Fern, Moss, Flower, Grass
+  maturity_level: number; //Plant maturity level
+  sugar_production_rate: number; //Sugar production rate, base
+  genetic_marker_production_rate: number; //Genetic marker production rate, base
   is_sugar_production_on: boolean;
   is_genetic_marker_production_on: boolean;
   is_secondary_resource_production_on: boolean;
