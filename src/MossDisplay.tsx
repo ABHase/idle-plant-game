@@ -413,9 +413,6 @@ const MossDisplay: React.FC<MossDisplayProps> = ({ setLadybugModalOpen }) => {
               </Button>
             </Tooltip>
           </Grid>
-          <Grid item xs={12}>
-            <Divider sx={{ backgroundColor: "white" }} />
-          </Grid>
         </Grid>
       </Box>
       {/* ... [Rest of the code for displaying other plant info] */}

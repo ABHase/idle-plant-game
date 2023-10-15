@@ -28,6 +28,9 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
 }) => {
   const purchased = useSelector((state: RootState) => state.upgrades.purchased);
   const [plantType, setPlantType] = React.useState<string>("Fern"); // default value as Fern
+  const typeSpecificUpgrades = UPGRADES[plantType];
+  const metaUpgrades = UPGRADES["Meta"];
+  const combinedUpgrades = [...metaUpgrades, ...typeSpecificUpgrades];
 
   const handlePlantTypeChange = (type: string) => {
     setPlantType(type);
@@ -40,9 +43,8 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
       <DialogContent style={{ overflowY: "auto" }}>
         <DialogContentText>
           Are you sure you want to plant a new seed, <DNAIcon /> DNA progress
-          will not be reset with plant resources. This action cannot be undone,
-          and will start a new plant with the following traits: Choose the type
-          of plant to evolve to:
+          will not be reset with plant resources. This action cannot be undone.
+          Choose the type of plant to evolve to:
         </DialogContentText>
         <Select
           value={plantType}
@@ -52,13 +54,15 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
           <MenuItem value="Fern">Fern</MenuItem>
           <MenuItem value="Moss">Moss</MenuItem>
         </Select>
+        <DialogContentText>
+          Will start a new {plantType} with the following traits::
+        </DialogContentText>
         {purchased.map((id) => {
-          const trait = UPGRADES[plantType].find(
-            (upgrade) => upgrade.id === id
-          );
+          const trait = combinedUpgrades.find((upgrade) => upgrade.id === id);
+          if (!trait) return null; // Don't render anything if trait is not found
           return (
             <Typography key={id} variant="body2">
-              - {trait?.name} ({trait?.description})
+              - {trait.name} ({trait.description})
             </Typography>
           );
         })}

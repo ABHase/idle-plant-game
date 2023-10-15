@@ -10,6 +10,16 @@ export type Upgrade = {
 };
 
 export const UPGRADES: Record<string, Upgrade[]> = {
+  Meta: [
+    {
+      id: "Moss_leaf_bonus",
+      name: "Absorbent Leaves (All Species)",
+      description:
+        "Leaves are water neutral and no longer lost due to dehydration.",
+      cost: 10,
+    },
+    // ... other meta progression traits
+  ],
   Fern: [
     {
       id: "boost_sugar",
@@ -147,6 +157,11 @@ export const UPGRADE_FUNCTIONS: Record<
   string,
   { [key: string]: (plant: PlantState) => void }
 > = {
+  Meta: {
+    moss_leaf_bonus: (plant) => {
+      plant.leafWaterUsage = false;
+    },
+  },
   Fern: {
     boost_sugar: (plant) => {
       plant.sugar_production_rate *= 1.5;

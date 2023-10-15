@@ -31,34 +31,12 @@ const MushroomStoreModal: React.FC<MushroomStoreModalProps> = ({
     setShowWarning(true); // Show the warning after making a purchase
   };
 
-  return (
-    <Modal
-      open={open}
-      onClose={onClose}
-      aria-labelledby="mushroom-store-modal-title"
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <Box
-        sx={{
-          maxWidth: "80%",
-          maxHeight: "80%",
-          bgcolor: "background.paper",
-          border: "2px solid #000",
-          borderRadius: 3,
-          boxShadow: 24,
-          p: 2,
-          overflow: "auto",
-          color: "text.primary",
-        }}
-      >
-        <Typography id="mushroom-store-modal-title" variant="h6">
-          Mushroom Store:
-        </Typography>
-        {MUSHROOM_ITEMS.map((item) => (
+  const plantType = useSelector((state: RootState) => state.plant.type); // Extract plant type
+
+  const renderContent = () => {
+    switch (plantType) {
+      case "Fern":
+        return MUSHROOM_ITEMS.map((item) => (
           <Box key={item.id} mt={2}>
             <Typography variant="body1">{item.name}</Typography>
             <Typography variant="body2">{item.description}</Typography>
@@ -87,7 +65,43 @@ const MushroomStoreModal: React.FC<MushroomStoreModalProps> = ({
               </Alert>
             </Snackbar>
           </Box>
-        ))}
+        ));
+      case "Moss":
+        return <Typography>No inventory available for Moss.</Typography>;
+      default:
+        // This can be a placeholder or remain empty until you have other plant types
+        return null;
+    }
+  };
+
+  return (
+    <Modal
+      open={open}
+      onClose={onClose}
+      aria-labelledby="mushroom-store-modal-title"
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Box
+        sx={{
+          maxWidth: "80%",
+          maxHeight: "80%",
+          bgcolor: "background.paper",
+          border: "2px solid #000",
+          borderRadius: 3,
+          boxShadow: 24,
+          p: 2,
+          overflow: "auto",
+          color: "text.primary",
+        }}
+      >
+        <Typography id="mushroom-store-modal-title" variant="h6">
+          Mushroom Store:
+        </Typography>
+        {renderContent()}
       </Box>
     </Modal>
   );

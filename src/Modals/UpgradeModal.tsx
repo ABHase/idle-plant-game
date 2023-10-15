@@ -30,7 +30,11 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, onClose }) => {
     (state: RootState) => state.globalState.geneticMarkers
   );
   const plantType = useSelector((state: RootState) => state.plant.type);
-  const availableUpgrades = UPGRADES[plantType];
+  const metaUpgradesForPlant = UPGRADES["Meta"].filter((upgrade) =>
+    upgrade.id.includes(plantType)
+  );
+  const specificUpgrades = UPGRADES[plantType];
+  const availableUpgrades = [...metaUpgradesForPlant, ...specificUpgrades];
 
   return (
     <Modal
