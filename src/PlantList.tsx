@@ -190,7 +190,11 @@ const PlantList: React.FC<PlantListProps> = ({ setLadybugModalOpen }) => {
               </Button>
             </Grid>
           ) : null}
-
+          <Grid item xs={12}>
+            <Box display="flex" alignItems="center" justifyContent="center">
+              <Typography variant="h5">You are a Fern</Typography>
+            </Box>
+          </Grid>
           <Grid item xs={4}>
             <Tooltip
               title={`${formatNumberWithDecimals(

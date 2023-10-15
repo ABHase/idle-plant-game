@@ -68,8 +68,11 @@ export const calculatePhotosynthesisSunlightConsumption = (
   );
 };
 
-export const calculateWaterDecrease = (leaves: number) => {
-  return leaves;
+export const calculateWaterDecrease = (
+  leaves: number,
+  leafWaterUsage: boolean
+) => {
+  return leafWaterUsage ? leaves : 0;
 };
 
 export const calculateRootsWaterIncrease = (
@@ -141,7 +144,10 @@ export const calculateWaterAndSunlight = (plantState: any, season: string) => {
   const waterModifier = getWaterModifier(season, plantState);
   const sunlightModifier = getSunlightModifier(season, plantState);
 
-  const waterDecrease = calculateWaterDecrease(plantState.leaves);
+  const waterDecrease = calculateWaterDecrease(
+    plantState.leaves,
+    plantState.leafWaterUsage
+  );
   const rootsWaterIncrease = calculateRootsWaterIncrease(
     plantState.roots,
     plantState.water_absorption_multiplier
@@ -240,7 +246,10 @@ export const itemizedReport = (plantState: any, season: string) => {
     ? calculatePhotosynthesisSunlightConsumption(plantState.maturity_level)
     : 0;
 
-  const waterDecrease = calculateWaterDecrease(plantState.leaves);
+  const waterDecrease = calculateWaterDecrease(
+    plantState.leaves,
+    plantState.leafWaterUsage
+  );
 
   const netWaterProduction =
     calculateLadybugsTaxWater(
@@ -277,7 +286,10 @@ export const itemizedReport = (plantState: any, season: string) => {
       totalSugarCreated: sugarsProducedDetails.totalSugarCreated,
     },
     water: {
-      waterDecrease: calculateWaterDecrease(plantState.leaves),
+      waterDecrease: calculateWaterDecrease(
+        plantState.leaves,
+        plantState.leafWaterUsage
+      ),
       rootsWaterIncrease: calculateRootsWaterIncrease(
         plantState.roots,
         plantState.water_absorption_multiplier

@@ -6,6 +6,9 @@ export interface GlobalState {
   geneticMarkerProgress: number;
   geneticMarkerThreshold: number;
   geneticMarkers: number;
+  geneticMarkerProgressMoss: number;
+  geneticMarkerThresholdMoss: number;
+  geneticMarkersMoss: number;
   seeds: number;
   silica: number;
   tannins: number;
@@ -18,6 +21,9 @@ const initialState: GlobalState = {
   geneticMarkerProgress: 0,
   geneticMarkerThreshold: 10,
   geneticMarkers: 0,
+  geneticMarkerProgressMoss: 0,
+  geneticMarkerThresholdMoss: 1,
+  geneticMarkersMoss: 0,
   seeds: 0,
   silica: 0,
   tannins: 0,
@@ -40,7 +46,7 @@ const globalStateSlice = createSlice({
 
     updateGeneticMarkerProgress: (
       state,
-      action: PayloadAction<{ geneticMarkerUpgradeActive: boolean }>,
+      action: PayloadAction<{ geneticMarkerUpgradeActive: boolean }>
     ) => {
       const multiplier = action.payload.geneticMarkerUpgradeActive ? 2 : 1;
       state.geneticMarkerProgress += multiplier;
@@ -53,7 +59,7 @@ const globalStateSlice = createSlice({
     },
     updateSecondaryResources: (
       state,
-      action: PayloadAction<{ biomeName: string }>,
+      action: PayloadAction<{ biomeName: string }>
     ) => {
       switch (action.payload.biomeName) {
         case "Desert":
