@@ -66,8 +66,7 @@ function App() {
   const plantTime = useSelector((state: RootState) => state.plantTime);
   const plants = useSelector(selectPlants);
   const season = useSelector(selectSeason);
-  const totalLeaves = useSelector((state: RootState) => state.plant.leaves); // Assuming `leaves` is a property in your plant state
-
+  const totalLeaves = useSelector((state: RootState) => state.plant.leaves);
   const [openDialog, setOpenDialog] = React.useState(false);
   const purchasedUpgrades = useSelector(
     (state: RootState) => state.upgrades.purchased
@@ -89,8 +88,8 @@ function App() {
 
   const [evolveDialogOpen, setEvolveDialogOpen] = useState(false);
 
-  const handleEvolve = () => {
-    dispatch(evolveAndRecordPlant(purchasedUpgrades));
+  const handleEvolve = (selectedPlantType: string) => {
+    dispatch(evolveAndRecordPlant(selectedPlantType, purchasedUpgrades));
   };
 
   useEffect(() => {
@@ -149,6 +148,7 @@ function App() {
   const [ladybugModalOpen, setLadybugModalOpen] = useState(false);
   const [reportModalOpen, setReportModalOpen] = useState(false);
   const [showLeafLossWarning, setShowLeafLossWarning] = useState(false);
+  const [plantType] = React.useState<string>("Fern");
 
   const handleOpenReportModal = () => {
     setReportModalOpen(true);
@@ -205,6 +205,7 @@ function App() {
           onClose={() => setOpenDialog(false)}
           onConfirm={handleDeleteConfirm}
         />
+
         <HistoryModal
           open={historyModalOpen}
           onClose={handleCloseHistoryModal}
