@@ -18,15 +18,20 @@ const ReportModal: React.FC<ReportModalProps> = ({ open, onClose }) => {
   const report = itemizedReport(plant, season);
 
   return (
-    <Modal open={open} onClose={onClose} aria-labelledby="report-modal-title">
+    <Modal
+      open={open}
+      onClose={onClose}
+      aria-labelledby="report-modal-title"
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
       <Box
         sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: 300,
-          height: "auto",
+          maxWidth: "80%",
+          maxHeight: "80%",
           bgcolor: "background.paper",
           border: "2px solid #000",
           borderRadius: 3,

@@ -11,8 +11,10 @@ import Button from "@mui/material/Button";
 import { RootState } from "./rootReducer"; // <-- Add this import
 import { UPGRADES } from "./upgrades"; // <-- Add this import
 import { Typography } from "@mui/material";
+import { DNAIcon } from "./icons/dna";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
+
 
 interface ConfirmEvolveDialogProps {
   open: boolean;
@@ -36,8 +38,11 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>{"Evolve Plant?"}</DialogTitle>
-      <DialogContent style={{ maxHeight: "300px", overflowY: "auto" }}>
+      <DialogContent style={{ overflowY: "auto" }}>
         <DialogContentText>
+          Are you sure you want to plant a new seed, <DNAIcon /> DNA progress
+          will not be reset with plant resources. This action cannot be undone,
+          and will start a new plant with the following traits:
           Choose the type of plant to evolve to:
         </DialogContentText>
         <Select
@@ -48,11 +53,6 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
           <MenuItem value="Fern">Fern</MenuItem>
           <MenuItem value="Moss">Moss</MenuItem>
         </Select>
-        <DialogContentText>
-          Are you sure you want to plant a new seed, DNA progress will not be
-          reset with plant resources. This action cannot be undone, and will
-          start a new plant with the following traits:
-        </DialogContentText>
         {purchased.map((id) => {
           const trait = UPGRADES.find((upgrade) => upgrade.id === id);
           return (
