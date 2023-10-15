@@ -36,16 +36,15 @@ const MushroomStoreModal: React.FC<MushroomStoreModalProps> = ({
       open={open}
       onClose={onClose}
       aria-labelledby="mushroom-store-modal-title"
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
     >
       <Box
         sx={{
-          maxWidth: "80%",
-          maxHeight: "80%",
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: 220,
+          height: 550,
           bgcolor: "background.paper",
           border: "2px solid #000",
           borderRadius: 3,
