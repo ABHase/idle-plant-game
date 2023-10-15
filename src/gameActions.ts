@@ -132,20 +132,43 @@ export const purchaseUpgradeThunk = createAsyncThunk<
 >("upgrades/purchase", async ({ plantType, upgradeId }, thunkAPI) => {
   const state = thunkAPI.getState();
 
-  // Find the right upgrade using the plant type
-  const upgrade = UPGRADES[plantType]?.find((u) => u.id === upgradeId);
+  const metaUpgradesForPlant = UPGRADES["Meta"].filter((upgrade) =>
+    upgrade.id.includes(plantType)
+  );
+  const specificUpgrades = UPGRADES[plantType];
+  const availableUpgrades = [...metaUpgradesForPlant, ...specificUpgrades];
+
+  // Find the right upgrade using the combined array of upgrades
+  const upgrade = availableUpgrades.find((u) => u.id === upgradeId);
 
   if (!upgrade) {
     throw new Error("Upgrade not found");
   }
 
-  if (state.globalState.geneticMarkers < upgrade.cost) {
+  // Use switch statement to check for the correct genetic marker based on plant type
+  let availableGeneticMarkers: number;
+
+  switch (plantType) {
+    case "Fern":
+      availableGeneticMarkers = state.globalState.geneticMarkers;
+      break;
+    case "Moss":
+      availableGeneticMarkers = state.globalState.geneticMarkersMoss;
+      break;
+    default:
+      throw new Error("Invalid plant type");
+  }
+
+  if (availableGeneticMarkers < upgrade.cost) {
     throw new Error("Not enough genetic markers");
   }
 
   thunkAPI.dispatch({
     type: "gameState/deductGeneticMarkers",
-    payload: upgrade.cost,
+    payload: {
+      amount: upgrade.cost,
+      plantType: plantType,
+    },
   });
   thunkAPI.dispatch({ type: "upgrades/purchaseUpgrade", payload: upgradeId });
 });
@@ -174,6 +197,7 @@ export const sellUpgradeThunk = createAsyncThunk<
   thunkAPI.dispatch({
     type: "gameState/increaseGeneticMarkers",
     payload: refundAmount,
+    plantType: plantType,
   });
   thunkAPI.dispatch({ type: "upgrades/sellUpgrade", payload: upgradeId });
 });
