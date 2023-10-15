@@ -13,10 +13,14 @@ import { ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
 import { ButtonBase } from "@mui/material";
 import { DNA } from "../Components/DNA";
+import { StarRateOutlined } from "@mui/icons-material";
 
 interface UpgradeModalProps {
   open: boolean;
   onClose: () => void;
+}
+interface UpgradesProps {
+  type: string;
 }
 
 const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, onClose }) => {
@@ -25,6 +29,8 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, onClose }) => {
   const geneticMarkers = useSelector(
     (state: RootState) => state.globalState.geneticMarkers
   );
+  const plantType = useSelector((state: RootState) => state.plant.type);
+  const availableUpgrades = UPGRADES[plantType];
 
   return (
     <Modal
@@ -68,14 +74,18 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, onClose }) => {
             color: "text.primary",
           }}
         >
-          {UPGRADES.map((upgrade) => (
+          {availableUpgrades.map((upgrade) => (
             <ButtonBase
               key={upgrade.id}
               onClick={() => {
+                const actionData = {
+                  plantType: plantType,
+                  upgradeId: upgrade.id,
+                };
                 if (purchased.includes(upgrade.id)) {
-                  dispatch(sellUpgradeThunk(upgrade.id));
+                  dispatch(sellUpgradeThunk(actionData));
                 } else {
-                  dispatch(purchaseUpgradeThunk(upgrade.id));
+                  dispatch(purchaseUpgradeThunk(actionData));
                 }
               }}
               sx={{
