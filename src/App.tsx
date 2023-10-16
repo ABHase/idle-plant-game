@@ -30,6 +30,8 @@ import MossDisplay from "./PlantDisplays/MossDisplay";
 import MossDNADisplay from "./DNADisplays/MossDNADisplay";
 import SucculentDisplay from "./PlantDisplays/SucculentDisplay";
 import SucculentDNADisplay from "./DNADisplays/SucculentDNADisplay";
+import GrassDisplay from "./PlantDisplays/GrassDisplay";
+import GrassDNADisplay from "./DNADisplays/GrassDNADisplay";
 
 const theme = createTheme({
   palette: {
@@ -206,6 +208,8 @@ function App() {
         return <MossDisplay setLadybugModalOpen={setLadybugModalOpen} />;
       case "Succulent":
         return <SucculentDisplay setLadybugModalOpen={setLadybugModalOpen} />;
+      case "Grass":
+        return <GrassDisplay setLadybugModalOpen={setLadybugModalOpen} />;
       default:
         return null; // or return a default component if desired
     }
@@ -219,6 +223,8 @@ function App() {
         return <MossDNADisplay />;
       case "Succulent":
         return <SucculentDNADisplay />;
+      case "Grass":
+        return <GrassDNADisplay />;
       default:
         return null; // or return a default component if desired
     }
@@ -317,7 +323,7 @@ function App() {
               <Button
                 variant="contained"
                 onClick={() => setMenuModalOpen(true)}
-                sx={{ width: "100%", mt: 1, mb: 1 }} // This will set the width to 90% of the parent and add some margin at the top and bottom
+                sx={{ width: "100%", mt: 0, mb: 0 }} // This will set the width to 90% of the parent and add some margin at the top and bottom
               >
                 Open Menu
               </Button>

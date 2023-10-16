@@ -24,6 +24,12 @@ export const UPGRADES: Record<string, Upgrade[]> = {
       description: "Sugar production 10X for non-Succulent plants.",
       cost: 5000,
     },
+    {
+      id: "Grass_growth_toggle",
+      name: "Growth Toggle (All Species)",
+      description: "Option to toggle auto growth on/off.",
+      cost: 500,
+    },
   ],
   Fern: [
     {
@@ -157,7 +163,32 @@ export const UPGRADES: Record<string, Upgrade[]> = {
     },
   ],
   Succulent: [
-    // ... other succulent upgrades
+    {
+      id: "needle_protection_1",
+      name: "Needle Protection",
+      description: "Needles protect twice as much water",
+      cost: 15,
+    },
+    {
+      id: "needle_protection_2",
+      name: "Needle Protection 2",
+      description: "Needles protect 50% more water",
+      cost: 30,
+    },
+    {
+      id: "needle_protection_3",
+      name: "Needle Protection 3",
+      description: "Needles protect 50% more water",
+      cost: 45,
+    },
+  ],
+  Grass: [
+    {
+      id: "auto_root_growth_multiplier_efficiency",
+      name: "Rhizomes",
+      description: "Reduce the cost of auto root growth from 5x to 2x",
+      cost: 3,
+    },
   ],
 };
 
@@ -171,6 +202,9 @@ export const UPGRADE_FUNCTIONS: Record<
     },
     Succulent_sugar_bonus: (plant) => {
       plant.agaveSugarBonus = true;
+    },
+    Grass_growth_toggle: (plant) => {
+      plant.grassGrowthToggle = true;
     },
   },
   Fern: {
@@ -240,6 +274,21 @@ export const UPGRADE_FUNCTIONS: Record<
       plant.sunlight_absorption_multiplier *= 2;
     },
   },
-  Succulent: {},
+  Succulent: {
+    needle_protection_1: (plant) => {
+      plant.needleProtection *= 2;
+    },
+    needle_protection_2: (plant) => {
+      plant.needleProtection *= 1.5;
+    },
+    needle_protection_3: (plant) => {
+      plant.needleProtection *= 1.5;
+    },
+  },
+  Grass: {
+    auto_root_growth_multiplier_efficiency: (plant) => {
+      plant.rootAutoGrowthMultiplier = 2;
+    },
+  },
   // ... other upgrade functions
 };

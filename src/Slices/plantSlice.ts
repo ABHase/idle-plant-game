@@ -54,7 +54,13 @@ export interface PlantState {
   leafWaterUsage: boolean; //Leaf water usage, this is the boolean that is used to determine if leaves use water, meta perk for moss
   agaveSugarBonus: boolean; //Agave sugar bonus, this is the boolean that is used to determine if agave has a sugar bonus, meta perk for succulent
   needles: number; //Needles, protect against rabbit attacks
+  needleProtection: number; //Needle protection, this is the number that is used to determine how much protection is provided by needles
   rabbitAttack: boolean; //Rabbit attack, this is the boolean that is used to determine if the plant is being attacked by rabbits
+  grassGrowthToggle: boolean; //Grass growth toggle, this is the boolean that is used to determine if the plant can passively grow
+  leafGrowthToggle: boolean; //Leaf growth toggle, this is the boolean that is used to determine if the plant is passively growing leaves
+  leafAutoGrowthMultiplier: number; //Leaf auto growth, leaf cost multiplied by this number to auto grow leaves
+  rootGrowthToggle: boolean; //Root growth toggle, this is the boolean that is used to determine if the plant is passively growing roots
+  rootAutoGrowthMultiplier: number; //Root auto growth, root cost multiplied by this number to auto grow roots
 }
 
 const initialState: PlantState = PLANT_CONFIGS.Fern; // Setting Fern as the default plant
@@ -193,9 +199,19 @@ const plantSlice = createSlice({
       state.leaves = Math.max(0, state.leaves - action.payload);
     },
     produceGeneticMarkers: (state) => {
-      const neededSugar = geneticSugarConsumption(state);
-      if (state.sugar >= neededSugar) {
-        state.sugar -= neededSugar;
+      const neededResource = geneticSugarConsumption(state);
+
+      if (state.type === "Grass") {
+        // Consume leaves for grass
+        const neededLeaves = neededResource / 5; // 1/5 the sugar amount
+        if (state.leaves >= neededLeaves) {
+          state.leaves -= neededLeaves;
+        }
+      } else {
+        // Consume sugar for other plants
+        if (state.sugar >= neededResource) {
+          state.sugar -= neededResource;
+        }
       }
     },
     produceSecondaryResource: (state) => {
@@ -272,6 +288,14 @@ const plantSlice = createSlice({
         state.needles += 1;
       }
     },
+    //Reducer to toggle leaf growth to the opposite of its current state
+    toggleLeafGrowth: (state) => {
+      state.leafGrowthToggle = !state.leafGrowthToggle;
+    },
+    //Reducer to toggle root growth to the opposite of its current state
+    toggleRootGrowth: (state) => {
+      state.rootGrowthToggle = !state.rootGrowthToggle;
+    },
   },
 });
 
@@ -306,5 +330,7 @@ export const {
   rabbitAttack,
   resetRabbitAttack,
   buyNeedles,
+  toggleLeafGrowth,
+  toggleRootGrowth,
 } = plantSlice.actions;
 export default plantSlice.reducer;
