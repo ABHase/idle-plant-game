@@ -94,6 +94,8 @@ const MushroomStoreModal: React.FC<MushroomStoreModalProps> = ({
             ))}
           </>
         );
+      case "Grass":
+        return <Typography>No inventory available for Grass.</Typography>;
 
       default:
         // This can be a placeholder or remain empty until you have other plant types

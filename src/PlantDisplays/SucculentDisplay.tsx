@@ -9,6 +9,8 @@ import {
   buyRoots,
   toggleGeneticMarkerProduction,
   buyNeedles,
+  toggleLeafGrowth,
+  toggleRootGrowth,
 } from "../Slices/plantSlice";
 import {
   Grid,
@@ -43,6 +45,8 @@ import {
   determinePhotosynthesisSugarProduction,
   itemizedReport,
 } from "../formulas";
+import ToggleAutoLeafButton from "../Components/Buttons/ToggleAutoLeafButton";
+import ToggleAutoRootButton from "../Components/Buttons/ToggleAutoRootButton";
 
 type SucculentDisplayProps = {
   setLadybugModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -148,6 +152,13 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
 
   const handleToggleGeneticMarkerProduction = () => {
     dispatch(toggleGeneticMarkerProduction());
+  };
+  const handleToggleAutoLeaves = () => {
+    dispatch(toggleLeafGrowth());
+  };
+
+  const handleToggleAutoRoots = () => {
+    dispatch(toggleRootGrowth());
   };
 
   const toggleMultiplier = (value: number) => {
@@ -344,6 +355,23 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
               </Button>
             </Tooltip>
           </Grid>
+
+          {/*Section for toggling leaf automatic production */}
+          <ToggleAutoLeafButton
+            isOn={plant.leafGrowthToggle}
+            onClick={handleToggleAutoLeaves}
+            leafCost={LEAF_COST}
+            multiplier={plant.leafAutoGrowthMultiplier}
+            isVisible={plant.grassGrowthToggle}
+          />
+          {/*Section for toggling root automatic production */}
+          <ToggleAutoRootButton
+            isOn={plant.rootGrowthToggle}
+            onClick={handleToggleAutoRoots}
+            rootCost={ROOT_COST}
+            multiplier={plant.rootAutoGrowthMultiplier}
+            isVisible={plant.grassGrowthToggle}
+          />
 
           <Grid item xs={12}>
             <Divider sx={{ backgroundColor: "white" }} />

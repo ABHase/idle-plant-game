@@ -12,6 +12,9 @@ export interface GlobalState {
   geneticMarkerProgressSucculent: number;
   geneticMarkerThresholdSucculent: number;
   geneticMarkersSucculent: number;
+  geneticMarkerProgressGrass: number;
+  geneticMarkerThresholdGrass: number;
+  geneticMarkersGrass: number;
   seeds: number;
   silica: number;
   tannins: number;
@@ -30,6 +33,9 @@ const initialState: GlobalState = {
   geneticMarkerProgressSucculent: 0,
   geneticMarkerThresholdSucculent: 10,
   geneticMarkersSucculent: 0,
+  geneticMarkerProgressGrass: 0,
+  geneticMarkerThresholdGrass: 10,
+  geneticMarkersGrass: 0,
   seeds: 0,
   silica: 0,
   tannins: 0,
@@ -57,6 +63,9 @@ const globalStateSlice = createSlice({
         case "Succulent":
           state.geneticMarkersSucculent -= action.payload.amount;
           break;
+        case "Grass":
+          state.geneticMarkersGrass -= action.payload.amount;
+          break;
         default:
           // Handle other types or default behavior if needed
           break;
@@ -75,6 +84,9 @@ const globalStateSlice = createSlice({
           break;
         case "Succulent":
           state.geneticMarkersSucculent += action.payload.amount;
+          break;
+        case "Grass":
+          state.geneticMarkersGrass += action.payload.amount;
           break;
         default:
           // Handle other types or default behavior if needed
@@ -120,6 +132,17 @@ const globalStateSlice = createSlice({
             state.geneticMarkerThresholdSucculent *= 1.1;
           }
           break;
+        case "Grass":
+          state.geneticMarkerProgressGrass += multiplier;
+          if (
+            state.geneticMarkerProgressGrass >=
+            state.geneticMarkerThresholdGrass
+          ) {
+            state.geneticMarkersGrass += multiplier;
+            state.geneticMarkerProgressGrass = 0;
+            state.geneticMarkerThresholdGrass *= 1.1;
+          }
+          break;
         default:
           // Handle other types or default behavior if needed
           break;
@@ -152,13 +175,13 @@ const globalStateSlice = createSlice({
       action: PayloadAction<{ amount: number; plantType: string }>
     ) => {
       switch (action.payload.plantType) {
-        case "fern":
+        case "Fern":
           state.geneticMarkers += action.payload.amount;
           break;
-        case "moss":
+        case "Moss":
           state.geneticMarkersMoss += action.payload.amount;
           break;
-        case "succulent":
+        case "Succulent":
           state.geneticMarkersSucculent += action.payload.amount;
           break;
         default:

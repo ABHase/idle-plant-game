@@ -13,12 +13,19 @@ import {
   updateWaterAndSunlight,
   resetRootRot,
   removeRoots,
+  buyLeaves,
+  buyRoots,
 } from "./Slices/plantSlice";
 import {
   increaseGeneticMarkers,
   updateGeneticMarkerProgress,
 } from "./Slices/gameStateSlice";
-import { SECONDARY_SUGAR_THRESHOLD, SUGAR_THRESHOLD } from "./constants";
+import {
+  LEAF_COST,
+  ROOT_COST,
+  SECONDARY_SUGAR_THRESHOLD,
+  SUGAR_THRESHOLD,
+} from "./constants";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { UPGRADES } from "./upgrades";
 import {
@@ -41,12 +48,29 @@ export const updateGame = (): ThunkAction<
     const newTotalTime = currentTotalTime + 1;
     const currentSeason = getState().plantTime.season;
     const currentMinute = getState().plantTime.update_counter;
+    const currentSugar = getState().plant.sugar;
     const plantType = getState().plant.type;
 
     // Dispatch updateTime with newTotalTime
     dispatch(updateTime(newTotalTime));
 
     const plant = getState().plant;
+
+    // Check if the plant has the the LEAF_COST for a leaf, if so dispatch buyLeaves with the payload of LEAF_COST
+    if (
+      currentSugar >= LEAF_COST * plant.leafAutoGrowthMultiplier &&
+      plant.leafGrowthToggle
+    ) {
+      dispatch(buyLeaves({ cost: LEAF_COST * plant.leafAutoGrowthMultiplier }));
+    }
+
+    //Check if the plant has the ROOT_COST for a root, if so dispatch buyRoots with the payload of ROOT_COST
+    if (
+      currentSugar >= ROOT_COST * plant.rootAutoGrowthMultiplier &&
+      plant.rootGrowthToggle
+    ) {
+      dispatch(buyRoots({ cost: ROOT_COST * plant.rootAutoGrowthMultiplier }));
+    }
 
     // Check if ladybugs are less than 1
     if (plant.ladybugs < 1) {
@@ -65,9 +89,14 @@ export const updateGame = (): ThunkAction<
 
     //Genetic Marker (DNA) Production Dispatches
 
+    const requiredResource =
+      plant.type === "Grass" ? plant.leaves : plant.sugar;
+    const resourceThreshold =
+      plant.type === "Grass" ? SUGAR_THRESHOLD / 5 : SUGAR_THRESHOLD;
+
     if (
       plant.is_genetic_marker_production_on &&
-      plant.sugar >= SUGAR_THRESHOLD
+      requiredResource >= resourceThreshold
     ) {
       dispatch(produceGeneticMarkers());
       dispatch(
@@ -94,7 +123,10 @@ export const updateGame = (): ThunkAction<
     }
 
     // If plant type is Succulent, and plant water * 100 is greater than plant needles, dispatch rabbit attack
-    if (plant.type === "Succulent" && plant.water > plant.needles * 100) {
+    if (
+      plant.type === "Succulent" &&
+      plant.water > plant.needles * 100 * plant.needleProtection
+    ) {
       dispatch({ type: "plant/rabbitAttack" });
     }
 
@@ -157,6 +189,9 @@ export const purchaseUpgradeThunk = createAsyncThunk<
       break;
     case "Succulent":
       availableGeneticMarkers = state.globalState.geneticMarkersSucculent;
+      break;
+    case "Grass":
+      availableGeneticMarkers = state.globalState.geneticMarkersGrass;
       break;
     default:
       throw new Error("Invalid plant type");
