@@ -5,11 +5,11 @@ import { RootState } from "./rootReducer";
 import { createSelector } from "reselect";
 import { evolveAndRecordPlant, updateGame } from "./gameActions";
 import store, { AppDispatch } from "./store"; // Adjust the path if necessary
-import GlobalStateDisplay from "./GlobalStateDisplay";
+import GlobalStateDisplay from "./DNADisplays/GlobalStateDisplay";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { Alert, Box, Snackbar } from "@mui/material";
 import PlantTimeDisplay from "./PlantTimeDisplay";
-import PlantList from "./PlantList";
+import PlantList from "./PlantDisplays/PlantList";
 import { clearState, saveState } from "./localStorage";
 import ConfirmDeleteDialog from "./ConfirmDeleteDialog";
 import ConfirmEvolveDialog from "./ConfirmEvolveDialog";
@@ -26,9 +26,10 @@ import MenuModal from "./Modals/MenuModal";
 import MushroomStoreModal from "./Modals/MushroomStoreModal";
 import LadyBugModal from "./Modals/LadyBugModal";
 import ReportModal from "./Modals/ReportModal";
-import MossDisplay from "./MossDisplay";
-import MossDNADisplay from "./MossDNADisplay";
-import SucculentDisplay from "./SucculentDisplay";
+import MossDisplay from "./PlantDisplays/MossDisplay";
+import MossDNADisplay from "./DNADisplays/MossDNADisplay";
+import SucculentDisplay from "./PlantDisplays/SucculentDisplay";
+import SucculentDNADisplay from "./DNADisplays/SucculentDNADisplay";
 
 const theme = createTheme({
   palette: {
@@ -68,6 +69,9 @@ function App() {
   const totalTime = useSelector((state: RootState) => state.app.totalTime);
   const plantTime = useSelector((state: RootState) => state.plantTime);
   const plantDisplayType = useSelector((state: RootState) => state.plant.type);
+  const rabbitAttack = useSelector(
+    (state: RootState) => state.plant.rabbitAttack
+  );
   const plants = useSelector(selectPlants);
   const season = useSelector(selectSeason);
   const totalLeaves = useSelector((state: RootState) => state.plant.leaves);
@@ -105,6 +109,7 @@ function App() {
     }
     // Update previous leaves to current total leaves after checking
     previousLeaves.current = totalLeaves;
+
     // Call the update function to start the game loop
     update();
     // Cleanup code: stop the loop when the component unmounts
@@ -153,7 +158,6 @@ function App() {
   const [reportModalOpen, setReportModalOpen] = useState(false);
   const [showLeafLossWarning, setShowLeafLossWarning] = useState(false);
   const [plantType] = React.useState<string>("Fern");
-
   const handleOpenReportModal = () => {
     setReportModalOpen(true);
   };
@@ -213,6 +217,8 @@ function App() {
         return <GlobalStateDisplay />;
       case "Moss":
         return <MossDNADisplay />;
+      case "Succulent":
+        return <SucculentDNADisplay />;
       default:
         return null; // or return a default component if desired
     }
@@ -284,6 +290,17 @@ function App() {
             sx={{ width: "100%" }}
           >
             You lost a leaf due to lack of water!
+          </Alert>
+        </Snackbar>
+        <Snackbar
+          open={rabbitAttack}
+          autoHideDuration={3000}
+          onClose={() => {
+            dispatch({ type: "plant/resetRabbitAttack" });
+          }}
+        >
+          <Alert severity="warning">
+            Rabbits have drank your water! You lost a leaf!
           </Alert>
         </Snackbar>
 

@@ -4,7 +4,7 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import { MUSHROOM_ITEMS } from "../mushroomItems";
+import { DESERT_MUSHROOM_ITEMS, MUSHROOM_ITEMS } from "../mushroomItems";
 import { RootState } from "../rootReducer";
 import { ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
@@ -70,10 +70,31 @@ const MushroomStoreModal: React.FC<MushroomStoreModalProps> = ({
         return <Typography>No inventory available for Moss.</Typography>;
       case "Succulent":
         return (
-          <Typography>
-            The friendly desert fungi offer water for sugar:
-          </Typography>
+          <>
+            <Typography mt={2}>
+              Welcome to the Desert Mushroom Store, water available for sugar at
+              a discount! Watch out for rabbits out there.
+            </Typography>
+            {DESERT_MUSHROOM_ITEMS.map((item) => (
+              <Box key={item.id} mt={2}>
+                <Typography variant="body1">{item.name}</Typography>
+                <Typography variant="body2">{item.description}</Typography>
+                <Typography variant="body2" sx={{ display: "flex" }}>
+                  Cost: <Sugar amount={item.cost} />
+                </Typography>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => handlePurchase(item.effect)}
+                  disabled={sugar < item.cost}
+                >
+                  Buy
+                </Button>
+              </Box>
+            ))}
+          </>
         );
+
       default:
         // This can be a placeholder or remain empty until you have other plant types
         return null;

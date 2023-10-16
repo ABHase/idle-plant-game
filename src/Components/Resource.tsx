@@ -1,5 +1,5 @@
 import React from "react";
-import { formatNumberWithDecimals } from "../PlantList";
+import { formatNumberWithDecimals } from "../PlantDisplays/PlantList";
 import { Typography } from "@mui/material";
 
 interface IProps {

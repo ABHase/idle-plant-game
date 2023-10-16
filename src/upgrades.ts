@@ -18,7 +18,12 @@ export const UPGRADES: Record<string, Upgrade[]> = {
         "Leaves are water neutral and no longer lost due to dehydration.",
       cost: 10,
     },
-    // ... other meta progression traits
+    {
+      id: "Succulent_sugar_bonus",
+      name: "Agave Sugar (All Species)",
+      description: "Sugar production 10X for non-Succulent plants.",
+      cost: 5000,
+    },
   ],
   Fern: [
     {
@@ -163,6 +168,9 @@ export const UPGRADE_FUNCTIONS: Record<
   Meta: {
     Moss_leaf_bonus: (plant) => {
       plant.leafWaterUsage = false;
+    },
+    Succulent_sugar_bonus: (plant) => {
+      plant.agaveSugarBonus = true;
     },
   },
   Fern: {

@@ -8,7 +8,12 @@ import {
   addGeneticMarkers,
   increaseGeneticMarkers,
 } from "./Slices/gameStateSlice"; // Assume you have deductSugar function in gameStateSlice
-import { PlantState, deductSugar, increaseRootRot } from "./Slices/plantSlice";
+import {
+  PlantState,
+  deductSugar,
+  increaseRootRot,
+  addWater,
+} from "./Slices/plantSlice";
 import {
   activateTimeBoost,
   deactivateTimeBoost,
@@ -67,6 +72,39 @@ export const MUSHROOM_ITEMS: MushroomItem[] = [
   // ... other mushroom items
 ];
 
+export const DESERT_MUSHROOM_ITEMS: MushroomItem[] = [
+  {
+    id: "water_drop",
+    name: "Water Drop",
+    description: "150 water.",
+    cost: 500,
+    effect: (dispatch, getState) => {
+      dispatch(deductSugar(500)); // Deduct sugar cost
+      dispatch(addWater(150)); // Add 150 water
+    },
+  },
+  {
+    id: "water_splash",
+    name: "Water Splash",
+    description: "500 water.",
+    cost: 1000,
+    effect: (dispatch, getState) => {
+      dispatch(deductSugar(1000)); // Deduct sugar cost
+      dispatch(addWater(500)); // Add 300 water
+    },
+  },
+  {
+    id: "water_flood",
+    name: "Water Flood",
+    description: "10000 water.",
+    cost: 5000,
+    effect: (dispatch, getState) => {
+      dispatch(deductSugar(5000)); // Deduct sugar cost
+      dispatch(addWater(10000)); // Add 10000 water
+    },
+  },
+];
+
 export const MUSHROOM_ITEM_FUNCTIONS: {
   [key: string]: (
     dispatch: ThunkDispatch<RootState, unknown, Action<string>>,
@@ -81,5 +119,19 @@ export const MUSHROOM_ITEM_FUNCTIONS: {
     dispatch: ThunkDispatch<RootState, unknown, Action<string>>,
     getState: () => RootState
   ) => void,
-  // ... other mushroom item functions
+  water_drop: DESERT_MUSHROOM_ITEMS.find((item) => item.id === "water_drop")
+    ?.effect as (
+    dispatch: ThunkDispatch<RootState, unknown, Action<string>>,
+    getState: () => RootState
+  ) => void,
+  water_splash: DESERT_MUSHROOM_ITEMS.find((item) => item.id === "water_splash")
+    ?.effect as (
+    dispatch: ThunkDispatch<RootState, unknown, Action<string>>,
+    getState: () => RootState
+  ) => void,
+  water_flood: DESERT_MUSHROOM_ITEMS.find((item) => item.id === "water_flood")
+    ?.effect as (
+    dispatch: ThunkDispatch<RootState, unknown, Action<string>>,
+    getState: () => RootState
+  ) => void,
 };

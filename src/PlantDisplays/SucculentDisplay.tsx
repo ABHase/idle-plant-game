@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "./rootReducer";
+import { RootState } from "../rootReducer";
 import {
   absorbSunlight,
   absorbWater,
@@ -8,7 +8,8 @@ import {
   buyLeaves,
   buyRoots,
   toggleGeneticMarkerProduction,
-} from "./Slices/plantSlice";
+  buyNeedles,
+} from "../Slices/plantSlice";
 import {
   Grid,
   Typography,
@@ -19,49 +20,43 @@ import {
   Box,
   LinearProgress,
 } from "@mui/material";
-import { Add, ArrowForwardIos, Clear } from "@mui/icons-material";
-import { LEAF_COST, ROOT_COST } from "./constants";
-import WbSunnyIcon from "@mui/icons-material/WbSunny";
-import OpacityIcon from "@mui/icons-material/Opacity";
-import GrainIcon from "@mui/icons-material/Grain";
-import GrassIcon from "@mui/icons-material/Grass";
-import SpaIcon from "@mui/icons-material/Spa";
-import ParkIcon from "@mui/icons-material/Park";
+import { LEAF_COST, ROOT_COST } from "../constants";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import CloseIcon from "@mui/icons-material/Close";
 import {
   MATURITY_SUGAR_PRODUCTION_MODIFIER,
   MATURITY_WATER_CONSUMPTION_MODIFIER,
   MATURITY_SUNLIGHT_CONSUMPTION_MODIFIER,
   BASE_WATER_CONSUMPTION,
   BASE_SUNLIGHT_CONSUMPTION,
-} from "./constants";
-import { Water } from "./Components/Water";
-import { Sunlight } from "./Components/Sunlight";
-import { Roots } from "./Components/Roots";
-import { Leaves } from "./Components/Leaves";
-import { Sugar } from "./Components/Sugar";
-import { Maturity } from "./Components/Maturity";
-import { DNAIcon } from "./icons/dna";
-import { DNA } from "./Components/DNA";
+} from "../constants";
+import { Water } from "../Components/Water";
+import { Sunlight } from "../Components/Sunlight";
+import { Roots } from "../Components/Roots";
+import { Leaves } from "../Components/Leaves";
+import { Sugar } from "../Components/Sugar";
+import { Maturity } from "../Components/Maturity";
+import { DNAIcon } from "../icons/dna";
+import { DNA } from "../Components/DNA";
 import {
   calculatePhotosynthesisSunlightConsumption,
   calculatePhotosynthesisWaterConsumption,
   determinePhotosynthesisSugarProduction,
   itemizedReport,
-} from "./formulas";
+} from "../formulas";
 
-type MossDisplayProps = {
+type SucculentDisplayProps = {
   setLadybugModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const MossDisplay: React.FC<MossDisplayProps> = ({ setLadybugModalOpen }) => {
+const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
+  setLadybugModalOpen,
+}) => {
   const dispatch = useDispatch();
   const plant = useSelector((state: RootState) => state.plant);
   const plantTime = useSelector((state: RootState) => state.plantTime);
   const [multiplier, setMultiplier] = useState<number>(1);
 
-  const { geneticMarkerProgressMoss, geneticMarkerThresholdMoss } = useSelector(
+  const { geneticMarkerProgress, geneticMarkerThreshold } = useSelector(
     (state: RootState) => state.globalState
   );
   const plantState = useSelector((state: RootState) => state.plant);
@@ -145,6 +140,12 @@ const MossDisplay: React.FC<MossDisplayProps> = ({ setLadybugModalOpen }) => {
     }
   };
 
+  const handleBuyNeedles = () => {
+    for (let i = 0; i < multiplier; i++) {
+      dispatch(buyNeedles({ cost: plantState.maturity_level * 100 }));
+    }
+  };
+
   const handleToggleGeneticMarkerProduction = () => {
     dispatch(toggleGeneticMarkerProduction());
   };
@@ -186,15 +187,13 @@ const MossDisplay: React.FC<MossDisplayProps> = ({ setLadybugModalOpen }) => {
                 }}
                 onClick={() => setLadybugModalOpen(true)}
               >
-                <Typography variant="h5" align="center">
-                  You Have Aphids!
-                </Typography>
+                <Typography variant="h5">You Have Aphids!</Typography>
               </Button>
             </Grid>
           ) : null}
           <Grid item xs={12}>
             <Box display="flex" alignItems="center" justifyContent="center">
-              <Typography variant="h5">You are a clump of Moss</Typography>
+              <Typography variant="h5">You are a Desert Succulent</Typography>
             </Box>
           </Grid>
           <Grid item xs={4}>
@@ -340,7 +339,7 @@ const MossDisplay: React.FC<MossDisplayProps> = ({ setLadybugModalOpen }) => {
                     color: plant.is_genetic_marker_production_on ? "" : "red",
                   }}
                 />{" "}
-                <DNA amount={(1 / geneticMarkerThresholdMoss) * 100} /> %{" "}
+                <DNA amount={(1 / geneticMarkerThreshold) * 100} /> %{" "}
                 {plant.is_genetic_marker_production_on ? "Stop" : "Start"}
               </Button>
             </Tooltip>
@@ -404,15 +403,104 @@ const MossDisplay: React.FC<MossDisplayProps> = ({ setLadybugModalOpen }) => {
                     backgroundColor: "#424532", // Or any other style reset
                   },
                 }}
-                onClick={() => {
-                  handleBuyLeaves();
-                  handleBuyRoots();
-                }}
+                onClick={() => handleBuyLeaves()}
               >
-                Grow: <Leaves amount={multiplier} />
+                Leaves: <Leaves amount={multiplier} />
                 &nbsp;for <Sugar amount={LEAF_COST * multiplier} />
+                <Water amount={LEAF_COST * multiplier * 100} />
               </Button>
             </Tooltip>
+          </Grid>
+
+          {/* Roots Section */}
+          <Grid item xs={12}>
+            <Tooltip title="Grow Roots">
+              <Button
+                fullWidth
+                sx={{
+                  border: "1px solid #aaa",
+                  borderRadius: "4px",
+                  backgroundColor: "#363534",
+                  color: "#C7B08B",
+                  "&:active, &:focus": {
+                    backgroundColor: "#363534", // Or any other style reset
+                  },
+                }}
+                onClick={() => handleBuyRoots()}
+              >
+                Grow Roots: <Roots amount={multiplier} />
+                &nbsp;for <Sugar amount={ROOT_COST * multiplier} />
+              </Button>
+            </Tooltip>
+          </Grid>
+          {/* Needles Section */}
+          <Grid item xs={12}>
+            <Tooltip title="Grow Needles">
+              <Button
+                fullWidth
+                sx={{
+                  border: "1px solid #aaa",
+                  borderRadius: "4px",
+                  backgroundColor: "#252b36",
+                  color: "#d0d4db",
+                  "&:active, &:focus": {
+                    backgroundColor: "#252b36", // Or any other style reset
+                  },
+                }}
+                onClick={() => handleBuyNeedles()}
+              >
+                Grow Needles: {multiplier}
+                &nbsp;for{" "}
+                <Sugar amount={plant.maturity_level * 100 * multiplier} />
+              </Button>
+            </Tooltip>
+          </Grid>
+          <Grid item xs={12}>
+            <Divider sx={{ backgroundColor: "white" }} />
+          </Grid>
+
+          <Grid
+            item
+            xs={12}
+            sx={{ display: "flex", justifyContent: "space-evenly" }}
+          >
+            <Button
+              sx={{
+                border: "1px solid #aaa",
+                borderRadius: "4px",
+                backgroundColor: "#0F4A52",
+                color: "#34F7E1",
+                "&:active, &:focus": {
+                  backgroundColor: "#0F4A52", // Or any other style reset
+                },
+              }}
+              onClick={() => handleWaterAbsorption()}
+            >
+              + <Water amount={plant.water_absorption_rate} />
+            </Button>
+            <Button
+              sx={{
+                border: "1px solid #aaa",
+                borderRadius: "4px",
+                backgroundColor: "#633912",
+                color: "#FFC64D",
+                "&:active, &:focus": {
+                  backgroundColor: "#633912", // Or any other style reset
+                },
+              }}
+              onClick={() => handleSunlightAbsorption()}
+            >
+              + <Sunlight amount={plant.sunlight_absorption_rate} />
+            </Button>
+          </Grid>
+          <Grid item xs={12}>
+            <Divider sx={{ backgroundColor: "white" }} />
+          </Grid>
+          <Grid item xs={5}>
+            <Typography>Needles protecting:</Typography>
+          </Grid>
+          <Grid item xs={7}>
+            <Water amount={plant.needles * 100} />
           </Grid>
         </Grid>
       </Box>
@@ -441,4 +529,4 @@ export function formatNumberWithDecimals(value: number): string {
   }
 }
 
-export default MossDisplay;
+export default SucculentDisplay;

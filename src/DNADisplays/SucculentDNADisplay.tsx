@@ -1,28 +1,22 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "./rootReducer"; // Adjust the import path if needed
+import { RootState } from "../rootReducer"; // Adjust the import path if needed
 import { Box, Grid, LinearProgress, Typography } from "@mui/material";
-import { DNA } from "./Components/DNA";
+import { DNA } from "../Components/DNA";
 
-const GlobalStateDisplay: React.FC = () => {
+const SucculentDNADisplay: React.FC = () => {
   const {
-    geneticMarkerProgress,
-    geneticMarkerThreshold,
-    geneticMarkers,
-    seeds,
-    silica,
-    tannins,
-    calcium,
-    fulvic,
-    costModifier,
+    geneticMarkerProgressSucculent,
+    geneticMarkerThresholdSucculent,
+    geneticMarkersSucculent,
   } = useSelector((state: RootState) => state.globalState);
 
   const percentage = Math.floor(
-    (geneticMarkerProgress / geneticMarkerThreshold) * 100
+    (geneticMarkerProgressSucculent / geneticMarkerThresholdSucculent) * 100
   );
 
   return (
-    <div className="global-state-display">
+    <div className="succulent-dna-display">
       <Box
         border={1}
         borderColor="grey.300"
@@ -33,13 +27,17 @@ const GlobalStateDisplay: React.FC = () => {
       >
         <Grid container spacing={0} alignItems="center">
           <Grid item xs={3}>
-            <DNA amount={geneticMarkers} />
+            <DNA amount={geneticMarkersSucculent} />
           </Grid>
           <Grid item xs={9}>
             <Box position="relative" display="inline-flex" width="100%">
               <LinearProgress
                 variant="determinate"
-                value={(geneticMarkerProgress / geneticMarkerThreshold) * 100}
+                value={
+                  (geneticMarkerProgressSucculent /
+                    geneticMarkerThresholdSucculent) *
+                  100
+                }
                 sx={{ width: "100%", height: "12px", marginTop: "4px" }}
               />
 
@@ -65,4 +63,4 @@ const GlobalStateDisplay: React.FC = () => {
   );
 };
 
-export default GlobalStateDisplay;
+export default SucculentDNADisplay;
