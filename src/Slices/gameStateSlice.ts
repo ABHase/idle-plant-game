@@ -9,6 +9,9 @@ export interface GlobalState {
   geneticMarkerProgressMoss: number;
   geneticMarkerThresholdMoss: number;
   geneticMarkersMoss: number;
+  geneticMarkerProgressSucculent: number;
+  geneticMarkerThresholdSucculent: number;
+  geneticMarkersSucculent: number;
   seeds: number;
   silica: number;
   tannins: number;
@@ -24,6 +27,9 @@ const initialState: GlobalState = {
   geneticMarkerProgressMoss: 0,
   geneticMarkerThresholdMoss: 1,
   geneticMarkersMoss: 0,
+  geneticMarkerProgressSucculent: 0,
+  geneticMarkerThresholdSucculent: 10,
+  geneticMarkersSucculent: 0,
   seeds: 0,
   silica: 0,
   tannins: 0,
@@ -48,6 +54,9 @@ const globalStateSlice = createSlice({
         case "Moss":
           state.geneticMarkersMoss -= action.payload.amount;
           break;
+        case "Succulent":
+          state.geneticMarkersSucculent -= action.payload.amount;
+          break;
         default:
           // Handle other types or default behavior if needed
           break;
@@ -64,6 +73,9 @@ const globalStateSlice = createSlice({
         case "Moss":
           state.geneticMarkersMoss += action.payload.amount;
           break;
+        case "Succulent":
+          state.geneticMarkersSucculent += action.payload.amount;
+          break;
         default:
           // Handle other types or default behavior if needed
           break;
@@ -79,22 +91,33 @@ const globalStateSlice = createSlice({
     ) => {
       const multiplier = action.payload.geneticMarkerUpgradeActive ? 2 : 1;
       switch (action.payload.plantType) {
-        case "fern":
+        case "Fern":
           state.geneticMarkerProgress += multiplier;
           if (state.geneticMarkerProgress >= state.geneticMarkerThreshold) {
-            state.geneticMarkers += 1;
+            state.geneticMarkers += multiplier;
             state.geneticMarkerProgress = 0;
             state.geneticMarkerThreshold *= 1.1;
           }
           break;
-        case "moss":
+        case "Moss":
           state.geneticMarkerProgressMoss += multiplier;
           if (
             state.geneticMarkerProgressMoss >= state.geneticMarkerThresholdMoss
           ) {
-            state.geneticMarkersMoss += 1;
+            state.geneticMarkersMoss += multiplier;
             state.geneticMarkerProgressMoss = 0;
             state.geneticMarkerThresholdMoss *= 1.1;
+          }
+          break;
+        case "Succulent":
+          state.geneticMarkerProgressSucculent += multiplier;
+          if (
+            state.geneticMarkerProgressSucculent >=
+            state.geneticMarkerThresholdSucculent
+          ) {
+            state.geneticMarkersSucculent += multiplier;
+            state.geneticMarkerProgressSucculent = 0;
+            state.geneticMarkerThresholdSucculent *= 1.1;
           }
           break;
         default:
@@ -134,6 +157,9 @@ const globalStateSlice = createSlice({
           break;
         case "moss":
           state.geneticMarkersMoss += action.payload.amount;
+          break;
+        case "succulent":
+          state.geneticMarkersSucculent += action.payload.amount;
           break;
         default:
           // Handle other types or default behavior if needed

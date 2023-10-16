@@ -41,6 +41,7 @@ export const updateGame = (): ThunkAction<
     const newTotalTime = currentTotalTime + 1;
     const currentSeason = getState().plantTime.season;
     const currentMinute = getState().plantTime.update_counter;
+    const plantType = getState().plant.type;
 
     // Dispatch updateTime with newTotalTime
     dispatch(updateTime(newTotalTime));
@@ -69,16 +70,9 @@ export const updateGame = (): ThunkAction<
       plant.sugar >= SUGAR_THRESHOLD
     ) {
       dispatch(produceGeneticMarkers());
-      const plant = getState().plant;
       dispatch(
         updateGeneticMarkerProgress({
           geneticMarkerUpgradeActive: plant.geneticMarkerUpgradeActive,
-          plantType: plant.type,
-        })
-      );
-      dispatch(
-        increaseGeneticMarkers({
-          amount: plant.genetic_marker_production_rate,
           plantType: plant.type,
         })
       );
@@ -97,6 +91,11 @@ export const updateGame = (): ThunkAction<
     // Check if the plant has more root rot than root rot threshold, if so dispatch removeRoots
     if (plant.rootRot >= plant.rootRotThreshold) {
       dispatch(removeRoots());
+    }
+
+    // If plant type is Succulent, and plant water * 100 is greater than plant needles, dispatch rabbit attack
+    if (plant.type === "Succulent" && plant.water > plant.needles * 100) {
+      dispatch({ type: "plant/rabbitAttack" });
     }
 
     // If the plant has more than 1000 sugar add one aphid every 12th cycle but only if ladybugs are not less than 1, and plant.type is not Succulent
@@ -155,6 +154,9 @@ export const purchaseUpgradeThunk = createAsyncThunk<
       break;
     case "Moss":
       availableGeneticMarkers = state.globalState.geneticMarkersMoss;
+      break;
+    case "Succulent":
+      availableGeneticMarkers = state.globalState.geneticMarkersSucculent;
       break;
     default:
       throw new Error("Invalid plant type");

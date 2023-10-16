@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "./rootReducer";
+import { RootState } from "../rootReducer";
 import {
   absorbSunlight,
   absorbWater,
@@ -8,7 +8,7 @@ import {
   buyLeaves,
   buyRoots,
   toggleGeneticMarkerProduction,
-} from "./Slices/plantSlice";
+} from "../Slices/plantSlice";
 import {
   Grid,
   Typography,
@@ -20,7 +20,7 @@ import {
   LinearProgress,
 } from "@mui/material";
 import { Add, ArrowForwardIos, Clear } from "@mui/icons-material";
-import { LEAF_COST, ROOT_COST } from "./constants";
+import { LEAF_COST, ROOT_COST } from "../constants";
 import WbSunnyIcon from "@mui/icons-material/WbSunny";
 import OpacityIcon from "@mui/icons-material/Opacity";
 import GrainIcon from "@mui/icons-material/Grain";
@@ -35,21 +35,21 @@ import {
   MATURITY_SUNLIGHT_CONSUMPTION_MODIFIER,
   BASE_WATER_CONSUMPTION,
   BASE_SUNLIGHT_CONSUMPTION,
-} from "./constants";
-import { Water } from "./Components/Water";
-import { Sunlight } from "./Components/Sunlight";
-import { Roots } from "./Components/Roots";
-import { Leaves } from "./Components/Leaves";
-import { Sugar } from "./Components/Sugar";
-import { Maturity } from "./Components/Maturity";
-import { DNAIcon } from "./icons/dna";
-import { DNA } from "./Components/DNA";
+} from "../constants";
+import { Water } from "../Components/Water";
+import { Sunlight } from "../Components/Sunlight";
+import { Roots } from "../Components/Roots";
+import { Leaves } from "../Components/Leaves";
+import { Sugar } from "../Components/Sugar";
+import { Maturity } from "../Components/Maturity";
+import { DNAIcon } from "../icons/dna";
+import { DNA } from "../Components/DNA";
 import {
   calculatePhotosynthesisSunlightConsumption,
   calculatePhotosynthesisWaterConsumption,
   determinePhotosynthesisSugarProduction,
   itemizedReport,
-} from "./formulas";
+} from "../formulas";
 
 type PlantListProps = {
   setLadybugModalOpen: React.Dispatch<React.SetStateAction<boolean>>;

@@ -39,6 +39,8 @@ export const FERN_INITIAL_CONFIG: PlantState = {
   aphids: 0,
   leafWaterUsage: true,
   agaveSugarBonus: false,
+  needles: 0,
+  rabbitAttack: false,
 };
 
 export const MOSS_INITIAL_CONFIG: PlantState = {
@@ -79,6 +81,8 @@ export const MOSS_INITIAL_CONFIG: PlantState = {
   aphids: 0,
   leafWaterUsage: false,
   agaveSugarBonus: false,
+  needles: 0,
+  rabbitAttack: false,
 };
 
 export const SUCCULENT_INITIAL_CONFIG: PlantState = {
@@ -94,10 +98,10 @@ export const SUCCULENT_INITIAL_CONFIG: PlantState = {
   sunlight_absorption_rate: 10,
   water: 1,
   water_absorption_rate: 1,
-  sunlight_efficiency_multiplier: 0.5,
+  sunlight_efficiency_multiplier: 1,
   water_efficiency_multiplier: 1,
-  sunlight_absorption_multiplier: 1,
-  water_absorption_multiplier: 1,
+  sunlight_absorption_multiplier: 2,
+  water_absorption_multiplier: 0.1,
   sugar: 0,
   ladybugs: 1,
   ladybugTax: 0.5,
@@ -119,6 +123,8 @@ export const SUCCULENT_INITIAL_CONFIG: PlantState = {
   aphids: 0,
   leafWaterUsage: true,
   agaveSugarBonus: true,
+  needles: 1,
+  rabbitAttack: false,
 };
 
 export const PLANT_CONFIGS: Record<string, PlantState> = {

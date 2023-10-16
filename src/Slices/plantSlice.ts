@@ -53,6 +53,8 @@ export interface PlantState {
   aphids: number; //Aphids level, this is the number that is used to determine how much sugar is consumed by aphids
   leafWaterUsage: boolean; //Leaf water usage, this is the boolean that is used to determine if leaves use water, meta perk for moss
   agaveSugarBonus: boolean; //Agave sugar bonus, this is the boolean that is used to determine if agave has a sugar bonus, meta perk for succulent
+  needles: number; //Needles, protect against rabbit attacks
+  rabbitAttack: boolean; //Rabbit attack, this is the boolean that is used to determine if the plant is being attacked by rabbits
 }
 
 const initialState: PlantState = PLANT_CONFIGS.Fern; // Setting Fern as the default plant
@@ -172,10 +174,20 @@ const plantSlice = createSlice({
 
     buyLeaves: (state, action: PayloadAction<{ cost: number }>) => {
       if (state.sugar >= action.payload.cost) {
-        state.sugar -= action.payload.cost;
-        state.leaves += 1;
+        if (state.type === "Succulent") {
+          const waterCost = 100 * action.payload.cost;
+          if (state.water >= waterCost) {
+            state.sugar -= action.payload.cost;
+            state.water -= waterCost;
+            state.leaves += 1;
+          }
+        } else {
+          state.sugar -= action.payload.cost;
+          state.leaves += 1;
+        }
       }
     },
+
     //Reducer to decrease leaves by payload
     removeLeaves: (state, action: PayloadAction<number>) => {
       state.leaves = Math.max(0, state.leaves - action.payload);
@@ -239,6 +251,27 @@ const plantSlice = createSlice({
     resetLadybugs: (state) => {
       state.ladybugs = 1;
     },
+    //Reducer to add an amount of water to the plant from the payload
+    addWater: (state, action: PayloadAction<number>) => {
+      state.water += action.payload;
+    },
+    //Reducer to simulate a rabbit attack, lose 10% water, 1 leaf and then set rabbit attack back to false
+    rabbitAttack: (state) => {
+      state.rabbitAttack = true;
+      state.water = Math.max(0, state.water - state.water * 0.1);
+      state.leaves = Math.max(0, state.leaves - 1);
+    },
+    // Set Rabbit Attack to false
+    resetRabbitAttack: (state) => {
+      state.rabbitAttack = false;
+    },
+    //Reducer to buy needles
+    buyNeedles: (state, action: PayloadAction<{ cost: number }>) => {
+      if (state.sugar >= action.payload.cost) {
+        state.sugar -= action.payload.cost;
+        state.needles += 1;
+      }
+    },
   },
 });
 
@@ -269,5 +302,9 @@ export const {
   deductAllAphids,
   removeLeaves,
   resetLadybugs,
+  addWater,
+  rabbitAttack,
+  resetRabbitAttack,
+  buyNeedles,
 } = plantSlice.actions;
 export default plantSlice.reducer;
