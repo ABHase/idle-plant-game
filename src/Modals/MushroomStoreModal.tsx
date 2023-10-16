@@ -68,6 +68,12 @@ const MushroomStoreModal: React.FC<MushroomStoreModalProps> = ({
         ));
       case "Moss":
         return <Typography>No inventory available for Moss.</Typography>;
+      case "Succulent":
+        return (
+          <Typography>
+            The friendly desert fungi offer water for sugar:
+          </Typography>
+        );
       default:
         // This can be a placeholder or remain empty until you have other plant types
         return null;

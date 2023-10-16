@@ -151,6 +151,9 @@ export const UPGRADES: Record<string, Upgrade[]> = {
       cost: 1,
     },
   ],
+  Succulent: [
+    // ... other succulent upgrades
+  ],
 };
 
 export const UPGRADE_FUNCTIONS: Record<
@@ -229,5 +232,6 @@ export const UPGRADE_FUNCTIONS: Record<
       plant.sunlight_absorption_multiplier *= 2;
     },
   },
+  Succulent: {},
   // ... other upgrade functions
 };

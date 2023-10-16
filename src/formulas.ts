@@ -75,6 +75,10 @@ export const calculateWaterDecrease = (
   return leafWaterUsage ? leaves : 0;
 };
 
+export const agaveSugarBonus = (agave: boolean) => {
+  return agave ? 10 : 1;
+};
+
 export const calculateRootsWaterIncrease = (
   roots: number,
   water_absorption_multiplier: number
@@ -122,7 +126,8 @@ export const determinePhotosynthesisSugarProduction = (
   maturity_level: number,
   season: string,
   autumnModifier: number,
-  winterModifier: number
+  winterModifier: number,
+  agaveBonus: boolean
 ) => {
   const sugarModifier = getSugarModifier(
     season,
@@ -132,7 +137,9 @@ export const determinePhotosynthesisSugarProduction = (
   const modifiedRate =
     sugarProductionRate *
     (1 + MATURITY_SUGAR_PRODUCTION_MODIFIER * maturity_level);
-  return modifiedRate * sugarModifier;
+
+  const agaveMultiplier = agaveSugarBonus(agaveBonus);
+  return modifiedRate * sugarModifier * agaveMultiplier;
 };
 
 export const geneticSugarConsumption = (plantState: any): number => {
@@ -189,7 +196,7 @@ export const calculateSugarPhotosynthesis = (
   plantState: any,
   season: string
 ) => {
-  const sugarProductionRate = plantState.sugar_production_rate; // Corrected this line
+  const sugarProductionRate = plantState.sugar_production_rate;
 
   const waterNeeded = calculatePhotosynthesisWaterConsumption(
     plantState.maturity_level
@@ -202,16 +209,17 @@ export const calculateSugarPhotosynthesis = (
     plantState.water >= waterNeeded &&
     plantState.sunlight >= sunlightNeeded
   ) {
-    const sugarsProduced = determinePhotosynthesisSugarProduction(
+    let sugarsProduced = determinePhotosynthesisSugarProduction(
       sugarProductionRate,
       plantState.maturity_level,
       season,
-      plantState.autumnModifier, // Assuming this is in plantState, modify if needed
-      plantState.winterModifier // Assuming this is in plantState, modify if needed
+      plantState.autumnModifier,
+      plantState.winterModifier,
+      plantState.agaveSugarBonus
     );
 
     return {
-      sugarsProduced, // Corrected this line
+      sugarsProduced,
       sugar: plantState.sugar + sugarsProduced,
       totalSugarCreated: plantState.totalSugarCreated + sugarsProduced,
       water: plantState.water - waterNeeded,
@@ -219,7 +227,7 @@ export const calculateSugarPhotosynthesis = (
     };
   } else {
     return {
-      sugarsProduced: 0, // Corrected this line
+      sugarsProduced: 0,
       sugar: plantState.sugar,
       totalSugarCreated: plantState.totalSugarCreated,
       water: plantState.water,
