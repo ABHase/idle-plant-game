@@ -16,7 +16,7 @@ export interface PlantHistoryState {
   entries: PlantHistoryEntry[];
 }
 
-const initialPlantHistoryState: PlantHistoryState = {
+export const initialPlantHistoryState: PlantHistoryState = {
   entries: [],
 };
 

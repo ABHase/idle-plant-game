@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "./rootReducer";
 import { createSelector } from "reselect";
 import { evolveAndRecordPlant, updateGame } from "./gameActions";
-import store, { AppDispatch } from "./store"; // Adjust the path if necessary
+import store, { AppDispatch } from "./store";
 import GlobalStateDisplay from "./DNADisplays/GlobalStateDisplay";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { Alert, Box, Snackbar } from "@mui/material";

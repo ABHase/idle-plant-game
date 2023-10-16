@@ -5,7 +5,7 @@ export interface AppState {
   totalTime: number;
 }
 
-const initialState: AppState = {
+export const initialState: AppState = {
   totalTime: 0,
 };
 

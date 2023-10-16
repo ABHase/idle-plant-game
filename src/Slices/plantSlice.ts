@@ -63,7 +63,7 @@ export interface PlantState {
   rootAutoGrowthMultiplier: number; //Root auto growth, root cost multiplied by this number to auto grow roots
 }
 
-const initialState: PlantState = PLANT_CONFIGS.Fern; // Setting Fern as the default plant
+export const initialState: PlantState = PLANT_CONFIGS.Fern; // Setting Fern as the default plant
 
 const plantSlice = createSlice({
   name: "plant",

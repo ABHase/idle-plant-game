@@ -13,6 +13,8 @@ const timeBoostSlice = createSlice({
   },
 });
 
+export const initialState: TimeBoostState = false;
+
 export const { activateTimeBoost, deactivateTimeBoost } =
   timeBoostSlice.actions;
 

@@ -23,7 +23,7 @@ export interface GlobalState {
   costModifier: number;
 }
 
-const initialState: GlobalState = {
+export const initialState: GlobalState = {
   geneticMarkerProgress: 0,
   geneticMarkerThreshold: 10,
   geneticMarkers: 0,
