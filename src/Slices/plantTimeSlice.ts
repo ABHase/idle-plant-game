@@ -11,7 +11,7 @@ export interface PlantTimeState {
   is_day: boolean;
 }
 
-const initialPlantTimeState: PlantTimeState = {
+export const initialPlantTimeState: PlantTimeState = {
   year: 1,
   season: "Spring",
   day: 1,

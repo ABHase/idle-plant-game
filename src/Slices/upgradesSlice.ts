@@ -14,7 +14,7 @@ export interface UpgradesState {
   purchased: string[]; // array of upgrade IDs
 }
 
-const initialState: UpgradesState = {
+export const initialState: UpgradesState = {
   available: UPGRADES.Fern,
   purchased: [],
 };
