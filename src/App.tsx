@@ -28,6 +28,7 @@ import LadyBugModal from "./Modals/LadyBugModal";
 import ReportModal from "./Modals/ReportModal";
 import MossDisplay from "./MossDisplay";
 import MossDNADisplay from "./MossDNADisplay";
+import SucculentDisplay from "./SucculentDisplay";
 
 const theme = createTheme({
   palette: {
@@ -199,6 +200,8 @@ function App() {
         return <PlantList setLadybugModalOpen={setLadybugModalOpen} />;
       case "Moss":
         return <MossDisplay setLadybugModalOpen={setLadybugModalOpen} />;
+      case "Succulent":
+        return <SucculentDisplay setLadybugModalOpen={setLadybugModalOpen} />;
       default:
         return null; // or return a default component if desired
     }

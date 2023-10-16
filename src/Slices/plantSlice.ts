@@ -21,37 +21,38 @@ export interface PlantState {
   maturity_level: number; //Plant maturity level
   sugar_production_rate: number; //Sugar production rate, base
   genetic_marker_production_rate: number; //Genetic marker production rate, base
-  is_sugar_production_on: boolean;
-  is_genetic_marker_production_on: boolean;
-  is_secondary_resource_production_on: boolean;
-  sunlight: number;
-  sunlight_absorption_rate: number;
-  sunlight_efficiency_multiplier: number;
-  water: number;
-  water_absorption_rate: number;
-  water_efficiency_multiplier: number;
-  sunlight_absorption_multiplier: number;
-  water_absorption_multiplier: number;
-  sugar: number;
-  ladybugs: number;
-  ladybugTax: number;
-  roots: number;
-  leaves: number;
-  resin: number;
-  sugarProduced: number;
-  lastProductionTimestamp: number;
-  totalWaterAbsorbed: number;
-  totalSunlightAbsorbed: number;
-  totalSugarCreated: number;
-  geneticMarkerUpgradeActive: boolean;
-  rootRot: number;
-  rootRotThreshold: number;
-  springModifier: number;
-  summerModifier: number;
-  autumnModifier: number;
-  winterModifier: number;
-  aphids: number;
-  leafWaterUsage: boolean;
+  is_sugar_production_on: boolean; //Is sugar production on?
+  is_genetic_marker_production_on: boolean; //Is genetic marker production on?
+  is_secondary_resource_production_on: boolean; //Is secondary resource production on?
+  sunlight: number; //Sunlight level
+  sunlight_absorption_rate: number; //Sunlight absorption rate, base
+  sunlight_efficiency_multiplier: number; //Sunlight efficiency multiplier, base
+  water: number; //Water level
+  water_absorption_rate: number; //Water absorption rate, base
+  water_efficiency_multiplier: number; //Water efficiency multiplier, base
+  sunlight_absorption_multiplier: number; //Sunlight absorption multiplier, base
+  water_absorption_multiplier: number; //Water absorption multiplier, base
+  sugar: number; //Sugar level
+  ladybugs: number; //Ladybugs this is the number that is making the tax, so it should be 1 by default and less when the tax is on
+  ladybugTax: number; //Ladybug tax this is the number that is multiplied by the ladybugs number to change the tax rate
+  roots: number; //Roots level
+  leaves: number; //Leaves level
+  resin: number; //Resin level not used yet
+  sugarProduced: number; //Sugar produced
+  lastProductionTimestamp: number; //Last production timestamp, not used currently
+  totalWaterAbsorbed: number; //Total water absorbed by the plant since creation
+  totalSunlightAbsorbed: number; //Total sunlight absorbed by the plant since creation
+  totalSugarCreated: number; //Total sugar created by the plant since creation
+  geneticMarkerUpgradeActive: boolean; //Is the genetic marker upgrade active? This is for the upgrade that increases the genetic marker production rate and prices
+  rootRot: number; //Root rot level, this is the number that is used to determine if roots are rotting from fungus
+  rootRotThreshold: number; //Root rot threshold, this is the number that is used to determine if roots are rotting from fungus
+  springModifier: number; //Spring modifier, this is the number that is used to determine how much water is absorbed in spring
+  summerModifier: number; //Summer modifier, this is the number that is used to determine how much sunlight is absorbed in summer
+  autumnModifier: number; //Autumn modifier, this is the number that is used to determine how much sugar is produced in autumn
+  winterModifier: number; //Winter modifier, this is the number that is used to determine the winter penalty
+  aphids: number; //Aphids level, this is the number that is used to determine how much sugar is consumed by aphids
+  leafWaterUsage: boolean; //Leaf water usage, this is the boolean that is used to determine if leaves use water, meta perk for moss
+  agaveSugarBonus: boolean; //Agave sugar bonus, this is the boolean that is used to determine if agave has a sugar bonus, meta perk for succulent
 }
 
 const initialState: PlantState = PLANT_CONFIGS.Fern; // Setting Fern as the default plant

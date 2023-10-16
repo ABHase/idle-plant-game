@@ -19,16 +19,8 @@ import {
   Box,
   LinearProgress,
 } from "@mui/material";
-import { Add, ArrowForwardIos, Clear } from "@mui/icons-material";
 import { LEAF_COST, ROOT_COST } from "./constants";
-import WbSunnyIcon from "@mui/icons-material/WbSunny";
-import OpacityIcon from "@mui/icons-material/Opacity";
-import GrainIcon from "@mui/icons-material/Grain";
-import GrassIcon from "@mui/icons-material/Grass";
-import SpaIcon from "@mui/icons-material/Spa";
-import ParkIcon from "@mui/icons-material/Park";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import CloseIcon from "@mui/icons-material/Close";
 import {
   MATURITY_SUGAR_PRODUCTION_MODIFIER,
   MATURITY_WATER_CONSUMPTION_MODIFIER,
@@ -51,17 +43,19 @@ import {
   itemizedReport,
 } from "./formulas";
 
-type MossDisplayProps = {
+type SucculentDisplayProps = {
   setLadybugModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const MossDisplay: React.FC<MossDisplayProps> = ({ setLadybugModalOpen }) => {
+const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
+  setLadybugModalOpen,
+}) => {
   const dispatch = useDispatch();
   const plant = useSelector((state: RootState) => state.plant);
   const plantTime = useSelector((state: RootState) => state.plantTime);
   const [multiplier, setMultiplier] = useState<number>(1);
 
-  const { geneticMarkerProgressMoss, geneticMarkerThresholdMoss } = useSelector(
+  const { geneticMarkerProgress, geneticMarkerThreshold } = useSelector(
     (state: RootState) => state.globalState
   );
   const plantState = useSelector((state: RootState) => state.plant);
@@ -186,15 +180,13 @@ const MossDisplay: React.FC<MossDisplayProps> = ({ setLadybugModalOpen }) => {
                 }}
                 onClick={() => setLadybugModalOpen(true)}
               >
-                <Typography variant="h5" align="center">
-                  You Have Aphids!
-                </Typography>
+                <Typography variant="h5">You Have Aphids!</Typography>
               </Button>
             </Grid>
           ) : null}
           <Grid item xs={12}>
             <Box display="flex" alignItems="center" justifyContent="center">
-              <Typography variant="h5">You are a clump of Moss</Typography>
+              <Typography variant="h5">You are a Succulent</Typography>
             </Box>
           </Grid>
           <Grid item xs={4}>
@@ -340,7 +332,7 @@ const MossDisplay: React.FC<MossDisplayProps> = ({ setLadybugModalOpen }) => {
                     color: plant.is_genetic_marker_production_on ? "" : "red",
                   }}
                 />{" "}
-                <DNA amount={(1 / geneticMarkerThresholdMoss) * 100} /> %{" "}
+                <DNA amount={(1 / geneticMarkerThreshold) * 100} /> %{" "}
                 {plant.is_genetic_marker_production_on ? "Stop" : "Start"}
               </Button>
             </Tooltip>
@@ -404,15 +396,106 @@ const MossDisplay: React.FC<MossDisplayProps> = ({ setLadybugModalOpen }) => {
                     backgroundColor: "#424532", // Or any other style reset
                   },
                 }}
-                onClick={() => {
-                  handleBuyLeaves();
-                  handleBuyRoots();
-                }}
+                onClick={() => handleBuyLeaves()}
               >
-                Grow: <Leaves amount={multiplier} />
+                Grow Leaves: <Leaves amount={multiplier} />
                 &nbsp;for <Sugar amount={LEAF_COST * multiplier} />
               </Button>
             </Tooltip>
+          </Grid>
+
+          {/* Roots Section */}
+          <Grid item xs={12}>
+            <Tooltip title="Grow Roots">
+              <Button
+                fullWidth
+                sx={{
+                  border: "1px solid #aaa",
+                  borderRadius: "4px",
+                  backgroundColor: "#363534",
+                  color: "#C7B08B",
+                  "&:active, &:focus": {
+                    backgroundColor: "#363534", // Or any other style reset
+                  },
+                }}
+                onClick={() => handleBuyRoots()}
+              >
+                Grow Roots: <Roots amount={multiplier} />
+                &nbsp;for <Sugar amount={ROOT_COST * multiplier} />
+              </Button>
+            </Tooltip>
+          </Grid>
+
+          <Grid item xs={12}>
+            <Divider sx={{ backgroundColor: "white" }} />
+          </Grid>
+
+          <Grid
+            item
+            xs={12}
+            sx={{ display: "flex", justifyContent: "space-evenly" }}
+          >
+            <Button
+              sx={{
+                border: "1px solid #aaa",
+                borderRadius: "4px",
+                backgroundColor: "#0F4A52",
+                color: "#34F7E1",
+                "&:active, &:focus": {
+                  backgroundColor: "#0F4A52", // Or any other style reset
+                },
+              }}
+              onClick={() => handleWaterAbsorption()}
+            >
+              + <Water amount={plant.water_absorption_rate} />
+            </Button>
+            <Button
+              sx={{
+                border: "1px solid #aaa",
+                borderRadius: "4px",
+                backgroundColor: "#633912",
+                color: "#FFC64D",
+                "&:active, &:focus": {
+                  backgroundColor: "#633912", // Or any other style reset
+                },
+              }}
+              onClick={() => handleSunlightAbsorption()}
+            >
+              + <Sunlight amount={plant.sunlight_absorption_rate} />
+            </Button>
+          </Grid>
+          <Grid item xs={12}>
+            <Divider sx={{ backgroundColor: "white" }} />
+          </Grid>
+          <Grid item xs={12}>
+            <Box position="relative" display="inline-flex" width="100%">
+              <LinearProgress
+                variant="determinate"
+                value={(plant.rootRot / plant.rootRotThreshold) * 100}
+                sx={{
+                  width: "100%",
+                  height: "22px",
+                  marginTop: "4px",
+                  backgroundColor: "#f0a6a2", // This is a lighter red for the unfilled portion
+                  "& .MuiLinearProgress-barColorPrimary": {
+                    backgroundColor: "#942e25",
+                  },
+                }}
+              />
+
+              <Box
+                sx={{
+                  position: "absolute",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "100%",
+                  color: "white",
+                }}
+              >
+                <Typography color="black">Root Rot from Fungus</Typography>
+              </Box>
+            </Box>
           </Grid>
         </Grid>
       </Box>
@@ -441,4 +524,4 @@ export function formatNumberWithDecimals(value: number): string {
   }
 }
 
-export default MossDisplay;
+export default SucculentDisplay;

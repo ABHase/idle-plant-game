@@ -300,7 +300,8 @@ const PlantList: React.FC<PlantListProps> = ({ setLadybugModalOpen }) => {
                       plant.maturity_level,
                       plantTime.season,
                       plant.autumnModifier,
-                      plant.winterModifier
+                      plant.winterModifier,
+                      plant.agaveSugarBonus
                     )}
                   />
                   /s
