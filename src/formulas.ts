@@ -419,5 +419,5 @@ export const calculateActualSugarProductionPerMinute = (
     ) * limitingResourcePercentage;
 
   // Convert to per minute
-  return actualSugarProductionPerSecond * 60;
+  return Math.max(0, actualSugarProductionPerSecond * 60);
 };
