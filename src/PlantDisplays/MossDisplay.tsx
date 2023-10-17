@@ -364,14 +364,6 @@ const MossDisplay: React.FC<MossDisplayProps> = ({ setLadybugModalOpen }) => {
             multiplier={plant.leafAutoGrowthMultiplier}
             isVisible={plant.grassGrowthToggle}
           />
-          {/*Section for toggling root automatic production */}
-          <ToggleAutoRootButton
-            isOn={plant.rootGrowthToggle}
-            onClick={handleToggleAutoRoots}
-            rootCost={ROOT_COST}
-            multiplier={plant.rootAutoGrowthMultiplier}
-            isVisible={plant.grassGrowthToggle}
-          />
 
           <Grid item xs={12}>
             <Divider sx={{ backgroundColor: "white" }} />
@@ -432,7 +424,6 @@ const MossDisplay: React.FC<MossDisplayProps> = ({ setLadybugModalOpen }) => {
                   },
                 }}
                 onClick={() => {
-                  handleBuyRoots();
                   handleBuyLeaves();
                 }}
               >
