@@ -434,8 +434,8 @@ const MossDisplay: React.FC<MossDisplayProps> = ({ setLadybugModalOpen }) => {
                   },
                 }}
                 onClick={() => {
-                  handleBuyLeaves();
                   handleBuyRoots();
+                  handleBuyLeaves();
                 }}
               >
                 Grow: <Leaves amount={multiplier} />&
