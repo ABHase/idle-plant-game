@@ -170,7 +170,7 @@ const plantSlice = createSlice({
         !state.is_genetic_marker_production_on;
     },
     buyRoots: (state, action: PayloadAction<{ cost: number }>) => {
-      if (state.type === "Moss") {
+      if (state.type === "Moss" && state.sugar >= action.payload.cost) {
         state.roots += 1;
       } else if (state.sugar >= action.payload.cost) {
         state.sugar -= action.payload.cost;
