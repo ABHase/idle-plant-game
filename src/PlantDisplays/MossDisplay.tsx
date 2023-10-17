@@ -421,7 +421,7 @@ const MossDisplay: React.FC<MossDisplayProps> = ({ setLadybugModalOpen }) => {
 
           {/* Leaves Section */}
           <Grid item xs={12}>
-            <Tooltip title="Grow Leaves">
+            <Tooltip title="Grow Leaves and Roots">
               <Button
                 fullWidth
                 sx={{
@@ -438,7 +438,8 @@ const MossDisplay: React.FC<MossDisplayProps> = ({ setLadybugModalOpen }) => {
                   handleBuyRoots();
                 }}
               >
-                Grow: <Leaves amount={multiplier} />
+                Grow: <Leaves amount={multiplier} />&
+                <Roots amount={multiplier} />
                 &nbsp;for <Sugar amount={LEAF_COST * multiplier} />
               </Button>
             </Tooltip>
