@@ -40,6 +40,7 @@ import { Maturity } from "../Components/Maturity";
 import { DNAIcon } from "../icons/dna";
 import { DNA } from "../Components/DNA";
 import {
+  calculateActualSugarProductionPerMinute,
   calculatePhotosynthesisSunlightConsumption,
   calculatePhotosynthesisWaterConsumption,
   determinePhotosynthesisSugarProduction,
@@ -119,6 +120,12 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
       plantState.sunlight_absorption_multiplier *
       sunlightModifier *
       plant.ladybugs;
+
+  const actualSugarPerMinute = calculateActualSugarProductionPerMinute(
+    plant,
+    report,
+    plantTime
+  );
 
   const handleSunlightAbsorption = () => {
     dispatch(absorbSunlight());
@@ -306,17 +313,8 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
                   <ArrowForwardIcon
                     sx={{ color: plant.is_sugar_production_on ? "" : "red" }}
                   />{" "}
-                  <Sugar
-                    amount={determinePhotosynthesisSugarProduction(
-                      plant.sugar_production_rate,
-                      plant.maturity_level,
-                      plantTime.season,
-                      plant.autumnModifier,
-                      plant.winterModifier,
-                      plant.agaveSugarBonus
-                    )}
-                  />
-                  /s
+                  <Sugar amount={actualSugarPerMinute} />
+                  /MIN
                 </Box>
               </Button>
             </Tooltip>
