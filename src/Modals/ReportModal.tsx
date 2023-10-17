@@ -6,6 +6,9 @@ import { Button } from "@mui/material";
 import { useSelector } from "react-redux";
 import { RootState } from "../rootReducer";
 import { itemizedReport } from "../formulas";
+import { Sugar } from "../Components/Sugar";
+import { Water } from "../Components/Water";
+import { Sunlight } from "../Components/Sunlight";
 
 interface ReportModalProps {
   open: boolean;
@@ -47,73 +50,82 @@ const ReportModal: React.FC<ReportModalProps> = ({ open, onClose }) => {
         <Box display="flex" flexDirection="column" mb={2}>
           <Typography variant="subtitle1">Sugar:</Typography>
           <Typography variant="body2">
-            Production Rate: {report.sugar.productionRate}
+            Base Production Rate: {report.sugar.productionRate} X
           </Typography>
           <Typography variant="body2">
-            Sugars Produced: {report.sugar.sugarsProduced}
+            Sugars Being Produced/cycle:&nbsp;
+            <Sugar amount={report.sugar.sugarsProduced} />
           </Typography>
           <Typography variant="body2">
-            Stored Sugar: {report.sugar.totalSugar}
-          </Typography>
-          <Typography variant="body2">
-            Total Sugar Created: {report.sugar.totalSugarCreated}
+            Total Sugar Created:{" "}
+            <Sugar amount={report.sugar.totalSugarCreated} />
           </Typography>
         </Box>
 
         <Box display="flex" flexDirection="column" mb={2}>
           <Typography variant="subtitle1">Water:</Typography>
           <Typography variant="body2">
-            Base Water Increase Per Root: {report.water.rootsWaterIncrease}
+            Base Water Increase Per Root:{" "}
+            <Water amount={report.water.rootsWaterIncrease} />
           </Typography>
           <Typography variant="body2">
             Water Increase with Seasonal Bonus:{" "}
-            {report.water.seasonModifiedWaterIncrease}
+            <Water amount={report.water.seasonModifiedWaterIncrease} />
           </Typography>
           <Typography variant="body2">
-            Water Decreased Per Leaf: {report.water.waterDecrease}
+            Water Decreased Per Leaf:{" "}
+            <Water amount={report.water.waterDecrease} />
           </Typography>
           <Typography variant="body2">
-            Water Produced after Ladybug Tax: {report.water.ladybugsTaxWater}
+            Water Produced after Ladybug Tax:{" "}
+            <Water amount={report.water.ladybugsTaxWater} />
           </Typography>
           <Typography variant="body2">
             Water Used Producing Sugar:{" "}
-            {report.water.photosynthesisWaterConsumption}
+            <Water amount={report.water.photosynthesisWaterConsumption} />
           </Typography>
           <Typography variant="body2">
-            Net Water: {report.water.netWaterProduction}
+            Net Water: <Water amount={report.water.netWaterProduction} />
           </Typography>
           <Typography variant="body2">
-            Stored Water: {report.water.totalWater}
+            Stored Water: <Water amount={report.water.totalWater} />
           </Typography>
           <Typography variant="body2">
-            Total Water Absorbed: {report.water.totalWaterAbsorbed}
+            Total Water Absorbed:{" "}
+            <Water amount={report.water.totalWaterAbsorbed} />
           </Typography>
         </Box>
 
         <Box display="flex" flexDirection="column" mb={2}>
           <Typography variant="subtitle1">Sunlight:</Typography>
           <Typography variant="body2">
-            Leaves Sunlight Increase: {report.sunlight.leavesSunlightIncrease}
+            Leaves Sunlight Increase:{" "}
+            <Sunlight amount={report.sunlight.leavesSunlightIncrease} />
           </Typography>
           <Typography variant="body2">
             Season Modified Sunlight Increase:{" "}
-            {report.sunlight.seasonModifiedSunlightIncrease}
+            <Sunlight amount={report.sunlight.seasonModifiedSunlightIncrease} />
           </Typography>
           <Typography variant="body2">
-            Ladybugs Tax Sunlight: {report.sunlight.ladybugsTaxSunlight}
+            Ladybugs Tax Sunlight:{" "}
+            <Sunlight amount={report.sunlight.ladybugsTaxSunlight} />
           </Typography>
           <Typography variant="body2">
             Sunlight Used Producing Sugar:{" "}
-            {report.sunlight.photosynthesisSunlightConsumption}
+            <Sunlight
+              amount={report.sunlight.photosynthesisSunlightConsumption}
+            />
           </Typography>
           <Typography variant="body2">
-            Net Sunlight: {report.sunlight.netSunlightProduction}
+            Net Sunlight:{" "}
+            <Sunlight amount={report.sunlight.netSunlightProduction} />
           </Typography>
           <Typography variant="body2">
-            Stored Sunlight: {report.sunlight.totalSunlight}
+            Stored Sunlight: <Sunlight amount={report.sunlight.totalSunlight} />
           </Typography>
           <Typography variant="body2">
-            Total Sunlight Absorbed: {report.sunlight.totalSunlightAbsorbed}
+            Total Sunlight Absorbed:{" "}
+            <Sunlight amount={report.sunlight.totalSunlightAbsorbed} />
           </Typography>
         </Box>
 
