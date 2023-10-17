@@ -106,6 +106,59 @@ const HelpModal: React.FC<HelpModalProps> = ({ open, onClose }) => {
         produced faster. In the winter everything is much slower.
       </Typography>
     </Box>,
+    <Box sx={{ color: "text.primary" }}>
+      <Typography variant="h6" mb={2}>
+        Fern:
+      </Typography>
+      <Typography variant="body2">
+        The fern is a fast growing plant that can absorb water and sunlight, it
+        is the basic starter plant, but it has no traits that carry over to
+        other species.
+      </Typography>
+    </Box>,
+    <Box sx={{ color: "text.primary" }}>
+      <Typography variant="h6" mb={2}>
+        Moss:
+      </Typography>
+      <Typography variant="body2">
+        Moss grows slowly, and simply. You cannot manually absorb resources. You
+        also buy roots and leaves all at once. There is no mushroom to trade
+        with. Moss unlocks absorbent leaves for all species.
+      </Typography>
+    </Box>,
+    <Box sx={{ color: "text.primary" }}>
+      <Typography variant="h6" mb={2}>
+        Moss:
+      </Typography>
+      <Typography variant="body2">
+        Moss grows slowly, and simply. You cannot manually absorb resources. You
+        also buy roots and leaves all at once. There is no mushroom to trade
+        with. Moss unlocks absorbent leaves for all species.
+      </Typography>
+    </Box>,
+    <Box sx={{ color: "text.primary" }}>
+      <Typography variant="h6" mb={2}>
+        Succulent:
+      </Typography>
+      <Typography variant="body2">
+        The Desert Succulent can trade sugar for water at the mushroom store
+        with no risk of Root Rot. It also produces sugar faster than other
+        plants, and unlocks agave sugar production for all species. However, in
+        the desert there is very little water and what little there is needs to
+        be defended from rabbits with needles.
+      </Typography>
+    </Box>,
+    <Box sx={{ color: "text.primary" }}>
+      <Typography variant="h6" mb={2}>
+        Grass:
+      </Typography>
+      <Typography variant="body2">
+        The Grass Colony wants to grow. It will not stop growing leaves
+        passively, and unlocks passive growth for all species. There is no
+        inventory at the mushroom store for grass, and it cannot directly
+        convert sugar into DNA, rather it converts leaves into DNA.
+      </Typography>
+    </Box>,
   ];
 
   return (
