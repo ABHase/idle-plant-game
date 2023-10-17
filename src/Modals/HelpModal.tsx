@@ -145,7 +145,9 @@ const HelpModal: React.FC<HelpModalProps> = ({ open, onClose }) => {
         with no risk of Root Rot. It also produces sugar faster than other
         plants, and unlocks agave sugar production for all species. However, in
         the desert there is very little water and what little there is needs to
-        be defended from rabbits with needles.
+        be defended from rabbits with needles. If you have more water than
+        needles the needles can defend rabbits will eat one leaf and 10% of your
+        water.
       </Typography>
     </Box>,
     <Box sx={{ color: "text.primary" }}>
