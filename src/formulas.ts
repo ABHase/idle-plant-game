@@ -1,3 +1,5 @@
+import { PlantState } from "./Slices/plantSlice";
+import { PlantTimeState } from "./Slices/plantTimeSlice";
 import {
   BASE_SUNLIGHT_CONSUMPTION,
   BASE_WATER_CONSUMPTION,
@@ -273,6 +275,18 @@ export const itemizedReport = (plantState: any, season: string) => {
     photosynthesisWaterConsumption -
     waterDecrease;
 
+  const netWaterProductionBeforeSugar =
+    calculateLadybugsTaxWater(
+      plantState.ladybugs,
+      calculateSeasonModifiedWaterIncrease(
+        calculateRootsWaterIncrease(
+          plantState.roots,
+          plantState.water_absorption_multiplier
+        ),
+        getWaterModifier(season, plantState)
+      )
+    ) - waterDecrease;
+
   const netSunlightProduction =
     calculateLadybugsTaxSunlight(
       plantState.ladybugs,
@@ -284,6 +298,17 @@ export const itemizedReport = (plantState: any, season: string) => {
         getSunlightModifier(season, plantState)
       )
     ) - photosynthesisSunlightConsumption;
+
+  const netSunlightProductionBeforeSugar = calculateLadybugsTaxSunlight(
+    plantState.ladybugs,
+    calculateSeasonModifiedSunlightIncrease(
+      calculateLeavesSunlightIncrease(
+        plantState.leaves,
+        plantState.sunlight_absorption_multiplier
+      ),
+      getSunlightModifier(season, plantState)
+    )
+  );
 
   // Itemized breakdown
   const report = {
@@ -322,6 +347,7 @@ export const itemizedReport = (plantState: any, season: string) => {
       totalWater: waterAndSunlightDetails.water,
       totalWaterAbsorbed: waterAndSunlightDetails.totalWaterAbsorbed,
       photosynthesisWaterConsumption: photosynthesisWaterConsumption,
+      netWaterProductionBeforeSugar: netWaterProductionBeforeSugar,
       netWaterProduction: netWaterProduction,
     },
     sunlight: {
@@ -349,9 +375,49 @@ export const itemizedReport = (plantState: any, season: string) => {
       totalSunlight: waterAndSunlightDetails.sunlight,
       totalSunlightAbsorbed: waterAndSunlightDetails.totalSunlightAbsorbed,
       photosynthesisSunlightConsumption: photosynthesisSunlightConsumption,
+      netSunlightProductionBeforeSugar: netSunlightProductionBeforeSugar,
       netSunlightProduction: netSunlightProduction,
     },
   };
 
   return report;
+};
+
+export const calculateActualSugarProductionPerMinute = (
+  plant: PlantState,
+  report: any,
+  plantTime: PlantTimeState
+) => {
+  // Get the limiting resource
+  const limitingResourcePerSecond = Math.min(
+    report.water.netWaterProductionBeforeSugar,
+    report.sunlight.netSunlightProductionBeforeSugar
+  );
+
+  // Get the required resources for sugar production
+  const requiredWaterPerSecond = calculatePhotosynthesisWaterConsumption(
+    plant.maturity_level
+  );
+  const requiredSunlightPerSecond = calculatePhotosynthesisSunlightConsumption(
+    plant.maturity_level
+  );
+
+  // Determine the percentage of available limiting resource in terms of requirement
+  const limitingResourcePercentage =
+    limitingResourcePerSecond /
+    Math.min(requiredWaterPerSecond, requiredSunlightPerSecond);
+
+  // Determine the actual sugar production per second
+  const actualSugarProductionPerSecond =
+    determinePhotosynthesisSugarProduction(
+      plant.sugar_production_rate,
+      plant.maturity_level,
+      plantTime.season,
+      plant.autumnModifier,
+      plant.winterModifier,
+      plant.agaveSugarBonus
+    ) * limitingResourcePercentage;
+
+  // Convert to per minute
+  return actualSugarProductionPerSecond * 60;
 };
