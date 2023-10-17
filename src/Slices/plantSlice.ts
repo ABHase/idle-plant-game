@@ -187,6 +187,10 @@ const plantSlice = createSlice({
             state.water -= waterCost;
             state.leaves += 1;
           }
+        } else if (state.type === "Moss") {
+          state.sugar -= action.payload.cost;
+          state.leaves += 1;
+          state.roots += 1;
         } else {
           state.sugar -= action.payload.cost;
           state.leaves += 1;
