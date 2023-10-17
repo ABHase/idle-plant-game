@@ -139,7 +139,7 @@ const MossDisplay: React.FC<MossDisplayProps> = ({ setLadybugModalOpen }) => {
 
   const handleBuyRoots = () => {
     for (let i = 0; i < multiplier; i++) {
-      dispatch(buyRoots({ cost: ROOT_COST }));
+      dispatch(buyRoots({ cost: LEAF_COST }));
     }
   };
 
