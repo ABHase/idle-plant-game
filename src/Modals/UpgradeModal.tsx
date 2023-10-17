@@ -29,7 +29,34 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, onClose }) => {
   const geneticMarkers = useSelector(
     (state: RootState) => state.globalState.geneticMarkers
   );
+  const geneticMarkersMoss = useSelector(
+    (state: RootState) => state.globalState.geneticMarkersMoss
+  );
+  const geneticMarkersSucculent = useSelector(
+    (state: RootState) => state.globalState.geneticMarkersSucculent
+  );
+  const geneticMarkersGrass = useSelector(
+    (state: RootState) => state.globalState.geneticMarkersGrass
+  );
   const plantType = useSelector((state: RootState) => state.plant.type);
+  let amountToPass;
+  switch (plantType) {
+    case "Fern":
+      amountToPass = geneticMarkers;
+      break;
+    case "Moss":
+      amountToPass = geneticMarkersMoss;
+      break;
+    case "Succulent":
+      amountToPass = geneticMarkersSucculent;
+      break;
+    case "Grass":
+      amountToPass = geneticMarkersGrass;
+      break;
+    default:
+      amountToPass = 0; // Default case, if needed
+      break;
+  }
   const metaUpgradesForPlant = UPGRADES["Meta"].filter((upgrade) =>
     upgrade.id.includes(plantType)
   );
@@ -63,7 +90,7 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, onClose }) => {
       >
         {/* This is the header Box that won't scroll */}
         <Box>
-          <DNA amount={geneticMarkers} />
+          <DNA amount={amountToPass} />
           <Typography id="upgrade-modal-title" variant="h6">
             Traits for Future Seeds:
           </Typography>
