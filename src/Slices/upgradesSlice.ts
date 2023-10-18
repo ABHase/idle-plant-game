@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { PlantState } from "./plantSlice"; // Import this for typing
 import { UPGRADES } from "../upgrades";
 
@@ -36,7 +36,6 @@ const upgradesSlice = createSlice({
         state.purchased.splice(index, 1);
       }
     },
-    //Reducer to change the available upgrades based on the plant type
     changeAvailableUpgrades: (
       state,
       action: PayloadAction<{ plantType: string }>
@@ -45,8 +44,24 @@ const upgradesSlice = createSlice({
     },
     resetUpgrades: () => initialState,
   },
+  extraReducers: (builder) => {
+    builder.addMatcher(
+      (action): action is PayloadAction<{ upgrades: UpgradesState }> =>
+        action.type === "REPLACE_STATE",
+      (state, action) => {
+        if (action.payload.upgrades !== undefined) {
+          return action.payload.upgrades;
+        }
+        return state;
+      }
+    );
+  },
 });
 
-export const { purchaseUpgrade, resetUpgrades, sellUpgrade } =
-  upgradesSlice.actions;
+export const {
+  purchaseUpgrade,
+  resetUpgrades,
+  sellUpgrade,
+  changeAvailableUpgrades,
+} = upgradesSlice.actions;
 export default upgradesSlice.reducer;

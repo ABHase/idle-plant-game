@@ -301,6 +301,18 @@ const plantSlice = createSlice({
       state.rootGrowthToggle = !state.rootGrowthToggle;
     },
   },
+  extraReducers: (builder) => {
+    builder.addMatcher(
+      (action): action is PayloadAction<{ plant: PlantState }> =>
+        action.type === "REPLACE_STATE",
+      (state, action) => {
+        if (action.payload.plant !== undefined) {
+          return action.payload.plant;
+        }
+        return state;
+      }
+    );
+  },
 });
 
 export const {

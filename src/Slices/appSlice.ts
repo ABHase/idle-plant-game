@@ -1,4 +1,3 @@
-// appSlice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface AppState {
@@ -17,6 +16,18 @@ const appSlice = createSlice({
     updateTime: (state, action: PayloadAction<number>) => {
       state.totalTime = action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addMatcher(
+      (action): action is PayloadAction<{ app: AppState }> =>
+        action.type === "REPLACE_STATE",
+      (state, action) => {
+        if (action.payload.app) {
+          return action.payload.app;
+        }
+        return state;
+      }
+    );
   },
 });
 
