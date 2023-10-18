@@ -41,6 +41,32 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().prepend(thunk),
 });
 
+// Function to export the state as a Base64 encoded string
+export const exportState = (): string => {
+  const state = store.getState();
+  const stringifiedState = JSON.stringify({ state, version: currentVersion });
+  const encodedState = btoa(stringifiedState);
+  return encodedState;
+};
+
+export const importState = (encodedState: string): void => {
+  try {
+    const decodedString = atob(encodedState);
+    const { state, version } = JSON.parse(decodedString);
+
+    if (version !== currentVersion) {
+      const migratedState = runMigrations(state, currentVersion);
+      store.dispatch({ type: "REPLACE_STATE", payload: migratedState });
+      saveState(migratedState);
+    } else {
+      store.dispatch({ type: "REPLACE_STATE", payload: state });
+      saveState(state);
+    }
+  } catch (error) {
+    console.error("Failed to import state: ", error);
+  }
+};
+
 export default store;
 export type AppDispatch = typeof store.dispatch;
 export type AppThunk<ReturnType = void> = ThunkAction<

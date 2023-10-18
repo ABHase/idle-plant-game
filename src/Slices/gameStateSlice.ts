@@ -189,7 +189,18 @@ const globalStateSlice = createSlice({
           break;
       }
     },
-    // Add other reducers as necessary...
+  },
+  extraReducers: (builder) => {
+    builder.addMatcher(
+      (action): action is PayloadAction<{ gameState: GlobalState }> =>
+        action.type === "REPLACE_STATE",
+      (state, action) => {
+        if (action.payload.gameState) {
+          return action.payload.gameState;
+        }
+        return state;
+      }
+    );
   },
 });
 
@@ -199,5 +210,7 @@ export const {
   deductGeneticMarkers,
   increaseGeneticMarkers,
   addGeneticMarkers,
+  // Add other exported actions...
 } = globalStateSlice.actions;
+
 export default globalStateSlice.reducer;

@@ -32,6 +32,7 @@ import SucculentDisplay from "./PlantDisplays/SucculentDisplay";
 import SucculentDNADisplay from "./DNADisplays/SucculentDNADisplay";
 import GrassDisplay from "./PlantDisplays/GrassDisplay";
 import GrassDNADisplay from "./DNADisplays/GrassDNADisplay";
+import TextboxModal from "./Modals/TextboxModal";
 
 const theme = createTheme({
   palette: {
@@ -158,8 +159,18 @@ function App() {
   const [mushroomStoreModalOpen, setMushroomStoreModalOpen] = useState(false);
   const [ladybugModalOpen, setLadybugModalOpen] = useState(false);
   const [reportModalOpen, setReportModalOpen] = useState(false);
+
   const [showLeafLossWarning, setShowLeafLossWarning] = useState(false);
   const [plantType] = React.useState<string>("Fern");
+  const [textboxModalOpen, setTextboxModalOpen] = useState(false);
+
+  const handleOpenTextboxModal = () => {
+    setTextboxModalOpen(true);
+  };
+  const handleCloseTextboxModal = () => {
+    setTextboxModalOpen(false);
+  };
+
   const handleOpenReportModal = () => {
     setReportModalOpen(true);
   };
@@ -271,12 +282,18 @@ function App() {
           setOpenDialog={setOpenDialog}
           onOpenMushroomStore={handleOpenMushroomStoreModal}
           handleOpenReportModal={handleOpenReportModal}
+          handleOpenTextboxModal={handleOpenTextboxModal}
+          handleCloseReportModal={handleCloseReportModal}
         />
         <MushroomStoreModal
           open={mushroomStoreModalOpen}
           onClose={handleCloseMushroomStoreModal}
         />
         <ReportModal open={reportModalOpen} onClose={handleCloseReportModal} />
+        <TextboxModal
+          open={textboxModalOpen}
+          onClose={handleCloseTextboxModal}
+        />
 
         {ladybugModalOpen ? (
           <LadyBugModal

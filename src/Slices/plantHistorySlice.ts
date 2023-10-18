@@ -29,6 +29,18 @@ const plantHistorySlice = createSlice({
     },
     resetPlantHistory: () => initialPlantHistoryState,
   },
+  extraReducers: (builder) => {
+    builder.addMatcher(
+      (action): action is PayloadAction<{ plantHistory: PlantHistoryState }> =>
+        action.type === "REPLACE_STATE",
+      (state, action) => {
+        if (action.payload.plantHistory) {
+          return action.payload.plantHistory;
+        }
+        return state;
+      }
+    );
+  },
 });
 
 export const { addPlantToHistory, resetPlantHistory } =

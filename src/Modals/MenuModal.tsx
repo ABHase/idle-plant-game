@@ -16,6 +16,8 @@ interface Props {
   handleCloseHelpModal: () => void;
   onOpenMushroomStore: () => void;
   handleOpenReportModal: () => void;
+  handleOpenTextboxModal: () => void;
+  handleCloseReportModal: () => void;
 }
 
 const MenuModal: React.FC<Props> = (props) => {
@@ -92,6 +94,13 @@ const MenuModal: React.FC<Props> = (props) => {
             Join Discord
           </Button>
         </a>
+        <Button
+          variant="contained"
+          sx={{ my: 1, backgroundColor: "#4e86e6" }}
+          onClick={props.handleOpenTextboxModal}
+        >
+          Import/Export Save
+        </Button>
         <Button
           variant="contained"
           sx={{ my: 1, backgroundColor: "#942e25" }}
