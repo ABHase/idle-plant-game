@@ -13,6 +13,8 @@ import {
   deductSugar,
   increaseRootRot,
   addWater,
+  deductSunlight,
+  increaseSugar,
 } from "./Slices/plantSlice";
 import {
   activateTimeBoost,
@@ -105,6 +107,19 @@ export const DESERT_MUSHROOM_ITEMS: MushroomItem[] = [
   },
 ];
 
+export const LICHEN_MUSHROOM_ITEMS: MushroomItem[] = [
+  {
+    id: "shade_for_sugar",
+    name: "Shady Protection Racket",
+    description: "500 Sugar.",
+    cost: 50000,
+    effect: (dispatch, getState) => {
+      dispatch(deductSunlight(50000)); // Deduct sugar cost
+      dispatch(increaseSugar(100)); // Add 150 water
+    },
+  },
+];
+
 export const MUSHROOM_ITEM_FUNCTIONS: {
   [key: string]: (
     dispatch: ThunkDispatch<RootState, unknown, Action<string>>,
@@ -131,6 +146,12 @@ export const MUSHROOM_ITEM_FUNCTIONS: {
   ) => void,
   water_flood: DESERT_MUSHROOM_ITEMS.find((item) => item.id === "water_flood")
     ?.effect as (
+    dispatch: ThunkDispatch<RootState, unknown, Action<string>>,
+    getState: () => RootState
+  ) => void,
+  shade_for_sugar: LICHEN_MUSHROOM_ITEMS.find(
+    (item) => item.id === "shade_for_sugar"
+  )?.effect as (
     dispatch: ThunkDispatch<RootState, unknown, Action<string>>,
     getState: () => RootState
   ) => void,

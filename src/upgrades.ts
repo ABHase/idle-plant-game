@@ -161,6 +161,12 @@ export const UPGRADES: Record<string, Upgrade[]> = {
       description: "Doubles the amount of sunlight absorbed by Moss",
       cost: 1,
     },
+    {
+      id: "lichen_store",
+      name: "Lichen Co-Op",
+      description: "Unlocks the Lichen Store",
+      cost: 30,
+    },
   ],
   Succulent: [
     {
@@ -422,6 +428,9 @@ export const UPGRADE_FUNCTIONS: Record<
   Moss: {
     bromeliad: (plant) => {
       plant.sunlight_absorption_multiplier *= 2;
+    },
+    lichen_store: (plant) => {
+      plant.lichenStoreAvailable = true;
     },
   },
   Succulent: {

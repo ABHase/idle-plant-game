@@ -16,6 +16,16 @@ interface TextboxModalProps {
 
 const TextboxModal: FC<TextboxModalProps> = ({ open, onClose }) => {
   const [textBoxContent, setTextBoxContent] = useState<string>("");
+  const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
+
+  const handleConfirmedImport = () => {
+    try {
+      importState(textBoxContent);
+      alert("State successfully imported!");
+    } catch (error) {
+      alert("Failed to import state");
+    }
+  };
 
   const handleExport = () => {
     const exportedState = exportState();
@@ -23,12 +33,7 @@ const TextboxModal: FC<TextboxModalProps> = ({ open, onClose }) => {
   };
 
   const handleImport = () => {
-    try {
-      importState(textBoxContent);
-      alert("State successfully imported!");
-    } catch (error) {
-      alert("Failed to import state");
-    }
+    setConfirmOpen(true);
   };
 
   return (
@@ -50,6 +55,26 @@ const TextboxModal: FC<TextboxModalProps> = ({ open, onClose }) => {
           Import from Textbox
         </Button>
       </DialogActions>
+      <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
+        <DialogTitle>Confirm Import</DialogTitle>
+        <DialogContent>
+          Importing will overwrite your current state. Are you sure?
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setConfirmOpen(false)} color="primary">
+            Cancel
+          </Button>
+          <Button
+            onClick={() => {
+              handleConfirmedImport();
+              setConfirmOpen(false);
+            }}
+            color="secondary"
+          >
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Dialog>
   );
 };
