@@ -15,7 +15,7 @@ import timeBoostReducer from "./Slices/timeBoostSlice";
 import { runMigrations } from "./migrations";
 
 const persistedState: RootState | undefined = loadState();
-const currentVersion = 1;
+const currentVersion = 2;
 
 if (
   !persistedState ||
@@ -24,6 +24,7 @@ if (
 ) {
   const migratedState = runMigrations(persistedState, currentVersion);
   saveState(migratedState);
+  window.location.reload();
 }
 
 const store = configureStore({

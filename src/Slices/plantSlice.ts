@@ -61,6 +61,7 @@ export interface PlantState {
   leafAutoGrowthMultiplier: number; //Leaf auto growth, leaf cost multiplied by this number to auto grow leaves
   rootGrowthToggle: boolean; //Root growth toggle, this is the boolean that is used to determine if the plant is passively growing roots
   rootAutoGrowthMultiplier: number; //Root auto growth, root cost multiplied by this number to auto grow roots
+  lichenStoreAvailable: boolean; //Lichen store available, this is the boolean that is used to determine if the lichen store is available to moss
 }
 
 export const initialState: PlantState = PLANT_CONFIGS.Fern; // Setting Fern as the default plant
@@ -236,14 +237,20 @@ const plantSlice = createSlice({
       const deductionAmount = action.payload;
       state.sugar = Math.max(0, state.sugar - deductionAmount);
     },
-    //Reducer to increase root rot by payload
+    deductSunlight: (state, action: PayloadAction<number>) => {
+      const deductionAmount = action.payload;
+      state.sunlight = Math.max(0, state.sunlight - deductionAmount);
+    },
+    increaseSugar: (state, action: PayloadAction<number>) => {
+      const increaseAmount = action.payload;
+      state.sugar += increaseAmount;
+    },
     increaseRootRot: (state, action: PayloadAction<number>) => {
       state.rootRot += action.payload;
       if (state.rootRot > state.rootRotThreshold) {
         state.rootRot = state.rootRotThreshold;
       }
     },
-    //Reducer to reset root rot to 0
     resetRootRot: (state) => {
       state.rootRot = 0;
     },
@@ -348,5 +355,7 @@ export const {
   buyNeedles,
   toggleLeafGrowth,
   toggleRootGrowth,
+  deductSunlight,
+  increaseSugar,
 } = plantSlice.actions;
 export default plantSlice.reducer;
