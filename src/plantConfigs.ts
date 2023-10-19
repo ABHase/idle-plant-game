@@ -198,8 +198,8 @@ export const GRASS_INITIAL_CONFIG: PlantState = {
 };
 
 export const PLANT_CONFIGS: Record<string, PlantState> = {
-  Fern: FERN_INITIAL_CONFIG,
   Moss: MOSS_INITIAL_CONFIG,
+  Fern: FERN_INITIAL_CONFIG,
   Succulent: SUCCULENT_INITIAL_CONFIG,
   Grass: GRASS_INITIAL_CONFIG,
 };

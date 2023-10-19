@@ -9,6 +9,16 @@ import {
   SUGAR_THRESHOLD,
 } from "./constants";
 
+export const isSugarConversionUnlocked = (plant: PlantState) =>
+  plant.totalWaterAbsorbed > calculatePhotosynthesisSunlightConsumption(1) &&
+  plant.totalWaterAbsorbed > calculatePhotosynthesisWaterConsumption(1);
+
+export const isGeneticMarkerUpgradeUnlocked = (plant: PlantState) =>
+  plant.totalSugarCreated > SUGAR_THRESHOLD;
+
+export const isSugarUpgradesUnlocked = (plant: PlantState) =>
+  plant.totalSugarCreated > 0;
+
 export const getWaterModifier = (season: string, plantState: any) => {
   if (season === "Spring") {
     return plantState.springModifier;

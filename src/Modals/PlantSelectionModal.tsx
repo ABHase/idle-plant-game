@@ -1,15 +1,14 @@
 import React, { useState } from "react";
 import { PLANT_CONFIGS } from "../plantConfigs";
 import {
-  Button,
+  ButtonBase,
   Dialog,
   DialogContent,
   DialogTitle,
   Typography,
-  Card,
 } from "@mui/material";
 
-// Type definitions for props
+// Existing type definitions for props
 interface PlantSelectionModalProps {
   open: boolean;
   onClose: () => void;
@@ -21,8 +20,6 @@ const PlantSelectionModal: React.FC<PlantSelectionModalProps> = ({
   onClose,
   onPlantSelect,
 }) => {
-  const [isPlantSelected, setIsPlantSelected] = useState(false);
-
   const descriptions: { [key: string]: string } = {
     Fern: "Requires direct attention early on, prone to aphids.",
     Moss: "Can fully idle without dying, grows very slowly.",
@@ -32,27 +29,33 @@ const PlantSelectionModal: React.FC<PlantSelectionModalProps> = ({
 
   return (
     <Dialog open={open}>
-      <DialogTitle
-        sx={{ backgroundColor: (theme) => theme.palette.background.paper }}
-      >
-        Select a Plant Type, you can change at any time
-      </DialogTitle>
+      <DialogTitle>Select a Species, you can change at any time</DialogTitle>
       <DialogContent
-        sx={{ backgroundColor: (theme) => theme.palette.background.default }}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
       >
         {Object.keys(PLANT_CONFIGS).map((plantType) => (
-          <Card
+          <ButtonBase
             key={plantType}
             onClick={() => {
               onPlantSelect(plantType);
               onClose();
             }}
             sx={{
-              margin: "10px",
-              padding: "10px",
-              cursor: "pointer",
+              width: "90%",
+              margin: "5px",
+              padding: "5px",
+              display: "block",
+              backgroundColor: "primary.main",
+              color: "black",
+              border: "1px solid white",
+              borderRadius: "8px",
               "&:hover": {
-                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+                backgroundColor: "primary.dark",
               },
             }}
           >
@@ -60,13 +63,8 @@ const PlantSelectionModal: React.FC<PlantSelectionModalProps> = ({
             <Typography sx={{ fontSize: "16px", marginTop: "5px" }}>
               {descriptions[plantType] || "No description available."}
             </Typography>
-          </Card>
+          </ButtonBase>
         ))}
-        <Typography
-          sx={{ fontSize: "12px", textAlign: "center", marginTop: "20px" }}
-        >
-          There is a help section in the menu.
-        </Typography>
       </DialogContent>
     </Dialog>
   );

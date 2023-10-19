@@ -51,6 +51,9 @@ import {
   calculatePhotosynthesisSunlightConsumption,
   calculatePhotosynthesisWaterConsumption,
   determinePhotosynthesisSugarProduction,
+  isGeneticMarkerUpgradeUnlocked,
+  isSugarConversionUnlocked,
+  isSugarUpgradesUnlocked,
   itemizedReport,
 } from "../formulas";
 import ToggleAutoLeafButton from "../Components/Buttons/ToggleAutoLeafButton";
@@ -270,7 +273,15 @@ const PlantList: React.FC<PlantListProps> = ({ setLadybugModalOpen }) => {
             </Tooltip>
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid
+            item
+            xs={12}
+            sx={{
+              visibility: isSugarConversionUnlocked(plant)
+                ? "visible"
+                : "hidden",
+            }}
+          >
             <Tooltip
               title={
                 plant.is_sugar_production_on
@@ -320,7 +331,15 @@ const PlantList: React.FC<PlantListProps> = ({ setLadybugModalOpen }) => {
             </Tooltip>
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid
+            item
+            xs={12}
+            sx={{
+              visibility: isGeneticMarkerUpgradeUnlocked(plant)
+                ? "visible"
+                : "hidden",
+            }}
+          >
             <Tooltip
               title={
                 plant.is_genetic_marker_production_on
@@ -377,7 +396,9 @@ const PlantList: React.FC<PlantListProps> = ({ setLadybugModalOpen }) => {
           <Grid
             item
             xs={3}
-            sx={{ display: plant.sugar === 0 ? "none" : "block" }}
+            sx={{
+              visibility: isSugarUpgradesUnlocked(plant) ? "visible" : "hidden",
+            }}
           >
             <Button
               onClick={() => toggleMultiplier(1)}
@@ -392,7 +413,9 @@ const PlantList: React.FC<PlantListProps> = ({ setLadybugModalOpen }) => {
           <Grid
             item
             xs={3}
-            sx={{ display: plant.sugar === 0 ? "none" : "block" }}
+            sx={{
+              visibility: isSugarUpgradesUnlocked(plant) ? "visible" : "hidden",
+            }}
           >
             <Button
               onClick={() => toggleMultiplier(10)}
@@ -407,7 +430,9 @@ const PlantList: React.FC<PlantListProps> = ({ setLadybugModalOpen }) => {
           <Grid
             item
             xs={3}
-            sx={{ display: plant.sugar === 0 ? "none" : "block" }}
+            sx={{
+              visibility: isSugarUpgradesUnlocked(plant) ? "visible" : "hidden",
+            }}
           >
             <Button
               onClick={() => toggleMultiplier(100)}
@@ -420,7 +445,9 @@ const PlantList: React.FC<PlantListProps> = ({ setLadybugModalOpen }) => {
           <Grid
             item
             xs={3}
-            sx={{ display: plant.sugar === 0 ? "none" : "block" }}
+            sx={{
+              visibility: isSugarUpgradesUnlocked(plant) ? "visible" : "hidden",
+            }}
           >
             <Button
               onClick={() => toggleMultiplier(1000)}
@@ -435,7 +462,9 @@ const PlantList: React.FC<PlantListProps> = ({ setLadybugModalOpen }) => {
           <Grid
             item
             xs={12}
-            sx={{ display: plant.sugar === 0 ? "none" : "block" }}
+            sx={{
+              visibility: isSugarUpgradesUnlocked(plant) ? "visible" : "hidden",
+            }}
           >
             <Tooltip title="Grow Leaves">
               <Button
@@ -461,7 +490,9 @@ const PlantList: React.FC<PlantListProps> = ({ setLadybugModalOpen }) => {
           <Grid
             item
             xs={12}
-            sx={{ display: plant.sugar === 0 ? "none" : "block" }}
+            sx={{
+              visibility: isSugarUpgradesUnlocked(plant) ? "visible" : "hidden",
+            }}
           >
             <Tooltip title="Grow Roots">
               <Button
@@ -524,7 +555,13 @@ const PlantList: React.FC<PlantListProps> = ({ setLadybugModalOpen }) => {
           <Grid item xs={12}>
             <Divider sx={{ backgroundColor: "white" }} />
           </Grid>
-          <Grid item xs={12}>
+          <Grid
+            item
+            xs={12}
+            sx={{
+              visibility: plant.rootRot > 0 ? "visible" : "hidden",
+            }}
+          >
             <Box position="relative" display="inline-flex" width="100%">
               <LinearProgress
                 variant="determinate"

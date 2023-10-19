@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../rootReducer"; // Adjust the import path if needed
 import { Box, Grid, LinearProgress, Typography } from "@mui/material";
 import { DNA } from "../Components/DNA";
+import { isGeneticMarkerUpgradeUnlocked } from "../formulas";
 
 const GlobalStateDisplay: React.FC = () => {
   const {
@@ -17,6 +18,7 @@ const GlobalStateDisplay: React.FC = () => {
     costModifier,
   } = useSelector((state: RootState) => state.globalState);
 
+  const plant = useSelector((state: RootState) => state.plant);
   const percentage = Math.floor(
     (geneticMarkerProgress / geneticMarkerThreshold) * 100
   );
@@ -32,10 +34,26 @@ const GlobalStateDisplay: React.FC = () => {
         margin="0 auto"
       >
         <Grid container spacing={0} alignItems="center">
-          <Grid item xs={3}>
+          <Grid
+            item
+            xs={3}
+            sx={{
+              visibility: isGeneticMarkerUpgradeUnlocked(plant)
+                ? "visible"
+                : "hidden",
+            }}
+          >
             <DNA amount={geneticMarkers} />
           </Grid>
-          <Grid item xs={9}>
+          <Grid
+            item
+            xs={9}
+            sx={{
+              visibility: isGeneticMarkerUpgradeUnlocked(plant)
+                ? "visible"
+                : "hidden",
+            }}
+          >
             <Box position="relative" display="inline-flex" width="100%">
               <LinearProgress
                 variant="determinate"
