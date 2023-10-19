@@ -385,9 +385,16 @@ function App() {
               <Button
                 variant="contained"
                 onClick={() => setMenuModalOpen(true)}
-                sx={{ width: "100%", mt: 0, mb: 0 }} // This will set the width to 90% of the parent and add some margin at the top and bottom
+                sx={{ width: "45%", mt: 0, mb: 0, ml: 1, mr: 1 }}
               >
                 Open Menu
+              </Button>
+              <Button
+                variant="contained"
+                onClick={() => handleOpenMushroomStoreModal()}
+                sx={{ width: "45%", mt: 0, mb: 0, ml: 1, mr: 1 }}
+              >
+                Mushroom
               </Button>
             </Box>
 

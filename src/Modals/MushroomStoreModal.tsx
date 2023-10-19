@@ -103,7 +103,8 @@ const MushroomStoreModal: React.FC<MushroomStoreModalProps> = ({
         } else {
           return (
             <Typography mt={2}>
-              No inventory available for Moss. Check back later!
+              No inventory available for Moss. Check back when you've unlocked
+              the Lichen trait!
             </Typography>
           );
         }

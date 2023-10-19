@@ -118,6 +118,16 @@ export const LICHEN_MUSHROOM_ITEMS: MushroomItem[] = [
       dispatch(increaseSugar(100)); // Add 150 water
     },
   },
+  {
+    id: "shade_for_sugar_2",
+    name: "Shadier Protection Racket",
+    description: "1000 Sugar.",
+    cost: 500000,
+    effect: (dispatch, getState) => {
+      dispatch(deductSunlight(500000)); // Deduct sugar cost
+      dispatch(increaseSugar(1000)); // Add 150 water
+    },
+  },
 ];
 
 export const MUSHROOM_ITEM_FUNCTIONS: {
@@ -151,6 +161,12 @@ export const MUSHROOM_ITEM_FUNCTIONS: {
   ) => void,
   shade_for_sugar: LICHEN_MUSHROOM_ITEMS.find(
     (item) => item.id === "shade_for_sugar"
+  )?.effect as (
+    dispatch: ThunkDispatch<RootState, unknown, Action<string>>,
+    getState: () => RootState
+  ) => void,
+  shade_for_sugar_2: LICHEN_MUSHROOM_ITEMS.find(
+    (item) => item.id === "shade_for_sugar_2"
   )?.effect as (
     dispatch: ThunkDispatch<RootState, unknown, Action<string>>,
     getState: () => RootState
