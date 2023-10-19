@@ -115,7 +115,7 @@ export const LICHEN_MUSHROOM_ITEMS: MushroomItem[] = [
     cost: 50000,
     effect: (dispatch, getState) => {
       dispatch(deductSunlight(50000)); // Deduct sugar cost
-      dispatch(increaseSugar(100)); // Add 150 water
+      dispatch(increaseSugar(500)); // Add 150 water
     },
   },
   {
@@ -125,7 +125,7 @@ export const LICHEN_MUSHROOM_ITEMS: MushroomItem[] = [
     cost: 500000,
     effect: (dispatch, getState) => {
       dispatch(deductSunlight(500000)); // Deduct sugar cost
-      dispatch(increaseSugar(1000)); // Add 150 water
+      dispatch(increaseSugar(5000)); // Add 150 water
     },
   },
 ];

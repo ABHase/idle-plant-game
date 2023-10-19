@@ -271,7 +271,7 @@ export const UPGRADES: Record<string, Upgrade[]> = {
       id: "auto_root_growth_multiplier_efficiency",
       name: "Rhizomes",
       description: "Reduce the cost of auto root growth from 5x to 2x",
-      cost: 3,
+      cost: 1,
     },
     {
       id: "boost_sunlight_multiplier_grass",
