@@ -16,7 +16,7 @@ import ConfirmEvolveDialog from "./ConfirmEvolveDialog";
 import { Button } from "@mui/material";
 import { resetApp } from "./Slices/appSlice";
 import { resetGlobalState } from "./Slices/gameStateSlice";
-import { resetPlant } from "./Slices/plantSlice";
+import { initializeNewPlant, resetPlant } from "./Slices/plantSlice";
 import { resetPlantTime } from "./Slices/plantTimeSlice";
 import UpgradeModal from "./Modals/UpgradeModal";
 import { resetUpgrades } from "./Slices/upgradesSlice";
@@ -33,6 +33,7 @@ import SucculentDNADisplay from "./DNADisplays/SucculentDNADisplay";
 import GrassDisplay from "./PlantDisplays/GrassDisplay";
 import GrassDNADisplay from "./DNADisplays/GrassDNADisplay";
 import TextboxModal from "./Modals/TextboxModal";
+import PlantSelectionModal from "./Modals/PlantSelectionModal";
 
 const theme = createTheme({
   palette: {
@@ -57,6 +58,11 @@ const theme = createTheme({
   // Add any other theme customizations here
 });
 
+const useIsNewUser = () => {
+  const isNewUser = localStorage.getItem("isNewUser");
+  return isNewUser === "true";
+};
+
 const selectPlants = createSelector(
   (state: RootState) => state.plant,
   (plant) => Object.values(plant)
@@ -68,7 +74,32 @@ const selectSeason = createSelector(
 );
 
 function App() {
+  //New user setup
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const isNewUser = useIsNewUser();
+  const [isPlantSelected, setIsPlantSelected] = useState(!isNewUser);
+
   const dispatch: AppDispatch = useDispatch();
+
+  useEffect(() => {
+    if (isNewUser && !isPlantSelected) {
+      setModalOpen(true);
+    }
+  }, [isPlantSelected, isNewUser]);
+
+  const handlePlantSelect = (plantType: string) => {
+    dispatch(initializeNewPlant({ plantType }));
+    setIsPlantSelected(true);
+    // Update localStorage to indicate that the user is no longer new.
+    localStorage.setItem("isNewUser", "false");
+    saveState(store.getState());
+  };
+
+  const handleClose = () => {
+    setModalOpen(false);
+  };
+
   const totalTime = useSelector((state: RootState) => state.app.totalTime);
   const plantTime = useSelector((state: RootState) => state.plantTime);
   const plantDisplayType = useSelector((state: RootState) => state.plant.type);
@@ -103,7 +134,18 @@ function App() {
     dispatch(evolveAndRecordPlant(selectedPlantType, purchasedUpgrades));
   };
 
+  // Update the lastUpdateTimeRef whenever the plant is selected
   useEffect(() => {
+    if (isPlantSelected) {
+      lastUpdateTimeRef.current = Date.now();
+    }
+  }, [isPlantSelected]);
+
+  useEffect(() => {
+    // Only proceed if a plant is selected
+    if (!isPlantSelected) {
+      return;
+    }
     // Check if the number of leaves has decreased
 
     if (previousLeaves.current > totalLeaves) {
@@ -117,13 +159,16 @@ function App() {
     update();
     // Cleanup code: stop the loop when the component unmounts
     return () => {};
-  }, [dispatch, totalLeaves]);
+  }, [dispatch, totalLeaves, isPlantSelected]);
 
   const lastUpdateTimeRef = useRef(Date.now());
   const saveCounterRef = useRef(0);
   const previousLeaves = useRef(totalLeaves);
 
   function update() {
+    if (!isPlantSelected) {
+      return; // Exit early if the plant hasn't been selected yet
+    }
     const currentTime = Date.now();
     const timeElapsed = currentTime - lastUpdateTimeRef.current;
 
@@ -154,7 +199,7 @@ function App() {
 
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
   const [historyModalOpen, setHistoryModalOpen] = useState(false);
-  const [helpModalOpen, setHelpModalOpen] = useState(true);
+  const [helpModalOpen, setHelpModalOpen] = useState(false);
   const [menuModalOpen, setMenuModalOpen] = useState(false);
   const [mushroomStoreModalOpen, setMushroomStoreModalOpen] = useState(false);
   const [ladybugModalOpen, setLadybugModalOpen] = useState(false);
@@ -354,6 +399,13 @@ function App() {
               open={upgradeModalOpen}
               onClose={handleCloseUpgradeModal}
             />
+            {isNewUser && (
+              <PlantSelectionModal
+                open={modalOpen}
+                onClose={handleClose}
+                onPlantSelect={handlePlantSelect}
+              />
+            )}
           </header>
         </Box>
       </Box>

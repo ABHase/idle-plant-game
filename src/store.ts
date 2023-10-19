@@ -15,7 +15,22 @@ import timeBoostReducer from "./Slices/timeBoostSlice";
 import { runMigrations } from "./migrations";
 
 const persistedState: RootState | undefined = loadState();
-const currentVersion = 2;
+export const currentVersion = 3;
+
+// Check if the flag isNewUser exists in local storage
+let isNewUser = localStorage.getItem("isNewUser");
+
+if (!persistedState) {
+  // New user or local storage is empty
+  isNewUser = "true";
+  localStorage.setItem("isNewUser", "true");
+} else {
+  if (isNewUser === null) {
+    // Handle edge cases where persistedState exists but isNewUser flag does not
+    isNewUser = "false";
+    localStorage.setItem("isNewUser", "false");
+  }
+}
 
 if (
   !persistedState ||

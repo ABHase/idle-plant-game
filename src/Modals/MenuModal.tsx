@@ -1,5 +1,6 @@
 import React from "react";
 import { Box, Button, Dialog } from "@mui/material";
+import { currentVersion } from "../store";
 
 interface Props {
   open: boolean;
@@ -31,6 +32,8 @@ const MenuModal: React.FC<Props> = (props) => {
         display="flex"
         flexDirection="column"
       >
+        {/* Displaying currentVersion */}
+        <div>Current Version: 0.{currentVersion}</div>
         <Button
           sx={{ my: 1 }}
           variant="contained"
