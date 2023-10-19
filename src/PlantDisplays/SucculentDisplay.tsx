@@ -44,6 +44,9 @@ import {
   calculatePhotosynthesisSunlightConsumption,
   calculatePhotosynthesisWaterConsumption,
   determinePhotosynthesisSugarProduction,
+  isGeneticMarkerUpgradeUnlocked,
+  isSugarConversionUnlocked,
+  isSugarUpgradesUnlocked,
   itemizedReport,
 } from "../formulas";
 import ToggleAutoLeafButton from "../Components/Buttons/ToggleAutoLeafButton";
@@ -270,7 +273,15 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
             </Tooltip>
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid
+            item
+            xs={12}
+            sx={{
+              visibility: isSugarConversionUnlocked(plant)
+                ? "visible"
+                : "hidden",
+            }}
+          >
             <Tooltip
               title={
                 plant.is_sugar_production_on
@@ -320,7 +331,15 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
             </Tooltip>
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid
+            item
+            xs={12}
+            sx={{
+              visibility: isGeneticMarkerUpgradeUnlocked(plant)
+                ? "visible"
+                : "hidden",
+            }}
+          >
             <Tooltip
               title={
                 plant.is_genetic_marker_production_on
@@ -361,6 +380,7 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
             leafCost={LEAF_COST}
             multiplier={plant.leafAutoGrowthMultiplier}
             isVisible={plant.grassGrowthToggle}
+            plant={plant}
           />
           {/*Section for toggling root automatic production */}
           <ToggleAutoRootButton
@@ -369,12 +389,19 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
             rootCost={ROOT_COST}
             multiplier={plant.rootAutoGrowthMultiplier}
             isVisible={plant.grassGrowthToggle}
+            plant={plant}
           />
 
           <Grid item xs={12}>
             <Divider sx={{ backgroundColor: "white" }} />
           </Grid>
-          <Grid item xs={3}>
+          <Grid
+            item
+            xs={3}
+            sx={{
+              visibility: isSugarUpgradesUnlocked(plant) ? "visible" : "hidden",
+            }}
+          >
             <Button
               onClick={() => toggleMultiplier(1)}
               variant={multiplier === 1 ? "contained" : "outlined"}
@@ -385,7 +412,13 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
               x1
             </Button>
           </Grid>
-          <Grid item xs={3}>
+          <Grid
+            item
+            xs={3}
+            sx={{
+              visibility: isSugarUpgradesUnlocked(plant) ? "visible" : "hidden",
+            }}
+          >
             <Button
               onClick={() => toggleMultiplier(10)}
               variant={multiplier === 10 ? "contained" : "outlined"}
@@ -396,7 +429,13 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
               x10
             </Button>
           </Grid>
-          <Grid item xs={3}>
+          <Grid
+            item
+            xs={3}
+            sx={{
+              visibility: isSugarUpgradesUnlocked(plant) ? "visible" : "hidden",
+            }}
+          >
             <Button
               onClick={() => toggleMultiplier(100)}
               variant={multiplier === 100 ? "contained" : "outlined"}
@@ -405,7 +444,13 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
               x100
             </Button>
           </Grid>
-          <Grid item xs={3}>
+          <Grid
+            item
+            xs={3}
+            sx={{
+              visibility: isSugarUpgradesUnlocked(plant) ? "visible" : "hidden",
+            }}
+          >
             <Button
               onClick={() => toggleMultiplier(1000)}
               variant={multiplier === 1000 ? "contained" : "outlined"}
@@ -416,7 +461,13 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
           </Grid>
 
           {/* Leaves Section */}
-          <Grid item xs={12}>
+          <Grid
+            item
+            xs={12}
+            sx={{
+              visibility: isSugarUpgradesUnlocked(plant) ? "visible" : "hidden",
+            }}
+          >
             <Tooltip title="Grow Leaves">
               <Button
                 fullWidth
@@ -439,7 +490,13 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
           </Grid>
 
           {/* Roots Section */}
-          <Grid item xs={12}>
+          <Grid
+            item
+            xs={12}
+            sx={{
+              visibility: isSugarUpgradesUnlocked(plant) ? "visible" : "hidden",
+            }}
+          >
             <Tooltip title="Grow Roots">
               <Button
                 fullWidth
@@ -460,7 +517,13 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
             </Tooltip>
           </Grid>
           {/* Needles Section */}
-          <Grid item xs={12}>
+          <Grid
+            item
+            xs={12}
+            sx={{
+              visibility: isSugarUpgradesUnlocked(plant) ? "visible" : "hidden",
+            }}
+          >
             <Tooltip title="Grow Needles">
               <Button
                 fullWidth

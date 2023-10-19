@@ -4,6 +4,8 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { Sugar } from "../Sugar";
 import { Roots } from "../Roots";
 import { Grid } from "@mui/material";
+import { isSugarUpgradesUnlocked } from "../../formulas";
+import { PlantState } from "../../Slices/plantSlice";
 
 interface ToggleButtonProps {
   isOn: boolean;
@@ -11,6 +13,7 @@ interface ToggleButtonProps {
   rootCost: number;
   multiplier: number;
   isVisible: boolean;
+  plant: PlantState;
 }
 
 const ToggleAutoRootButton: React.FC<ToggleButtonProps> = ({
@@ -19,11 +22,18 @@ const ToggleAutoRootButton: React.FC<ToggleButtonProps> = ({
   rootCost,
   multiplier,
   isVisible,
+  plant,
 }) => {
   if (!isVisible) return null; // <-- If isVisible is false, render nothing
 
   return (
-    <Grid item xs={12}>
+    <Grid
+      item
+      xs={12}
+      sx={{
+        visibility: isSugarUpgradesUnlocked(plant) ? "visible" : "hidden",
+      }}
+    >
       <Tooltip
         title={
           isOn

@@ -15,7 +15,7 @@ import timeBoostReducer from "./Slices/timeBoostSlice";
 import { runMigrations } from "./migrations";
 
 const persistedState: RootState | undefined = loadState();
-export const currentVersion = 3;
+export const currentVersion = 4;
 
 // Check if the flag isNewUser exists in local storage
 let isNewUser = localStorage.getItem("isNewUser");

@@ -51,6 +51,8 @@ import {
   calculatePhotosynthesisSunlightConsumption,
   calculatePhotosynthesisWaterConsumption,
   determinePhotosynthesisSugarProduction,
+  isGeneticMarkerUpgradeUnlocked,
+  isSugarUpgradesUnlocked,
   itemizedReport,
 } from "../formulas";
 import ToggleAutoLeafButton from "../Components/Buttons/ToggleAutoLeafButton";
@@ -322,7 +324,15 @@ const MossDisplay: React.FC<MossDisplayProps> = ({ setLadybugModalOpen }) => {
             </Tooltip>
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid
+            item
+            xs={12}
+            sx={{
+              visibility: isGeneticMarkerUpgradeUnlocked(plant)
+                ? "visible"
+                : "hidden",
+            }}
+          >
             <Tooltip
               title={
                 plant.is_genetic_marker_production_on
@@ -363,12 +373,19 @@ const MossDisplay: React.FC<MossDisplayProps> = ({ setLadybugModalOpen }) => {
             leafCost={LEAF_COST}
             multiplier={plant.leafAutoGrowthMultiplier}
             isVisible={plant.grassGrowthToggle}
+            plant={plant}
           />
 
           <Grid item xs={12}>
             <Divider sx={{ backgroundColor: "white" }} />
           </Grid>
-          <Grid item xs={3}>
+          <Grid
+            item
+            xs={3}
+            sx={{
+              visibility: isSugarUpgradesUnlocked(plant) ? "visible" : "hidden",
+            }}
+          >
             <Button
               onClick={() => toggleMultiplier(1)}
               variant={multiplier === 1 ? "contained" : "outlined"}
@@ -379,7 +396,13 @@ const MossDisplay: React.FC<MossDisplayProps> = ({ setLadybugModalOpen }) => {
               x1
             </Button>
           </Grid>
-          <Grid item xs={3}>
+          <Grid
+            item
+            xs={3}
+            sx={{
+              visibility: isSugarUpgradesUnlocked(plant) ? "visible" : "hidden",
+            }}
+          >
             <Button
               onClick={() => toggleMultiplier(10)}
               variant={multiplier === 10 ? "contained" : "outlined"}
@@ -390,7 +413,13 @@ const MossDisplay: React.FC<MossDisplayProps> = ({ setLadybugModalOpen }) => {
               x10
             </Button>
           </Grid>
-          <Grid item xs={3}>
+          <Grid
+            item
+            xs={3}
+            sx={{
+              visibility: isSugarUpgradesUnlocked(plant) ? "visible" : "hidden",
+            }}
+          >
             <Button
               onClick={() => toggleMultiplier(100)}
               variant={multiplier === 100 ? "contained" : "outlined"}
@@ -399,7 +428,13 @@ const MossDisplay: React.FC<MossDisplayProps> = ({ setLadybugModalOpen }) => {
               x100
             </Button>
           </Grid>
-          <Grid item xs={3}>
+          <Grid
+            item
+            xs={3}
+            sx={{
+              visibility: isSugarUpgradesUnlocked(plant) ? "visible" : "hidden",
+            }}
+          >
             <Button
               onClick={() => toggleMultiplier(1000)}
               variant={multiplier === 1000 ? "contained" : "outlined"}
@@ -410,7 +445,13 @@ const MossDisplay: React.FC<MossDisplayProps> = ({ setLadybugModalOpen }) => {
           </Grid>
 
           {/* Leaves Section */}
-          <Grid item xs={12}>
+          <Grid
+            item
+            xs={12}
+            sx={{
+              visibility: isSugarUpgradesUnlocked(plant) ? "visible" : "hidden",
+            }}
+          >
             <Tooltip title="Grow Leaves and Roots">
               <Button
                 fullWidth

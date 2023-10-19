@@ -44,6 +44,9 @@ import {
   calculatePhotosynthesisSunlightConsumption,
   calculatePhotosynthesisWaterConsumption,
   determinePhotosynthesisSugarProduction,
+  isGeneticMarkerUpgradeUnlocked,
+  isSugarConversionUnlocked,
+  isSugarUpgradesUnlocked,
   itemizedReport,
 } from "../formulas";
 import ToggleAutoLeafButton from "../Components/Buttons/ToggleAutoLeafButton";
@@ -267,7 +270,15 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({ setLadybugModalOpen }) => {
             </Tooltip>
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid
+            item
+            xs={12}
+            sx={{
+              visibility: isSugarConversionUnlocked(plant)
+                ? "visible"
+                : "hidden",
+            }}
+          >
             <Tooltip
               title={
                 plant.is_sugar_production_on
@@ -317,7 +328,15 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({ setLadybugModalOpen }) => {
             </Tooltip>
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid
+            item
+            xs={12}
+            sx={{
+              visibility: isGeneticMarkerUpgradeUnlocked(plant)
+                ? "visible"
+                : "hidden",
+            }}
+          >
             <Tooltip
               title={
                 plant.is_genetic_marker_production_on
@@ -358,6 +377,7 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({ setLadybugModalOpen }) => {
             leafCost={LEAF_COST}
             multiplier={plant.leafAutoGrowthMultiplier}
             isVisible={plant.grassGrowthToggle}
+            plant={plant}
           />
           {/*Section for toggling root automatic production */}
           <ToggleAutoRootButton
@@ -366,13 +386,20 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({ setLadybugModalOpen }) => {
             rootCost={ROOT_COST}
             multiplier={plant.rootAutoGrowthMultiplier}
             isVisible={plant.grassGrowthToggle}
+            plant={plant}
           />
 
           {/*Multipliers */}
           <Grid item xs={12}>
             <Divider sx={{ backgroundColor: "white" }} />
           </Grid>
-          <Grid item xs={3}>
+          <Grid
+            item
+            xs={3}
+            sx={{
+              visibility: isSugarUpgradesUnlocked(plant) ? "visible" : "hidden",
+            }}
+          >
             <Button
               onClick={() => toggleMultiplier(1)}
               variant={multiplier === 1 ? "contained" : "outlined"}
@@ -383,7 +410,13 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({ setLadybugModalOpen }) => {
               x1
             </Button>
           </Grid>
-          <Grid item xs={3}>
+          <Grid
+            item
+            xs={3}
+            sx={{
+              visibility: isSugarUpgradesUnlocked(plant) ? "visible" : "hidden",
+            }}
+          >
             <Button
               onClick={() => toggleMultiplier(10)}
               variant={multiplier === 10 ? "contained" : "outlined"}
@@ -394,7 +427,13 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({ setLadybugModalOpen }) => {
               x10
             </Button>
           </Grid>
-          <Grid item xs={3}>
+          <Grid
+            item
+            xs={3}
+            sx={{
+              visibility: isSugarUpgradesUnlocked(plant) ? "visible" : "hidden",
+            }}
+          >
             <Button
               onClick={() => toggleMultiplier(100)}
               variant={multiplier === 100 ? "contained" : "outlined"}
@@ -403,7 +442,13 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({ setLadybugModalOpen }) => {
               x100
             </Button>
           </Grid>
-          <Grid item xs={3}>
+          <Grid
+            item
+            xs={3}
+            sx={{
+              visibility: isSugarUpgradesUnlocked(plant) ? "visible" : "hidden",
+            }}
+          >
             <Button
               onClick={() => toggleMultiplier(1000)}
               variant={multiplier === 1000 ? "contained" : "outlined"}
@@ -414,7 +459,13 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({ setLadybugModalOpen }) => {
           </Grid>
 
           {/* Leaves Section */}
-          <Grid item xs={12}>
+          <Grid
+            item
+            xs={12}
+            sx={{
+              visibility: isSugarUpgradesUnlocked(plant) ? "visible" : "hidden",
+            }}
+          >
             <Tooltip title="Grow Leaves">
               <Button
                 fullWidth
@@ -436,7 +487,13 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({ setLadybugModalOpen }) => {
           </Grid>
 
           {/* Roots Section */}
-          <Grid item xs={12}>
+          <Grid
+            item
+            xs={12}
+            sx={{
+              visibility: isSugarUpgradesUnlocked(plant) ? "visible" : "hidden",
+            }}
+          >
             <Tooltip title="Grow Roots">
               <Button
                 fullWidth

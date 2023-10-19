@@ -380,6 +380,7 @@ const PlantList: React.FC<PlantListProps> = ({ setLadybugModalOpen }) => {
             leafCost={LEAF_COST}
             multiplier={plant.leafAutoGrowthMultiplier}
             isVisible={plant.grassGrowthToggle}
+            plant={plant}
           />
           {/*Section for toggling root automatic production */}
           <ToggleAutoRootButton
@@ -388,6 +389,7 @@ const PlantList: React.FC<PlantListProps> = ({ setLadybugModalOpen }) => {
             rootCost={ROOT_COST}
             multiplier={plant.rootAutoGrowthMultiplier}
             isVisible={plant.grassGrowthToggle}
+            plant={plant}
           />
 
           <Grid item xs={12}>
