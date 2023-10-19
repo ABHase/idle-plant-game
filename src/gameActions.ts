@@ -235,8 +235,10 @@ export const sellUpgradeThunk = createAsyncThunk<
 
   thunkAPI.dispatch({
     type: "gameState/increaseGeneticMarkers",
-    payload: refundAmount,
-    plantType: plantType,
+    payload: {
+      amount: refundAmount,
+      plantType: plantType,
+    },
   });
   thunkAPI.dispatch({ type: "upgrades/sellUpgrade", payload: upgradeId });
 });
