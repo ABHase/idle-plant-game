@@ -588,7 +588,7 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
             <Typography>Needles protecting:</Typography>
           </Grid>
           <Grid item xs={7}>
-            <Water amount={plant.needles * 100} />
+            <Water amount={plant.needles * 100 * plant.needleProtection} />
           </Grid>
         </Grid>
       </Box>
