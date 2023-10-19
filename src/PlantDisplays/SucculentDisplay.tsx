@@ -64,9 +64,8 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
   const plantTime = useSelector((state: RootState) => state.plantTime);
   const [multiplier, setMultiplier] = useState<number>(1);
 
-  const { geneticMarkerProgress, geneticMarkerThreshold } = useSelector(
-    (state: RootState) => state.globalState
-  );
+  const { geneticMarkerProgress, geneticMarkerThresholdSucculent } =
+    useSelector((state: RootState) => state.globalState);
   const plantState = useSelector((state: RootState) => state.plant);
 
   // Extract season from state (Assuming you have access to the state here)
@@ -367,7 +366,7 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
                     color: plant.is_genetic_marker_production_on ? "" : "red",
                   }}
                 />{" "}
-                <DNA amount={(1 / geneticMarkerThreshold) * 100} /> %{" "}
+                <DNA amount={(1 / geneticMarkerThresholdSucculent) * 100} /> %{" "}
                 {plant.is_genetic_marker_production_on ? "Stop" : "Start"}
               </Button>
             </Tooltip>
