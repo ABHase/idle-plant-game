@@ -34,7 +34,9 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
   const geneticMarkersMoss = useSelector(
     (state: RootState) => state.globalState.geneticMarkersMoss
   );
-  const [plantType, setPlantType] = React.useState<string>("Fern"); // default value as Fern
+  const currentPlantType = useSelector((state: RootState) => state.plant.type);
+  const [plantType, setPlantType] = React.useState<string>(currentPlantType); // default value as Fern
+
   const typeSpecificUpgrades = UPGRADES[plantType];
   const metaUpgrades = UPGRADES["Meta"];
   const combinedUpgrades = [...metaUpgrades, ...typeSpecificUpgrades];
