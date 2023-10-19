@@ -374,7 +374,11 @@ const PlantList: React.FC<PlantListProps> = ({ setLadybugModalOpen }) => {
           <Grid item xs={12}>
             <Divider sx={{ backgroundColor: "white" }} />
           </Grid>
-          <Grid item xs={3}>
+          <Grid
+            item
+            xs={3}
+            sx={{ display: plant.sugar === 0 ? "none" : "block" }}
+          >
             <Button
               onClick={() => toggleMultiplier(1)}
               variant={multiplier === 1 ? "contained" : "outlined"}
@@ -385,7 +389,11 @@ const PlantList: React.FC<PlantListProps> = ({ setLadybugModalOpen }) => {
               x1
             </Button>
           </Grid>
-          <Grid item xs={3}>
+          <Grid
+            item
+            xs={3}
+            sx={{ display: plant.sugar === 0 ? "none" : "block" }}
+          >
             <Button
               onClick={() => toggleMultiplier(10)}
               variant={multiplier === 10 ? "contained" : "outlined"}
@@ -396,7 +404,11 @@ const PlantList: React.FC<PlantListProps> = ({ setLadybugModalOpen }) => {
               x10
             </Button>
           </Grid>
-          <Grid item xs={3}>
+          <Grid
+            item
+            xs={3}
+            sx={{ display: plant.sugar === 0 ? "none" : "block" }}
+          >
             <Button
               onClick={() => toggleMultiplier(100)}
               variant={multiplier === 100 ? "contained" : "outlined"}
@@ -405,7 +417,11 @@ const PlantList: React.FC<PlantListProps> = ({ setLadybugModalOpen }) => {
               x100
             </Button>
           </Grid>
-          <Grid item xs={3}>
+          <Grid
+            item
+            xs={3}
+            sx={{ display: plant.sugar === 0 ? "none" : "block" }}
+          >
             <Button
               onClick={() => toggleMultiplier(1000)}
               variant={multiplier === 1000 ? "contained" : "outlined"}
@@ -416,7 +432,11 @@ const PlantList: React.FC<PlantListProps> = ({ setLadybugModalOpen }) => {
           </Grid>
 
           {/* Leaves Section */}
-          <Grid item xs={12}>
+          <Grid
+            item
+            xs={12}
+            sx={{ display: plant.sugar === 0 ? "none" : "block" }}
+          >
             <Tooltip title="Grow Leaves">
               <Button
                 fullWidth
@@ -438,7 +458,11 @@ const PlantList: React.FC<PlantListProps> = ({ setLadybugModalOpen }) => {
           </Grid>
 
           {/* Roots Section */}
-          <Grid item xs={12}>
+          <Grid
+            item
+            xs={12}
+            sx={{ display: plant.sugar === 0 ? "none" : "block" }}
+          >
             <Tooltip title="Grow Roots">
               <Button
                 fullWidth
