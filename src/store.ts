@@ -15,6 +15,7 @@ import timeBoostReducer from "./Slices/timeBoostSlice";
 import { runMigrations } from "./migrations";
 
 const persistedState: RootState | undefined = loadState();
+//Should be auto incremented when there is a push
 export const currentVersion = 5;
 
 // Check if the flag isNewUser exists in local storage
