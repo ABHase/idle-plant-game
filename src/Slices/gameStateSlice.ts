@@ -189,6 +189,10 @@ const globalStateSlice = createSlice({
           break;
       }
     },
+    //Reducer to reset succulent genetic marker threshold
+    resetSucculentGeneticMarkerThreshold: (state) => {
+      state.geneticMarkerThresholdSucculent = 10;
+    },
   },
   extraReducers: (builder) => {
     builder.addMatcher(

@@ -105,6 +105,16 @@ export const DESERT_MUSHROOM_ITEMS: MushroomItem[] = [
       dispatch(addWater(10000)); // Add 10000 water
     },
   },
+  {
+    id: "reset_succulent_threshold",
+    name: "Reset Sugar needed for DNA",
+    description: "Reset the amount of sugar needed to gain DNA progress.",
+    cost: 1000000,
+    effect: (dispatch, getState) => {
+      dispatch(deductSugar(1000000)); // Deduct sugar cost
+      dispatch({ type: "globalState/resetSucculentGeneticMarkerThreshold" }); // Reset the succulent genetic marker threshold
+    },
+  },
 ];
 
 export const LICHEN_MUSHROOM_ITEMS: MushroomItem[] = [
