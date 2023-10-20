@@ -214,6 +214,7 @@ export const {
   deductGeneticMarkers,
   increaseGeneticMarkers,
   addGeneticMarkers,
+  resetSucculentGeneticMarkerThreshold,
   // Add other exported actions...
 } = globalStateSlice.actions;
 

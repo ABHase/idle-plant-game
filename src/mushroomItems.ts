@@ -15,6 +15,7 @@ import {
   addWater,
   deductSunlight,
   increaseSugar,
+  resetSucculentGeneticMarkerThreshold,
 } from "./Slices/plantSlice";
 import {
   activateTimeBoost,
@@ -112,7 +113,7 @@ export const DESERT_MUSHROOM_ITEMS: MushroomItem[] = [
     cost: 1000000,
     effect: (dispatch, getState) => {
       dispatch(deductSugar(1000000)); // Deduct sugar cost
-      dispatch({ type: "globalState/resetSucculentGeneticMarkerThreshold" }); // Reset the succulent genetic marker threshold
+      dispatch(resetSucculentGeneticMarkerThreshold()); // Reset the succulent genetic marker threshold
     },
   },
 ];
