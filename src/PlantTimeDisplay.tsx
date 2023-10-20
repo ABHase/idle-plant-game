@@ -73,7 +73,7 @@ const PlantTimeDisplay: React.FC<PlantTimeProps> = ({ plantTime }) => {
     return null;
   };
 
-  const { minutes, seconds } = getTimeToNextSeason(plantTime);
+  const { hours, minutes, seconds } = getTimeToNextSeason(plantTime);
 
   return (
     <div className="plant-time-display">
@@ -81,8 +81,9 @@ const PlantTimeDisplay: React.FC<PlantTimeProps> = ({ plantTime }) => {
         title={
           <>
             <Typography color="inherit">
-              {minutes}M:{seconds.toString().padStart(2, "0")}S left to next
-              season
+              {hours.toString().padStart(2, "0")}:
+              {minutes.toString().padStart(2, "0")}:
+              {seconds.toString().padStart(2, "0")} To Next Sseason
             </Typography>
             <Typography color="inherit">Next Season: {nextSeason}</Typography>
             {renderNextResourceComponent()}
@@ -114,8 +115,11 @@ const PlantTimeDisplay: React.FC<PlantTimeProps> = ({ plantTime }) => {
       </Tooltip>
       <Dialog open={isPopupVisible} onClose={togglePopup}>
         <DialogTitle>
-          {minutes}M:{seconds.toString().padStart(2, "0")}S left to next season
+          {hours.toString().padStart(2, "0")}:
+          {minutes.toString().padStart(2, "0")}:
+          {seconds.toString().padStart(2, "0")} To Next Season
         </DialogTitle>
+
         <DialogContent>
           Next Season: {nextSeason} {renderNextResourceComponent()}
         </DialogContent>
