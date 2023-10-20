@@ -131,7 +131,7 @@ export const LICHEN_MUSHROOM_ITEMS: MushroomItem[] = [
   {
     id: "shade_for_sugar_2",
     name: "Shadier Protection Racket",
-    description: "1000 Sugar.",
+    description: "5000 Sugar.",
     cost: 500000,
     effect: (dispatch, getState) => {
       dispatch(deductSunlight(500000)); // Deduct sugar cost
