@@ -30,6 +30,12 @@ export const UPGRADES: Record<string, Upgrade[]> = {
       description: "Option to toggle auto growth on/off.",
       cost: 500,
     },
+    {
+      id: "Fern_clone_upgrade",
+      name: "Clone Upgrade (All Species)",
+      description: "Start with 1K extra roots and leaves.",
+      cost: 2000,
+    },
   ],
   Fern: [
     {
@@ -361,6 +367,10 @@ export const UPGRADE_FUNCTIONS: Record<
     },
     Grass_growth_toggle: (plant) => {
       plant.grassGrowthToggle = true;
+    },
+    Fern_clone_upgrade: (plant) => {
+      plant.roots += 1000;
+      plant.leaves += 1000;
     },
   },
   Fern: {
