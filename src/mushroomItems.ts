@@ -7,6 +7,7 @@ import { updateGame } from "./gameActions";
 import {
   addGeneticMarkers,
   increaseGeneticMarkers,
+  resetSucculentGeneticMarkerThreshold,
 } from "./Slices/gameStateSlice"; // Assume you have deductSugar function in gameStateSlice
 import {
   PlantState,
@@ -15,7 +16,6 @@ import {
   addWater,
   deductSunlight,
   increaseSugar,
-  resetSucculentGeneticMarkerThreshold,
 } from "./Slices/plantSlice";
 import {
   activateTimeBoost,
