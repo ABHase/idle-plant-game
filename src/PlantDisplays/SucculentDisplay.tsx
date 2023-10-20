@@ -43,6 +43,7 @@ import {
   calculateActualSugarProductionPerMinute,
   calculatePhotosynthesisSunlightConsumption,
   calculatePhotosynthesisWaterConsumption,
+  calculateSugarPhotosynthesis,
   determinePhotosynthesisSugarProduction,
   isGeneticMarkerUpgradeUnlocked,
   isSugarConversionUnlocked,
@@ -253,12 +254,17 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
           </Grid>
           <Grid item xs={4}>
             <Tooltip
-              title={`Converts ${formatNumberWithDecimals(
-                waterConsumption
-              )} water and ${formatNumberWithDecimals(
-                sunlightConsumption
-              )} sunlight into ${formatNumberWithDecimals(
-                modifiedRate
+              title={`Converts ${calculatePhotosynthesisWaterConsumption(
+                plant.maturity_level
+              )} water and ${calculatePhotosynthesisWaterConsumption(
+                plant.maturity_level
+              )} sunlight into ${determinePhotosynthesisSugarProduction(
+                plant.sugar_production_rate,
+                plant.maturity_level,
+                season,
+                plant.autumnModifier,
+                plant.winterModifier,
+                plant.agaveSugarBonus
               )} sugar per cycle.`}
             >
               <Box>

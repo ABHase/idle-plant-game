@@ -50,6 +50,55 @@ export const getSugarModifier = (
   return 1;
 };
 
+export const getSeasonModifier = (season: string, plantState: any) => {
+  if (season === "Spring") {
+    return { value: plantState.springModifier, resource: "water" };
+  } else if (season === "Summer") {
+    return { value: plantState.summerModifier, resource: "sunlight" };
+  } else if (season === "Autumn") {
+    return { value: plantState.autumnModifier, resource: "sugar" };
+  } else if (season === "Winter") {
+    return { value: plantState.winterModifier, resource: "all" }; // Assuming Winter uses water as well
+  }
+  return { value: 1, resource: "none" };
+};
+
+export const getNextSeason = (currentSeason: string): string => {
+  switch (currentSeason) {
+    case "Winter":
+      return "Spring";
+    case "Spring":
+      return "Summer";
+    case "Summer":
+      return "Autumn";
+    case "Autumn":
+      return "Winter";
+    default:
+      return currentSeason;
+  }
+};
+
+export const getTimeToNextSeason = (plantTime: {
+  day: number;
+  hour: number;
+  update_counter: number;
+}): { minutes: number; seconds: number } => {
+  // Calculate total minutes left for the current season.
+  const totalInGameMinutesLeft =
+    (30 - plantTime.day) * 24 * 60 + // Days left
+    (24 - plantTime.hour - 1) * 60 + // Hours left (-1 because we also account for the current hour)
+    (60 - plantTime.update_counter); // Minutes left in the current hour
+
+  // Convert in-game minutes to real-world seconds.
+  const totalRealSecondsLeft = (totalInGameMinutesLeft * 1) / 5; // 5 in-game minutes is 1 real-world second
+
+  // Convert the total real-world seconds to minutes and seconds.
+  const minutes = Math.floor(totalRealSecondsLeft / 60);
+  const seconds = Math.floor(totalRealSecondsLeft % 60);
+
+  return { minutes, seconds };
+};
+
 export const calculateModifiedRate = (
   baseRate: number,
   maturity_level: number,
