@@ -56,12 +56,14 @@ export interface PlantState {
   needles: number; //Needles, protect against rabbit attacks
   needleProtection: number; //Needle protection, this is the number that is used to determine how much protection is provided by needles
   rabbitAttack: boolean; //Rabbit attack, this is the boolean that is used to determine if the plant is being attacked by rabbits
+  rabbitImmunity: boolean; //Rabbit immunity, this is the boolean that is used to determine if the plant is immune to rabbit attacks
   grassGrowthToggle: boolean; //Grass growth toggle, this is the boolean that is used to determine if the plant can passively grow
   leafGrowthToggle: boolean; //Leaf growth toggle, this is the boolean that is used to determine if the plant is passively growing leaves
   leafAutoGrowthMultiplier: number; //Leaf auto growth, leaf cost multiplied by this number to auto grow leaves
   rootGrowthToggle: boolean; //Root growth toggle, this is the boolean that is used to determine if the plant is passively growing roots
   rootAutoGrowthMultiplier: number; //Root auto growth, root cost multiplied by this number to auto grow roots
   lichenStoreAvailable: boolean; //Lichen store available, this is the boolean that is used to determine if the lichen store is available to moss
+  autoGrowthMultiplier: number; //Auto growth multiplier, this is the number that is used to determine how many plant parts grow when auto growing
 }
 
 export const initialState: PlantState = PLANT_CONFIGS.Fern; // Setting Fern as the default plant
@@ -170,31 +172,99 @@ const plantSlice = createSlice({
       state.is_genetic_marker_production_on =
         !state.is_genetic_marker_production_on;
     },
-    buyRoots: (state, action: PayloadAction<{ cost: number }>) => {
-      if (state.type === "Moss" && state.sugar >= action.payload.cost) {
-        state.roots += 1;
-      } else if (state.sugar >= action.payload.cost) {
-        state.sugar -= action.payload.cost;
-        state.roots += 1;
+    buyRoots: (
+      state,
+      action: PayloadAction<{ cost: number; multiplier: number }>
+    ) => {
+      const totalCost = action.payload.cost * action.payload.multiplier;
+      const affordableRoots = Math.floor(state.sugar / action.payload.cost); // maximum affordable roots with current sugar
+
+      const actualMultiplier = Math.min(
+        affordableRoots,
+        action.payload.multiplier
+      ); // take the smaller of the two
+
+      if (state.type === "Moss" && state.sugar >= totalCost) {
+        state.roots += actualMultiplier;
+      } else if (state.sugar >= totalCost) {
+        state.sugar -= actualMultiplier * action.payload.cost;
+        state.roots += actualMultiplier;
       }
     },
 
-    buyLeaves: (state, action: PayloadAction<{ cost: number }>) => {
+    buyLeaves: (
+      state,
+      action: PayloadAction<{ cost: number; multiplier: number }>
+    ) => {
+      const affordableLeavesFromSugar = Math.floor(
+        state.sugar / action.payload.cost
+      );
+      let actualMultiplier = Math.min(
+        affordableLeavesFromSugar,
+        action.payload.multiplier
+      );
+
+      if (state.type === "Succulent") {
+        const waterCostPerLeaf = 100 * action.payload.cost;
+        const affordableLeavesFromWater = Math.floor(
+          state.water / waterCostPerLeaf
+        );
+
+        // Adjust actualMultiplier based on water availability
+        actualMultiplier = Math.min(
+          actualMultiplier,
+          affordableLeavesFromWater
+        );
+
+        if (actualMultiplier > 0) {
+          state.sugar -= actualMultiplier * action.payload.cost;
+          state.water -= actualMultiplier * waterCostPerLeaf;
+          state.leaves += actualMultiplier;
+        }
+      } else if (state.type === "Moss") {
+        if (actualMultiplier > 0) {
+          state.sugar -= actualMultiplier * action.payload.cost;
+          state.leaves += actualMultiplier;
+          state.roots += actualMultiplier;
+        }
+      } else {
+        if (actualMultiplier > 0) {
+          state.sugar -= actualMultiplier * action.payload.cost;
+          state.leaves += actualMultiplier;
+        }
+      }
+    },
+
+    autoGrowRoots: (
+      state,
+      action: PayloadAction<{ cost: number; multiplier: number }>
+    ) => {
       if (state.sugar >= action.payload.cost) {
+        state.sugar -= action.payload.cost;
+        state.roots += action.payload.multiplier;
+      }
+    },
+
+    autoGrowLeaves: (
+      state,
+      action: PayloadAction<{ cost: number; multiplier: number }>
+    ) => {
+      const totalCost = action.payload.cost;
+      if (state.sugar >= totalCost) {
         if (state.type === "Succulent") {
-          const waterCost = 100 * action.payload.cost;
+          const waterCost = 100 * totalCost;
           if (state.water >= waterCost) {
-            state.sugar -= action.payload.cost;
+            state.sugar -= totalCost;
             state.water -= waterCost;
-            state.leaves += 1;
+            state.leaves += action.payload.multiplier;
           }
         } else if (state.type === "Moss") {
-          state.sugar -= action.payload.cost;
-          state.leaves += 1;
-          state.roots += 1;
+          state.sugar -= totalCost;
+          state.leaves += action.payload.multiplier;
+          state.roots += action.payload.multiplier;
         } else {
-          state.sugar -= action.payload.cost;
-          state.leaves += 1;
+          state.sugar -= totalCost;
+          state.leaves += action.payload.multiplier;
         }
       }
     },
@@ -357,5 +427,7 @@ export const {
   toggleRootGrowth,
   deductSunlight,
   increaseSugar,
+  autoGrowLeaves,
+  autoGrowRoots,
 } = plantSlice.actions;
 export default plantSlice.reducer;

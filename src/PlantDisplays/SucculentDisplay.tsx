@@ -58,6 +58,8 @@ import SunlightTooltip from "../Components/Tooltips/SunlightTooltip";
 import RootsTooltip from "../Components/Tooltips/RootsTooltip";
 import WaterTooltip from "../Components/Tooltips/WaterTooltip";
 import MaturityTooltip from "../Components/Tooltips/MaturityTooltip";
+import ProtectionInfo from "../Components/ProtectionInfo";
+import MultiplierToggleButton from "../Components/Buttons/MultiplierToggleButton";
 
 type SucculentDisplayProps = {
   handleOpenModal: (modalName: string) => void;
@@ -151,15 +153,11 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
   };
 
   const handleBuyRoots = () => {
-    for (let i = 0; i < multiplier; i++) {
-      dispatch(buyRoots({ cost: ROOT_COST }));
-    }
+    dispatch(buyRoots({ cost: ROOT_COST, multiplier: multiplier }));
   };
 
   const handleBuyLeaves = () => {
-    for (let i = 0; i < multiplier; i++) {
-      dispatch(buyLeaves({ cost: LEAF_COST }));
-    }
+    dispatch(buyLeaves({ cost: LEAF_COST, multiplier: multiplier }));
   };
 
   const handleBuyNeedles = () => {
@@ -377,67 +375,44 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
           </Grid>
           <Grid
             item
-            xs={3}
+            xs={12}
             sx={{
               visibility: isSugarUpgradesUnlocked(plant) ? "visible" : "hidden",
             }}
           >
-            <Button
-              onClick={() => toggleMultiplier(1)}
-              variant={multiplier === 1 ? "contained" : "outlined"}
+            <Box
               sx={{
-                padding: "4px 8px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
               }}
             >
-              x1
-            </Button>
-          </Grid>
-          <Grid
-            item
-            xs={3}
-            sx={{
-              visibility: isSugarUpgradesUnlocked(plant) ? "visible" : "hidden",
-            }}
-          >
-            <Button
-              onClick={() => toggleMultiplier(10)}
-              variant={multiplier === 10 ? "contained" : "outlined"}
-              sx={{
-                padding: "4px 8px",
-              }}
-            >
-              x10
-            </Button>
-          </Grid>
-          <Grid
-            item
-            xs={3}
-            sx={{
-              visibility: isSugarUpgradesUnlocked(plant) ? "visible" : "hidden",
-            }}
-          >
-            <Button
-              onClick={() => toggleMultiplier(100)}
-              variant={multiplier === 100 ? "contained" : "outlined"}
-              sx={{ padding: "4px 8px" }}
-            >
-              x100
-            </Button>
-          </Grid>
-          <Grid
-            item
-            xs={3}
-            sx={{
-              visibility: isSugarUpgradesUnlocked(plant) ? "visible" : "hidden",
-            }}
-          >
-            <Button
-              onClick={() => toggleMultiplier(1000)}
-              variant={multiplier === 1000 ? "contained" : "outlined"}
-              sx={{ padding: "4px 8px" }}
-            >
-              x1000
-            </Button>
+              <MultiplierToggleButton
+                currentMultiplier={multiplier}
+                value={1}
+                onClick={toggleMultiplier}
+              />
+              <MultiplierToggleButton
+                currentMultiplier={multiplier}
+                value={10}
+                onClick={toggleMultiplier}
+              />
+              <MultiplierToggleButton
+                currentMultiplier={multiplier}
+                value={100}
+                onClick={toggleMultiplier}
+              />
+              <MultiplierToggleButton
+                currentMultiplier={multiplier}
+                value={1000}
+                onClick={toggleMultiplier}
+              />
+              <MultiplierToggleButton
+                currentMultiplier={multiplier}
+                value={100000}
+                onClick={toggleMultiplier}
+              />
+            </Box>
           </Grid>
 
           {/* Leaves Section */}
@@ -565,15 +540,18 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
           <Grid item xs={12}>
             <Divider sx={{ backgroundColor: "white" }} />
           </Grid>
-          <Grid item xs={5}>
-            <Typography>Needles protecting:</Typography>
-          </Grid>
-          <Grid item xs={7}>
-            <Water amount={plant.needles * 100 * plant.needleProtection} />
+
+          <Grid item xs={12}>
+            <Box display="flex" justifyContent="center" alignItems="center">
+              <ProtectionInfo
+                needles={plant.needles}
+                needleProtection={plant.needleProtection}
+                rabbitImmunity={plant.rabbitImmunity}
+              />
+            </Box>
           </Grid>
         </Grid>
       </Box>
-      {/* ... [Rest of the code for displaying other plant info] */}
     </div>
   );
 };

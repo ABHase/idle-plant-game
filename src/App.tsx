@@ -237,6 +237,7 @@ function App() {
         height="100vh"
         bgcolor="background.default"
         color="text.primary"
+        overflow="auto"
       >
         <ConfirmDeleteDialog
           open={openDialog}

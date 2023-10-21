@@ -48,6 +48,8 @@ export const FERN_INITIAL_CONFIG: PlantState = {
   rootGrowthToggle: false,
   rootAutoGrowthMultiplier: 5,
   lichenStoreAvailable: false,
+  rabbitImmunity: true,
+  autoGrowthMultiplier: 1,
 };
 
 export const MOSS_INITIAL_CONFIG: PlantState = {
@@ -97,6 +99,8 @@ export const MOSS_INITIAL_CONFIG: PlantState = {
   rootGrowthToggle: false,
   rootAutoGrowthMultiplier: 5,
   lichenStoreAvailable: false,
+  rabbitImmunity: true,
+  autoGrowthMultiplier: 1,
 };
 
 export const SUCCULENT_INITIAL_CONFIG: PlantState = {
@@ -146,6 +150,8 @@ export const SUCCULENT_INITIAL_CONFIG: PlantState = {
   rootGrowthToggle: false,
   rootAutoGrowthMultiplier: 5,
   lichenStoreAvailable: false,
+  rabbitImmunity: false,
+  autoGrowthMultiplier: 1,
 };
 
 export const GRASS_INITIAL_CONFIG: PlantState = {
@@ -195,6 +201,8 @@ export const GRASS_INITIAL_CONFIG: PlantState = {
   rootGrowthToggle: false,
   rootAutoGrowthMultiplier: 5,
   lichenStoreAvailable: false,
+  rabbitImmunity: true,
+  autoGrowthMultiplier: 10,
 };
 
 export const PLANT_CONFIGS: Record<string, PlantState> = {

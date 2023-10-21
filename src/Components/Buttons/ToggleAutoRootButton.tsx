@@ -61,7 +61,7 @@ const ToggleAutoRootButton: React.FC<ToggleButtonProps> = ({
               color: isOn ? "" : "red",
             }}
           />{" "}
-          <Roots amount={1} /> &nbsp;
+          <Roots amount={plant.autoGrowthMultiplier} /> &nbsp;
           {isOn ? "Stop" : "Start"}
         </Button>
       </Tooltip>

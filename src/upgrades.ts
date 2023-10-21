@@ -200,6 +200,12 @@ export const UPGRADES: Record<string, Upgrade[]> = {
       cost: 200,
     },
     {
+      id: "rabbit_immunity",
+      name: "Rabbit Immunity",
+      description: "Succulents are immune to rabbits",
+      cost: 450,
+    },
+    {
       id: "boost_sunlight_multiplier_succulent",
       name: "Heliotropism",
       description: "Increase passive sunlight absorption efficiency by 20%",
@@ -251,25 +257,25 @@ export const UPGRADES: Record<string, Upgrade[]> = {
       id: "bloom_succulent",
       name: "Spring Bloom",
       description: "Double Spring Bonus",
-      cost: 2500,
+      cost: 1000,
     },
     {
       id: "thermophilic_succulent",
       name: "Thermophilic",
       description: "Double Summer Bonus",
-      cost: 2500,
+      cost: 1000,
     },
     {
       id: "bountiful_harvest_succulent",
       name: "Bountiful Harvest",
       description: "Double Autumn Bonus",
-      cost: 5000,
+      cost: 1000,
     },
     {
       id: "coniferous_succulent",
       name: "Coniferous",
       description: "Reduce Winter penalty by 50%",
-      cost: 10000,
+      cost: 2000,
     },
   ],
   Grass: [
@@ -326,6 +332,20 @@ export const UPGRADES: Record<string, Upgrade[]> = {
       name: "Stomatal Regulation 2",
       description: "Reduce the base water to sugar ratio by 20%",
       cost: 20,
+    },
+    {
+      id: "auto_grow_100",
+      name: "Spread 100",
+      description:
+        "Auto grows 100 roots or leaves per cycle, for the same sugar.",
+      cost: 50,
+    },
+    {
+      id: "auto_grow_1000",
+      name: "Spread 1000",
+      description:
+        "Auto grows 1000 roots or leaves per cycle, for the same sugar.",
+      cost: 300,
     },
     {
       id: "bloom_grass",
@@ -492,6 +512,9 @@ export const UPGRADE_FUNCTIONS: Record<
     coniferous_succulent: (plant) => {
       plant.winterModifier *= 2;
     },
+    rabbit_immunity: (plant) => {
+      plant.rabbitImmunity = true;
+    },
   },
   Grass: {
     auto_root_growth_multiplier_efficiency: (plant) => {
@@ -532,6 +555,12 @@ export const UPGRADE_FUNCTIONS: Record<
     },
     coniferous_grass: (plant) => {
       plant.winterModifier *= 2;
+    },
+    auto_grow_100: (plant) => {
+      plant.autoGrowthMultiplier = 100;
+    },
+    auto_grow_1000: (plant) => {
+      plant.autoGrowthMultiplier = 1000;
     },
   },
   // ... other upgrade functions

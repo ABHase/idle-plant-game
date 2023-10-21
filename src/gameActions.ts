@@ -15,6 +15,8 @@ import {
   removeRoots,
   buyLeaves,
   buyRoots,
+  autoGrowLeaves,
+  autoGrowRoots,
 } from "./Slices/plantSlice";
 import {
   increaseGeneticMarkers,
@@ -56,20 +58,30 @@ export const updateGame = (): ThunkAction<
 
     const plant = getState().plant;
 
-    // Check if the plant has the the LEAF_COST for a leaf, if so dispatch buyLeaves with the payload of LEAF_COST
+    // Check if the plant has the the LEAF_COST for a leaf
     if (
       currentSugar >= LEAF_COST * plant.leafAutoGrowthMultiplier &&
       plant.leafGrowthToggle
     ) {
-      dispatch(buyLeaves({ cost: LEAF_COST * plant.leafAutoGrowthMultiplier }));
+      dispatch(
+        autoGrowLeaves({
+          cost: LEAF_COST * plant.leafAutoGrowthMultiplier,
+          multiplier: plant.autoGrowthMultiplier,
+        })
+      );
     }
 
-    //Check if the plant has the ROOT_COST for a root, if so dispatch buyRoots with the payload of ROOT_COST
+    // Check if the plant has the ROOT_COST for a root
     if (
       currentSugar >= ROOT_COST * plant.rootAutoGrowthMultiplier &&
       plant.rootGrowthToggle
     ) {
-      dispatch(buyRoots({ cost: ROOT_COST * plant.rootAutoGrowthMultiplier }));
+      dispatch(
+        autoGrowRoots({
+          cost: ROOT_COST * plant.rootAutoGrowthMultiplier,
+          multiplier: plant.autoGrowthMultiplier,
+        })
+      );
     }
 
     // Check if ladybugs are less than 1
@@ -125,7 +137,8 @@ export const updateGame = (): ThunkAction<
     // If plant type is Succulent, and plant water * 100 is greater than plant needles, dispatch rabbit attack
     if (
       plant.type === "Succulent" &&
-      plant.water > plant.needles * 100 * plant.needleProtection
+      plant.water > plant.needles * 100 * plant.needleProtection &&
+      !plant.rabbitImmunity
     ) {
       dispatch({ type: "plant/rabbitAttack" });
     }

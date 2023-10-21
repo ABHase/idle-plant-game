@@ -61,7 +61,7 @@ const ToggleAutoLeafButton: React.FC<ToggleButtonProps> = ({
               color: isOn ? "" : "red",
             }}
           />{" "}
-          <Leaves amount={1} /> &nbsp;
+          <Leaves amount={plant.autoGrowthMultiplier} /> &nbsp;
           {isOn ? "Stop" : "Start"}
         </Button>
       </Tooltip>
