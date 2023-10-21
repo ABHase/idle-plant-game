@@ -52,6 +52,12 @@ import {
 } from "../formulas";
 import ToggleAutoLeafButton from "../Components/Buttons/ToggleAutoLeafButton";
 import ToggleAutoRootButton from "../Components/Buttons/ToggleAutoRootButton";
+import ResourceConversionTooltip from "../Components/Tooltips/ResourceConversionTooltip";
+import LeavesTooltip from "../Components/Tooltips/LeavesTooltip";
+import SunlightTooltip from "../Components/Tooltips/SunlightTooltip";
+import RootsTooltip from "../Components/Tooltips/RootsTooltip";
+import WaterTooltip from "../Components/Tooltips/WaterTooltip";
+import MaturityTooltip from "../Components/Tooltips/MaturityTooltip";
 
 type SucculentDisplayProps = {
   setLadybugModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -218,64 +224,30 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
             </Box>
           </Grid>
           <Grid item xs={4}>
-            <Tooltip
-              title={`${formatNumberWithDecimals(
-                report.water.netWaterProduction
-              )}/second.`}
-            >
-              <Box>
-                <Water amount={plant.water} />
-              </Box>
-            </Tooltip>
-
-            <Tooltip title="Roots">
-              <Box>
-                <Roots amount={plant.roots} />
-              </Box>
-            </Tooltip>
+            <WaterTooltip
+              productionRate={report.water.netWaterProduction}
+              amount={plant.water}
+            />
+            <RootsTooltip amount={plant.roots} />
           </Grid>
 
           <Grid item xs={4}>
-            <Tooltip
-              title={`${formatNumberWithDecimals(
-                report.sunlight.netSunlightProduction
-              )}/second.`}
-            >
-              <Box>
-                <Sunlight amount={plant.sunlight} />
-              </Box>
-            </Tooltip>
-
-            <Tooltip title="Leaves">
-              <Box>
-                <Leaves amount={plant.leaves} />
-              </Box>
-            </Tooltip>
+            <SunlightTooltip
+              productionRate={report.sunlight.netSunlightProduction}
+              amount={plant.sunlight}
+            />
+            <LeavesTooltip amount={plant.leaves} />
           </Grid>
           <Grid item xs={4}>
-            <Tooltip
-              title={`Converts ${calculatePhotosynthesisWaterConsumption(
-                plant.maturity_level
-              )} water and ${calculatePhotosynthesisWaterConsumption(
-                plant.maturity_level
-              )} sunlight into ${determinePhotosynthesisSugarProduction(
-                plant.sugar_production_rate,
-                plant.maturity_level,
-                season,
-                plant.autumnModifier,
-                plant.winterModifier,
-                plant.agaveSugarBonus
-              )} sugar per cycle.`}
-            >
-              <Box>
-                <Sugar amount={plant.sugar} />
-              </Box>
-            </Tooltip>
-            <Tooltip title="Size">
-              <Box>
-                <Maturity amount={plant.maturity_level} />
-              </Box>
-            </Tooltip>
+            <ResourceConversionTooltip
+              maturityLevel={plant.maturity_level}
+              sugarProductionRate={plant.sugar_production_rate}
+              season={season}
+              autumnModifier={plant.autumnModifier}
+              winterModifier={plant.winterModifier}
+              agaveSugarBonus={plant.agaveSugarBonus}
+            />
+            <MaturityTooltip maturityLevel={plant.maturity_level} />
           </Grid>
 
           <Grid
