@@ -340,7 +340,7 @@ function App() {
               </Button>
               <Button
                 variant="contained"
-                onClick={() => handleOpenModal("upgradeModalOpen")}
+                onClick={() => handleOpenModal("mushroomStoreModalOpen")}
                 sx={{ width: "45%", mt: 0, mb: 0, ml: 1, mr: 1 }}
               >
                 Mushroom
