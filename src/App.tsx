@@ -6,7 +6,7 @@ import { createSelector } from "reselect";
 import { evolveAndRecordPlant, updateGame } from "./gameActions";
 import store, { AppDispatch } from "./store";
 import GlobalStateDisplay from "./DNADisplays/GlobalStateDisplay";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material/styles";
 import { Alert, Box, Snackbar } from "@mui/material";
 import PlantTimeDisplay from "./PlantTimeDisplay";
 import PlantList from "./PlantDisplays/PlantList";
@@ -34,29 +34,8 @@ import GrassDisplay from "./PlantDisplays/GrassDisplay";
 import GrassDNADisplay from "./DNADisplays/GrassDNADisplay";
 import TextboxModal from "./Modals/TextboxModal";
 import PlantSelectionModal from "./Modals/PlantSelectionModal";
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: "#81b85c", // A more vibrant forest green for buttons and highlights
-    },
-    secondary: {
-      main: "#607D8B", // Bluish-grey, reminiscent of a night sky or moonlit water
-    },
-    background: {
-      default: "#1f1107", // A very dark brown, almost black, like deep woods at night
-      paper: "#162e13", // A slightly lighter green, like forest undergrowth in moonlight
-    },
-    text: {
-      primary: "#FFFFFF", // Pure white for text to ensure good contrast against the dark background
-      secondary: "#B0BEC5", // A lighter grey, used for secondary text elements
-    },
-  },
-  typography: {
-    fontFamily: "'YOUR_FONT_NAME', lato", // Remember to replace 'YOUR_FONT_NAME'
-  },
-  // Add any other theme customizations here
-});
+import { theme } from "./themeConfig";
+import { useModalState } from "./useModalState";
 
 const useIsNewUser = () => {
   const isNewUser = localStorage.getItem("isNewUser");
@@ -75,6 +54,8 @@ const selectSeason = createSelector(
 
 function App() {
   //New user setup
+
+  const { modals, handleOpenModal, handleCloseModal } = useModalState();
 
   const [modalOpen, setModalOpen] = useState(false);
   const isNewUser = useIsNewUser();
@@ -100,14 +81,11 @@ function App() {
     setModalOpen(false);
   };
 
-  const totalTime = useSelector((state: RootState) => state.app.totalTime);
   const plantTime = useSelector((state: RootState) => state.plantTime);
   const plantDisplayType = useSelector((state: RootState) => state.plant.type);
   const rabbitAttack = useSelector(
     (state: RootState) => state.plant.rabbitAttack
   );
-  const plants = useSelector(selectPlants);
-  const season = useSelector(selectSeason);
   const totalLeaves = useSelector((state: RootState) => state.plant.leaves);
   const [openDialog, setOpenDialog] = React.useState(false);
   const purchasedUpgrades = useSelector(
@@ -197,75 +175,39 @@ function App() {
     requestAnimationFrame(update);
   }
 
-  const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
-  const [historyModalOpen, setHistoryModalOpen] = useState(false);
-  const [helpModalOpen, setHelpModalOpen] = useState(false);
-  const [menuModalOpen, setMenuModalOpen] = useState(false);
-  const [mushroomStoreModalOpen, setMushroomStoreModalOpen] = useState(false);
-  const [ladybugModalOpen, setLadybugModalOpen] = useState(false);
-  const [reportModalOpen, setReportModalOpen] = useState(false);
-
   const [showLeafLossWarning, setShowLeafLossWarning] = useState(false);
   const [plantType] = React.useState<string>("Fern");
-  const [textboxModalOpen, setTextboxModalOpen] = useState(false);
-
-  const handleOpenTextboxModal = () => {
-    setTextboxModalOpen(true);
-  };
-  const handleCloseTextboxModal = () => {
-    setTextboxModalOpen(false);
-  };
-
-  const handleOpenReportModal = () => {
-    setReportModalOpen(true);
-  };
-
-  const handleCloseReportModal = () => {
-    setReportModalOpen(false);
-  };
-
-  const handleOpenMushroomStoreModal = () => {
-    setMushroomStoreModalOpen(true);
-  };
-
-  const handleCloseMushroomStoreModal = () => {
-    setMushroomStoreModalOpen(false);
-  };
-
-  const handleOpenUpgradeModal = () => {
-    setUpgradeModalOpen(true);
-  };
-
-  const handleCloseUpgradeModal = () => {
-    setUpgradeModalOpen(false);
-  };
-
-  const handleOpenHistoryModal = () => {
-    setHistoryModalOpen(true);
-  };
-
-  const handleCloseHistoryModal = () => {
-    setHistoryModalOpen(false);
-  };
-
-  const handleOpenHelpModal = () => {
-    setHelpModalOpen(true);
-  };
-
-  const handleCloseHelpModal = () => {
-    setHelpModalOpen(false);
-  };
 
   const renderPlantComponent = () => {
     switch (plantDisplayType) {
       case "Fern":
-        return <PlantList setLadybugModalOpen={setLadybugModalOpen} />;
+        return (
+          <PlantList
+            handleOpenModal={handleOpenModal}
+            modalName="ladybugModalOpen"
+          />
+        );
       case "Moss":
-        return <MossDisplay setLadybugModalOpen={setLadybugModalOpen} />;
+        return (
+          <MossDisplay
+            handleOpenModal={handleOpenModal}
+            modalName="ladybugModalOpen"
+          />
+        );
       case "Succulent":
-        return <SucculentDisplay setLadybugModalOpen={setLadybugModalOpen} />;
+        return (
+          <SucculentDisplay
+            handleOpenModal={handleOpenModal}
+            modalName="ladybugModalOpen"
+          />
+        );
       case "Grass":
-        return <GrassDisplay setLadybugModalOpen={setLadybugModalOpen} />;
+        return (
+          <GrassDisplay
+            handleOpenModal={handleOpenModal}
+            modalName="ladybugModalOpen"
+          />
+        );
       default:
         return null; // or return a default component if desired
     }
@@ -303,47 +245,54 @@ function App() {
         />
 
         <HistoryModal
-          open={historyModalOpen}
-          onClose={handleCloseHistoryModal}
+          open={modals.historyModalOpen}
+          onClose={() => handleCloseModal("historyModalOpen")}
         />
-        <HelpModal open={helpModalOpen} onClose={handleCloseHelpModal} />
+        <HelpModal
+          open={modals.helpModalOpen}
+          onClose={() => handleCloseModal("helpModalOpen")}
+        />
+
         <ConfirmEvolveDialog
           open={evolveDialogOpen}
           onClose={() => setEvolveDialogOpen(false)}
           onConfirm={handleEvolve}
         />
         <MenuModal
-          open={menuModalOpen}
-          onClose={() => setMenuModalOpen(false)}
-          onOpenUpgrade={handleOpenUpgradeModal}
+          open={modals.menuModalOpen}
+          onClose={() => handleCloseModal("menuModalOpen")}
+          onOpenUpgrade={() => handleOpenModal("upgradeModalOpen")}
           onPlantSeed={() => setEvolveDialogOpen(true)}
-          historyModalOpen={historyModalOpen}
-          handleOpenHistoryModal={handleOpenHistoryModal}
-          handleCloseHistoryModal={handleCloseHistoryModal}
-          helpModalOpen={helpModalOpen}
-          handleOpenHelpModal={handleOpenHelpModal}
-          handleCloseHelpModal={handleCloseHelpModal}
+          historyModalOpen={modals.historyModalOpen}
+          handleOpenHistoryModal={() => handleOpenModal("historyModalOpen")}
+          handleCloseHistoryModal={() => handleCloseModal("historyModalOpen")}
+          helpModalOpen={modals.helpModalOpen}
+          handleOpenHelpModal={() => handleOpenModal("helpModalOpen")}
+          handleCloseHelpModal={() => handleCloseModal("helpModalOpen")}
           openDialog={openDialog}
           setOpenDialog={setOpenDialog}
-          onOpenMushroomStore={handleOpenMushroomStoreModal}
-          handleOpenReportModal={handleOpenReportModal}
-          handleOpenTextboxModal={handleOpenTextboxModal}
-          handleCloseReportModal={handleCloseReportModal}
+          onOpenMushroomStore={() => handleOpenModal("mushroomStoreModalOpen")}
+          handleOpenReportModal={() => handleOpenModal("reportModalOpen")}
+          handleOpenTextboxModal={() => handleOpenModal("textboxModalOpen")}
+          handleCloseReportModal={() => handleCloseModal("reportModalOpen")}
         />
         <MushroomStoreModal
-          open={mushroomStoreModalOpen}
-          onClose={handleCloseMushroomStoreModal}
+          open={modals.mushroomStoreModalOpen}
+          onClose={() => handleCloseModal("mushroomStoreModalOpen")}
         />
-        <ReportModal open={reportModalOpen} onClose={handleCloseReportModal} />
+        <ReportModal
+          open={modals.reportModalOpen}
+          onClose={() => handleCloseModal("reportModalOpen")}
+        />
         <TextboxModal
-          open={textboxModalOpen}
-          onClose={handleCloseTextboxModal}
+          open={modals.textboxModalOpen}
+          onClose={() => handleCloseModal("textboxModalOpen")}
         />
 
-        {ladybugModalOpen ? (
+        {modals.ladybugModalOpen ? (
           <LadyBugModal
-            open={ladybugModalOpen}
-            onClose={() => setLadybugModalOpen(false)}
+            open={modals.ladybugModalOpen}
+            onClose={() => handleCloseModal("ladybugModalOpen")}
             // ... any other props you might need
           />
         ) : null}
@@ -357,7 +306,7 @@ function App() {
             severity="warning"
             sx={{ width: "100%" }}
           >
-            You lost a leaf due to lack of water!
+            You lost a leaf!
           </Alert>
         </Snackbar>
         <Snackbar
@@ -384,14 +333,14 @@ function App() {
             >
               <Button
                 variant="contained"
-                onClick={() => setMenuModalOpen(true)}
+                onClick={() => handleOpenModal("menuModalOpen")}
                 sx={{ width: "45%", mt: 0, mb: 0, ml: 1, mr: 1 }}
               >
                 Open Menu
               </Button>
               <Button
                 variant="contained"
-                onClick={() => handleOpenMushroomStoreModal()}
+                onClick={() => handleOpenModal("upgradeModalOpen")}
                 sx={{ width: "45%", mt: 0, mb: 0, ml: 1, mr: 1 }}
               >
                 Mushroom
@@ -403,8 +352,8 @@ function App() {
             {renderPlantComponent()}
 
             <UpgradeModal
-              open={upgradeModalOpen}
-              onClose={handleCloseUpgradeModal}
+              open={modals.upgradeModalOpen}
+              onClose={() => handleCloseModal("upgradeModalOpen")}
             />
             {isNewUser && (
               <PlantSelectionModal

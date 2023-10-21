@@ -60,11 +60,13 @@ import WaterTooltip from "../Components/Tooltips/WaterTooltip";
 import MaturityTooltip from "../Components/Tooltips/MaturityTooltip";
 
 type SucculentDisplayProps = {
-  setLadybugModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  handleOpenModal: (modalName: string) => void;
+  modalName: string;
 };
 
 const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
-  setLadybugModalOpen,
+  handleOpenModal,
+  modalName,
 }) => {
   const dispatch = useDispatch();
   const plant = useSelector((state: RootState) => state.plant);
@@ -212,7 +214,7 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
                     backgroundColor: "#e6842e", // Or any other style reset
                   },
                 }}
-                onClick={() => setLadybugModalOpen(true)}
+                onClick={() => handleOpenModal(modalName)}
               >
                 <Typography variant="h5">You Have Aphids!</Typography>
               </Button>
@@ -246,6 +248,7 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
               autumnModifier={plant.autumnModifier}
               winterModifier={plant.winterModifier}
               agaveSugarBonus={plant.agaveSugarBonus}
+              sugar={plant.sugar}
             />
             <MaturityTooltip maturityLevel={plant.maturity_level} />
           </Grid>

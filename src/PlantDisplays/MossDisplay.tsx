@@ -65,10 +65,14 @@ import LeavesTooltip from "../Components/Tooltips/LeavesTooltip";
 import WaterTooltip from "../Components/Tooltips/WaterTooltip";
 
 type MossDisplayProps = {
-  setLadybugModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  handleOpenModal: (modalName: string) => void;
+  modalName: string;
 };
 
-const MossDisplay: React.FC<MossDisplayProps> = ({ setLadybugModalOpen }) => {
+const MossDisplay: React.FC<MossDisplayProps> = ({
+  handleOpenModal,
+  modalName,
+}) => {
   const dispatch = useDispatch();
   const plant = useSelector((state: RootState) => state.plant);
   const plantTime = useSelector((state: RootState) => state.plantTime);
@@ -211,7 +215,7 @@ const MossDisplay: React.FC<MossDisplayProps> = ({ setLadybugModalOpen }) => {
                     backgroundColor: "#e6842e", // Or any other style reset
                   },
                 }}
-                onClick={() => setLadybugModalOpen(true)}
+                onClick={() => handleOpenModal(modalName)}
               >
                 <Typography variant="h5" align="center">
                   You Have Aphids!
@@ -247,6 +251,7 @@ const MossDisplay: React.FC<MossDisplayProps> = ({ setLadybugModalOpen }) => {
               autumnModifier={plant.autumnModifier}
               winterModifier={plant.winterModifier}
               agaveSugarBonus={plant.agaveSugarBonus}
+              sugar={plant.sugar}
             />
             <MaturityTooltip maturityLevel={plant.maturity_level} />
           </Grid>

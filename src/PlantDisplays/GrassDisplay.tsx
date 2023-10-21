@@ -59,10 +59,14 @@ import WaterTooltip from "../Components/Tooltips/WaterTooltip";
 import RootsTooltip from "../Components/Tooltips/RootsTooltip";
 
 type GrassDisplayProps = {
-  setLadybugModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  handleOpenModal: (modalName: string) => void;
+  modalName: string;
 };
 
-const GrassDisplay: React.FC<GrassDisplayProps> = ({ setLadybugModalOpen }) => {
+const GrassDisplay: React.FC<GrassDisplayProps> = ({
+  handleOpenModal,
+  modalName,
+}) => {
   const dispatch = useDispatch();
   const plant = useSelector((state: RootState) => state.plant);
   const plantTime = useSelector((state: RootState) => state.plantTime);
@@ -209,7 +213,7 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({ setLadybugModalOpen }) => {
                     backgroundColor: "#e6842e", // Or any other style reset
                   },
                 }}
-                onClick={() => setLadybugModalOpen(true)}
+                onClick={() => handleOpenModal(modalName)}
               >
                 <Typography variant="h5">You Have Aphids!</Typography>
               </Button>
@@ -243,6 +247,7 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({ setLadybugModalOpen }) => {
               autumnModifier={plant.autumnModifier}
               winterModifier={plant.winterModifier}
               agaveSugarBonus={plant.agaveSugarBonus}
+              sugar={plant.sugar}
             />
             <MaturityTooltip maturityLevel={plant.maturity_level} />
           </Grid>
