@@ -1,5 +1,6 @@
 import { Tooltip, Box, Typography } from "@mui/material";
 import { Water } from "../Water";
+import { formatNumberWithDecimals } from "../../PlantDisplays/PlantList";
 
 interface WaterTooltipProps {
   productionRate: number;
@@ -15,7 +16,7 @@ const WaterTooltip: React.FC<WaterTooltipProps> = ({
       title={
         <Typography component="span" display="inline">
           <Water amount={amount} />
-          {productionRate.toFixed(2)}/s
+          {formatNumberWithDecimals(productionRate)}/s
         </Typography>
       }
       placement="top"

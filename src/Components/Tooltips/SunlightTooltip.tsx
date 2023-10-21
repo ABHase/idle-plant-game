@@ -1,5 +1,6 @@
 import { Tooltip, Box, Typography } from "@mui/material";
 import { Sunlight } from "../Sunlight";
+import { formatNumberWithDecimals } from "../../PlantDisplays/PlantList";
 
 interface SunlightTooltipProps {
   productionRate: number;
@@ -15,7 +16,7 @@ const SunlightTooltip: React.FC<SunlightTooltipProps> = ({
       title={
         <Typography component="span" display="inline">
           <Sunlight amount={amount} />
-          {productionRate.toFixed(2)}/s
+          {formatNumberWithDecimals(productionRate)}/s
         </Typography>
       }
       placement="top"
