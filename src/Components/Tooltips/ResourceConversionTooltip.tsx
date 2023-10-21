@@ -61,7 +61,7 @@ const ResourceConversionTooltip: React.FC<ResourceConversionProps> = ({
   const titleContent = (
     <>
       Converts {renderWaterComponent()} and {renderSunlightComponent()} into
-      {renderSugarComponent()} per second.
+      {renderProducingSugarComponent()} per second.
     </>
   );
 
