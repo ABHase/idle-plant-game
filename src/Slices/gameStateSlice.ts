@@ -196,11 +196,11 @@ const globalStateSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addMatcher(
-      (action): action is PayloadAction<{ gameState: GlobalState }> =>
+      (action): action is PayloadAction<{ globalState: GlobalState }> =>
         action.type === "REPLACE_STATE",
       (state, action) => {
-        if (action.payload.gameState) {
-          return action.payload.gameState;
+        if (action.payload.globalState) {
+          return action.payload.globalState;
         }
         return state;
       }
