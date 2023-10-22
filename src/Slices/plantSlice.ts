@@ -184,14 +184,13 @@ const plantSlice = createSlice({
         action.payload.multiplier
       ); // take the smaller of the two
 
-      if (state.type === "Moss" && state.sugar >= totalCost) {
+      if (state.type === "Moss") {
         state.roots += actualMultiplier;
-      } else if (state.sugar >= totalCost) {
+      } else {
         state.sugar -= actualMultiplier * action.payload.cost;
         state.roots += actualMultiplier;
       }
     },
-
     buyLeaves: (
       state,
       action: PayloadAction<{ cost: number; multiplier: number }>
@@ -203,6 +202,12 @@ const plantSlice = createSlice({
         affordableLeavesFromSugar,
         action.payload.multiplier
       );
+
+      // Base deduction of sugar and addition of leaves
+      const makePurchase = () => {
+        state.sugar -= actualMultiplier * action.payload.cost;
+        state.leaves += actualMultiplier;
+      };
 
       if (state.type === "Succulent") {
         const waterCostPerLeaf = 100 * action.payload.cost;
@@ -217,20 +222,17 @@ const plantSlice = createSlice({
         );
 
         if (actualMultiplier > 0) {
-          state.sugar -= actualMultiplier * action.payload.cost;
+          makePurchase();
           state.water -= actualMultiplier * waterCostPerLeaf;
-          state.leaves += actualMultiplier;
         }
       } else if (state.type === "Moss") {
         if (actualMultiplier > 0) {
-          state.sugar -= actualMultiplier * action.payload.cost;
-          state.leaves += actualMultiplier;
-          state.roots += actualMultiplier;
+          makePurchase();
+          state.roots += actualMultiplier; // For Moss, buying leaves also adds roots
         }
       } else {
         if (actualMultiplier > 0) {
-          state.sugar -= actualMultiplier * action.payload.cost;
-          state.leaves += actualMultiplier;
+          makePurchase();
         }
       }
     },
