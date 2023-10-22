@@ -161,9 +161,12 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
   };
 
   const handleBuyNeedles = () => {
-    for (let i = 0; i < multiplier; i++) {
-      dispatch(buyNeedles({ cost: plantState.maturity_level * 100 }));
-    }
+    dispatch(
+      buyNeedles({
+        cost: plantState.maturity_level * 100,
+        multiplier: multiplier,
+      })
+    );
   };
 
   const handleToggleGeneticMarkerProduction = () => {
@@ -490,19 +493,26 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
                   "&:active, &:focus": {
                     backgroundColor: "#252b36", // Or any other style reset
                   },
+                  "&.Mui-disabled": {
+                    color: "#d0d4db",
+                    opacity: 1, // This resets the reduced opacity of the disabled button.
+                  },
                 }}
                 onClick={() => handleBuyNeedles()}
+                disabled={plant.rabbitImmunity}
               >
-                Grow Needles: {multiplier}
-                &nbsp;for{" "}
-                <Sugar amount={plant.maturity_level * 100 * multiplier} />
+                {plant.rabbitImmunity ? (
+                  "Rabbits are afraid of your needles!"
+                ) : (
+                  <>
+                    Grow Needles: {multiplier}
+                    &nbsp;for{" "}
+                    <Sugar amount={plant.maturity_level * 100 * multiplier} />
+                  </>
+                )}
               </Button>
             </Tooltip>
           </Grid>
-          <Grid item xs={12}>
-            <Divider sx={{ backgroundColor: "white" }} />
-          </Grid>
-
           <Grid
             item
             xs={12}

@@ -369,12 +369,23 @@ const plantSlice = createSlice({
       state.rabbitAttack = false;
     },
     //Reducer to buy needles
-    buyNeedles: (state, action: PayloadAction<{ cost: number }>) => {
-      if (state.sugar >= action.payload.cost) {
-        state.sugar -= action.payload.cost;
-        state.needles += 1;
-      }
+    //Reducer to buy needles
+    buyNeedles: (
+      state,
+      action: PayloadAction<{ cost: number; multiplier: number }>
+    ) => {
+      const totalCost = action.payload.cost * action.payload.multiplier;
+      const affordableNeedles = Math.floor(state.sugar / action.payload.cost); // maximum affordable needles with current sugar
+
+      const actualMultiplier = Math.min(
+        affordableNeedles,
+        action.payload.multiplier
+      ); // take the smaller of the two
+
+      state.sugar -= actualMultiplier * action.payload.cost;
+      state.needles += actualMultiplier;
     },
+
     //Reducer to toggle leaf growth to the opposite of its current state
     toggleLeafGrowth: (state) => {
       state.leafGrowthToggle = !state.leafGrowthToggle;
