@@ -6,7 +6,7 @@ export const theme = createTheme({
       main: "#81b85c", // A more vibrant forest green for buttons and highlights
     },
     secondary: {
-      main: "#607D8B", // Bluish-grey, reminiscent of a night sky or moonlit water
+      main: "#0a0d08", // Bluish-grey, reminiscent of a night sky or moonlit water
     },
     background: {
       default: "#1f1107", // A very dark brown, almost black, like deep woods at night

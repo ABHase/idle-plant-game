@@ -36,6 +36,8 @@ import TextboxModal from "./Modals/TextboxModal";
 import PlantSelectionModal from "./Modals/PlantSelectionModal";
 import { theme } from "./themeConfig";
 import { useModalState } from "./useModalState";
+import MushroomStoreDesktopDisplay from "./MushroomStoreDesktopDisplay";
+import UpgradeStoreDesktopDisplay from "./UpgradeStoreDesktopDisplay";
 
 const useIsNewUser = () => {
   const isNewUser = localStorage.getItem("isNewUser");
@@ -54,6 +56,8 @@ const selectSeason = createSelector(
 
 function App() {
   //New user setup
+
+  const isMobile = window.innerWidth <= 768;
 
   const { modals, handleOpenModal, handleCloseModal } = useModalState();
 
@@ -232,139 +236,194 @@ function App() {
     <ThemeProvider theme={theme}>
       <Box
         display="flex"
-        flexDirection="column"
-        justifyContent="flex-start"
-        height="100vh"
-        bgcolor="background.default"
-        color="text.primary"
-        overflow="auto"
+        flexDirection="row"
+        width="100%"
+        justifyContent="center"
       >
-        <ConfirmDeleteDialog
-          open={openDialog}
-          onClose={() => setOpenDialog(false)}
-          onConfirm={handleDeleteConfirm}
-        />
-
-        <HistoryModal
-          open={modals.historyModalOpen}
-          onClose={() => handleCloseModal("historyModalOpen")}
-        />
-        <HelpModal
-          open={modals.helpModalOpen}
-          onClose={() => handleCloseModal("helpModalOpen")}
-        />
-
-        <ConfirmEvolveDialog
-          open={evolveDialogOpen}
-          onClose={() => setEvolveDialogOpen(false)}
-          onConfirm={handleEvolve}
-        />
-        <MenuModal
-          open={modals.menuModalOpen}
-          onClose={() => handleCloseModal("menuModalOpen")}
-          onOpenUpgrade={() => handleOpenModal("upgradeModalOpen")}
-          onPlantSeed={() => setEvolveDialogOpen(true)}
-          historyModalOpen={modals.historyModalOpen}
-          handleOpenHistoryModal={() => handleOpenModal("historyModalOpen")}
-          handleCloseHistoryModal={() => handleCloseModal("historyModalOpen")}
-          helpModalOpen={modals.helpModalOpen}
-          handleOpenHelpModal={() => handleOpenModal("helpModalOpen")}
-          handleCloseHelpModal={() => handleCloseModal("helpModalOpen")}
-          openDialog={openDialog}
-          setOpenDialog={setOpenDialog}
-          onOpenMushroomStore={() => handleOpenModal("mushroomStoreModalOpen")}
-          handleOpenReportModal={() => handleOpenModal("reportModalOpen")}
-          handleOpenTextboxModal={() => handleOpenModal("textboxModalOpen")}
-          handleCloseReportModal={() => handleCloseModal("reportModalOpen")}
-        />
-        <MushroomStoreModal
-          open={modals.mushroomStoreModalOpen}
-          onClose={() => handleCloseModal("mushroomStoreModalOpen")}
-        />
-        <ReportModal
-          open={modals.reportModalOpen}
-          onClose={() => handleCloseModal("reportModalOpen")}
-        />
-        <TextboxModal
-          open={modals.textboxModalOpen}
-          onClose={() => handleCloseModal("textboxModalOpen")}
-        />
-
-        {modals.ladybugModalOpen ? (
-          <LadyBugModal
-            open={modals.ladybugModalOpen}
-            onClose={() => handleCloseModal("ladybugModalOpen")}
-            // ... any other props you might need
-          />
-        ) : null}
-        <Snackbar
-          open={showLeafLossWarning}
-          autoHideDuration={3000}
-          onClose={() => setShowLeafLossWarning(false)}
-        >
-          <Alert
-            onClose={() => setShowLeafLossWarning(false)}
-            severity="warning"
-            sx={{ width: "100%" }}
+        {/* Sidebar */}
+        {isMobile ? null : (
+          <Box
+            flex={1}
+            paddingRight={2}
+            bgcolor="background.default"
+            overflow="auto"
+            height="100vh"
           >
-            You lost a leaf!
-          </Alert>
-        </Snackbar>
-        <Snackbar
-          open={rabbitAttack}
-          autoHideDuration={3000}
-          onClose={() => {
-            dispatch({ type: "plant/resetRabbitAttack" });
-          }}
+            <MushroomStoreDesktopDisplay />
+          </Box>
+        )}
+        {/* Main Content */}
+        <Box
+          flex={2}
+          paddingRight={0}
+          bgcolor="background.default"
+          overflow="auto"
+          height="100vh"
         >
-          <Alert severity="warning">
-            Rabbits have drank your water! You lost a leaf!
-          </Alert>
-        </Snackbar>
-
-        <Box sx={{ display: { xs: "block", sm: "block" } }}>
-          <header className="App-header">
-            <Box
-              border={1}
-              borderColor="grey.300"
-              borderRadius={2}
-              width="320px"
-              padding={1}
-              margin="0 auto"
-            >
-              <Button
-                variant="contained"
-                onClick={() => handleOpenModal("menuModalOpen")}
-                sx={{ width: "45%", mt: 0, mb: 0, ml: 1, mr: 1 }}
-              >
-                Open Menu
-              </Button>
-              <Button
-                variant="contained"
-                onClick={() => handleOpenModal("mushroomStoreModalOpen")}
-                sx={{ width: "45%", mt: 0, mb: 0, ml: 1, mr: 1 }}
-              >
-                Mushroom
-              </Button>
-            </Box>
-
-            <PlantTimeDisplay plantTime={plantTime} />
-            {renderDNAComponent()}
-            {renderPlantComponent()}
-
-            <UpgradeModal
-              open={modals.upgradeModalOpen}
-              onClose={() => handleCloseModal("upgradeModalOpen")}
+          <Box
+            display="flex"
+            flexDirection="column"
+            justifyContent="flex-start"
+            height="100vh"
+            bgcolor="background.default"
+            color="text.primary"
+            overflow="auto"
+          >
+            <ConfirmDeleteDialog
+              open={openDialog}
+              onClose={() => setOpenDialog(false)}
+              onConfirm={handleDeleteConfirm}
             />
-            {isNewUser && (
-              <PlantSelectionModal
-                open={modalOpen}
-                onClose={handleClose}
-                onPlantSelect={handlePlantSelect}
+
+            <HistoryModal
+              open={modals.historyModalOpen}
+              onClose={() => handleCloseModal("historyModalOpen")}
+            />
+            <HelpModal
+              open={modals.helpModalOpen}
+              onClose={() => handleCloseModal("helpModalOpen")}
+            />
+
+            <ConfirmEvolveDialog
+              open={evolveDialogOpen}
+              onClose={() => setEvolveDialogOpen(false)}
+              onConfirm={handleEvolve}
+            />
+            <MenuModal
+              open={modals.menuModalOpen}
+              onClose={() => handleCloseModal("menuModalOpen")}
+              onOpenUpgrade={() => handleOpenModal("upgradeModalOpen")}
+              onPlantSeed={() => setEvolveDialogOpen(true)}
+              historyModalOpen={modals.historyModalOpen}
+              handleOpenHistoryModal={() => handleOpenModal("historyModalOpen")}
+              handleCloseHistoryModal={() =>
+                handleCloseModal("historyModalOpen")
+              }
+              helpModalOpen={modals.helpModalOpen}
+              handleOpenHelpModal={() => handleOpenModal("helpModalOpen")}
+              handleCloseHelpModal={() => handleCloseModal("helpModalOpen")}
+              openDialog={openDialog}
+              setOpenDialog={setOpenDialog}
+              onOpenMushroomStore={() =>
+                handleOpenModal("mushroomStoreModalOpen")
+              }
+              handleOpenReportModal={() => handleOpenModal("reportModalOpen")}
+              handleOpenTextboxModal={() => handleOpenModal("textboxModalOpen")}
+              handleCloseReportModal={() => handleCloseModal("reportModalOpen")}
+            />
+            <MushroomStoreModal
+              open={modals.mushroomStoreModalOpen}
+              onClose={() => handleCloseModal("mushroomStoreModalOpen")}
+            />
+            <ReportModal
+              open={modals.reportModalOpen}
+              onClose={() => handleCloseModal("reportModalOpen")}
+            />
+            <TextboxModal
+              open={modals.textboxModalOpen}
+              onClose={() => handleCloseModal("textboxModalOpen")}
+            />
+
+            {modals.ladybugModalOpen ? (
+              <LadyBugModal
+                open={modals.ladybugModalOpen}
+                onClose={() => handleCloseModal("ladybugModalOpen")}
+                // ... any other props you might need
               />
-            )}
-          </header>
+            ) : null}
+            <Snackbar
+              open={showLeafLossWarning}
+              autoHideDuration={3000}
+              onClose={() => setShowLeafLossWarning(false)}
+            >
+              <Alert
+                onClose={() => setShowLeafLossWarning(false)}
+                severity="warning"
+                sx={{ width: "100%" }}
+              >
+                You lost a leaf!
+              </Alert>
+            </Snackbar>
+            <Snackbar
+              open={rabbitAttack}
+              autoHideDuration={3000}
+              onClose={() => {
+                dispatch({ type: "plant/resetRabbitAttack" });
+              }}
+            >
+              <Alert severity="warning">
+                Rabbits have drank your water! You lost a leaf!
+              </Alert>
+            </Snackbar>
+
+            <Box sx={{ display: { xs: "block", sm: "block" } }}>
+              <header className="App-header">
+                <Box
+                  border={1}
+                  borderColor="grey.300"
+                  borderRadius={2}
+                  width="320px"
+                  padding={1}
+                  margin="0 auto"
+                >
+                  <Button
+                    variant="contained"
+                    onClick={() => handleOpenModal("menuModalOpen")}
+                    sx={{
+                      width: !isMobile ? "100%" : "45%",
+                      mt: 0,
+                      mb: 0,
+                      ml: !isMobile ? 0 : 1,
+                      mr: !isMobile ? 0 : 1,
+                    }}
+                  >
+                    Open Menu
+                  </Button>
+
+                  {isMobile && (
+                    <Button
+                      variant="contained"
+                      onClick={() => handleOpenModal("mushroomStoreModalOpen")}
+                      sx={{ width: "45%", mt: 0, mb: 0, ml: 1, mr: 1 }}
+                    >
+                      Mushroom
+                    </Button>
+                  )}
+                </Box>
+
+                <PlantTimeDisplay plantTime={plantTime} />
+                {renderDNAComponent()}
+                {renderPlantComponent()}
+
+                <UpgradeModal
+                  open={modals.upgradeModalOpen}
+                  onClose={() => handleCloseModal("upgradeModalOpen")}
+                />
+                {isNewUser && (
+                  <PlantSelectionModal
+                    open={modalOpen}
+                    onClose={handleClose}
+                    onPlantSelect={handlePlantSelect}
+                  />
+                )}
+              </header>
+            </Box>
+          </Box>
         </Box>
+        {/* Sidebar */}
+        {isMobile ? null : (
+          <Box
+            flex={1}
+            paddingRight={2}
+            bgcolor="background.default"
+            overflow="auto"
+            height="100vh"
+          >
+            <UpgradeStoreDesktopDisplay
+              onPlantSeed={() => setEvolveDialogOpen(true)}
+            />
+          </Box>
+        )}
       </Box>
     </ThemeProvider>
   );
