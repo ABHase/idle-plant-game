@@ -19,6 +19,8 @@ interface Props {
   handleOpenReportModal: () => void;
   handleOpenTextboxModal: () => void;
   handleCloseReportModal: () => void;
+  manualSave: () => void;
+  isMobile: boolean;
 }
 
 const MenuModal: React.FC<Props> = (props) => {
@@ -34,31 +36,37 @@ const MenuModal: React.FC<Props> = (props) => {
       >
         {/* Displaying currentVersion */}
         <div>Current Version: 0.{currentVersion}</div>
-        <Button
-          sx={{ my: 1 }}
-          variant="contained"
-          color="primary"
-          onClick={props.onPlantSeed}
-        >
-          Plant Seed
-        </Button>
-        <Button
-          sx={{ my: 1 }}
-          variant="contained"
-          color="primary"
-          onClick={props.onOpenUpgrade}
-        >
-          Evolve Traits
-        </Button>
+        {props.isMobile && (
+          <Button
+            sx={{ my: 1 }}
+            variant="contained"
+            color="primary"
+            onClick={props.onPlantSeed}
+          >
+            Plant Seed
+          </Button>
+        )}
+        {props.isMobile && (
+          <Button
+            sx={{ my: 1 }}
+            variant="contained"
+            color="primary"
+            onClick={props.onOpenUpgrade}
+          >
+            Evolve Traits
+          </Button>
+        )}
+        {props.isMobile && (
+          <Button
+            sx={{ my: 1 }}
+            variant="contained"
+            color="primary"
+            onClick={props.onOpenMushroomStore}
+          >
+            Mushroom Store
+          </Button>
+        )}
 
-        <Button
-          sx={{ my: 1 }}
-          variant="contained"
-          color="primary"
-          onClick={props.onOpenMushroomStore}
-        >
-          Mushroom Store
-        </Button>
         <Button
           sx={{ my: 1 }}
           variant="contained"
@@ -97,6 +105,13 @@ const MenuModal: React.FC<Props> = (props) => {
             Join Discord
           </Button>
         </a>
+        <Button
+          variant="contained"
+          sx={{ my: 1, backgroundColor: "#4e86e6" }}
+          onClick={props.manualSave}
+        >
+          Manual Save
+        </Button>
         <Button
           variant="contained"
           sx={{ my: 1, backgroundColor: "#4e86e6" }}

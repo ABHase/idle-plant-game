@@ -95,10 +95,15 @@ const UpgradeStoreDesktopDisplay: React.FC<UpgradeStoreDesktopDisplayProps> = ({
                 ? "none"
                 : "auto",
 
-            opacity: geneticMarkers < upgrade.cost ? 0.5 : 1,
+            opacity:
+              !purchased.includes(upgrade.id) && geneticMarkers < upgrade.cost
+                ? 0.5
+                : 1,
             "&:hover": {
               bgcolor:
-                geneticMarkers < upgrade.cost ? "secondary.light" : "#38200f",
+                !purchased.includes(upgrade.id) && geneticMarkers < upgrade.cost
+                  ? "secondary.light"
+                  : "#38200f",
               color: "text.primary",
             },
           }}

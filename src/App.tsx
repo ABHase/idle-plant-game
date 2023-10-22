@@ -310,6 +310,8 @@ function App() {
               handleOpenReportModal={() => handleOpenModal("reportModalOpen")}
               handleOpenTextboxModal={() => handleOpenModal("textboxModalOpen")}
               handleCloseReportModal={() => handleCloseModal("reportModalOpen")}
+              manualSave={() => saveState(store.getState())}
+              isMobile={isMobile}
             />
             <MushroomStoreModal
               open={modals.mushroomStoreModalOpen}
