@@ -90,7 +90,11 @@ const UpgradeStoreDesktopDisplay: React.FC<UpgradeStoreDesktopDisplayProps> = ({
             bgcolor: purchased.includes(upgrade.id)
               ? "#4d2d17"
               : "secondary.main",
-            pointerEvents: geneticMarkers < upgrade.cost ? "none" : "auto",
+            pointerEvents:
+              !purchased.includes(upgrade.id) && geneticMarkers < upgrade.cost
+                ? "none"
+                : "auto",
+
             opacity: geneticMarkers < upgrade.cost ? 0.5 : 1,
             "&:hover": {
               bgcolor:
@@ -98,7 +102,9 @@ const UpgradeStoreDesktopDisplay: React.FC<UpgradeStoreDesktopDisplayProps> = ({
               color: "text.primary",
             },
           }}
-          disabled={geneticMarkers < upgrade.cost}
+          disabled={
+            !purchased.includes(upgrade.id) && geneticMarkers < upgrade.cost
+          }
         >
           <Box>
             <Typography variant="body1">{upgrade.name}</Typography>
