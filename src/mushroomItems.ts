@@ -139,6 +139,27 @@ export const DESERT_MUSHROOM_ITEMS: MushroomItem[] = [
     },
   },
   {
+    id: "desert_night_2",
+    name: "Darker Desert Night",
+    description:
+      "Time travel in the Darkness of the Desert. (Around 150 minutes)",
+    cost: 50000000000,
+    effect: (dispatch, getState) => {
+      dispatch(activateTimeBoost()); // Activate time boost
+      dispatch(deductSunlight(50000000000));
+
+      let counter = 0;
+      const intervalId = setInterval(() => {
+        dispatch(updateGame());
+        counter++;
+        if (counter >= 7200) {
+          clearInterval(intervalId);
+          dispatch(deactivateTimeBoost()); // Deactivate time boost
+        }
+      }, 50);
+    },
+  },
+  {
     id: "desert_rain",
     name: "Desert Rain",
     description: "Time travel in the intense Desert Rains. (Around 3 minutes)",
@@ -152,6 +173,27 @@ export const DESERT_MUSHROOM_ITEMS: MushroomItem[] = [
         dispatch(updateGame());
         counter++;
         if (counter >= 144) {
+          clearInterval(intervalId);
+          dispatch(deactivateTimeBoost()); // Deactivate time boost
+        }
+      }, 50);
+    },
+  },
+  {
+    id: "desert_rain_2",
+    name: "Deeper Desert Rain",
+    description:
+      "Time travel in the intense Desert Rains. (Around 150 minutes)",
+    cost: 50000000000,
+    effect: (dispatch, getState) => {
+      dispatch(activateTimeBoost()); // Activate time boost
+      dispatch(deductWater(50000000000));
+
+      let counter = 0;
+      const intervalId = setInterval(() => {
+        dispatch(updateGame());
+        counter++;
+        if (counter >= 7200) {
           clearInterval(intervalId);
           dispatch(deactivateTimeBoost()); // Deactivate time boost
         }
@@ -217,8 +259,20 @@ export const MUSHROOM_ITEM_FUNCTIONS: {
     dispatch: ThunkDispatch<RootState, unknown, Action<string>>,
     getState: () => RootState
   ) => void,
+  desert_night_2: DESERT_MUSHROOM_ITEMS.find(
+    (item) => item.id === "desert_night_2"
+  )?.effect as (
+    dispatch: ThunkDispatch<RootState, unknown, Action<string>>,
+    getState: () => RootState
+  ) => void,
   desert_rain: DESERT_MUSHROOM_ITEMS.find((item) => item.id === "desert_rain")
     ?.effect as (
+    dispatch: ThunkDispatch<RootState, unknown, Action<string>>,
+    getState: () => RootState
+  ) => void,
+  desert_rain_2: DESERT_MUSHROOM_ITEMS.find(
+    (item) => item.id === "desert_rain_2"
+  )?.effect as (
     dispatch: ThunkDispatch<RootState, unknown, Action<string>>,
     getState: () => RootState
   ) => void,

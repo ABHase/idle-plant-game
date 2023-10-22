@@ -21,7 +21,9 @@ import { Water } from "../Components/Water";
 
 const getCostType = (item: MushroomItem): string => {
   if (item.id === "desert_night") return "sunlight";
+  if (item.id === "desert_night_2") return "sunlight";
   if (item.id === "desert_rain") return "water";
+  if (item.id === "desert_rain_2") return "water";
   return "sugar";
 };
 
