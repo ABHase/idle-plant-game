@@ -130,7 +130,7 @@ export const DESERT_MUSHROOM_ITEMS: MushroomItem[] = [
       const intervalId = setInterval(() => {
         dispatch(updateGame());
         counter++;
-        if (counter >= 1440) {
+        if (counter >= 144) {
           clearInterval(intervalId);
           dispatch(deactivateTimeBoost()); // Deactivate time boost
         }
@@ -150,7 +150,7 @@ export const DESERT_MUSHROOM_ITEMS: MushroomItem[] = [
       const intervalId = setInterval(() => {
         dispatch(updateGame());
         counter++;
-        if (counter >= 1440) {
+        if (counter >= 144) {
           clearInterval(intervalId);
           dispatch(deactivateTimeBoost()); // Deactivate time boost
         }
