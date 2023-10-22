@@ -8,6 +8,7 @@ import {
   DESERT_MUSHROOM_ITEMS,
   LICHEN_MUSHROOM_ITEMS,
   MUSHROOM_ITEMS,
+  MushroomItem,
 } from "../mushroomItems";
 import { RootState } from "../rootReducer";
 import { ThunkDispatch } from "redux-thunk";
@@ -16,6 +17,13 @@ import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { Sugar } from "../Components/Sugar";
 import { Sunlight } from "../Components/Sunlight";
+import { Water } from "../Components/Water";
+
+const getCostType = (item: MushroomItem): string => {
+  if (item.id === "desert_night") return "sunlight";
+  if (item.id === "desert_rain") return "water";
+  return "sugar";
+};
 
 interface MushroomStoreModalProps {
   open: boolean;
@@ -29,6 +37,7 @@ const MushroomStoreModal: React.FC<MushroomStoreModalProps> = ({
   const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
   const sugar = useSelector((state: RootState) => state.plant.sugar);
   const sunlight = useSelector((state: RootState) => state.plant.sunlight);
+  const water = useSelector((state: RootState) => state.plant.water);
   const lichenStore = useSelector(
     (state: RootState) => state.plant.lichenStoreAvailable
   );
@@ -116,23 +125,33 @@ const MushroomStoreModal: React.FC<MushroomStoreModalProps> = ({
               Welcome to the Desert Mushroom Store, water available for sugar at
               a discount! Watch out for rabbits out there.
             </Typography>
-            {DESERT_MUSHROOM_ITEMS.map((item) => (
-              <Box key={item.id} mt={2}>
-                <Typography variant="body1">{item.name}</Typography>
-                <Typography variant="body2">{item.description}</Typography>
-                <Typography variant="body2" sx={{ display: "flex" }}>
-                  Cost: <Sugar amount={item.cost} />
-                </Typography>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => handlePurchase(item.effect)}
-                  disabled={sugar < item.cost}
-                >
-                  Buy
-                </Button>
-              </Box>
-            ))}
+            {DESERT_MUSHROOM_ITEMS.map((item) => {
+              const costType = getCostType(item);
+              return (
+                <Box key={item.id} mt={2}>
+                  <Typography variant="body1">{item.name}</Typography>
+                  <Typography variant="body2">{item.description}</Typography>
+                  <Typography variant="body2" sx={{ display: "flex" }}>
+                    Cost:
+                    {costType === "sunlight" && <Sunlight amount={item.cost} />}
+                    {costType === "water" && <Water amount={item.cost} />}
+                    {costType === "sugar" && <Sugar amount={item.cost} />}
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handlePurchase(item.effect)}
+                    disabled={
+                      (costType === "sugar" && sugar < item.cost) ||
+                      (costType === "sunlight" && sunlight < item.cost) ||
+                      (costType === "water" && water < item.cost)
+                    }
+                  >
+                    Buy
+                  </Button>
+                </Box>
+              );
+            })}
           </>
         );
       case "Grass":

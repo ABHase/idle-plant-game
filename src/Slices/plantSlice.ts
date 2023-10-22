@@ -313,6 +313,10 @@ const plantSlice = createSlice({
       const deductionAmount = action.payload;
       state.sunlight = Math.max(0, state.sunlight - deductionAmount);
     },
+    deductWater: (state, action: PayloadAction<number>) => {
+      const deductionAmount = action.payload;
+      state.water = Math.max(0, state.water - deductionAmount);
+    },
     increaseSugar: (state, action: PayloadAction<number>) => {
       const increaseAmount = action.payload;
       state.sugar += increaseAmount;
@@ -431,5 +435,6 @@ export const {
   increaseSugar,
   autoGrowLeaves,
   autoGrowRoots,
+  deductWater,
 } = plantSlice.actions;
 export default plantSlice.reducer;

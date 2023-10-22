@@ -8,6 +8,7 @@ import {
   DESERT_MUSHROOM_ITEMS,
   LICHEN_MUSHROOM_ITEMS,
   MUSHROOM_ITEMS,
+  MushroomItem,
 } from "./mushroomItems";
 import { RootState } from "./rootReducer";
 import { ThunkDispatch } from "redux-thunk";
@@ -17,6 +18,13 @@ import Alert from "@mui/material/Alert";
 import { Sugar } from "./Components/Sugar";
 import { Sunlight } from "./Components/Sunlight";
 import { ButtonBase } from "@mui/material";
+import { Water } from "./Components/Water";
+
+const getCostType = (item: MushroomItem): string => {
+  if (item.id === "desert_night") return "sunlight";
+  if (item.id === "desert_rain") return "water";
+  return "sugar";
+};
 
 const MushroomStoreDesktopDisplay = () => {
   const buttonBaseStyle = (resource: number, itemCost: number) => ({
@@ -38,6 +46,7 @@ const MushroomStoreDesktopDisplay = () => {
   const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
   const sugar = useSelector((state: RootState) => state.plant.sugar);
   const sunlight = useSelector((state: RootState) => state.plant.sunlight);
+  const water = useSelector((state: RootState) => state.plant.water);
   const lichenStore = useSelector(
     (state: RootState) => state.plant.lichenStoreAvailable
   );
@@ -125,28 +134,45 @@ const MushroomStoreDesktopDisplay = () => {
         }
 
       case "Succulent":
-        return (
-          <>
-            <Typography mt={2}>
-              Welcome to the Desert Mushroom Store, water available for sugar at
-              a discount! Watch out for rabbits out there.
-            </Typography>
-            {DESERT_MUSHROOM_ITEMS.map((item) => (
-              <ButtonBase
-                onClick={() => handleButtonClick(sugar, item.cost, item.effect)}
-                sx={buttonBaseStyle(sugar, item.cost)}
-              >
-                <Box key={item.id} mt={2}>
-                  <Typography variant="body1">{item.name}</Typography>
-                  <Typography variant="body2">{item.description}</Typography>
-                  <Typography variant="body2" sx={{ display: "flex" }}>
-                    Cost: <Sugar amount={item.cost} />
-                  </Typography>
-                </Box>
-              </ButtonBase>
-            ))}
-          </>
-        );
+        return DESERT_MUSHROOM_ITEMS.map((item) => {
+          const costType = getCostType(item);
+          return (
+            <ButtonBase
+              key={item.id}
+              onClick={() => {
+                switch (costType) {
+                  case "sunlight":
+                    handleButtonClick(sunlight, item.cost, item.effect);
+                    break;
+                  case "water":
+                    handleButtonClick(water, item.cost, item.effect);
+                    break;
+                  default:
+                    handleButtonClick(sugar, item.cost, item.effect);
+                    break;
+                }
+              }}
+              sx={buttonBaseStyle(
+                costType === "sunlight"
+                  ? sunlight
+                  : costType === "water"
+                  ? water
+                  : sugar,
+                item.cost
+              )}
+            >
+              <Typography variant="body1">{item.name}</Typography>
+              <Typography variant="body2">{item.description}</Typography>
+              <Typography variant="body2" sx={{ display: "flex" }}>
+                Cost:
+                {costType === "sunlight" && <Sunlight amount={item.cost} />}
+                {costType === "water" && <Water amount={item.cost} />}
+                {costType === "sugar" && <Sugar amount={item.cost} />}
+              </Typography>
+            </ButtonBase>
+          );
+        });
+
       case "Grass":
         return <Typography>No inventory available for Grass.</Typography>;
 
