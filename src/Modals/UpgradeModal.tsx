@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
@@ -25,6 +25,8 @@ interface UpgradesProps {
 
 const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, onClose }) => {
   const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
+  const state = useSelector((state: RootState) => state.globalState);
+
   const purchased = useSelector((state: RootState) => state.upgrades.purchased);
   const geneticMarkers = useSelector(
     (state: RootState) => state.globalState.geneticMarkers
@@ -39,7 +41,7 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, onClose }) => {
     (state: RootState) => state.globalState.geneticMarkersGrass
   );
   const plantType = useSelector((state: RootState) => state.plant.type);
-  let amountToPass;
+  let amountToPass: number;
   switch (plantType) {
     case "Fern":
       amountToPass = geneticMarkers;
@@ -62,6 +64,33 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, onClose }) => {
   );
   const specificUpgrades = UPGRADES[plantType];
   const availableUpgrades = [...metaUpgradesForPlant, ...specificUpgrades];
+
+  const [totalDNA, setTotalDNA] = useState(0);
+
+  // Function to calculate total DNA earned
+  const calculateTotalDNA = () => {
+    let total = 0;
+    purchased.forEach((purchasedId) => {
+      const foundUpgrade = availableUpgrades.find(
+        (upgrade) => upgrade.id === purchasedId
+      );
+      if (foundUpgrade) {
+        total += foundUpgrade.cost;
+      }
+    });
+
+    setTotalDNA(amountToPass + total);
+  };
+
+  useEffect(() => {
+    calculateTotalDNA();
+  }, [
+    purchased,
+    state.geneticMarkers,
+    state.geneticMarkersMoss,
+    state.geneticMarkersSucculent,
+    state.geneticMarkersGrass,
+  ]);
 
   return (
     <Modal
@@ -90,7 +119,19 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, onClose }) => {
       >
         {/* This is the header Box that won't scroll */}
         <Box>
-          <DNA amount={amountToPass} />
+          <Box
+            display="flex"
+            flexDirection="row"
+            justifyContent="space-between"
+            alignItems="center"
+            width="100%"
+            sx={{ borderBottom: "1px solid #ccc" }}
+          >
+            Available:
+            <DNA amount={amountToPass} />
+            Total Earned:
+            <DNA amount={totalDNA} />
+          </Box>
           <Typography id="upgrade-modal-title" variant="h6">
             Traits for Future Seeds:
           </Typography>

@@ -145,8 +145,7 @@ export const updateGame = (): ThunkAction<
 
     // If the plant has more than 1000 sugar add one aphid every 12th cycle but only if ladybugs are not less than 1, and plant.type is not Succulent
     if (
-      plant.type !== "Succulent" &&
-      plant.type !== "Moss" &&
+      plant.type == "Fern" &&
       plant.ladybugs === 1 &&
       plant.sugar >= 1000 &&
       currentMinute % 15 === 0

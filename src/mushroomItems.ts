@@ -120,7 +120,8 @@ export const DESERT_MUSHROOM_ITEMS: MushroomItem[] = [
   {
     id: "desert_night",
     name: "Desert Night",
-    description: "Time travel in the Darkness of the Desert.",
+    description:
+      "Time travel in the Darkness of the Desert. (Around 3 minutes)",
     cost: 1000000000,
     effect: (dispatch, getState) => {
       dispatch(activateTimeBoost()); // Activate time boost
@@ -140,7 +141,7 @@ export const DESERT_MUSHROOM_ITEMS: MushroomItem[] = [
   {
     id: "desert_rain",
     name: "Desert Rain",
-    description: "Time travel in the intense Desert Rains.",
+    description: "Time travel in the intense Desert Rains. (Around 3 minutes)",
     cost: 1000000000,
     effect: (dispatch, getState) => {
       dispatch(activateTimeBoost()); // Activate time boost

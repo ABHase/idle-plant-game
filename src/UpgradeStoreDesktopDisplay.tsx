@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -22,6 +22,35 @@ const UpgradeStoreDesktopDisplay: React.FC<UpgradeStoreDesktopDisplayProps> = ({
   const purchased = useSelector((state: RootState) => state.upgrades.purchased);
   const state = useSelector((state: RootState) => state.globalState);
   const plantType = useSelector((state: RootState) => state.plant.type);
+
+  // New State to hold the total DNA
+  const [totalDNA, setTotalDNA] = useState(0);
+
+  // Function to calculate total DNA earned
+  const calculateTotalDNA = () => {
+    let total = 0;
+    purchased.forEach((purchasedId) => {
+      const foundUpgrade = availableUpgrades.find(
+        (upgrade) => upgrade.id === purchasedId
+      );
+      if (foundUpgrade) {
+        total += foundUpgrade.cost;
+      }
+    });
+
+    // Adding the total earned DNA to the current corresponding plant DNA
+    setTotalDNA(state[geneticMarkersKey] + total);
+  };
+
+  useEffect(() => {
+    calculateTotalDNA();
+  }, [
+    purchased,
+    state.geneticMarkers,
+    state.geneticMarkersMoss,
+    state.geneticMarkersSucculent,
+    state.geneticMarkersGrass,
+  ]);
 
   // Map plantType to geneticMarkers property
   const geneticMarkersKey = (
@@ -64,6 +93,19 @@ const UpgradeStoreDesktopDisplay: React.FC<UpgradeStoreDesktopDisplayProps> = ({
         <Button variant="contained" color="primary" onClick={onPlantSeed}>
           Plant Seed
         </Button>
+      </Box>
+      {/* Displaying total DNA */}
+      <Box
+        display="flex"
+        flexDirection="row"
+        alignItems="center"
+        width="100%"
+        sx={{ borderTop: 1 }}
+      >
+        <Typography id="total-dna" variant="h6">
+          Total counting all upgrades:
+        </Typography>
+        <DNA amount={totalDNA} />
       </Box>
       {availableUpgrades.map((upgrade) => (
         <ButtonBase
