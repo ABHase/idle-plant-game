@@ -112,6 +112,11 @@ export const updateGame = (): ThunkAction<
         break;
     }
 
+    // Check if the geneticMarkerUpgradeActive flag is true, and if so, quadruple the resource threshold
+    if (plant.geneticMarkerUpgradeActive) {
+      resourceThreshold *= 4;
+    }
+
     if (
       plant.is_genetic_marker_production_on &&
       requiredResource >= resourceThreshold

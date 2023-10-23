@@ -342,7 +342,13 @@ const MossDisplay: React.FC<MossDisplayProps> = ({
                 }}
                 onClick={() => handleToggleGeneticMarkerProduction()}
               >
-                <Sugar amount={geneticMarkerThresholdMoss} />
+                <Sugar
+                  amount={
+                    plant.geneticMarkerUpgradeActive
+                      ? geneticMarkerThresholdMoss * 4
+                      : geneticMarkerThresholdMoss
+                  }
+                />
                 /s{" "}
                 <ArrowForwardIcon
                   sx={{

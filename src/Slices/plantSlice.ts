@@ -279,7 +279,12 @@ const plantSlice = createSlice({
       state.leaves = Math.max(0, state.leaves - action.payload);
     },
     produceGeneticMarkers: (state, action: PayloadAction<number>) => {
-      const neededResource = action.payload;
+      let neededResource = action.payload;
+
+      // If the geneticMarkerUpgradeActive flag is true, quadruple the needed resources
+      if (state.geneticMarkerUpgradeActive) {
+        neededResource *= 4;
+      }
 
       if (state.type === "Grass") {
         // Consume leaves for grass

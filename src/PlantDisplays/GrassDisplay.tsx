@@ -346,7 +346,13 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({
                 }}
                 onClick={() => handleToggleGeneticMarkerProduction()}
               >
-                <Leaves amount={geneticMarkerThresholdGrass} />
+                <Leaves
+                  amount={
+                    plant.geneticMarkerUpgradeActive
+                      ? geneticMarkerThresholdGrass * 4
+                      : geneticMarkerThresholdGrass
+                  }
+                />
                 /s{" "}
                 <ArrowForwardIcon
                   sx={{

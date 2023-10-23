@@ -351,7 +351,13 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
                 }}
                 onClick={() => handleToggleGeneticMarkerProduction()}
               >
-                <Sugar amount={geneticMarkerThresholdSucculent} />{" "}
+                <Sugar
+                  amount={
+                    plant.geneticMarkerUpgradeActive
+                      ? geneticMarkerThresholdSucculent * 4
+                      : geneticMarkerThresholdSucculent
+                  }
+                />{" "}
                 <ArrowForwardIcon
                   sx={{
                     color: plant.is_genetic_marker_production_on ? "" : "red",
