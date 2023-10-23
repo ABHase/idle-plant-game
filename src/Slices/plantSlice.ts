@@ -64,6 +64,14 @@ export interface PlantState {
   rootAutoGrowthMultiplier: number; //Root auto growth, root cost multiplied by this number to auto grow roots
   lichenStoreAvailable: boolean; //Lichen store available, this is the boolean that is used to determine if the lichen store is available to moss
   autoGrowthMultiplier: number; //Auto growth multiplier, this is the number that is used to determine how many plant parts grow when auto growing
+  aphidImmunity: boolean; //Aphid immunity, this is the boolean that is used to determine if the plant is immune to aphids
+  flowers: number; //Flowers, this is the number that is used to determine how many flowers the plant has
+  flowerSugarConsumptionRate: number; //Flower sugar consumption rate, this is the number that is used to determine how much sugar is consumed by flowers
+  flowerWaterConsumptionRate: number; //Flower water consumption rate, this is the number that is used to determine how much water is consumed by flowers
+  flowerSugarThreshold: number; //Flower sugar threshold, this is the number that is used to determine how much sugar is needed to grow a flower in a fruit
+  flowerWaterThreshold: number; //Flower water threshold, this is the number that is used to determine how much water is needed to grow a flower in a fruit
+  flowerDNA: number; //Flower DNA, this is the number that is used to determine how much DNA is gained from a flower
+  maxResourceToSpend: number | null;
 }
 
 export const initialState: PlantState = PLANT_CONFIGS.Fern; // Setting Fern as the default plant
@@ -402,6 +410,9 @@ const plantSlice = createSlice({
     toggleRootGrowth: (state) => {
       state.rootGrowthToggle = !state.rootGrowthToggle;
     },
+    setMaxResourceToSpend: (state, action: PayloadAction<number>) => {
+      state.maxResourceToSpend = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addMatcher(
@@ -456,5 +467,6 @@ export const {
   autoGrowRoots,
   deductWater,
   turnOffGeneticMarkerProduction,
+  setMaxResourceToSpend,
 } = plantSlice.actions;
 export default plantSlice.reducer;

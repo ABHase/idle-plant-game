@@ -50,6 +50,14 @@ export const FERN_INITIAL_CONFIG: PlantState = {
   lichenStoreAvailable: false,
   rabbitImmunity: true,
   autoGrowthMultiplier: 1,
+  aphidImmunity: false,
+  flowers: 0,
+  flowerSugarConsumptionRate: 0,
+  flowerWaterConsumptionRate: 0,
+  flowerSugarThreshold: 0,
+  flowerWaterThreshold: 0,
+  flowerDNA: 0,
+  maxResourceToSpend: null,
 };
 
 export const MOSS_INITIAL_CONFIG: PlantState = {
@@ -101,6 +109,14 @@ export const MOSS_INITIAL_CONFIG: PlantState = {
   lichenStoreAvailable: false,
   rabbitImmunity: true,
   autoGrowthMultiplier: 1,
+  aphidImmunity: true,
+  flowers: 0,
+  flowerSugarConsumptionRate: 0,
+  flowerWaterConsumptionRate: 0,
+  flowerSugarThreshold: 0,
+  flowerWaterThreshold: 0,
+  flowerDNA: 0,
+  maxResourceToSpend: null,
 };
 
 export const SUCCULENT_INITIAL_CONFIG: PlantState = {
@@ -152,6 +168,14 @@ export const SUCCULENT_INITIAL_CONFIG: PlantState = {
   lichenStoreAvailable: false,
   rabbitImmunity: false,
   autoGrowthMultiplier: 1,
+  aphidImmunity: false,
+  flowers: 0,
+  flowerSugarConsumptionRate: 0,
+  flowerWaterConsumptionRate: 0,
+  flowerSugarThreshold: 0,
+  flowerWaterThreshold: 0,
+  flowerDNA: 0,
+  maxResourceToSpend: null,
 };
 
 export const GRASS_INITIAL_CONFIG: PlantState = {
@@ -203,6 +227,14 @@ export const GRASS_INITIAL_CONFIG: PlantState = {
   lichenStoreAvailable: false,
   rabbitImmunity: true,
   autoGrowthMultiplier: 10,
+  aphidImmunity: false,
+  flowers: 0,
+  flowerSugarConsumptionRate: 0,
+  flowerWaterConsumptionRate: 0,
+  flowerSugarThreshold: 0,
+  flowerWaterThreshold: 0,
+  flowerDNA: 0,
+  maxResourceToSpend: null,
 };
 
 export const PLANT_CONFIGS: Record<string, PlantState> = {

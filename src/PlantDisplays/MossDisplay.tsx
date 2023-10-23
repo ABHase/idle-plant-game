@@ -11,6 +11,7 @@ import {
   toggleRootGrowth,
   toggleLeafGrowth,
   turnOffGeneticMarkerProduction,
+  setMaxResourceToSpend,
 } from "../Slices/plantSlice";
 import {
   Grid,
@@ -86,13 +87,12 @@ const MossDisplay: React.FC<MossDisplayProps> = ({
   );
   const plantState = useSelector((state: RootState) => state.plant);
 
-  const [maxResourceToSpend, setMaxResourceToSpend] = useState("");
   useEffect(() => {
-    const maxResource = parseFloat(maxResourceToSpend);
-    if (!isNaN(maxResource) && geneticMarkerThresholdMoss > maxResource) {
+    const maxResource = plant.maxResourceToSpend; // Assuming `plant` is from your Redux store
+    if (maxResource !== null && geneticMarkerThresholdMoss > maxResource) {
       dispatch(turnOffGeneticMarkerProduction());
     }
-  }, [maxResourceToSpend, geneticMarkerThresholdMoss, dispatch]);
+  }, [plant.maxResourceToSpend, geneticMarkerThresholdMoss, dispatch]);
 
   // Extract season from state (Assuming you have access to the state here)
   const { season } = useSelector((state: RootState) => state.plantTime);
@@ -349,14 +349,12 @@ const MossDisplay: React.FC<MossDisplayProps> = ({
                       : geneticMarkerThresholdMoss
                   }
                 />
-                /s{" "}
                 <ArrowForwardIcon
                   sx={{
                     color: plant.is_genetic_marker_production_on ? "" : "red",
                   }}
                 />{" "}
                 <DNA amount={plant.geneticMarkerUpgradeActive ? 2 : 1} />
-                {plant.is_genetic_marker_production_on ? "Stop" : "Start"}
               </Button>
             </Tooltip>
           </Grid>
@@ -372,8 +370,10 @@ const MossDisplay: React.FC<MossDisplayProps> = ({
           >
             <TextField
               type="number"
-              value={maxResourceToSpend}
-              onChange={(e) => setMaxResourceToSpend(e.target.value)}
+              value={plant.maxResourceToSpend}
+              onChange={(e) =>
+                dispatch(setMaxResourceToSpend(parseFloat(e.target.value)))
+              }
               label="Max Resource to Spend"
               inputProps={{ step: "1000" }}
             />

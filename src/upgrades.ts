@@ -39,6 +39,12 @@ export const UPGRADES: Record<string, Upgrade[]> = {
   ],
   Fern: [
     {
+      id: "aphid_immunity",
+      name: "Aphid Immunity",
+      description: "Ferns are immune to aphids",
+      cost: 50,
+    },
+    {
       id: "boost_sugar",
       name: "Cam Pathway",
       description: "Increase base sugar production by 50%",
@@ -394,6 +400,9 @@ export const UPGRADE_FUNCTIONS: Record<
     },
   },
   Fern: {
+    aphid_immunity: (plant) => {
+      plant.aphidImmunity = true;
+    },
     boost_sugar: (plant) => {
       plant.sugar_production_rate *= 1.5;
     },

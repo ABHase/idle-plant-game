@@ -11,6 +11,7 @@ import {
   toggleLeafGrowth,
   toggleRootGrowth,
   turnOffGeneticMarkerProduction,
+  setMaxResourceToSpend,
 } from "../Slices/plantSlice";
 import {
   Grid,
@@ -87,13 +88,12 @@ const PlantList: React.FC<PlantListProps> = ({
   );
   const plantState = useSelector((state: RootState) => state.plant);
 
-  const [maxResourceToSpend, setMaxResourceToSpend] = useState("");
   useEffect(() => {
-    const maxResource = parseFloat(maxResourceToSpend);
-    if (!isNaN(maxResource) && geneticMarkerThreshold > maxResource) {
+    const maxResource = plant.maxResourceToSpend; // Assuming `plant` is from your Redux store
+    if (maxResource !== null && geneticMarkerThreshold > maxResource) {
       dispatch(turnOffGeneticMarkerProduction());
     }
-  }, [maxResourceToSpend, geneticMarkerThreshold, dispatch]);
+  }, [plant.maxResourceToSpend, geneticMarkerThreshold, dispatch]);
 
   // Extract season from state (Assuming you have access to the state here)
   const { season } = useSelector((state: RootState) => state.plantTime);
@@ -356,14 +356,12 @@ const PlantList: React.FC<PlantListProps> = ({
                       : geneticMarkerThreshold
                   }
                 />
-                /s{" "}
                 <ArrowForwardIcon
                   sx={{
                     color: plant.is_genetic_marker_production_on ? "" : "red",
                   }}
                 />{" "}
                 <DNA amount={plant.geneticMarkerUpgradeActive ? 2 : 1} />
-                {plant.is_genetic_marker_production_on ? "Stop" : "Start"}
               </Button>
             </Tooltip>
           </Grid>
@@ -379,8 +377,10 @@ const PlantList: React.FC<PlantListProps> = ({
           >
             <TextField
               type="number"
-              value={maxResourceToSpend}
-              onChange={(e) => setMaxResourceToSpend(e.target.value)}
+              value={plant.maxResourceToSpend}
+              onChange={(e) =>
+                dispatch(setMaxResourceToSpend(parseFloat(e.target.value)))
+              }
               label="Max Resource to Spend"
               inputProps={{ step: "1000" }}
             />

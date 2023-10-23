@@ -12,6 +12,7 @@ import {
   toggleLeafGrowth,
   toggleRootGrowth,
   turnOffGeneticMarkerProduction,
+  setMaxResourceToSpend,
 } from "../Slices/plantSlice";
 import {
   Grid,
@@ -81,13 +82,12 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
     useSelector((state: RootState) => state.globalState);
   const plantState = useSelector((state: RootState) => state.plant);
 
-  const [maxResourceToSpend, setMaxResourceToSpend] = useState("");
   useEffect(() => {
-    const maxResource = parseFloat(maxResourceToSpend);
-    if (!isNaN(maxResource) && geneticMarkerThresholdSucculent > maxResource) {
+    const maxResource = plant.maxResourceToSpend; // Assuming `plant` is from your Redux store
+    if (maxResource !== null && geneticMarkerThresholdSucculent > maxResource) {
       dispatch(turnOffGeneticMarkerProduction());
     }
-  }, [maxResourceToSpend, geneticMarkerThresholdSucculent, dispatch]);
+  }, [plant.maxResourceToSpend, geneticMarkerThresholdSucculent, dispatch]);
 
   // Extract season from state (Assuming you have access to the state here)
   const { season } = useSelector((state: RootState) => state.plantTime);
@@ -364,7 +364,6 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
                   }}
                 />{" "}
                 <DNA amount={plant.geneticMarkerUpgradeActive ? 2 : 1} />{" "}
-                {plant.is_genetic_marker_production_on ? "Stop" : "Start"}
               </Button>
             </Tooltip>
           </Grid>
@@ -379,8 +378,10 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
           >
             <TextField
               type="number"
-              value={maxResourceToSpend}
-              onChange={(e) => setMaxResourceToSpend(e.target.value)}
+              value={plant.maxResourceToSpend}
+              onChange={(e) =>
+                dispatch(setMaxResourceToSpend(parseFloat(e.target.value)))
+              }
               label="Max Resource to Spend"
               inputProps={{ step: "1000" }}
             />

@@ -10,6 +10,7 @@ import {
   toggleGeneticMarkerProduction,
   toggleRootGrowth,
   turnOffGeneticMarkerProduction,
+  setMaxResourceToSpend,
 } from "../Slices/plantSlice";
 import {
   Grid,
@@ -80,13 +81,12 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({
   );
   const plantState = useSelector((state: RootState) => state.plant);
 
-  const [maxResourceToSpend, setMaxResourceToSpend] = useState("");
   useEffect(() => {
-    const maxResource = parseFloat(maxResourceToSpend);
-    if (!isNaN(maxResource) && geneticMarkerThresholdGrass > maxResource) {
+    const maxResource = plant.maxResourceToSpend; // Assuming `plant` is from your Redux store
+    if (maxResource !== null && geneticMarkerThresholdGrass > maxResource) {
       dispatch(turnOffGeneticMarkerProduction());
     }
-  }, [maxResourceToSpend, geneticMarkerThresholdGrass, dispatch]);
+  }, [plant.maxResourceToSpend, geneticMarkerThresholdGrass, dispatch]);
 
   // Extract season from state (Assuming you have access to the state here)
   const { season } = useSelector((state: RootState) => state.plantTime);
@@ -353,14 +353,12 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({
                       : geneticMarkerThresholdGrass
                   }
                 />
-                /s{" "}
                 <ArrowForwardIcon
                   sx={{
                     color: plant.is_genetic_marker_production_on ? "" : "red",
                   }}
                 />{" "}
                 <DNA amount={plant.geneticMarkerUpgradeActive ? 2 : 1} />
-                {plant.is_genetic_marker_production_on ? "Stop" : "Start"}
               </Button>
             </Tooltip>
           </Grid>
@@ -376,10 +374,12 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({
           >
             <TextField
               type="number"
-              value={maxResourceToSpend}
-              onChange={(e) => setMaxResourceToSpend(e.target.value)}
+              value={plant.maxResourceToSpend}
+              onChange={(e) =>
+                dispatch(setMaxResourceToSpend(parseFloat(e.target.value)))
+              }
               label="Max Resource to Spend"
-              inputProps={{ step: "100" }}
+              inputProps={{ step: "1000" }}
             />
           </Grid>
 
