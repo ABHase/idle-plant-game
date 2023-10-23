@@ -14,8 +14,16 @@ import {
   removeRoots,
   autoGrowLeaves,
   autoGrowRoots,
+  deductSugar,
+  addSugarToFlower,
+  addWaterToFlower,
+  removeFlower,
+  deductWater,
 } from "./Slices/plantSlice";
-import { updateGeneticMarkerProgress } from "./Slices/gameStateSlice";
+import {
+  addGeneticMarkersBush,
+  updateGeneticMarkerProgress,
+} from "./Slices/gameStateSlice";
 import { LEAF_COST, ROOT_COST } from "./constants";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { UPGRADES } from "./upgrades";
@@ -177,6 +185,7 @@ export const updateGame = (): ThunkAction<
     dispatch(updateMaturityLevel());
     dispatch(updateWaterAndSunlight({ season: currentSeason }));
     dispatch(produceSugar({ season: currentSeason }));
+    dispatch(updateFlowers());
 
     // ... [other logic and dispatches as needed]
   };
@@ -217,6 +226,9 @@ export const purchaseUpgradeThunk = createAsyncThunk<
       break;
     case "Grass":
       availableGeneticMarkers = state.globalState.geneticMarkersGrass;
+      break;
+    case "Bush":
+      availableGeneticMarkers = state.globalState.geneticMarkersBush;
       break;
     default:
       throw new Error("Invalid plant type");
@@ -305,5 +317,53 @@ export const evolveAndRecordPlant = (
         upgrades: upgrades,
       })
     );
+  };
+};
+
+export const updateFlowers = (): ThunkAction<
+  void,
+  RootState,
+  unknown,
+  Action<string>
+> => {
+  return (dispatch, getState) => {
+    const plant = getState().plant;
+
+    for (let i = 0; i < plant.flowers.length; i++) {
+      const flower = plant.flowers[i];
+
+      const sugarThresholdMet = flower.sugar >= plant.flowerSugarThreshold;
+      const waterThresholdMet = flower.water >= plant.flowerWaterThreshold;
+
+      let sugarAcquired = false;
+      let waterAcquired = false;
+
+      if (
+        !sugarThresholdMet &&
+        plant.sugar >= plant.flowerSugarConsumptionRate
+      ) {
+        dispatch(deductSugar(plant.flowerSugarConsumptionRate));
+        dispatch(addSugarToFlower(i, plant.flowerSugarConsumptionRate));
+        sugarAcquired = true;
+      }
+
+      if (
+        !waterThresholdMet &&
+        plant.water >= plant.flowerWaterConsumptionRate
+      ) {
+        dispatch(deductWater(plant.flowerWaterConsumptionRate));
+        dispatch(addWaterToFlower(i, plant.flowerWaterConsumptionRate));
+        waterAcquired = true;
+      }
+
+      if (sugarThresholdMet && waterThresholdMet) {
+        dispatch(addGeneticMarkersBush({ amount: plant.flowerDNA }));
+        dispatch(removeFlower(i));
+      } else if (!(sugarAcquired && waterAcquired)) {
+        // Remove the flower if it didn't get both sugar and water
+        dispatch(removeFlower(i));
+        break;
+      }
+    }
   };
 };

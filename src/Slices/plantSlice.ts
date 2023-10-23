@@ -1,14 +1,48 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
-import { SUGAR_THRESHOLD, SECONDARY_SUGAR_THRESHOLD } from "../constants";
+import { SECONDARY_SUGAR_THRESHOLD } from "../constants";
 import { UPGRADE_FUNCTIONS, UPGRADES } from "../upgrades"; // Assuming you have UPGRADES defined in an 'upgrades.ts' file
 import {
   calculateWaterAndSunlight,
   calculateSugarPhotosynthesis,
-  geneticSugarConsumption,
 } from "../formulas";
 import { PLANT_CONFIGS } from "../plantConfigs";
-import { type } from "os";
+import { getRandomColor } from "../randomColors";
+
+// Action to add water to a specific flower
+export const addWaterToFlower = createAction(
+  "plant/addWaterToFlower",
+  (index: number, amount: number) => ({ payload: { index, amount } })
+);
+
+// Action to add sugar to a specific flower
+export const addSugarToFlower = createAction(
+  "plant/addSugarToFlower",
+  (index: number, amount: number) => ({ payload: { index, amount } })
+);
+
+// Action to remove a flower by index
+export const removeFlower = createAction(
+  "plant/removeFlower",
+  (flowerIndex: number) => ({
+    payload: flowerIndex,
+  })
+);
+// Action to add a flower to the plant
+export const addFlower = createAction(
+  "plant/addFlower",
+  (newFlower: Flower) => ({
+    payload: {
+      newFlower,
+    },
+  })
+);
+
+interface Flower {
+  water: number;
+  sugar: number;
+  color: string;
+}
 
 type EvolvePlantPayload = {
   plantType: string;
@@ -65,7 +99,7 @@ export interface PlantState {
   lichenStoreAvailable: boolean; //Lichen store available, this is the boolean that is used to determine if the lichen store is available to moss
   autoGrowthMultiplier: number; //Auto growth multiplier, this is the number that is used to determine how many plant parts grow when auto growing
   aphidImmunity: boolean; //Aphid immunity, this is the boolean that is used to determine if the plant is immune to aphids
-  flowers: number; //Flowers, this is the number that is used to determine how many flowers the plant has
+  flowers: Flower[]; //Flowers, this is the number that is used to determine how many flowers the plant has
   flowerSugarConsumptionRate: number; //Flower sugar consumption rate, this is the number that is used to determine how much sugar is consumed by flowers
   flowerWaterConsumptionRate: number; //Flower water consumption rate, this is the number that is used to determine how much water is consumed by flowers
   flowerSugarThreshold: number; //Flower sugar threshold, this is the number that is used to determine how much sugar is needed to grow a flower in a fruit
@@ -75,6 +109,72 @@ export interface PlantState {
 }
 
 export const initialState: PlantState = PLANT_CONFIGS.Fern; // Setting Fern as the default plant
+
+// Add water to a specific flower
+const addWaterToFlowerReducer = (
+  state: PlantState,
+  action: PayloadAction<{ index: number; amount: number }>
+) => {
+  const { index, amount } = action.payload;
+  state.flowers[index].water += amount;
+};
+
+// Add sugar to a specific flower
+const addSugarToFlowerReducer = (
+  state: PlantState,
+  action: PayloadAction<{ index: number; amount: number }>
+) => {
+  const { index, amount } = action.payload;
+  state.flowers[index].sugar += amount;
+};
+
+// Remove a specific flower
+const removeFlowerReducer = (
+  state: PlantState,
+  action: PayloadAction<number> // index of flower to remove
+) => {
+  state.flowers.splice(action.payload, 1);
+};
+
+// Add a new flower
+const addFlowerReducer = (
+  state: PlantState,
+  action: PayloadAction<{ newFlower: Flower }>
+) => {
+  const { newFlower } = action.payload;
+  state.flowers.push(newFlower);
+};
+
+// Action to buy a flower for the plant
+export const buyFlower = createAction("plant/buyFlower", (cost: number) => ({
+  payload: {
+    cost,
+  },
+}));
+
+// Buy a new flower
+const buyFlowerReducer = (
+  state: PlantState,
+  action: PayloadAction<{ cost: number }>
+) => {
+  const { cost } = action.payload;
+
+  // Check if the plant can afford to buy a flower
+  if (state.sugar >= cost) {
+    // Deduct the cost and add a new flower with initial values
+    state.sugar -= cost;
+    const newFlower = {
+      sugar: 0,
+      water: 0,
+      color: getRandomColor(),
+      // ... any other flower properties
+    };
+    state.flowers.push(newFlower);
+  } else {
+    // Handle case when not enough resources to buy a flower
+    // Could dispatch a message or log, etc.
+  }
+};
 
 const plantSlice = createSlice({
   name: "plant",
@@ -415,6 +515,11 @@ const plantSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    builder.addCase(buyFlower, buyFlowerReducer);
+    builder.addCase(addWaterToFlower, addWaterToFlowerReducer);
+    builder.addCase(addSugarToFlower, addSugarToFlowerReducer);
+    builder.addCase(removeFlower, removeFlowerReducer);
+    builder.addCase(addFlower, addFlowerReducer);
     builder.addMatcher(
       (action): action is PayloadAction<{ plant: PlantState }> =>
         action.type === "REPLACE_STATE",

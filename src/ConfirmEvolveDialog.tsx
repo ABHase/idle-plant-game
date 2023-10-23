@@ -43,7 +43,6 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
 
   const handlePlantTypeChange = (type: string) => {
     setPlantType(type);
-    console.log(type);
   };
 
   return (
@@ -67,6 +66,7 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
           <MenuItem value="Moss">Moss</MenuItem>
           <MenuItem value="Succulent">Succulent</MenuItem>
           <MenuItem value="Grass">Grass</MenuItem>
+          <MenuItem value="Bush">Bush</MenuItem>
         </Select>
         <DialogContentText>
           Will start a new {plantType} with the following traits::

@@ -38,6 +38,8 @@ import { theme } from "./themeConfig";
 import { useModalState } from "./useModalState";
 import MushroomStoreDesktopDisplay from "./MushroomStoreDesktopDisplay";
 import UpgradeStoreDesktopDisplay from "./UpgradeStoreDesktopDisplay";
+import BushDisplay from "./PlantDisplays/BushDisplay";
+import BushDNADisplay from "./DNADisplays/BushDNADisplay";
 
 const useIsNewUser = () => {
   const isNewUser = localStorage.getItem("isNewUser");
@@ -212,6 +214,13 @@ function App() {
             modalName="ladybugModalOpen"
           />
         );
+      case "Bush":
+        return (
+          <BushDisplay
+            handleOpenModal={handleOpenModal}
+            modalName="ladybugModalOpen"
+          />
+        );
       default:
         return null; // or return a default component if desired
     }
@@ -227,6 +236,8 @@ function App() {
         return <SucculentDNADisplay />;
       case "Grass":
         return <GrassDNADisplay />;
+      case "Bush":
+        return <BushDNADisplay />;
       default:
         return null; // or return a default component if desired
     }

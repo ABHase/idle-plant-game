@@ -8,10 +8,11 @@ import {
   buyLeaves,
   buyRoots,
   toggleGeneticMarkerProduction,
-  toggleRootGrowth,
   toggleLeafGrowth,
+  toggleRootGrowth,
   turnOffGeneticMarkerProduction,
   setMaxResourceToSpend,
+  buyFlower,
 } from "../Slices/plantSlice";
 import {
   Grid,
@@ -23,9 +24,13 @@ import {
   Box,
   LinearProgress,
   TextField,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
 } from "@mui/material";
 import { Add, ArrowForwardIos, Clear } from "@mui/icons-material";
-import { LEAF_COST, ROOT_COST } from "../constants";
+import { FLOWER_COST, LEAF_COST, ROOT_COST } from "../constants";
 import WbSunnyIcon from "@mui/icons-material/WbSunny";
 import OpacityIcon from "@mui/icons-material/Opacity";
 import GrainIcon from "@mui/icons-material/Grain";
@@ -55,6 +60,7 @@ import {
   calculatePhotosynthesisWaterConsumption,
   determinePhotosynthesisSugarProduction,
   isGeneticMarkerUpgradeUnlocked,
+  isSugarConversionUnlocked,
   isSugarUpgradesUnlocked,
   itemizedReport,
 } from "../formulas";
@@ -67,13 +73,14 @@ import RootsTooltip from "../Components/Tooltips/RootsTooltip";
 import LeavesTooltip from "../Components/Tooltips/LeavesTooltip";
 import WaterTooltip from "../Components/Tooltips/WaterTooltip";
 import MultiplierToggleButton from "../Components/Buttons/MultiplierToggleButton";
+import LocalFloristIcon from "@mui/icons-material/LocalFlorist";
 
-type MossDisplayProps = {
+type BushDisplayProps = {
   handleOpenModal: (modalName: string) => void;
   modalName: string;
 };
 
-const MossDisplay: React.FC<MossDisplayProps> = ({
+const BushDisplay: React.FC<BushDisplayProps> = ({
   handleOpenModal,
   modalName,
 }) => {
@@ -82,17 +89,17 @@ const MossDisplay: React.FC<MossDisplayProps> = ({
   const plantTime = useSelector((state: RootState) => state.plantTime);
   const [multiplier, setMultiplier] = useState<number>(1);
 
-  const { geneticMarkerProgressMoss, geneticMarkerThresholdMoss } = useSelector(
+  const { geneticMarkerProgress, geneticMarkerThreshold } = useSelector(
     (state: RootState) => state.globalState
   );
   const plantState = useSelector((state: RootState) => state.plant);
 
   useEffect(() => {
     const maxResource = plant.maxResourceToSpend; // Assuming `plant` is from your Redux store
-    if (maxResource !== null && geneticMarkerThresholdMoss > maxResource) {
+    if (maxResource !== null && geneticMarkerThreshold > maxResource) {
       dispatch(turnOffGeneticMarkerProduction());
     }
-  }, [plant.maxResourceToSpend, geneticMarkerThresholdMoss, dispatch]);
+  }, [plant.maxResourceToSpend, geneticMarkerThreshold, dispatch]);
 
   // Extract season from state (Assuming you have access to the state here)
   const { season } = useSelector((state: RootState) => state.plantTime);
@@ -167,6 +174,10 @@ const MossDisplay: React.FC<MossDisplayProps> = ({
     dispatch(toggleSugarProduction());
   };
 
+  const handleBuyFlower = () => {
+    dispatch(buyFlower(FLOWER_COST));
+  };
+
   const handleBuyRoots = () => {
     dispatch(buyRoots({ cost: ROOT_COST, multiplier: multiplier }));
   };
@@ -224,15 +235,13 @@ const MossDisplay: React.FC<MossDisplayProps> = ({
                 }}
                 onClick={() => handleOpenModal(modalName)}
               >
-                <Typography variant="h5" align="center">
-                  You Have Aphids!
-                </Typography>
+                <Typography variant="h5">You Have Aphids!</Typography>
               </Button>
             </Grid>
           ) : null}
           <Grid item xs={12}>
             <Box display="flex" alignItems="center" justifyContent="center">
-              <Typography variant="h5">You are a clump of Moss</Typography>
+              <Typography variant="h5">You are a Berry Bush</Typography>
             </Box>
           </Grid>
           <Grid item xs={4}>
@@ -263,7 +272,15 @@ const MossDisplay: React.FC<MossDisplayProps> = ({
             <MaturityTooltip maturityLevel={plant.maturity_level} />
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid
+            item
+            xs={12}
+            sx={{
+              visibility: isSugarConversionUnlocked(plant)
+                ? "visible"
+                : "hidden",
+            }}
+          >
             <Tooltip
               title={
                 plant.is_sugar_production_on
@@ -307,60 +324,28 @@ const MossDisplay: React.FC<MossDisplayProps> = ({
                     sx={{ color: plant.is_sugar_production_on ? "" : "red" }}
                   />{" "}
                   <Sugar amount={actualSugarPerMinute} />
-                  /MIN
+                  /Min
                 </Box>
               </Button>
             </Tooltip>
           </Grid>
 
-          <Grid item xs={6}>
-            <Tooltip
-              title={
-                plant.is_genetic_marker_production_on
-                  ? "Turn off Genetic Marker Production"
-                  : "Turn on Genetic Marker Production"
-              }
+          <Grid item xs={12}>
+            <Button
+              fullWidth
+              sx={{
+                border: "1px solid #aaa",
+                borderRadius: "4px",
+                backgroundColor: "#332932",
+                color: "#DEA4FC",
+                "&:active, &:focus": {
+                  backgroundColor: "#332932", // Or any other style reset
+                },
+              }}
+              onClick={() => handleBuyFlower()}
             >
-              <Button
-                fullWidth
-                sx={{
-                  border: "1px solid #aaa",
-                  borderRadius: "4px",
-                  backgroundColor: "#332932",
-                  color: "#DEA4FC",
-                  "&:active, &:focus": {
-                    backgroundColor: "#332932", // Or any other style reset
-                  },
-                }}
-                onClick={() => handleToggleGeneticMarkerProduction()}
-              >
-                <Sugar
-                  amount={
-                    plant.geneticMarkerUpgradeActive
-                      ? geneticMarkerThresholdMoss * 4
-                      : geneticMarkerThresholdMoss
-                  }
-                />
-                <ArrowForwardIcon
-                  sx={{
-                    color: plant.is_genetic_marker_production_on ? "" : "red",
-                  }}
-                />{" "}
-                <DNA amount={plant.geneticMarkerUpgradeActive ? 2 : 1} />
-              </Button>
-            </Tooltip>
-          </Grid>
-
-          <Grid item xs={6}>
-            <TextField
-              type="number"
-              value={plant.maxResourceToSpend}
-              onChange={(e) =>
-                dispatch(setMaxResourceToSpend(parseFloat(e.target.value)))
-              }
-              label="Max Resource to Spend"
-              inputProps={{ step: "1000" }}
-            />
+              <Sugar amount={FLOWER_COST} /> for a Flower
+            </Button>
           </Grid>
 
           {/*Section for toggling leaf automatic production */}
@@ -369,6 +354,15 @@ const MossDisplay: React.FC<MossDisplayProps> = ({
             onClick={handleToggleAutoLeaves}
             leafCost={LEAF_COST}
             multiplier={plant.leafAutoGrowthMultiplier}
+            isVisible={plant.grassGrowthToggle}
+            plant={plant}
+          />
+          {/*Section for toggling root automatic production */}
+          <ToggleAutoRootButton
+            isOn={plant.rootGrowthToggle}
+            onClick={handleToggleAutoRoots}
+            rootCost={ROOT_COST}
+            multiplier={plant.rootAutoGrowthMultiplier}
             isVisible={plant.grassGrowthToggle}
             plant={plant}
           />
@@ -426,7 +420,7 @@ const MossDisplay: React.FC<MossDisplayProps> = ({
               visibility: isSugarUpgradesUnlocked(plant) ? "visible" : "hidden",
             }}
           >
-            <Tooltip title="Grow Leaves and Roots">
+            <Tooltip title="Grow Leaves">
               <Button
                 fullWidth
                 sx={{
@@ -438,15 +432,138 @@ const MossDisplay: React.FC<MossDisplayProps> = ({
                     backgroundColor: "#424532", // Or any other style reset
                   },
                 }}
-                onClick={() => {
-                  handleBuyLeaves();
-                }}
+                onClick={() => handleBuyLeaves()}
               >
-                Grow: <Leaves amount={multiplier} />&
-                <Roots amount={multiplier} />
+                Grow Leaves: <Leaves amount={multiplier} />
                 &nbsp;for <Sugar amount={LEAF_COST * multiplier} />
               </Button>
             </Tooltip>
+          </Grid>
+
+          {/* Roots Section */}
+          <Grid
+            item
+            xs={12}
+            sx={{
+              visibility: isSugarUpgradesUnlocked(plant) ? "visible" : "hidden",
+            }}
+          >
+            <Tooltip title="Grow Roots">
+              <Button
+                fullWidth
+                sx={{
+                  border: "1px solid #aaa",
+                  borderRadius: "4px",
+                  backgroundColor: "#363534",
+                  color: "#C7B08B",
+                  "&:active, &:focus": {
+                    backgroundColor: "#363534", // Or any other style reset
+                  },
+                }}
+                onClick={() => handleBuyRoots()}
+              >
+                Grow Roots: <Roots amount={multiplier} />
+                &nbsp;for <Sugar amount={ROOT_COST * multiplier} />
+              </Button>
+            </Tooltip>
+          </Grid>
+
+          <Grid item xs={12}>
+            <Divider sx={{ backgroundColor: "white" }} />
+          </Grid>
+
+          <Grid
+            item
+            xs={12}
+            sx={{ display: "flex", justifyContent: "space-evenly" }}
+          >
+            <Button
+              sx={{
+                border: "1px solid #aaa",
+                borderRadius: "4px",
+                backgroundColor: "#0F4A52",
+                color: "#34F7E1",
+                "&:active, &:focus": {
+                  backgroundColor: "#0F4A52", // Or any other style reset
+                },
+              }}
+              onClick={() => handleWaterAbsorption()}
+            >
+              + <Water amount={plant.water_absorption_rate} />
+            </Button>
+            <Button
+              sx={{
+                border: "1px solid #aaa",
+                borderRadius: "4px",
+                backgroundColor: "#633912",
+                color: "#FFC64D",
+                "&:active, &:focus": {
+                  backgroundColor: "#633912", // Or any other style reset
+                },
+              }}
+              onClick={() => handleSunlightAbsorption()}
+            >
+              + <Sunlight amount={plant.sunlight_absorption_rate} />
+            </Button>
+          </Grid>
+          <Grid item xs={12}>
+            <Divider sx={{ backgroundColor: "white" }} />
+          </Grid>
+
+          <Grid item xs={12}>
+            <Box sx={{ display: "flex", justifyContent: "left" }}>
+              <Typography variant="h6">Flowers</Typography>
+              <Box sx={{ display: "flex", justifyContent: "left" }}>
+                <Water amount={plant.flowerWaterConsumptionRate} />
+                /s per Flower
+              </Box>
+              <Box sx={{ display: "flex", justifyContent: "left" }}>
+                <Sugar amount={plant.flowerSugarConsumptionRate} />
+                /s per Flower
+              </Box>
+            </Box>
+            <Box
+              sx={{
+                height: "140px",
+                overflowY: "auto",
+                border: "1px solid #ccc",
+                borderRadius: "4px",
+                padding: "8px",
+              }}
+            >
+              <List>
+                {plant.flowers.map((flower, index) => (
+                  <ListItem
+                    key={index}
+                    sx={{
+                      border: "1px solid #ccc",
+                      borderRadius: "4px",
+                      marginBottom: "4px",
+                    }}
+                  >
+                    <ListItemIcon>
+                      <LocalFloristIcon style={{ color: flower.color }} />
+                    </ListItemIcon>
+
+                    <Box sx={{ width: "100%", marginLeft: 2 }}>
+                      <LinearProgress
+                        variant="determinate"
+                        value={
+                          (flower.water / plant.flowerWaterThreshold) * 100
+                        }
+                      />
+                      <LinearProgress
+                        variant="determinate"
+                        value={
+                          (flower.sugar / plant.flowerSugarThreshold) * 100
+                        }
+                      />
+                      <DNA amount={plant.flowerDNA} />
+                    </Box>
+                  </ListItem>
+                ))}
+              </List>
+            </Box>
           </Grid>
         </Grid>
       </Box>
@@ -466,7 +583,9 @@ export function formatNumber(value: number): string {
 }
 
 export function formatNumberWithDecimals(value: number): string {
-  if (value >= 1_000_000) {
+  if (value >= 1_000_000_000) {
+    return (value / 1_000_000_000).toFixed(2) + "B";
+  } else if (value >= 1_000_000) {
     return (value / 1_000_000).toFixed(2) + "M";
   } else if (value >= 1_000) {
     return (value / 1_000).toFixed(2) + "K";
@@ -475,4 +594,4 @@ export function formatNumberWithDecimals(value: number): string {
   }
 }
 
-export default MossDisplay;
+export default BushDisplay;

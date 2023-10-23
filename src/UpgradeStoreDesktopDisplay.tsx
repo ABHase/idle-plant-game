@@ -50,6 +50,8 @@ const UpgradeStoreDesktopDisplay: React.FC<UpgradeStoreDesktopDisplayProps> = ({
     state.geneticMarkersMoss,
     state.geneticMarkersSucculent,
     state.geneticMarkersGrass,
+    state.geneticMarkersBush,
+    plantType,
   ]);
 
   // Map plantType to geneticMarkers property

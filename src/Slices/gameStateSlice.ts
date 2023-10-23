@@ -15,6 +15,9 @@ export interface GlobalState {
   geneticMarkerProgressGrass: number;
   geneticMarkerThresholdGrass: number;
   geneticMarkersGrass: number;
+  geneticMarkerProgressBush: number;
+  geneticMarkerThresholdBush: number;
+  geneticMarkersBush: number;
   seeds: number;
   silica: number;
   tannins: number;
@@ -36,6 +39,9 @@ export const initialState: GlobalState = {
   geneticMarkerProgressGrass: 0,
   geneticMarkerThresholdGrass: 100,
   geneticMarkersGrass: 0,
+  geneticMarkerProgressBush: 0,
+  geneticMarkerThresholdBush: 100,
+  geneticMarkersBush: 0,
   seeds: 0,
   silica: 0,
   tannins: 0,
@@ -66,6 +72,9 @@ const globalStateSlice = createSlice({
         case "Grass":
           state.geneticMarkersGrass -= action.payload.amount;
           break;
+        case "Bush":
+          state.geneticMarkersBush -= action.payload.amount;
+          break;
         default:
           // Handle other types or default behavior if needed
           break;
@@ -87,6 +96,9 @@ const globalStateSlice = createSlice({
           break;
         case "Grass":
           state.geneticMarkersGrass += action.payload.amount;
+          break;
+        case "Bush":
+          state.geneticMarkersBush += action.payload.amount;
           break;
         default:
           // Handle other types or default behavior if needed
@@ -161,11 +173,26 @@ const globalStateSlice = createSlice({
         case "Succulent":
           state.geneticMarkersSucculent += action.payload.amount;
           break;
+        case "Grass":
+          state.geneticMarkersGrass += action.payload.amount;
+          break;
+        case "Bush":
+          state.geneticMarkersBush += action.payload.amount;
+          break;
         default:
           // Handle other types or default behavior if needed
           break;
       }
     },
+
+    //Add geneticMarkersBush by payload does not need plant type only adding to one kind
+    addGeneticMarkersBush: (
+      state,
+      action: PayloadAction<{ amount: number }>
+    ) => {
+      state.geneticMarkersBush += action.payload.amount;
+    },
+
     //Reducer to reset succulent genetic marker threshold
     resetSucculentGeneticMarkerThreshold: (state) => {
       state.geneticMarkerThresholdSucculent = 10;
@@ -192,6 +219,7 @@ export const {
   increaseGeneticMarkers,
   addGeneticMarkers,
   resetSucculentGeneticMarkerThreshold,
+  addGeneticMarkersBush,
   // Add other exported actions...
 } = globalStateSlice.actions;
 

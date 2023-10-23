@@ -378,6 +378,141 @@ export const UPGRADES: Record<string, Upgrade[]> = {
       cost: 200,
     },
   ],
+  Bush: [
+    {
+      id: "boost_sugar_bush",
+      name: "Cam Pathway",
+      description: "Increase base sugar production by 50%",
+      cost: 10,
+    },
+    {
+      id: "boost_sunlight_absorption_bush",
+      name: "Trichomes",
+      description: "Increase manual sunlight absorption by 50%",
+      cost: 10,
+    },
+    {
+      id: "boost_water_absorption_bush",
+      name: "Aquaporins",
+      description: "Increase manual water absorption by 50%",
+      cost: 10,
+    },
+    {
+      id: "boost_sunlight_multiplier_bush",
+      name: "Heliotropism",
+      description: "Increase passive sunlight absorption efficiency by 20%",
+      cost: 30,
+    },
+    {
+      id: "boost_water_multiplier_bush",
+      name: "Root Hairs",
+      description: "Increase passive water absorption efficiency by 20%",
+      cost: 30,
+    },
+    {
+      id: "boost_sunlight_efficiency_multiplier_bush",
+      name: "Extra Chlorophyll",
+      description: "Reduce the base sunlight to sugar ratio by 10%",
+      cost: 70,
+    },
+    {
+      id: "boost_water_efficiency_multiplier_bush",
+      name: "Stomatal Regulation",
+      description: "Reduce the base water to sugar ratio by 10%",
+      cost: 70,
+    },
+    {
+      id: "boost_sugar_tier_2_bush",
+      name: "Cam Pathway Tier 2",
+      description: "Increase base sugar production by 100%",
+      cost: 100,
+    },
+    {
+      id: "boost_sunlight_absorption_tier_2_bush",
+      name: "Trichomes Tier 2",
+      description: "Increase manual sunlight absorption by 100%",
+      cost: 100,
+    },
+    {
+      id: "toggle_genetic_marker_upgrade_bush",
+      name: "Nutrient Recycling",
+      description:
+        "Double the rate of genetic marker production, and quadruple the sugar cost",
+      cost: 100,
+    },
+    {
+      id: "boost_water_absorption_tier_2_bush",
+      name: "Aquaporins Tier 2",
+      description: "Increase manual water absorption by 100%",
+      cost: 100,
+    },
+    {
+      id: "boost_sunlight_multiplier_tier_2_bush",
+      name: "Heliotropism Tier 2",
+      description: "Increase passive sunlight absorption efficiency by 40%",
+      cost: 200,
+    },
+    {
+      id: "boost_water_multiplier_tier_2_bush",
+      name: "Root Hairs Tier 2",
+      description: "Increase passive water absorption efficiency by 40%",
+      cost: 200,
+    },
+    {
+      id: "flower_dna_upgrade",
+      name: "Flower DNA",
+      description: "Flowers now give 2 more DNA when they mature",
+      cost: 200,
+    },
+    {
+      id: "flower_dna_upgrade_2",
+      name: "Flower DNA 2",
+      description: "Flowers now give 5 more DNA when they mature",
+      cost: 500,
+    },
+    {
+      id: "boost_sunlight_efficiency_multiplier_tier_2_bush",
+      name: "Extra Chlorophyll Tier 2",
+      description: "Reduce the base sunlight to sugar ratio by 20%",
+      cost: 500,
+    },
+    {
+      id: "boost_water_efficiency_multiplier_tier_2_bush",
+      name: "Stomatal Regulation Tier 2",
+      description: "Reduce the base water to sugar ratio by 20%",
+      cost: 500,
+    },
+    {
+      id: "flower_dna_upgrade_3",
+      name: "Flower DNA 3",
+      description: "Flowers now give 10 more DNA when they mature",
+      cost: 1000,
+    },
+    {
+      id: "bloom_bush",
+      name: "Spring Bloom",
+      description: "Double Spring Bonus",
+      cost: 2500,
+    },
+    {
+      id: "thermophilic_bush",
+      name: "Thermophilic",
+      description: "Double Summer Bonus",
+      cost: 2500,
+    },
+    {
+      id: "bountiful_harvest_bush",
+      name: "Bountiful Harvest",
+      description: "Double Autumn Bonus",
+      cost: 5000,
+    },
+    {
+      id: "coniferous_bush",
+      name: "Coniferous",
+      description: "Reduce Winter penalty by 50%",
+      cost: 10000,
+    },
+  ],
 };
 
 export const UPGRADE_FUNCTIONS: Record<
@@ -570,6 +705,74 @@ export const UPGRADE_FUNCTIONS: Record<
     },
     auto_grow_1000: (plant) => {
       plant.autoGrowthMultiplier = 1000;
+    },
+  },
+  Bush: {
+    boost_sugar_bush: (plant) => {
+      plant.sugar_production_rate *= 1.5;
+    },
+    boost_sunlight_absorption_bush: (plant) => {
+      plant.sunlight_absorption_rate *= 1.5;
+    },
+    boost_water_absorption_bush: (plant) => {
+      plant.water_absorption_rate *= 1.5;
+    },
+    boost_sunlight_multiplier_bush: (plant) => {
+      plant.sunlight_absorption_multiplier *= 1.2;
+    },
+    boost_water_multiplier_bush: (plant) => {
+      plant.water_absorption_multiplier *= 1.2;
+    },
+    boost_sunlight_efficiency_multiplier_bush: (plant) => {
+      plant.sunlight_efficiency_multiplier *= 0.9;
+    },
+    boost_water_efficiency_multiplier_bush: (plant) => {
+      plant.water_efficiency_multiplier *= 0.9;
+    },
+    boost_sugar_tier_2_bush: (plant) => {
+      plant.sugar_production_rate *= 2;
+    },
+    boost_sunlight_absorption_tier_2_bush: (plant) => {
+      plant.sunlight_absorption_rate *= 2;
+    },
+    boost_water_absorption_tier_2_bush: (plant) => {
+      plant.water_absorption_rate *= 2;
+    },
+    boost_sunlight_multiplier_tier_2_bush: (plant) => {
+      plant.sunlight_absorption_multiplier *= 1.4;
+    },
+    boost_water_multiplier_tier_2_bush: (plant) => {
+      plant.water_absorption_multiplier *= 1.4;
+    },
+    boost_sunlight_efficiency_multiplier_tier_2_bush: (plant) => {
+      plant.sunlight_efficiency_multiplier *= 0.8;
+    },
+    boost_water_efficiency_multiplier_tier_2_bush: (plant) => {
+      plant.water_efficiency_multiplier *= 0.8;
+    },
+    toggle_genetic_marker_upgrade_bush: (plant) => {
+      plant.geneticMarkerUpgradeActive = !plant.geneticMarkerUpgradeActive;
+    },
+    bloom_bush: (plant) => {
+      plant.springModifier *= 2;
+    },
+    thermophilic_bush: (plant) => {
+      plant.summerModifier *= 2;
+    },
+    bountiful_harvest_bush: (plant) => {
+      plant.autumnModifier *= 2;
+    },
+    coniferous_bush: (plant) => {
+      plant.winterModifier *= 2;
+    },
+    flower_dna_upgrade: (plant) => {
+      plant.flowerDNA += 2;
+    },
+    flower_dna_upgrade_2: (plant) => {
+      plant.flowerDNA += 5;
+    },
+    flower_dna_upgrade_3: (plant) => {
+      plant.flowerDNA += 10;
     },
   },
   // ... other upgrade functions

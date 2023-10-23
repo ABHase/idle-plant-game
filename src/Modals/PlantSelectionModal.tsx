@@ -25,6 +25,7 @@ const PlantSelectionModal: React.FC<PlantSelectionModalProps> = ({
     Moss: "Can fully idle without dying, grows very slowly.",
     Grass: "Grows uncontrollably.",
     Succulent: "The desert is harsh and dangerous, be ready.",
+    Bush: "Makes DNA with Flowers.",
   };
 
   return (

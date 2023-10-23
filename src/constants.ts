@@ -13,6 +13,7 @@ export const SWAMP = "Swamp";
 //Plant Part Costs
 export const ROOT_COST = 10;
 export const LEAF_COST = 5;
+export const FLOWER_COST = 10;
 
 // ... any other constants you may have
 // ... your existing constants ...

@@ -450,17 +450,14 @@ export const calculateActualSugarProductionPerMinute = (
     report.water.netWaterProductionBeforeSugar,
     report.sunlight.netSunlightProductionBeforeSugar
   );
-  console.log("limitingResourcePerSecond", limitingResourcePerSecond);
 
   // Get the required resources for sugar production
   const requiredWaterPerSecond = calculatePhotosynthesisWaterConsumption(
     plant.maturity_level
   );
-  console.log("requiredWaterPerSecond", requiredWaterPerSecond);
   const requiredSunlightPerSecond = calculatePhotosynthesisSunlightConsumption(
     plant.maturity_level
   );
-  console.log("requiredSunlightPerSecond", requiredSunlightPerSecond);
 
   // Determine the percentage of available limiting resource in terms of requirement
   const limitingResourcePercentage = Math.min(
@@ -469,8 +466,6 @@ export const calculateActualSugarProductionPerMinute = (
       ? limitingResourcePerSecond / requiredWaterPerSecond
       : limitingResourcePerSecond / requiredSunlightPerSecond
   );
-
-  console.log("limitingResourcePercentage", limitingResourcePercentage);
 
   // Determine the actual sugar production per second
   const actualSugarProductionPerSecond =
