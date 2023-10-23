@@ -172,6 +172,9 @@ const plantSlice = createSlice({
       state.is_genetic_marker_production_on =
         !state.is_genetic_marker_production_on;
     },
+    turnOffGeneticMarkerProduction: (state) => {
+      state.is_genetic_marker_production_on = false;
+    },
     buyRoots: (
       state,
       action: PayloadAction<{ cost: number; multiplier: number }>
@@ -275,14 +278,13 @@ const plantSlice = createSlice({
     removeLeaves: (state, action: PayloadAction<number>) => {
       state.leaves = Math.max(0, state.leaves - action.payload);
     },
-    produceGeneticMarkers: (state) => {
-      const neededResource = geneticSugarConsumption(state);
+    produceGeneticMarkers: (state, action: PayloadAction<number>) => {
+      const neededResource = action.payload;
 
       if (state.type === "Grass") {
         // Consume leaves for grass
-        const neededLeaves = neededResource / 5; // 1/5 the sugar amount
-        if (state.leaves >= neededLeaves) {
-          state.leaves -= neededLeaves;
+        if (state.leaves >= neededResource) {
+          state.leaves -= neededResource;
         }
       } else {
         // Consume sugar for other plants
@@ -291,6 +293,7 @@ const plantSlice = createSlice({
         }
       }
     },
+
     produceSecondaryResource: (state) => {
       if (
         state.is_secondary_resource_production_on &&
@@ -447,5 +450,6 @@ export const {
   autoGrowLeaves,
   autoGrowRoots,
   deductWater,
+  turnOffGeneticMarkerProduction,
 } = plantSlice.actions;
 export default plantSlice.reducer;

@@ -25,16 +25,16 @@ export interface GlobalState {
 
 export const initialState: GlobalState = {
   geneticMarkerProgress: 0,
-  geneticMarkerThreshold: 10,
+  geneticMarkerThreshold: 100,
   geneticMarkers: 0,
   geneticMarkerProgressMoss: 0,
-  geneticMarkerThresholdMoss: 1,
+  geneticMarkerThresholdMoss: 10,
   geneticMarkersMoss: 0,
   geneticMarkerProgressSucculent: 0,
-  geneticMarkerThresholdSucculent: 10,
+  geneticMarkerThresholdSucculent: 100,
   geneticMarkersSucculent: 0,
   geneticMarkerProgressGrass: 0,
-  geneticMarkerThresholdGrass: 10,
+  geneticMarkerThresholdGrass: 100,
   geneticMarkersGrass: 0,
   seeds: 0,
   silica: 0,
@@ -104,50 +104,27 @@ const globalStateSlice = createSlice({
       const multiplier = action.payload.geneticMarkerUpgradeActive ? 2 : 1;
       switch (action.payload.plantType) {
         case "Fern":
-          state.geneticMarkerProgress += multiplier;
-          if (state.geneticMarkerProgress >= state.geneticMarkerThreshold) {
-            state.geneticMarkers += multiplier;
-            state.geneticMarkerProgress = 0;
-            state.geneticMarkerThreshold *= 1.1;
-          }
+          state.geneticMarkers += multiplier;
+          state.geneticMarkerThreshold *= 1.1;
           break;
         case "Moss":
-          state.geneticMarkerProgressMoss += multiplier;
-          if (
-            state.geneticMarkerProgressMoss >= state.geneticMarkerThresholdMoss
-          ) {
-            state.geneticMarkersMoss += multiplier;
-            state.geneticMarkerProgressMoss = 0;
-            state.geneticMarkerThresholdMoss *= 1.1;
-          }
+          state.geneticMarkersMoss += multiplier;
+          state.geneticMarkerThresholdMoss *= 1.1;
           break;
         case "Succulent":
-          state.geneticMarkerProgressSucculent += multiplier;
-          if (
-            state.geneticMarkerProgressSucculent >=
-            state.geneticMarkerThresholdSucculent
-          ) {
-            state.geneticMarkersSucculent += multiplier;
-            state.geneticMarkerProgressSucculent = 0;
-            state.geneticMarkerThresholdSucculent *= 1.1;
-          }
+          state.geneticMarkersSucculent += multiplier;
+          state.geneticMarkerThresholdSucculent *= 1.1;
           break;
         case "Grass":
-          state.geneticMarkerProgressGrass += multiplier;
-          if (
-            state.geneticMarkerProgressGrass >=
-            state.geneticMarkerThresholdGrass
-          ) {
-            state.geneticMarkersGrass += multiplier;
-            state.geneticMarkerProgressGrass = 0;
-            state.geneticMarkerThresholdGrass *= 1.1;
-          }
+          state.geneticMarkersGrass += multiplier;
+          state.geneticMarkerThresholdGrass *= 1.1;
           break;
         default:
           // Handle other types or default behavior if needed
           break;
       }
     },
+
     //Probably going to remove this below
     updateSecondaryResources: (
       state,

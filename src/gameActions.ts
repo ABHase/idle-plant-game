@@ -7,27 +7,16 @@ import { updateTime } from "./Slices/appSlice";
 import {
   evolvePlant,
   produceGeneticMarkers,
-  produceSecondaryResource,
   produceSugar,
   updateMaturityLevel,
   updateWaterAndSunlight,
   resetRootRot,
   removeRoots,
-  buyLeaves,
-  buyRoots,
   autoGrowLeaves,
   autoGrowRoots,
 } from "./Slices/plantSlice";
-import {
-  increaseGeneticMarkers,
-  updateGeneticMarkerProgress,
-} from "./Slices/gameStateSlice";
-import {
-  LEAF_COST,
-  ROOT_COST,
-  SECONDARY_SUGAR_THRESHOLD,
-  SUGAR_THRESHOLD,
-} from "./constants";
+import { updateGeneticMarkerProgress } from "./Slices/gameStateSlice";
+import { LEAF_COST, ROOT_COST } from "./constants";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { UPGRADES } from "./upgrades";
 import {
@@ -51,7 +40,7 @@ export const updateGame = (): ThunkAction<
     const currentSeason = getState().plantTime.season;
     const currentMinute = getState().plantTime.update_counter;
     const currentSugar = getState().plant.sugar;
-    const plantType = getState().plant.type;
+    const gameState = getState().globalState;
 
     // Dispatch updateTime with newTotalTime
     dispatch(updateTime(newTotalTime));
@@ -103,14 +92,31 @@ export const updateGame = (): ThunkAction<
 
     const requiredResource =
       plant.type === "Grass" ? plant.leaves : plant.sugar;
-    const resourceThreshold =
-      plant.type === "Grass" ? SUGAR_THRESHOLD / 5 : SUGAR_THRESHOLD;
+    let resourceThreshold;
+
+    switch (plant.type) {
+      case "Fern":
+        resourceThreshold = gameState.geneticMarkerThreshold;
+        break;
+      case "Moss":
+        resourceThreshold = gameState.geneticMarkerThresholdMoss;
+        break;
+      case "Succulent":
+        resourceThreshold = gameState.geneticMarkerThresholdSucculent;
+        break;
+      case "Grass":
+        resourceThreshold = gameState.geneticMarkerThresholdGrass;
+        break;
+      default:
+        resourceThreshold = gameState.geneticMarkerThreshold; // Default case if no match
+        break;
+    }
 
     if (
       plant.is_genetic_marker_production_on &&
       requiredResource >= resourceThreshold
     ) {
-      dispatch(produceGeneticMarkers());
+      dispatch(produceGeneticMarkers(resourceThreshold));
       dispatch(
         updateGeneticMarkerProgress({
           geneticMarkerUpgradeActive: plant.geneticMarkerUpgradeActive,
@@ -145,7 +151,7 @@ export const updateGame = (): ThunkAction<
 
     // If the plant has more than 1000 sugar add one aphid every 12th cycle but only if ladybugs are not less than 1, and plant.type is not Succulent
     if (
-      plant.type == "Fern" &&
+      plant.type === "Fern" &&
       plant.ladybugs === 1 &&
       plant.sugar >= 1000 &&
       currentMinute % 15 === 0

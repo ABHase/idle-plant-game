@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../rootReducer";
 import {
@@ -10,6 +10,7 @@ import {
   toggleGeneticMarkerProduction,
   toggleLeafGrowth,
   toggleRootGrowth,
+  turnOffGeneticMarkerProduction,
 } from "../Slices/plantSlice";
 import {
   Grid,
@@ -20,6 +21,7 @@ import {
   Tooltip,
   Box,
   LinearProgress,
+  TextField,
 } from "@mui/material";
 import { Add, ArrowForwardIos, Clear } from "@mui/icons-material";
 import { LEAF_COST, ROOT_COST } from "../constants";
@@ -84,6 +86,14 @@ const PlantList: React.FC<PlantListProps> = ({
     (state: RootState) => state.globalState
   );
   const plantState = useSelector((state: RootState) => state.plant);
+
+  const [maxResourceToSpend, setMaxResourceToSpend] = useState("");
+  useEffect(() => {
+    const maxResource = parseFloat(maxResourceToSpend);
+    if (!isNaN(maxResource) && geneticMarkerThreshold > maxResource) {
+      dispatch(turnOffGeneticMarkerProduction());
+    }
+  }, [maxResourceToSpend, geneticMarkerThreshold, dispatch]);
 
   // Extract season from state (Assuming you have access to the state here)
   const { season } = useSelector((state: RootState) => state.plantTime);
@@ -312,7 +322,7 @@ const PlantList: React.FC<PlantListProps> = ({
 
           <Grid
             item
-            xs={12}
+            xs={6}
             sx={{
               visibility: isGeneticMarkerUpgradeUnlocked(plant)
                 ? "visible"
@@ -339,17 +349,35 @@ const PlantList: React.FC<PlantListProps> = ({
                 }}
                 onClick={() => handleToggleGeneticMarkerProduction()}
               >
-                <Sugar amount={100} />
+                <Sugar amount={geneticMarkerThreshold} />
                 /s{" "}
                 <ArrowForwardIcon
                   sx={{
                     color: plant.is_genetic_marker_production_on ? "" : "red",
                   }}
                 />{" "}
-                <DNA amount={(1 / geneticMarkerThreshold) * 100} /> %{" "}
+                <DNA amount={plant.geneticMarkerUpgradeActive ? 2 : 1} />
                 {plant.is_genetic_marker_production_on ? "Stop" : "Start"}
               </Button>
             </Tooltip>
+          </Grid>
+
+          <Grid
+            item
+            xs={6}
+            sx={{
+              visibility: isGeneticMarkerUpgradeUnlocked(plant)
+                ? "visible"
+                : "hidden",
+            }}
+          >
+            <TextField
+              type="number"
+              value={maxResourceToSpend}
+              onChange={(e) => setMaxResourceToSpend(e.target.value)}
+              label="Max Resource to Spend"
+              inputProps={{ step: "1000" }}
+            />
           </Grid>
 
           {/*Section for toggling leaf automatic production */}

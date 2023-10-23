@@ -45,38 +45,6 @@ const GlobalStateDisplay: React.FC = () => {
           >
             <DNA amount={geneticMarkers} />
           </Grid>
-          <Grid
-            item
-            xs={9}
-            sx={{
-              visibility: isGeneticMarkerUpgradeUnlocked(plant)
-                ? "visible"
-                : "hidden",
-            }}
-          >
-            <Box position="relative" display="inline-flex" width="100%">
-              <LinearProgress
-                variant="determinate"
-                value={(geneticMarkerProgress / geneticMarkerThreshold) * 100}
-                sx={{ width: "100%", height: "12px", marginTop: "4px" }}
-              />
-
-              <Box
-                sx={{
-                  position: "absolute",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "100%",
-                  color: "white",
-                }}
-              >
-                <Typography variant="caption" color="black">
-                  {percentage}%
-                </Typography>
-              </Box>
-            </Box>
-          </Grid>
         </Grid>
       </Box>
     </div>

@@ -41,6 +41,11 @@ if (
   const migratedState = runMigrations(persistedState, currentVersion);
   saveState(migratedState);
   window.location.reload();
+} else {
+  // Reset isTimeBoostActive to false
+  if (persistedState?.timeBoost) {
+    persistedState.timeBoost = false;
+  }
 }
 
 const store = configureStore({
