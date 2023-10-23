@@ -302,6 +302,9 @@ export const itemizedReport = (plantState: any, season: string) => {
     season
   );
 
+  const totalFlowerWaterConsumption =
+    plantState.flowers.length * plantState.flowerWaterConsumptionRate;
+
   // Water and Sunlight Changes
   const waterAndSunlightDetails = calculateWaterAndSunlight(plantState, season);
 
@@ -330,7 +333,8 @@ export const itemizedReport = (plantState: any, season: string) => {
       )
     ) -
     photosynthesisWaterConsumption -
-    waterDecrease;
+    waterDecrease -
+    totalFlowerWaterConsumption;
 
   const netWaterProductionBeforeSugar =
     calculateLadybugsTaxWater(
@@ -467,6 +471,10 @@ export const calculateActualSugarProductionPerMinute = (
       : limitingResourcePerSecond / requiredSunlightPerSecond
   );
 
+  // Calculate total sugar consumed by flowers per minute
+  const totalFlowerSugarConsumptionPerMinute =
+    plant.flowers.length * plant.flowerSugarConsumptionRate * 60;
+
   // Determine the actual sugar production per second
   const actualSugarProductionPerSecond =
     determinePhotosynthesisSugarProduction(
@@ -479,5 +487,8 @@ export const calculateActualSugarProductionPerMinute = (
     ) * limitingResourcePercentage;
 
   // Convert to per minute
-  return Math.max(0, actualSugarProductionPerSecond * 60);
+  return (
+    Math.max(0, actualSugarProductionPerSecond * 60) -
+    totalFlowerSugarConsumptionPerMinute
+  );
 };
