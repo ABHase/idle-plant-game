@@ -8,11 +8,15 @@ import { initialState as initialPlantState } from "./Slices/plantSlice";
 import { initialPlantTimeState as initialPlantTimeState } from "./Slices/plantTimeSlice";
 import { initialState as initialUpgradesState } from "./Slices/upgradesSlice";
 import { initialState as initialTimeBoostState } from "./Slices/timeBoostSlice";
+import { PLANT_CONFIGS } from "./plantConfigs";
 
 export const runMigrations = (
   state?: RootState,
   version: number = 1
 ): RootState => {
+  // Determine the correct initial plant type for migration
+  const plantType = state?.plant?.type || "Fern"; // Default to "Fern" if not found
+  const correctInitialPlantState = PLANT_CONFIGS[plantType];
   return {
     globalState: {
       ...initialGlobalState,
@@ -27,7 +31,7 @@ export const runMigrations = (
       ...state?.plantHistory,
     },
     plant: {
-      ...initialPlantState,
+      ...correctInitialPlantState,
       ...state?.plant,
     },
     plantTime: {
