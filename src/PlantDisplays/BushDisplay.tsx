@@ -239,11 +239,7 @@ const BushDisplay: React.FC<BushDisplayProps> = ({
               </Button>
             </Grid>
           ) : null}
-          <Grid item xs={12}>
-            <Box display="flex" alignItems="center" justifyContent="center">
-              <Typography variant="h5">You are a Berry Bush</Typography>
-            </Box>
-          </Grid>
+
           <Grid item xs={4}>
             <WaterTooltip
               productionRate={report.water.netWaterProduction}
@@ -330,7 +326,15 @@ const BushDisplay: React.FC<BushDisplayProps> = ({
             </Tooltip>
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid
+            item
+            xs={12}
+            sx={{
+              visibility: isGeneticMarkerUpgradeUnlocked(plant)
+                ? "visible"
+                : "hidden",
+            }}
+          >
             <Button
               fullWidth
               sx={{

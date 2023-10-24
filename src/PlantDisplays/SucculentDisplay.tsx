@@ -231,11 +231,7 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
               </Button>
             </Grid>
           ) : null}
-          <Grid item xs={12}>
-            <Box display="flex" alignItems="center" justifyContent="center">
-              <Typography variant="h5">You are a Desert Succulent</Typography>
-            </Box>
-          </Grid>
+
           <Grid item xs={4}>
             <WaterTooltip
               productionRate={report.water.netWaterProduction}

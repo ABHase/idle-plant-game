@@ -39,6 +39,9 @@ const GrassDNADisplay: React.FC = () => {
           >
             <DNA amount={geneticMarkersGrass} />
           </Grid>
+          <Grid item xs={9}>
+            <Typography variant="h6">You are a Colony of Grass</Typography>
+          </Grid>
         </Grid>
       </Box>
     </div>

@@ -40,6 +40,9 @@ const MossDNADisplay: React.FC = () => {
           >
             <DNA amount={geneticMarkersMoss} />
           </Grid>
+          <Grid item xs={9}>
+            <Typography variant="h6">You are a clump of Moss</Typography>
+          </Grid>
         </Grid>
       </Box>
     </div>

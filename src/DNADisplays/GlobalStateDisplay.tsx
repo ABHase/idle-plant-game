@@ -45,6 +45,9 @@ const GlobalStateDisplay: React.FC = () => {
           >
             <DNA amount={geneticMarkers} />
           </Grid>
+          <Grid item xs={9}>
+            <Typography variant="h5">You are a Fern</Typography>
+          </Grid>
         </Grid>
       </Box>
     </div>

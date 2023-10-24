@@ -226,11 +226,6 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({
               </Button>
             </Grid>
           ) : null}
-          <Grid item xs={12}>
-            <Box display="flex" alignItems="center" justifyContent="center">
-              <Typography variant="h5">You are a Colony of Grass</Typography>
-            </Box>
-          </Grid>
           <Grid item xs={4}>
             <WaterTooltip
               productionRate={report.water.netWaterProduction}

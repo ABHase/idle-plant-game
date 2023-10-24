@@ -39,6 +39,9 @@ const BushDNADisplay: React.FC = () => {
           >
             <DNA amount={geneticMarkersBush} />
           </Grid>
+          <Grid item xs={9}>
+            <Typography variant="h5">You are a Berry Bush</Typography>
+          </Grid>
         </Grid>
       </Box>
     </div>
