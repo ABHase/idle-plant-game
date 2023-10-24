@@ -16,7 +16,7 @@ import { runMigrations } from "./migrations";
 
 const persistedState: RootState | undefined = loadState();
 //Should be auto incremented when there is a push
-export const currentVersion = 39;
+export const currentVersion = 40;
 
 // Check if the flag isNewUser exists in local storage
 let isNewUser = localStorage.getItem("isNewUser");
