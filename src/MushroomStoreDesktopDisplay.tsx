@@ -17,8 +17,18 @@ import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { Sugar } from "./Components/Sugar";
 import { Sunlight } from "./Components/Sunlight";
-import { ButtonBase } from "@mui/material";
+import {
+  ButtonBase,
+  LinearProgress,
+  List,
+  ListItem,
+  ListItemIcon,
+} from "@mui/material";
 import { Water } from "./Components/Water";
+import { formatTime } from "./PlantDisplays/BushDisplay";
+import { DNA } from "./Components/DNA";
+import LocalFloristIcon from "@mui/icons-material/LocalFlorist";
+import { Flower } from "./Components/Flower";
 
 const getCostType = (item: MushroomItem): string => {
   if (item.id === "desert_night") return "sunlight";
@@ -46,6 +56,7 @@ const MushroomStoreDesktopDisplay = () => {
     },
   });
   const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
+  const plant = useSelector((state: RootState) => state.plant);
   const sugar = useSelector((state: RootState) => state.plant.sugar);
   const sunlight = useSelector((state: RootState) => state.plant.sunlight);
   const water = useSelector((state: RootState) => state.plant.water);
@@ -177,6 +188,90 @@ const MushroomStoreDesktopDisplay = () => {
 
       case "Grass":
         return <Typography>No inventory available for Grass.</Typography>;
+      case "Bush":
+        return (
+          <Box>
+            <Box sx={{ display: "flex", justifyContent: "left" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "left",
+                }}
+              >
+                <Typography variant="h6">Flowers:</Typography>
+                <Typography variant="caption">
+                  {plant.flowers.length} / 100
+                </Typography>
+              </Box>
+              <Box
+                sx={{ display: "flex", alignItems: "center", marginLeft: 2 }}
+              >
+                {" "}
+                {/* Added marginLeft for spacing */}
+                <Water amount={plant.flowerWaterConsumptionRate} />
+                /s per Flower
+              </Box>
+              <Box
+                sx={{ display: "flex", alignItems: "center", marginLeft: 2 }}
+              >
+                {" "}
+                {/* Added marginLeft for spacing */}
+                <Sugar amount={plant.flowerSugarConsumptionRate} />
+                /s per Flower
+              </Box>
+            </Box>
+
+            <Box
+              sx={{
+                height: "auto",
+                overflowY: "auto",
+                border: "1px solid #ccc",
+                borderRadius: "4px",
+                padding: "8px",
+              }}
+            >
+              <List>
+                {plant.flowers.map((flower, index) => {
+                  const remainingWater =
+                    plant.flowerWaterThreshold - flower.water;
+                  const remainingSugar =
+                    plant.flowerSugarThreshold - flower.sugar;
+
+                  const timeForWater = formatTime(remainingWater / 10);
+
+                  return (
+                    <ListItem
+                      key={index}
+                      sx={{
+                        border: "1px solid #ccc",
+                        borderRadius: "4px",
+                        marginBottom: "4px",
+                      }}
+                    >
+                      <ListItemIcon style={{ color: "white" }}>
+                        <LocalFloristIcon style={{ color: flower.color }} />
+                        <DNA amount={plant.flowerDNA} />
+                      </ListItemIcon>
+
+                      <Box sx={{ width: "100%", marginLeft: 2 }}>
+                        <LinearProgress
+                          variant="determinate"
+                          value={
+                            (flower.water / plant.flowerWaterThreshold) * 100
+                          }
+                        />
+                        <Typography variant="caption">
+                          {timeForWater}
+                        </Typography>
+                      </Box>
+                    </ListItem>
+                  );
+                })}
+              </List>
+            </Box>
+          </Box>
+        );
 
       default:
         // This can be a placeholder or remain empty until you have other plant types
@@ -200,9 +295,11 @@ const MushroomStoreDesktopDisplay = () => {
       margin="0 auto"
       width="auto"
     >
-      <Typography id="mushroom-store-modal-title" variant="h6">
-        Mushroom Store:
-      </Typography>
+      {plantType !== "Bush" && (
+        <Typography id="mushroom-store-modal-title" variant="h6">
+          Mushroom Store:
+        </Typography>
+      )}
       {renderContent()}
     </Box>
   );

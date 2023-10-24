@@ -219,6 +219,7 @@ function App() {
           <BushDisplay
             handleOpenModal={handleOpenModal}
             modalName="ladybugModalOpen"
+            isMobile={isMobile}
           />
         );
       default:

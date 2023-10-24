@@ -79,11 +79,13 @@ import { Flower } from "../Components/Flower";
 type BushDisplayProps = {
   handleOpenModal: (modalName: string) => void;
   modalName: string;
+  isMobile: boolean;
 };
 
 const BushDisplay: React.FC<BushDisplayProps> = ({
   handleOpenModal,
   modalName,
+  isMobile,
 }) => {
   const dispatch = useDispatch();
   const plant = useSelector((state: RootState) => state.plant);
@@ -517,73 +519,75 @@ const BushDisplay: React.FC<BushDisplayProps> = ({
             <Divider sx={{ backgroundColor: "white" }} />
           </Grid>
 
-          <Grid item xs={12}>
-            <Box sx={{ display: "flex", justifyContent: "left" }}>
-              <Box sx={{ display: "column", justifyContent: "left" }}>
-                <Typography variant="h6">Flowers:</Typography>
-                <Typography variant="caption">
-                  {plant.flowers.length} / 100
-                </Typography>
-              </Box>
+          {isMobile && (
+            <Grid item xs={12}>
               <Box sx={{ display: "flex", justifyContent: "left" }}>
-                <Water amount={plant.flowerWaterConsumptionRate} />
-                /s per Flower
+                <Box sx={{ display: "column", justifyContent: "left" }}>
+                  <Typography variant="h6">Flowers:</Typography>
+                  <Typography variant="caption">
+                    {plant.flowers.length} / 100
+                  </Typography>
+                </Box>
+                <Box sx={{ display: "flex", justifyContent: "left" }}>
+                  <Water amount={plant.flowerWaterConsumptionRate} />
+                  /s per Flower
+                </Box>
+                <Box sx={{ display: "flex", justifyContent: "left" }}>
+                  <Sugar amount={plant.flowerSugarConsumptionRate} />
+                  /s per Flower
+                </Box>
               </Box>
-              <Box sx={{ display: "flex", justifyContent: "left" }}>
-                <Sugar amount={plant.flowerSugarConsumptionRate} />
-                /s per Flower
+              <Box
+                sx={{
+                  height: "140px",
+                  overflowY: "auto",
+                  border: "1px solid #ccc",
+                  borderRadius: "4px",
+                  padding: "8px",
+                }}
+              >
+                <List>
+                  {plant.flowers.map((flower, index) => {
+                    const remainingWater =
+                      plant.flowerWaterThreshold - flower.water;
+                    const remainingSugar =
+                      plant.flowerSugarThreshold - flower.sugar;
+
+                    const timeForWater = formatTime(remainingWater / 10);
+                    const timeForSugar = formatTime(remainingSugar / 10);
+
+                    return (
+                      <ListItem
+                        key={index}
+                        sx={{
+                          border: "1px solid #ccc",
+                          borderRadius: "4px",
+                          marginBottom: "4px",
+                        }}
+                      >
+                        <ListItemIcon style={{ color: "white" }}>
+                          <LocalFloristIcon style={{ color: flower.color }} />
+                          <DNA amount={plant.flowerDNA} />
+                        </ListItemIcon>
+
+                        <Box sx={{ width: "100%", marginLeft: 2 }}>
+                          <LinearProgress
+                            variant="determinate"
+                            value={
+                              (flower.water / plant.flowerWaterThreshold) * 100
+                            }
+                          />
+                          <Typography variant="caption">
+                            {timeForWater}
+                          </Typography>
+                        </Box>
+                      </ListItem>
+                    );
+                  })}
+                </List>
               </Box>
-            </Box>
-            <Box
-              sx={{
-                height: "140px",
-                overflowY: "auto",
-                border: "1px solid #ccc",
-                borderRadius: "4px",
-                padding: "8px",
-              }}
-            >
-              <List>
-                {plant.flowers.map((flower, index) => {
-                  const remainingWater =
-                    plant.flowerWaterThreshold - flower.water;
-                  const remainingSugar =
-                    plant.flowerSugarThreshold - flower.sugar;
-
-                  const timeForWater = formatTime(remainingWater / 10);
-                  const timeForSugar = formatTime(remainingSugar / 10);
-
-                  return (
-                    <ListItem
-                      key={index}
-                      sx={{
-                        border: "1px solid #ccc",
-                        borderRadius: "4px",
-                        marginBottom: "4px",
-                      }}
-                    >
-                      <ListItemIcon style={{ color: "white" }}>
-                        <LocalFloristIcon style={{ color: flower.color }} />
-                        <DNA amount={plant.flowerDNA} />
-                      </ListItemIcon>
-
-                      <Box sx={{ width: "100%", marginLeft: 2 }}>
-                        <LinearProgress
-                          variant="determinate"
-                          value={
-                            (flower.water / plant.flowerWaterThreshold) * 100
-                          }
-                        />
-                        <Typography variant="caption">
-                          {timeForWater}
-                        </Typography>
-                      </Box>
-                    </ListItem>
-                  );
-                })}
-              </List>
-            </Box>
-          </Grid>
+            </Grid>
+          )}
         </Grid>
       </Box>
       {/* ... [Rest of the code for displaying other plant info] */}
@@ -613,7 +617,7 @@ export function formatNumberWithDecimals(value: number): string {
   }
 }
 
-function formatTime(seconds: number) {
+export function formatTime(seconds: number) {
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds - hours * 3600) / 60);
   const secs = Math.round(seconds - hours * 3600 - minutes * 60);
