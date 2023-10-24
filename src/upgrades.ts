@@ -434,13 +434,6 @@ export const UPGRADES: Record<string, Upgrade[]> = {
       cost: 100,
     },
     {
-      id: "toggle_genetic_marker_upgrade_bush",
-      name: "Nutrient Recycling",
-      description:
-        "Double the rate of genetic marker production, and quadruple the sugar cost",
-      cost: 100,
-    },
-    {
       id: "boost_water_absorption_tier_2_bush",
       name: "Aquaporins Tier 2",
       description: "Increase manual water absorption by 100%",
@@ -487,6 +480,13 @@ export const UPGRADES: Record<string, Upgrade[]> = {
       name: "Flower DNA 3",
       description: "Flowers now give 10 more DNA when they mature",
       cost: 1000,
+    },
+    {
+      id: "flower_turbo_consumption",
+      name: "Turbo Flowers",
+      description:
+        "Flowers consume twice as much sugar and water but mature twice as fast",
+      cost: 2000,
     },
     {
       id: "bloom_bush",
@@ -750,8 +750,9 @@ export const UPGRADE_FUNCTIONS: Record<
     boost_water_efficiency_multiplier_tier_2_bush: (plant) => {
       plant.water_efficiency_multiplier *= 0.8;
     },
-    toggle_genetic_marker_upgrade_bush: (plant) => {
-      plant.geneticMarkerUpgradeActive = !plant.geneticMarkerUpgradeActive;
+    flower_turbo_consumption: (plant) => {
+      plant.flowerSugarConsumptionRate *= 2;
+      plant.flowerWaterConsumptionRate *= 2;
     },
     bloom_bush: (plant) => {
       plant.springModifier *= 2;
