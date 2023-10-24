@@ -19,6 +19,7 @@ import {
   addWaterToFlower,
   removeFlower,
   deductWater,
+  increaseFlowerThreshold,
 } from "./Slices/plantSlice";
 import {
   addGeneticMarkersBush,
@@ -360,6 +361,7 @@ export const updateFlowers = (): ThunkAction<
 
       if (sugarThresholdMet && waterThresholdMet) {
         dispatch(addGeneticMarkersBush({ amount: plant.flowerDNA }));
+        dispatch(increaseFlowerThreshold());
         dispatch(removeFlower(i));
       } else if (!(sugarAcquired && waterAcquired)) {
         // Remove the flower if it didn't get both sugar and water

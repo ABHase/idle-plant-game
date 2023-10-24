@@ -145,34 +145,41 @@ const addFlowerReducer = (
   state.flowers.push(newFlower);
 };
 
-// Action to buy a flower for the plant
-export const buyFlower = createAction("plant/buyFlower", (cost: number) => ({
-  payload: {
-    cost,
-  },
-}));
+export const buyFlower = createAction(
+  "plant/buyFlower",
+  (cost: number, multiplier: number) => ({
+    payload: {
+      cost,
+      multiplier,
+    },
+  })
+);
 
-// Buy a new flower
 const buyFlowerReducer = (
   state: PlantState,
-  action: PayloadAction<{ cost: number }>
+  action: PayloadAction<{ cost: number; multiplier: number }>
 ) => {
-  const { cost } = action.payload;
+  const { cost, multiplier } = action.payload;
 
-  // Check if the plant can afford to buy a flower
-  if (state.sugar >= cost) {
-    // Deduct the cost and add a new flower with initial values
-    state.sugar -= cost;
-    const newFlower = {
-      sugar: 0,
-      water: 0,
-      color: getRandomColor(),
-      // ... any other flower properties
-    };
-    state.flowers.push(newFlower);
+  // Check if the plant can afford to buy the multiplied number of flowers
+  if (state.sugar >= cost * multiplier) {
+    // Deduct the cost for multiple flowers and add the new flowers with initial values
+    state.sugar -= cost * multiplier;
+
+    // Calculate how many flowers we can actually add based on the 100 limit
+    const flowersToAdd = Math.min(multiplier, 100 - state.flowers.length);
+
+    for (let i = 0; i < flowersToAdd; i++) {
+      const newFlower = {
+        sugar: 0,
+        water: 0,
+        color: getRandomColor(),
+        // ... any other flower properties
+      };
+      state.flowers.push(newFlower);
+    }
   } else {
-    // Handle case when not enough resources to buy a flower
-    // Could dispatch a message or log, etc.
+    // Handle case when not enough resources to buy the multiplied number of flowers
   }
 };
 
@@ -513,6 +520,12 @@ const plantSlice = createSlice({
     setMaxResourceToSpend: (state, action: PayloadAction<number>) => {
       state.maxResourceToSpend = action.payload;
     },
+    //Reducer to increase flower threshold by 1 %
+    increaseFlowerThreshold: (state) => {
+      console.log("increaseFlowerThreshold");
+      state.flowerSugarThreshold *= 1.01;
+      state.flowerWaterThreshold *= 1.01;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(buyFlower, buyFlowerReducer);
@@ -573,5 +586,6 @@ export const {
   deductWater,
   turnOffGeneticMarkerProduction,
   setMaxResourceToSpend,
+  increaseFlowerThreshold,
 } = plantSlice.actions;
 export default plantSlice.reducer;

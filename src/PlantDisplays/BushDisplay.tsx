@@ -74,6 +74,7 @@ import LeavesTooltip from "../Components/Tooltips/LeavesTooltip";
 import WaterTooltip from "../Components/Tooltips/WaterTooltip";
 import MultiplierToggleButton from "../Components/Buttons/MultiplierToggleButton";
 import LocalFloristIcon from "@mui/icons-material/LocalFlorist";
+import { Flower } from "../Components/Flower";
 
 type BushDisplayProps = {
   handleOpenModal: (modalName: string) => void;
@@ -175,7 +176,7 @@ const BushDisplay: React.FC<BushDisplayProps> = ({
   };
 
   const handleBuyFlower = () => {
-    dispatch(buyFlower(FLOWER_COST));
+    dispatch(buyFlower(FLOWER_COST, multiplier));
   };
 
   const handleBuyRoots = () => {
@@ -343,12 +344,14 @@ const BushDisplay: React.FC<BushDisplayProps> = ({
                 backgroundColor: "#332932",
                 color: "#DEA4FC",
                 "&:active, &:focus": {
-                  backgroundColor: "#332932", // Or any other style reset
+                  backgroundColor: "#332932",
                 },
               }}
               onClick={() => handleBuyFlower()}
             >
-              <Sugar amount={FLOWER_COST} /> for a Flower
+              <Sugar amount={FLOWER_COST * Math.min(multiplier, 100)} />
+              <ArrowForwardIcon sx={{ color: "green" }} />
+              <Flower amount={Math.min(multiplier, 100)} />
             </Button>
           </Grid>
 
@@ -516,7 +519,12 @@ const BushDisplay: React.FC<BushDisplayProps> = ({
 
           <Grid item xs={12}>
             <Box sx={{ display: "flex", justifyContent: "left" }}>
-              <Typography variant="h6">Flowers</Typography>
+              <Box sx={{ display: "column", justifyContent: "left" }}>
+                <Typography variant="h6">Flowers:</Typography>
+                <Typography variant="caption">
+                  {plant.flowers.length} / 100
+                </Typography>
+              </Box>
               <Box sx={{ display: "flex", justifyContent: "left" }}>
                 <Water amount={plant.flowerWaterConsumptionRate} />
                 /s per Flower
@@ -536,36 +544,43 @@ const BushDisplay: React.FC<BushDisplayProps> = ({
               }}
             >
               <List>
-                {plant.flowers.map((flower, index) => (
-                  <ListItem
-                    key={index}
-                    sx={{
-                      border: "1px solid #ccc",
-                      borderRadius: "4px",
-                      marginBottom: "4px",
-                    }}
-                  >
-                    <ListItemIcon>
-                      <LocalFloristIcon style={{ color: flower.color }} />
-                    </ListItemIcon>
+                {plant.flowers.map((flower, index) => {
+                  const remainingWater =
+                    plant.flowerWaterThreshold - flower.water;
+                  const remainingSugar =
+                    plant.flowerSugarThreshold - flower.sugar;
 
-                    <Box sx={{ width: "100%", marginLeft: 2 }}>
-                      <LinearProgress
-                        variant="determinate"
-                        value={
-                          (flower.water / plant.flowerWaterThreshold) * 100
-                        }
-                      />
-                      <LinearProgress
-                        variant="determinate"
-                        value={
-                          (flower.sugar / plant.flowerSugarThreshold) * 100
-                        }
-                      />
-                      <DNA amount={plant.flowerDNA} />
-                    </Box>
-                  </ListItem>
-                ))}
+                  const timeForWater = formatTime(remainingWater / 10);
+                  const timeForSugar = formatTime(remainingSugar / 10);
+
+                  return (
+                    <ListItem
+                      key={index}
+                      sx={{
+                        border: "1px solid #ccc",
+                        borderRadius: "4px",
+                        marginBottom: "4px",
+                      }}
+                    >
+                      <ListItemIcon style={{ color: "white" }}>
+                        <LocalFloristIcon style={{ color: flower.color }} />
+                        <DNA amount={plant.flowerDNA} />
+                      </ListItemIcon>
+
+                      <Box sx={{ width: "100%", marginLeft: 2 }}>
+                        <LinearProgress
+                          variant="determinate"
+                          value={
+                            (flower.water / plant.flowerWaterThreshold) * 100
+                          }
+                        />
+                        <Typography variant="caption">
+                          {timeForWater}
+                        </Typography>
+                      </Box>
+                    </ListItem>
+                  );
+                })}
               </List>
             </Box>
           </Grid>
@@ -596,6 +611,15 @@ export function formatNumberWithDecimals(value: number): string {
   } else {
     return value.toFixed(2);
   }
+}
+
+function formatTime(seconds: number) {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds - hours * 3600) / 60);
+  const secs = Math.round(seconds - hours * 3600 - minutes * 60);
+  return (
+    (hours ? hours + "h " : "") + (minutes ? minutes + "m " : "") + secs + "s"
+  );
 }
 
 export default BushDisplay;
