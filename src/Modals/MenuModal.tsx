@@ -92,7 +92,7 @@ const MenuModal: React.FC<Props> = (props) => {
           Help
         </Button>
         <a
-          href="https://discord.gg/eNNEjSBE"
+          href="https://discord.gg/2RJMbh3F4P"
           target="_blank"
           rel="noopener noreferrer"
           style={{ textDecoration: "none", width: "100%" }}
