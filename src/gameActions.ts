@@ -48,6 +48,7 @@ export const updateGame = (): ThunkAction<
     const currentSeason = getState().plantTime.season;
     const currentMinute = getState().plantTime.update_counter;
     const currentSugar = getState().plant.sugar;
+    const maxResourceToSpend = getState().plant.maxResourceToSpend;
     const gameState = getState().globalState;
 
     // Dispatch updateTime with newTotalTime
@@ -127,7 +128,8 @@ export const updateGame = (): ThunkAction<
 
     if (
       plant.is_genetic_marker_production_on &&
-      requiredResource >= resourceThreshold
+      requiredResource >= resourceThreshold &&
+      requiredResource < (maxResourceToSpend || Infinity)
     ) {
       dispatch(produceGeneticMarkers(resourceThreshold));
       dispatch(

@@ -83,7 +83,7 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
   const plantState = useSelector((state: RootState) => state.plant);
 
   useEffect(() => {
-    const maxResource = plant.maxResourceToSpend; // Assuming `plant` is from your Redux store
+    const maxResource = plant.maxResourceToSpend;
     if (maxResource !== null && geneticMarkerThresholdSucculent > maxResource) {
       dispatch(turnOffGeneticMarkerProduction());
     }
