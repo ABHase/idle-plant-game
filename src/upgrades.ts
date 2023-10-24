@@ -351,7 +351,7 @@ export const UPGRADES: Record<string, Upgrade[]> = {
       name: "Spread 1000",
       description:
         "Auto grows 1000 roots or leaves per cycle, for the same sugar.",
-      cost: 300,
+      cost: 100,
     },
     {
       id: "bloom_grass",
