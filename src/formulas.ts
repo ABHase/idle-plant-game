@@ -303,7 +303,7 @@ export const itemizedReport = (plantState: any, season: string) => {
   );
 
   const totalFlowerWaterConsumption =
-    plantState.flowers.length * plantState.flowerWaterConsumptionRate;
+    plantState.flowers.length * plantState.flowerWaterConsumptionRate || 0;
 
   // Water and Sunlight Changes
   const waterAndSunlightDetails = calculateWaterAndSunlight(plantState, season);
@@ -473,7 +473,7 @@ export const calculateActualSugarProductionPerMinute = (
 
   // Calculate total sugar consumed by flowers per minute
   const totalFlowerSugarConsumptionPerMinute =
-    plant.flowers.length * plant.flowerSugarConsumptionRate * 60;
+    plant.flowers.length * plant.flowerSugarConsumptionRate * 60 || 0;
 
   // Determine the actual sugar production per second
   const actualSugarProductionPerSecond =
