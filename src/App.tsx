@@ -40,6 +40,7 @@ import MushroomStoreDesktopDisplay from "./MushroomStoreDesktopDisplay";
 import UpgradeStoreDesktopDisplay from "./UpgradeStoreDesktopDisplay";
 import BushDisplay from "./PlantDisplays/BushDisplay";
 import BushDNADisplay from "./DNADisplays/BushDNADisplay";
+import MapModal from "./Modals/MapModal";
 
 const useIsNewUser = () => {
   const isNewUser = localStorage.getItem("isNewUser");
@@ -322,6 +323,7 @@ function App() {
               handleOpenReportModal={() => handleOpenModal("reportModalOpen")}
               handleOpenTextboxModal={() => handleOpenModal("textboxModalOpen")}
               handleCloseReportModal={() => handleCloseModal("reportModalOpen")}
+              handleOpenMapModal={() => handleOpenModal("mapModalOpen")}
               manualSave={() => saveState(store.getState())}
               isMobile={isMobile}
             />
@@ -336,6 +338,11 @@ function App() {
             <TextboxModal
               open={modals.textboxModalOpen}
               onClose={() => handleCloseModal("textboxModalOpen")}
+            />
+            <MapModal
+              open={modals.mapModalOpen}
+              onClose={() => handleCloseModal("mapModalOpen")}
+              isMobile={isMobile}
             />
 
             {modals.ladybugModalOpen ? (

@@ -90,6 +90,7 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, onClose }) => {
     state.geneticMarkersMoss,
     state.geneticMarkersSucculent,
     state.geneticMarkersGrass,
+    plantType,
   ]);
 
   return (

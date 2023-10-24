@@ -5,6 +5,7 @@ import { initialState as initialGlobalState } from "./Slices/gameStateSlice";
 import { initialState as initialAppState } from "./Slices/appSlice";
 import { initialPlantHistoryState as initialPlantHistoryState } from "./Slices/plantHistorySlice";
 import { initialState as initialPlantState } from "./Slices/plantSlice";
+import { initialState as initialCellCompletionState } from "./Slices/cellCompletionSlice";
 import { initialPlantTimeState as initialPlantTimeState } from "./Slices/plantTimeSlice";
 import { initialState as initialUpgradesState } from "./Slices/upgradesSlice";
 import { initialState as initialTimeBoostState } from "./Slices/timeBoostSlice";
@@ -44,6 +45,10 @@ export const runMigrations = (
     },
     timeBoost:
       state?.timeBoost !== undefined ? state?.timeBoost : initialTimeBoostState,
+    cellCompletion: {
+      ...initialCellCompletionState,
+      ...state?.cellCompletion,
+    },
     version: version,
   };
 };

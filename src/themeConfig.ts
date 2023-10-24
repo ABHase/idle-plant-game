@@ -18,7 +18,7 @@ export const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: "'YOUR_FONT_NAME', lato", // Remember to replace 'YOUR_FONT_NAME'
+    fontFamily: "'YOUR_FONT_NAME', lato",
   },
   // Add any other theme customizations here
 });

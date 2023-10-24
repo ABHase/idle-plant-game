@@ -7,6 +7,7 @@ import { updateGame } from "./gameActions";
 import {
   addGeneticMarkers,
   increaseGeneticMarkers,
+  resetGrassGeneticMarkerThreshold,
   resetSucculentGeneticMarkerThreshold,
 } from "./Slices/gameStateSlice"; // Assume you have deductSugar function in gameStateSlice
 import {
@@ -74,6 +75,20 @@ export const MUSHROOM_ITEMS: MushroomItem[] = [
     },
   },
   // ... other mushroom items
+];
+
+export const GRASS_MUSHROOM_ITEMS: MushroomItem[] = [
+  {
+    id: "wildfire",
+    name: "Wildfire",
+    description:
+      "Burn the forest to the ground to rejuvenate the soil. (Reset Leaves Needed for DNA)",
+    cost: 250000000000,
+    effect: (dispatch, getState) => {
+      dispatch(deductSunlight(1000000000000)); // Deduct sugar cost
+      dispatch(resetGrassGeneticMarkerThreshold()); // Reset the succulent genetic marker threshold
+    },
+  },
 ];
 
 export const DESERT_MUSHROOM_ITEMS: MushroomItem[] = [

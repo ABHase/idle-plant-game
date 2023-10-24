@@ -24,6 +24,7 @@ export interface GlobalState {
   calcium: number;
   fulvic: number;
   costModifier: number;
+  currentCell: number;
 }
 
 export const initialState: GlobalState = {
@@ -48,6 +49,7 @@ export const initialState: GlobalState = {
   calcium: 0,
   fulvic: 0,
   costModifier: 1,
+  currentCell: 0,
 };
 
 const globalStateSlice = createSlice({
@@ -197,6 +199,11 @@ const globalStateSlice = createSlice({
     resetSucculentGeneticMarkerThreshold: (state) => {
       state.geneticMarkerThresholdSucculent = 10;
     },
+
+    //Reducer to reset grass genetic marker threshold
+    resetGrassGeneticMarkerThreshold: (state) => {
+      state.geneticMarkerThresholdGrass = 100;
+    },
   },
   extraReducers: (builder) => {
     builder.addMatcher(
@@ -220,6 +227,7 @@ export const {
   addGeneticMarkers,
   resetSucculentGeneticMarkerThreshold,
   addGeneticMarkersBush,
+  resetGrassGeneticMarkerThreshold,
   // Add other exported actions...
 } = globalStateSlice.actions;
 

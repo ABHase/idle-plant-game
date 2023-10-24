@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import {
   DESERT_MUSHROOM_ITEMS,
+  GRASS_MUSHROOM_ITEMS,
   LICHEN_MUSHROOM_ITEMS,
   MUSHROOM_ITEMS,
   MushroomItem,
@@ -187,7 +188,28 @@ const MushroomStoreDesktopDisplay = () => {
         });
 
       case "Grass":
-        return <Typography>No inventory available for Grass.</Typography>;
+        return (
+          <>
+            <Typography mt={2}>The Flame</Typography>
+            {GRASS_MUSHROOM_ITEMS.map((item) => (
+              <ButtonBase
+                onClick={() =>
+                  handleButtonClick(sunlight, item.cost, item.effect)
+                }
+                sx={buttonBaseStyle(sunlight, item.cost)}
+              >
+                <Box key={item.id} mt={2}>
+                  <Typography variant="body1">{item.name}</Typography>
+                  <Typography variant="body2">{item.description}</Typography>
+                  <Typography variant="body2" sx={{ display: "flex" }}>
+                    Cost: <Sunlight amount={item.cost} />
+                  </Typography>
+                </Box>
+              </ButtonBase>
+            ))}
+          </>
+        );
+
       case "Bush":
         return (
           <Box>

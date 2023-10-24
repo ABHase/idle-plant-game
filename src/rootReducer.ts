@@ -6,7 +6,8 @@ import { PlantState } from "./Slices/plantSlice";
 import { GlobalState } from "./Slices/gameStateSlice";
 import { UpgradesState } from "./Slices/upgradesSlice";
 import { PlantHistoryState } from "./Slices/plantHistorySlice";
-import { TimeBoostState } from "./Slices/timeBoostSlice"; // Assuming you named your state as TimeBoostState in the slice file
+import { TimeBoostState } from "./Slices/timeBoostSlice";
+import { CellCompletionState } from "./Slices/cellCompletionSlice";
 
 export type RootState = {
   version: number;
@@ -16,5 +17,6 @@ export type RootState = {
   globalState: GlobalState;
   upgrades: UpgradesState;
   plantHistory: PlantHistoryState;
-  timeBoost: TimeBoostState; // Add this line
+  timeBoost: TimeBoostState;
+  cellCompletion: CellCompletionState;
 };

@@ -19,6 +19,7 @@ interface Props {
   handleOpenReportModal: () => void;
   handleOpenTextboxModal: () => void;
   handleCloseReportModal: () => void;
+  handleOpenMapModal: () => void;
   manualSave: () => void;
   isMobile: boolean;
 }
@@ -66,6 +67,15 @@ const MenuModal: React.FC<Props> = (props) => {
             Mushroom Store
           </Button>
         )}
+        <Button
+          sx={{ my: 1 }}
+          variant="contained"
+          color="primary"
+          onClick={props.handleOpenMapModal}
+          disabled={true}
+        >
+          Map
+        </Button>
 
         <Button
           sx={{ my: 1 }}

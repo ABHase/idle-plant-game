@@ -10,6 +10,7 @@ export const useModalState = () => {
     ladybugModalOpen: false,
     reportModalOpen: false,
     textboxModalOpen: false,
+    mapModalOpen: false,
     // ... any other modal states
   });
 

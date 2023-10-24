@@ -377,6 +377,13 @@ export const UPGRADES: Record<string, Upgrade[]> = {
       description: "Reduce Winter penalty by 50%",
       cost: 200,
     },
+    {
+      id: "auto_grow_10000",
+      name: "Spread 10000",
+      description:
+        "Auto grows 10000 roots or leaves per cycle, for the same sugar.",
+      cost: 250,
+    },
   ],
   Bush: [
     {
@@ -705,6 +712,9 @@ export const UPGRADE_FUNCTIONS: Record<
     },
     auto_grow_1000: (plant) => {
       plant.autoGrowthMultiplier = 1000;
+    },
+    auto_grow_10000: (plant) => {
+      plant.autoGrowthMultiplier = 10000;
     },
   },
   Bush: {

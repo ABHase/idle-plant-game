@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import {
   DESERT_MUSHROOM_ITEMS,
+  GRASS_MUSHROOM_ITEMS,
   LICHEN_MUSHROOM_ITEMS,
   MUSHROOM_ITEMS,
   MushroomItem,
@@ -157,7 +158,28 @@ const MushroomStoreModal: React.FC<MushroomStoreModalProps> = ({
           </>
         );
       case "Grass":
-        return <Typography>No inventory available for Grass.</Typography>;
+        return (
+          <>
+            <Typography mt={2}>The Lichen</Typography>
+            {GRASS_MUSHROOM_ITEMS.map((item) => (
+              <Box key={item.id} mt={2}>
+                <Typography variant="body1">{item.name}</Typography>
+                <Typography variant="body2">{item.description}</Typography>
+                <Typography variant="body2" sx={{ display: "flex" }}>
+                  Cost: <Sunlight amount={item.cost} />
+                </Typography>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => handlePurchase(item.effect)}
+                  disabled={sunlight < item.cost}
+                >
+                  Buy
+                </Button>
+              </Box>
+            ))}
+          </>
+        );
 
       default:
         // This can be a placeholder or remain empty until you have other plant types

@@ -7,6 +7,7 @@ import plantTimeReducer from "./Slices/plantTimeSlice";
 import appReducer from "./Slices/appSlice";
 import plantReducer from "./Slices/plantSlice";
 import upgradesReducer from "./Slices/upgradesSlice";
+import cellCompletionReducer from "./Slices/cellCompletionSlice";
 import globalStateSlice from "./Slices/gameStateSlice";
 import { loadState, saveState } from "./localStorage";
 import { RootState } from "./rootReducer";
@@ -16,7 +17,7 @@ import { runMigrations } from "./migrations";
 
 const persistedState: RootState | undefined = loadState();
 //Should be auto incremented when there is a push
-export const currentVersion = 49;
+export const currentVersion = 51;
 
 // Check if the flag isNewUser exists in local storage
 let isNewUser = localStorage.getItem("isNewUser");
@@ -59,6 +60,7 @@ const store = configureStore({
     upgrades: upgradesReducer,
     plantHistory: plantHistoryReducer,
     timeBoost: timeBoostReducer,
+    cellCompletion: cellCompletionReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().prepend(thunk),
 });
