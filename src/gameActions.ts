@@ -329,7 +329,7 @@ export const updateFlowers = (): ThunkAction<
   return (dispatch, getState) => {
     const plant = getState().plant;
 
-    for (let i = 0; i < plant.flowers.length; i++) {
+    for (let i = plant.flowers.length - 1; i >= 0; i--) {
       const flower = plant.flowers[i];
 
       const sugarThresholdMet = flower.sugar >= plant.flowerSugarThreshold;
