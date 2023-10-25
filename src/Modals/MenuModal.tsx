@@ -78,7 +78,7 @@ const MenuModal: React.FC<Props> = (props) => {
           variant="contained"
           color="primary"
           onClick={props.handleOpenMapModal}
-          disabled={!purchasedUpgrades.includes("Succulent_sugar_bonus")}
+          disabled={!purchasedUpgrades.includes("Bush_map")}
         >
           Map
         </Button>

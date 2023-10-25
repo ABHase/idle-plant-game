@@ -573,7 +573,8 @@ export const UPGRADE_FUNCTIONS: Record<
       plant.autumnModifier *= 2;
       plant.winterModifier *= 2;
       plant.sunlight_absorption_rate *= 5;
-      plant.sunlight_absorption_rate *= 5;
+      plant.water_absorption_rate *= 5;
+      plant.autoGrowthMultiplier *= 3;
     },
     Adjacent_to_Moss: (plant) => {
       plant.sunlight_absorption_multiplier *= 20;

@@ -237,8 +237,8 @@ const plantSlice = createSlice({
       Object.assign(state, plantConfig);
       state.id = uuidv4();
 
-      // Apply upgrades in order: adjacency, meta, and then plant-specific
-      ["Adjacency", "Meta", plantType].forEach((upgradeCategory) => {
+      // Apply upgrades in order: meta, plant-specific, and then adjacency
+      ["Meta", plantType, "Adjacency"].forEach((upgradeCategory) => {
         upgrades.forEach((upgradeId) => {
           const upgradeFunction = UPGRADE_FUNCTIONS[upgradeCategory][upgradeId];
           if (upgradeFunction) {
