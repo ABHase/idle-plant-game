@@ -75,15 +75,25 @@ const PlantHistoryModal: React.FC<PlantHistoryModalProps> = ({
   );
 };
 
-function formatNumberWithDecimals(value: number): string {
-  if (!value) value = 0;
-  if (value >= 1_000_000) {
-    return (value / 1_000_000).toFixed(2) + "M";
-  } else if (value >= 1_000) {
-    return (value / 1_000).toFixed(2) + "K";
+export function formatNumberWithDecimals(value: number): string {
+  const absValue = Math.abs(value);
+
+  let formattedValue;
+
+  if (absValue >= 1_000_000_000_000) {
+    formattedValue = (absValue / 1_000_000_000_000).toFixed(2) + "T";
+  } else if (absValue >= 1_000_000_000) {
+    formattedValue = (absValue / 1_000_000_000).toFixed(2) + "B";
+  } else if (absValue >= 1_000_000) {
+    formattedValue = (absValue / 1_000_000).toFixed(2) + "M";
+  } else if (absValue >= 1_000) {
+    formattedValue = (absValue / 1_000).toFixed(2) + "K";
   } else {
-    return value.toFixed(2);
+    formattedValue = absValue.toFixed(2);
   }
+
+  // Apply the sign
+  return value < 0 ? "-" + formattedValue : formattedValue;
 }
 
 export default PlantHistoryModal;
