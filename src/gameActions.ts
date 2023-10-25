@@ -377,7 +377,6 @@ export const updateFlowers = (): ThunkAction<
       } else if (!(sugarAcquired && waterAcquired)) {
         // Remove the flower if it didn't get both sugar and water
         dispatch(removeFlower(i));
-        break;
       }
     }
   };
