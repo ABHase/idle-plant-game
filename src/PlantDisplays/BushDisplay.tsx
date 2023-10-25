@@ -553,8 +553,12 @@ const BushDisplay: React.FC<BushDisplayProps> = ({
                     const remainingSugar =
                       plant.flowerSugarThreshold - flower.sugar;
 
-                    const timeForWater = formatTime(remainingWater / 10);
-                    const timeForSugar = formatTime(remainingSugar / 10);
+                    const timeForWater = formatTime(
+                      remainingWater / plant.flowerWaterConsumptionRate
+                    );
+                    const timeForSugar = formatTime(
+                      remainingSugar / plant.flowerSugarConsumptionRate
+                    );
 
                     return (
                       <ListItem

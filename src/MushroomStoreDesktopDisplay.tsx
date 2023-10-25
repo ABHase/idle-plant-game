@@ -260,7 +260,9 @@ const MushroomStoreDesktopDisplay = () => {
                   const remainingSugar =
                     plant.flowerSugarThreshold - flower.sugar;
 
-                  const timeForWater = formatTime(remainingWater / 10);
+                  const timeForWater = formatTime(
+                    remainingWater / plant.flowerWaterConsumptionRate
+                  );
 
                   return (
                     <ListItem
