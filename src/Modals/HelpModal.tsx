@@ -9,7 +9,7 @@ import GrainIcon from "@mui/icons-material/Grain";
 import GrassIcon from "@mui/icons-material/Grass";
 import SpaIcon from "@mui/icons-material/Spa";
 import ParkIcon from "@mui/icons-material/Park";
-import { Button } from "@mui/material";
+import { Button, List, ListItem, ListItemText } from "@mui/material";
 
 interface HelpModalProps {
   open: boolean;
@@ -19,8 +19,11 @@ interface HelpModalProps {
 const HelpModal: React.FC<HelpModalProps> = ({ open, onClose }) => {
   const [currentPage, setCurrentPage] = useState(0);
 
-  const pages = [
-    <Box sx={{ color: "text.primary" }}>
+  // Table of contents items
+  const toc = ["Basics", "Moss", "Fern", "Grass", "Berry Bush", "Succulent"];
+
+  const pages: React.ReactNode[] = [
+    <div>
       <Typography variant="h6" mb={2}>
         Game Basics:
       </Typography>
@@ -56,111 +59,178 @@ const HelpModal: React.FC<HelpModalProps> = ({ open, onClose }) => {
         </Typography>
       </Box>
       <Box display="flex" alignItems="center" mb={1}>
-        <GrainIcon color="primary" />
         <Typography variant="body2">
           {" "}
-          - Sugar is used to buy roots and leaves, and to convert to DNA in
-          batches of 100.
+          - Traits can be sold back for DNA at any time for full value. Traits
+          DO NOT take effect until you plant a new plant.
+        </Typography>
+      </Box>
+    </div>,
+
+    <div>
+      <Typography variant="h6" mb={2}>
+        Moss:
+      </Typography>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2"> - Moss grows very slowly.</Typography>
+      </Box>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          {" "}
+          - Moss cannot trade with the Mushroom until you unlock the Lichen
+          trait.
         </Typography>
       </Box>
       <Box display="flex" alignItems="center" mb={1}>
-        <ParkIcon sx={{ fontSize: 22, color: "green" }} />
         <Typography variant="body2">
           {" "}
-          - The size of your plant represents its health. A bigger plant
-          produces more sugar, but growth requires more resources.
+          - Moss can trade sunlight for sugar if you unlock the Lichen.
         </Typography>
       </Box>
-    </Box>,
-    <Box sx={{ color: "text.primary" }}>
-      <Typography variant="h6" mb={2}>
-        Mushroom Store:
-      </Typography>
-      <Typography variant="body2" mb={2}>
-        Trade with The Mushroom to gain advantages. However, trading excessively
-        will cause fungus to rot your roots. The rot will strangle all of your
-        roots.
-      </Typography>
-      <Typography variant="body2">
-        To heal your plant, let your roots dry out completely, by reducing water
-        level to zero. Or let the plant rot right before planting a new seed.
-      </Typography>
-    </Box>,
-    <Box sx={{ color: "text.primary" }}>
-      <Typography variant="h6" mb={2}>
-        Strategy:
-      </Typography>
-      <Typography variant="body2">
-        Use water and sunlight wisely. Balance growth with resource consumption.
-        Remember, each new seed inherits past traits, but starts its growth
-        journey anew. Your old plants are recorded in the history tab.
-      </Typography>
-    </Box>,
-    <Box sx={{ color: "text.primary" }}>
-      <Typography variant="h6" mb={2}>
-        Seasons:
-      </Typography>
-      <Typography variant="body2">
-        In the spring water will be absorbed faster, and in the summer sunlight
-        will be absorbed faster. In the harvest time of autumn, sugar is
-        produced faster. In the winter everything is much slower.
-      </Typography>
-    </Box>,
-    <Box sx={{ color: "text.primary" }}>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          {" "}
+          - The Moss Meta Upgrade makes leaves water neutral and no longer lost
+          to dehydration. There are advantages and disadvantages to this.
+        </Typography>
+      </Box>
+    </div>,
+    <div>
+      {" "}
       <Typography variant="h6" mb={2}>
         Fern:
       </Typography>
-      <Typography variant="body2">
-        The fern is a fast growing plant that can absorb water and sunlight, it
-        is the basic starter plant, but it has no traits that carry over to
-        other species.
-      </Typography>
-    </Box>,
-    <Box sx={{ color: "text.primary" }}>
-      <Typography variant="h6" mb={2}>
-        Moss:
-      </Typography>
-      <Typography variant="body2">
-        Moss grows slowly, and simply. You cannot manually absorb resources. You
-        also buy roots and leaves all at once. There is no mushroom to trade
-        with. Moss unlocks absorbent leaves for all species.
-      </Typography>
-    </Box>,
-    <Box sx={{ color: "text.primary" }}>
-      <Typography variant="h6" mb={2}>
-        Moss:
-      </Typography>
-      <Typography variant="body2">
-        Moss grows slowly, and simply. You cannot manually absorb resources. You
-        also buy roots and leaves all at once. There is no mushroom to trade
-        with. Moss unlocks absorbent leaves for all species.
-      </Typography>
-    </Box>,
-    <Box sx={{ color: "text.primary" }}>
-      <Typography variant="h6" mb={2}>
-        Succulent:
-      </Typography>
-      <Typography variant="body2">
-        The Desert Succulent can trade sugar for water at the mushroom store
-        with no risk of Root Rot. It also produces sugar faster than other
-        plants, and unlocks agave sugar production for all species. However, in
-        the desert there is very little water and what little there is needs to
-        be defended from rabbits with needles. If you have more water than
-        needles the needles can defend rabbits will eat one leaf and 10% of your
-        water.
-      </Typography>
-    </Box>,
-    <Box sx={{ color: "text.primary" }}>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          {" "}
+          - Fern will become infested with aphids at 1000 sugar. There is an
+          immunity trait that can be had.
+        </Typography>
+      </Box>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          {" "}
+          - The Lady Bug will offer protection from aphids when needed at a
+          steep cost.
+        </Typography>
+      </Box>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          {" "}
+          - Fern can trade with the Mushroom for DNA or Time Boosts. This will
+          cause Root Rot that can be removed by emptying water.
+        </Typography>
+      </Box>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          {" "}
+          - The Fern Meta Upgrade increases the number of Roots and Leaves new
+          plants start with.
+        </Typography>
+      </Box>
+    </div>,
+    <div>
+      {" "}
       <Typography variant="h6" mb={2}>
         Grass:
       </Typography>
-      <Typography variant="body2">
-        The Grass Colony wants to grow. It will not stop growing leaves
-        passively, and unlocks passive growth for all species. There is no
-        inventory at the mushroom store for grass, and it cannot directly
-        convert sugar into DNA, rather it converts leaves into DNA.
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          {" "}
+          - Grass grows uncontrollably and has the slowest DNA generation.
+        </Typography>
+      </Box>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          {" "}
+          - Grass can typically just be left idle and will grow on its own.
+        </Typography>
+      </Box>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          {" "}
+          - Grass trades leaves for DNA rather than sugar. This is very slow.
+          The number of leaves required can be reset for 250 B sunlight.
+        </Typography>
+      </Box>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          {" "}
+          - The Grass Meta Upgrade grants base Auto Growth 100 for all plants.
+        </Typography>
+      </Box>
+    </div>,
+    <div>
+      {" "}
+      <Typography variant="h6" mb={2}>
+        Berry Bush:
       </Typography>
-    </Box>,
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          {" "}
+          - Berry Bush DNA comes from maturing flowers. The amount of Sugar and
+          Water needed to reach maturity is reset every time the Berry Bush is
+          replanted.
+        </Typography>
+      </Box>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          {" "}
+          - Replant often with new traits to reset the time it takes to mature
+          the flowers.
+        </Typography>
+      </Box>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          {" "}
+          - Berry Bush cannot trade with the Mushroom at all.
+        </Typography>
+      </Box>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          {" "}
+          - The Berry Bush Meta Upgrade unlocks the map, this is the only
+          upgrade technically required to win the game though in practice that
+          would be insane.
+        </Typography>
+      </Box>
+    </div>,
+    <div>
+      {" "}
+      <Typography variant="h6" mb={2}>
+        Succulent:
+      </Typography>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          {" "}
+          - The Succulent is a desert plant that grows slowly at first but makes
+          sugar at the fastest rate and can even trade sugar with the Mushroom
+          for water.
+        </Typography>
+      </Box>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          {" "}
+          - The Succulent is potentially the most active play style and fastest
+          growing Plant. Do not hesitate.
+        </Typography>
+      </Box>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          {" "}
+          - Needles protect you from water but cost more to grow the higher your
+          size. Your size is the square root of the sum of your roots and
+          leaves.
+        </Typography>
+      </Box>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          {" "}
+          - The Succulent Meta Upgrade increases provides all non-Succulent
+          plants with 10x Sugar production.
+        </Typography>
+      </Box>
+    </div>,
   ];
 
   return (
@@ -172,39 +242,58 @@ const HelpModal: React.FC<HelpModalProps> = ({ open, onClose }) => {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        maxWidth: "60",
       }}
     >
       <Box
         sx={{
-          maxWidth: "80%",
-          maxHeight: "80%",
-          bgcolor: "background.paper",
+          maxWidth: "100%",
+          maxHeight: "100%",
+          bgcolor: "secondary.main",
           border: "2px solid #000",
           borderRadius: 3,
           boxShadow: 24,
           p: 2,
           overflow: "auto",
+          display: "flex",
         }}
       >
-        {pages[currentPage]}
+        {/* Table of contents */}
+        <Box
+          sx={{
+            width: "30%",
+            maxHeight: "100%",
+            overflow: "auto",
+          }}
+        >
+          <Typography variant="h6" sx={{ color: "text.primary" }}>
+            Table of Contents
+          </Typography>
+          <List>
+            {toc.map((item, index) => (
+              <ListItem
+                button
+                key={index}
+                onClick={() => setCurrentPage(index)}
+              >
+                <ListItemText primary={item} sx={{ color: "text.primary" }} />
+              </ListItem>
+            ))}
+          </List>
+        </Box>
 
-        <Box mt={2} display="flex" justifyContent="space-between">
-          <Button
-            variant="outlined"
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}
-            disabled={currentPage === 0}
-          >
-            Back
-          </Button>
-          <Button
-            variant="outlined"
-            onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, pages.length - 1))
-            }
-            disabled={currentPage === pages.length - 1}
-          >
-            Next
-          </Button>
+        {/* Content */}
+        <Box
+          sx={{
+            width: "90%",
+            maxHeight: "100%",
+            maxWidth: "auto",
+            overflow: "auto",
+            paddingLeft: 2,
+            color: "text.primary",
+          }}
+        >
+          {pages[currentPage]}
         </Box>
       </Box>
     </Modal>
