@@ -10,6 +10,33 @@ export type Upgrade = {
 };
 
 export const UPGRADES: Record<string, Upgrade[]> = {
+  Adjacency: [
+    {
+      id: "Adjacent_to_Fern",
+      name: "Adjacent to Fern",
+      description: "Receive a roots and leaves boost when adjacent to a Fern.",
+      cost: 0,
+    },
+    {
+      id: "Adjacent_to_Succulent",
+      name: "Adjacent to Succulent",
+      description: "Receive a sugar boost when adjacent to a Succulent.",
+      cost: 0,
+    },
+    {
+      id: "Adjacent_to_Grass",
+      name: "Adjacent to Grass",
+      description: "Receive a season boost when adjacent to a Grass.",
+      cost: 0,
+    },
+    {
+      id: "Adjacent_to_Moss",
+      name: "Adjacent to Moss",
+      description:
+        "Receive a sunlight and water boost when adjacent to a Moss.",
+      cost: 0,
+    },
+  ],
   Meta: [
     {
       id: "Moss_leaf_bonus",
@@ -35,6 +62,12 @@ export const UPGRADES: Record<string, Upgrade[]> = {
       name: "Clone Upgrade (All Species)",
       description: "Start with 1K extra roots and leaves.",
       cost: 2000,
+    },
+    {
+      id: "Bush_map",
+      name: "Unlock the Map (All Species)",
+      description: "Unlock the map.",
+      cost: 15000,
     },
   ],
   Fern: [
@@ -526,6 +559,33 @@ export const UPGRADE_FUNCTIONS: Record<
   string,
   { [key: string]: (plant: PlantState) => void }
 > = {
+  Adjacency: {
+    Adjacent_to_Fern: (plant) => {
+      plant.roots += 100;
+      plant.leaves += 100;
+    },
+    Adjacent_to_Succulent: (plant) => {
+      plant.sugar_production_rate *= 2;
+    },
+    Adjacent_to_Grass: (plant) => {
+      plant.springModifier *= 2;
+      plant.summerModifier *= 2;
+      plant.autumnModifier *= 2;
+      plant.winterModifier *= 2;
+      plant.sunlight_absorption_rate *= 5;
+      plant.sunlight_absorption_rate *= 5;
+    },
+    Adjacent_to_Moss: (plant) => {
+      plant.sunlight_absorption_multiplier *= 20;
+      plant.water_absorption_multiplier *= 20;
+    },
+    Adjacent_to_Bush: (plant) => {
+      plant.flowerSugarThreshold *= 0.4;
+      plant.flowerWaterThreshold *= 0.4;
+      plant.water_absorption_rate *= 5;
+      plant.sunlight_absorption_rate *= 5;
+    },
+  },
   Meta: {
     Moss_leaf_bonus: (plant) => {
       plant.leafWaterUsage = false;

@@ -23,6 +23,9 @@ const upgradesSlice = createSlice({
   name: "upgrades",
   initialState,
   reducers: {
+    setPurchasedUpgrades: (state, action: PayloadAction<string[]>) => {
+      state.purchased = action.payload;
+    },
     purchaseUpgrade: (state, action: PayloadAction<string>) => {
       const upgradeId = action.payload;
       if (!state.purchased.includes(upgradeId)) {
@@ -63,5 +66,6 @@ export const {
   resetUpgrades,
   sellUpgrade,
   changeAvailableUpgrades,
+  setPurchasedUpgrades,
 } = upgradesSlice.actions;
 export default upgradesSlice.reducer;

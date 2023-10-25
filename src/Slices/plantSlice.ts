@@ -189,6 +189,14 @@ const plantSlice = createSlice({
   reducers: {
     resetPlant: () => initialState,
 
+    // Reducer for setting a specific plant type
+    setPlantType: (
+      state,
+      action: PayloadAction<{ plantType: keyof typeof PLANT_CONFIGS }>
+    ) => {
+      return PLANT_CONFIGS[action.payload.plantType] || initialState;
+    },
+
     initializeNewPlant: (
       state,
       action: PayloadAction<{ plantType: string }>
@@ -215,7 +223,11 @@ const plantSlice = createSlice({
         return;
       }
 
-      const availableUpgrades = { ...UPGRADES.Meta, ...UPGRADES[plantType] }; // Combine meta and specific plant upgrades
+      const availableUpgrades = {
+        ...UPGRADES.Meta,
+        ...UPGRADES[plantType],
+        ...UPGRADES.Adjacency,
+      }; // Combine adjacency, meta, and specific plant upgrades
 
       if (!availableUpgrades) {
         console.error(`No upgrades available for plant type: ${plantType}`);
@@ -225,22 +237,17 @@ const plantSlice = createSlice({
       Object.assign(state, plantConfig);
       state.id = uuidv4();
 
-      // Apply meta upgrades first
-      upgrades.forEach((upgradeId) => {
-        const metaUpgradeFunction = UPGRADE_FUNCTIONS["Meta"][upgradeId];
-        if (metaUpgradeFunction) {
-          metaUpgradeFunction(state);
-        }
-      });
-
-      // Then apply plant specific upgrades
-      upgrades.forEach((upgradeId) => {
-        const upgradeFunction = UPGRADE_FUNCTIONS[plantType][upgradeId];
-        if (upgradeFunction) {
-          upgradeFunction(state);
-        }
+      // Apply upgrades in order: adjacency, meta, and then plant-specific
+      ["Adjacency", "Meta", plantType].forEach((upgradeCategory) => {
+        upgrades.forEach((upgradeId) => {
+          const upgradeFunction = UPGRADE_FUNCTIONS[upgradeCategory][upgradeId];
+          if (upgradeFunction) {
+            upgradeFunction(state);
+          }
+        });
       });
     },
+
     absorbSunlight: (state) => {
       state.sunlight += state.sunlight_absorption_rate;
       state.totalSunlightAbsorbed += state.sunlight_absorption_rate;
@@ -587,5 +594,6 @@ export const {
   turnOffGeneticMarkerProduction,
   setMaxResourceToSpend,
   increaseFlowerThreshold,
+  setPlantType,
 } = plantSlice.actions;
 export default plantSlice.reducer;

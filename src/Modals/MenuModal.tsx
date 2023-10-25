@@ -1,6 +1,8 @@
 import React from "react";
 import { Box, Button, Dialog } from "@mui/material";
 import { currentVersion } from "../store";
+import { useSelector } from "react-redux";
+import { RootState } from "../rootReducer";
 
 interface Props {
   open: boolean;
@@ -25,6 +27,10 @@ interface Props {
 }
 
 const MenuModal: React.FC<Props> = (props) => {
+  const purchasedUpgrades = useSelector(
+    (state: RootState) => state.upgrades.purchased
+  );
+
   return (
     <Dialog open={props.open} onClose={props.onClose}>
       <Box
@@ -72,7 +78,7 @@ const MenuModal: React.FC<Props> = (props) => {
           variant="contained"
           color="primary"
           onClick={props.handleOpenMapModal}
-          disabled={true}
+          disabled={!purchasedUpgrades.includes("Succulent_sugar_bonus")}
         >
           Map
         </Button>

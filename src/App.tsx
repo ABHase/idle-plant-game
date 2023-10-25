@@ -41,6 +41,7 @@ import UpgradeStoreDesktopDisplay from "./UpgradeStoreDesktopDisplay";
 import BushDisplay from "./PlantDisplays/BushDisplay";
 import BushDNADisplay from "./DNADisplays/BushDNADisplay";
 import MapModal from "./Modals/MapModal";
+import { resetCell } from "./Slices/cellCompletionSlice";
 
 const useIsNewUser = () => {
   const isNewUser = localStorage.getItem("isNewUser");
@@ -109,6 +110,7 @@ function App() {
     dispatch(resetPlant());
     dispatch(resetPlantTime());
     dispatch(resetUpgrades());
+    dispatch(resetCell());
 
     window.location.reload();
   };

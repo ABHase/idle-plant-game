@@ -23,9 +23,7 @@ const cellCompletionSlice = createSlice({
       const { cellNumber, plantType } = action.payload;
       state.cells[cellNumber] = plantType;
     },
-    resetCell: (state, action: PayloadAction<number>) => {
-      state.cells[action.payload] = null;
-    },
+    resetCell: () => initialState,
   },
   extraReducers: (builder) => {
     builder.addMatcher(

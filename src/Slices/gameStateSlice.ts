@@ -204,6 +204,10 @@ const globalStateSlice = createSlice({
     resetGrassGeneticMarkerThreshold: (state) => {
       state.geneticMarkerThresholdGrass = 100;
     },
+    //Set current cell
+    setCurrentCell: (state, action: PayloadAction<{ cellNumber: number }>) => {
+      state.currentCell = action.payload.cellNumber;
+    },
   },
   extraReducers: (builder) => {
     builder.addMatcher(
@@ -228,6 +232,7 @@ export const {
   resetSucculentGeneticMarkerThreshold,
   addGeneticMarkersBush,
   resetGrassGeneticMarkerThreshold,
+  setCurrentCell,
   // Add other exported actions...
 } = globalStateSlice.actions;
 

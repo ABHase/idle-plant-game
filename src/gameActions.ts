@@ -20,9 +20,13 @@ import {
   removeFlower,
   deductWater,
   increaseFlowerThreshold,
+  resetPlant,
+  setPlantType,
 } from "./Slices/plantSlice";
 import {
   addGeneticMarkersBush,
+  resetGlobalState,
+  setCurrentCell,
   updateGeneticMarkerProgress,
 } from "./Slices/gameStateSlice";
 import { LEAF_COST, ROOT_COST } from "./constants";
@@ -32,6 +36,13 @@ import {
   PlantHistoryEntry,
   addPlantToHistory,
 } from "./Slices/plantHistorySlice";
+import { completeCell } from "./Slices/cellCompletionSlice";
+import {
+  purchaseUpgrade,
+  resetUpgrades,
+  setPurchasedUpgrades,
+} from "./Slices/upgradesSlice";
+import { calculateAdjacencyUpgrades } from "./calculateAdjacencyUpgrades";
 
 //... [other imports]
 
@@ -369,5 +380,39 @@ export const updateFlowers = (): ThunkAction<
         break;
       }
     }
+  };
+};
+
+export const completeCellAndDeductSugar = (
+  targetCellIndex: number
+): ThunkAction<void, RootState, unknown, Action<string>> => {
+  return (dispatch, getState) => {
+    // Get the current state
+    const state = getState();
+    const currentCell = state.globalState.currentCell;
+    const currentPlantType = state.plant.type;
+    const currentSugar = state.plant.sugar;
+
+    // Complete the cell with the current plant type
+    dispatch(
+      completeCell({ cellNumber: currentCell, plantType: currentPlantType })
+    );
+
+    dispatch(resetGlobalState());
+
+    // Set the current cell
+    dispatch(setCurrentCell({ cellNumber: targetCellIndex }));
+
+    // Calculate adjacency upgrades (assuming a function for this)
+    const adjacencyUpgrades = calculateAdjacencyUpgrades(
+      state,
+      currentCell,
+      currentPlantType
+    );
+
+    // Set the new adjacency upgrades
+    dispatch(setPurchasedUpgrades(adjacencyUpgrades));
+
+    dispatch(evolveAndRecordPlant(currentPlantType, adjacencyUpgrades));
   };
 };

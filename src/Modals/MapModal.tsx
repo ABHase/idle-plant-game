@@ -1,10 +1,12 @@
 import React, { useCallback, useState } from "react";
 import { Modal, Grid, Paper, Typography, Box } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../rootReducer";
 import GrassIcon from "../Components/Grass";
 import { getAdjacentCells } from "../cellUtils";
 import ConfirmMoveDialog from "../ConfirmMoveDialog";
+import { completeCellAndDeductSugar } from "../gameActions";
+import { AnyAction, ThunkDispatch } from "@reduxjs/toolkit";
 
 interface MapModalProps {
   open: boolean;
@@ -50,14 +52,20 @@ const MapModal: React.FC<MapModalProps> = ({ open, onClose, isMobile }) => {
   // Local state to manage the ConfirmMoveDialog visibility
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
 
-  // Define the alert function
-  const handleMoveClick = useCallback(() => {
+  const [clickedCellIndex, setClickedCellIndex] = useState<number | null>(null);
+
+  const handleMoveClick = useCallback((index: number) => {
+    setClickedCellIndex(index);
     setIsConfirmDialogOpen(true);
   }, []);
 
+  const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
+
   const handleConfirmMove = useCallback(() => {
-    // Your code to handle move confirmation here
-  }, []);
+    if (clickedCellIndex !== null) {
+      dispatch(completeCellAndDeductSugar(clickedCellIndex));
+    }
+  }, [dispatch, clickedCellIndex]);
 
   return (
     <Modal
@@ -115,7 +123,9 @@ const MapModal: React.FC<MapModalProps> = ({ open, onClose, isMobile }) => {
                     alignItems: "center",
                     justifyContent: "center",
                   }}
-                  onClick={isAdjacentCell ? handleMoveClick : undefined}
+                  onClick={
+                    isAdjacentCell ? () => handleMoveClick(index) : undefined
+                  }
                 >
                   {isAdjacentCell ? <Typography>Move</Typography> : null}
                 </Paper>

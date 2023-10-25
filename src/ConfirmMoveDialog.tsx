@@ -5,6 +5,9 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
+import { Sugar } from "./Components/Sugar";
+import { useSelector } from "react-redux";
+import { RootState } from "./rootReducer";
 
 type ConfirmMoveDialogProps = {
   open: boolean;
@@ -19,6 +22,7 @@ const ConfirmMoveDialog: React.FC<ConfirmMoveDialogProps> = ({
   onConfirm,
   currentPlantType,
 }) => {
+  const sugar = useSelector((state: RootState) => state.plant.sugar);
   return (
     <Dialog
       open={open}
@@ -30,11 +34,12 @@ const ConfirmMoveDialog: React.FC<ConfirmMoveDialogProps> = ({
       <DialogContent>
         <DialogContentText id="confirm-move-description">
           Complete the Current Cell as a {currentPlantType}. This will reset all
-          upgrades and DNA.
+          upgrades and DNA. You will start the new cell with any adjacency
+          bonuses. The cannot be undone.
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="primary">
+        <Button onClick={onClose} color="primary" variant="contained">
           Cancel
         </Button>
         <Button
@@ -43,9 +48,11 @@ const ConfirmMoveDialog: React.FC<ConfirmMoveDialogProps> = ({
             onClose();
           }}
           color="primary"
+          variant="contained"
           autoFocus
+          disabled={sugar < 1000000000}
         >
-          Confirm
+          <Sugar amount={1000000000} />
         </Button>
       </DialogActions>
     </Dialog>
