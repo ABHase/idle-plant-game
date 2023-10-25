@@ -9,7 +9,15 @@ import GrainIcon from "@mui/icons-material/Grain";
 import GrassIcon from "@mui/icons-material/Grass";
 import SpaIcon from "@mui/icons-material/Spa";
 import ParkIcon from "@mui/icons-material/Park";
-import { Button, List, ListItem, ListItemText } from "@mui/material";
+import {
+  Button,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+} from "@mui/material";
+import { useSelector } from "react-redux";
+import { RootState } from "../rootReducer";
 
 interface HelpModalProps {
   open: boolean;
@@ -17,10 +25,21 @@ interface HelpModalProps {
 }
 
 const HelpModal: React.FC<HelpModalProps> = ({ open, onClose }) => {
+  const purchasedUpgrades = useSelector(
+    (state: RootState) => state.upgrades.purchased
+  );
   const [currentPage, setCurrentPage] = useState(0);
 
   // Table of contents items
-  const toc = ["Basics", "Moss", "Fern", "Grass", "Berry Bush", "Succulent"];
+  const toc = [
+    "Basics",
+    "Map",
+    "Moss",
+    "Fern",
+    "Grass",
+    "Berry Bush",
+    "Succulent",
+  ];
 
   const pages: React.ReactNode[] = [
     <div>
@@ -63,6 +82,44 @@ const HelpModal: React.FC<HelpModalProps> = ({ open, onClose }) => {
           {" "}
           - Traits can be sold back for DNA at any time for full value. Traits
           DO NOT take effect until you plant a new plant.
+        </Typography>
+      </Box>
+    </div>,
+
+    <div>
+      <Typography variant="h6" mb={2}>
+        Map Bonuses:
+      </Typography>
+      <Typography variant="h6" mb={2}>
+        All Adjacency Bonuses Stack!
+      </Typography>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          - Starting next to a completed Fern tile: +100 to roots and leaves.
+        </Typography>
+      </Box>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          - Starting next to a completed Succulent tile: 2x sugar production.
+        </Typography>
+      </Box>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          - Starting next to a Grass tile: All seasonal bonuses are doubled,
+          including winter rates, which means they can become bonuses with
+          enough. Also 3X Spread on all plants. Also 5X manual absorption on all
+          plants.
+        </Typography>
+      </Box>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          - Starting next to Moss: 20x water and sunlight passive absorption.
+        </Typography>
+      </Box>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          - Starting next to a Bush: Flower maturity threshold is multiplied by
+          .4. Also 5X manual absorption on all plants.
         </Typography>
       </Box>
     </div>,
@@ -271,13 +328,15 @@ const HelpModal: React.FC<HelpModalProps> = ({ open, onClose }) => {
           </Typography>
           <List>
             {toc.map((item, index) => (
-              <ListItem
-                button
+              <ListItemButton
                 key={index}
                 onClick={() => setCurrentPage(index)}
+                disabled={
+                  item === "Map" && !purchasedUpgrades.includes("Bush_map")
+                }
               >
                 <ListItemText primary={item} sx={{ color: "text.primary" }} />
-              </ListItem>
+              </ListItemButton>
             ))}
           </List>
         </Box>
