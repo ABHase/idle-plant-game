@@ -37,11 +37,11 @@ const MapModal: React.FC<MapModalProps> = ({ open, onClose, isMobile }) => {
   };
 
   const plantColors = {
-    Fern: "#8BC34A",
-    Grass: "#4CAF50",
-    Bush: "#388E3C",
-    Moss: "#2E7D32",
-    Succulent: "#1B5E20",
+    Fern: "#30050d", // Red fern
+    Grass: "#0c2100", // Grass green
+    Bush: "#303F9F", // Blueberry blue
+    Moss: "#795548", // Darkish brown
+    Succulent: "#47430d", // Desert yellow
   };
 
   const getColorForPlant = (plantType: keyof PlantColors) =>
@@ -94,7 +94,7 @@ const MapModal: React.FC<MapModalProps> = ({ open, onClose, isMobile }) => {
           Map
         </Typography>
 
-        <Grid container spacing={1}>
+        <Grid container spacing={0.1}>
           {[...Array(24)].map((_, index) => {
             const cellPlantType: string | null = cellCompletion.cells[index];
 
@@ -122,11 +122,15 @@ const MapModal: React.FC<MapModalProps> = ({ open, onClose, isMobile }) => {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
+                    border: "2px solid black",
                   }}
                   onClick={
                     isAdjacentCell ? () => handleMoveClick(index) : undefined
                   }
                 >
+                  {cellPlantType && (
+                    <Typography>({cellPlantType[0]})</Typography>
+                  )}
                   {isAdjacentCell ? <Typography>Move</Typography> : null}
                 </Paper>
               </Grid>
