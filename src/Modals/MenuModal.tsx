@@ -30,6 +30,9 @@ const MenuModal: React.FC<Props> = (props) => {
   const purchasedUpgrades = useSelector(
     (state: RootState) => state.upgrades.purchased
   );
+  const playTimeSeconds = useSelector(
+    (state: RootState) => state.app.totalTime
+  );
 
   return (
     <Dialog open={props.open} onClose={props.onClose}>
@@ -43,6 +46,8 @@ const MenuModal: React.FC<Props> = (props) => {
       >
         {/* Displaying currentVersion */}
         <div>Current Version: 0.{currentVersion}</div>
+        <div>Play Time: {secondsToDHMS(playTimeSeconds)}</div>
+
         {props.isMobile && (
           <Button
             sx={{ my: 1 }}
@@ -147,5 +152,20 @@ const MenuModal: React.FC<Props> = (props) => {
     </Dialog>
   );
 };
+
+function secondsToDHMS(seconds: number): string {
+  const days = Math.floor(seconds / (24 * 3600));
+  seconds -= days * 24 * 3600;
+
+  const hours = Math.floor(seconds / 3600);
+  seconds -= hours * 3600;
+
+  const minutes = Math.floor(seconds / 60);
+  seconds -= minutes * 60;
+
+  return `${days}d ${hours.toString().padStart(2, "0")}:${minutes
+    .toString()
+    .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+}
 
 export default MenuModal;
