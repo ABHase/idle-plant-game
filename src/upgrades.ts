@@ -10,6 +10,33 @@ export type Upgrade = {
 };
 
 export const UPGRADES: Record<string, Upgrade[]> = {
+  Column: [
+    {
+      id: "Column_Fern",
+      name: "Fern Row",
+      description: "Receive a roots and leaves boost when adjacent to a Fern.",
+      cost: 0,
+    },
+    {
+      id: "Column_Succulent",
+      name: "Succulent Row",
+      description: "Receive a sugar boost when adjacent to a Succulent.",
+      cost: 0,
+    },
+    {
+      id: "Column_Grass",
+      name: "Grass Row",
+      description: "Receive a season boost when adjacent to a Grass.",
+      cost: 0,
+    },
+    {
+      id: "Column_Moss",
+      name: "Moss Row",
+      description:
+        "Receive a sunlight and water boost when adjacent to a Moss.",
+      cost: 0,
+    },
+  ],
   Adjacency: [
     {
       id: "Adjacent_to_Fern",
@@ -559,6 +586,35 @@ export const UPGRADE_FUNCTIONS: Record<
   string,
   { [key: string]: (plant: PlantState) => void }
 > = {
+  Row: {
+    Column_Fern: (plant) => {
+      plant.roots *= plant.roots;
+      plant.leaves *= plant.leaves;
+    },
+    Column_Succulent: (plant) => {
+      plant.sugar_production_rate *= plant.sugar_production_rate;
+    },
+    Column_Grass: (plant) => {
+      plant.springModifier *= 2;
+      plant.summerModifier *= 2;
+      plant.autumnModifier *= 2;
+      plant.winterModifier *= 2;
+      plant.sunlight_absorption_rate *= plant.sunlight_absorption_rate;
+      plant.water_absorption_rate *= plant.water_absorption_rate;
+      plant.autoGrowthMultiplier *= plant.autoGrowthMultiplier;
+    },
+    Column_Moss: (plant) => {
+      plant.sunlight_absorption_multiplier *=
+        plant.sunlight_absorption_multiplier;
+      plant.water_absorption_multiplier *= plant.water_absorption_multiplier;
+    },
+    Column_Bush: (plant) => {
+      plant.flowerSugarThreshold *= 0.4 * 0.4;
+      plant.flowerWaterThreshold *= 0.4 * 0.4;
+      plant.water_absorption_rate *= plant.water_absorption_rate;
+      plant.sunlight_absorption_rate *= plant.sunlight_absorption_rate;
+    },
+  },
   Adjacency: {
     Adjacent_to_Fern: (plant) => {
       plant.roots += 100;

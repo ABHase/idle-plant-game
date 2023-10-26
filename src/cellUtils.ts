@@ -1,8 +1,8 @@
 // cellUtils.ts
 
 // Constants for the dimensions of the grid
-const ROWS = 4;
-const COLUMNS = 6;
+export const ROWS = 4;
+export const COLUMNS = 6;
 
 // Convert a single number representation of a cell into its x, y coordinates
 export function getCoordinatesFromCellNumber(n: number): {
@@ -30,4 +30,22 @@ export function getAdjacentCells(n: number): number[] {
     (x + 1) * COLUMNS + y, // bottom
   ];
   return adjacent.filter((cell) => cell >= 0 && cell < ROWS * COLUMNS); // filtering out invalid cell numbers
+}
+
+// Get all cell numbers in a particular column
+export function getCellsInColumn(column: number): number[] {
+  const cells = [];
+  for (let row = 0; row < ROWS; row++) {
+    cells.push(getCellNumberFromCoordinates(row, column));
+  }
+  return cells;
+}
+
+// Get all cell numbers in a particular row
+export function getCellsInRow(row: number): number[] {
+  const cells = [];
+  for (let col = 0; col < COLUMNS; col++) {
+    cells.push(getCellNumberFromCoordinates(row, col));
+  }
+  return cells;
 }

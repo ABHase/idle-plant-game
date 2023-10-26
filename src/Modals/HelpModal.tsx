@@ -93,6 +93,9 @@ const HelpModal: React.FC<HelpModalProps> = ({ open, onClose }) => {
       <Typography variant="h6" mb={2}>
         All Adjacency Bonuses Stack!
       </Typography>
+      <Typography variant="h6" mb={2}>
+        Column Bonuses Can Only Be Applied Once!
+      </Typography>
       <Box display="flex" alignItems="center" mb={1}>
         <Typography variant="body2">
           - Starting next to a completed Fern tile: +100 to roots and leaves.
@@ -120,6 +123,12 @@ const HelpModal: React.FC<HelpModalProps> = ({ open, onClose }) => {
         <Typography variant="body2">
           - Starting next to a Bush: Flower maturity threshold is multiplied by
           .4. Also 5X manual absorption on all plants.
+        </Typography>
+      </Box>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          - Column bonuses exponentially increase some of the associated values
+          for each plant.
         </Typography>
       </Box>
     </div>,

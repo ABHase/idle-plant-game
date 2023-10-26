@@ -214,6 +214,7 @@ const plantSlice = createSlice({
         };
       }
     },
+
     evolvePlant: (state, action: PayloadAction<EvolvePlantPayload>) => {
       const { plantType, upgrades } = action.payload;
       const plantConfig = PLANT_CONFIGS[plantType];
@@ -227,7 +228,8 @@ const plantSlice = createSlice({
         ...UPGRADES.Meta,
         ...UPGRADES[plantType],
         ...UPGRADES.Adjacency,
-      }; // Combine adjacency, meta, and specific plant upgrades
+        ...UPGRADES.Column,
+      }; // Combine adjacency, meta, specific plant, and Row upgrades
 
       if (!availableUpgrades) {
         console.error(`No upgrades available for plant type: ${plantType}`);
@@ -237,8 +239,8 @@ const plantSlice = createSlice({
       Object.assign(state, plantConfig);
       state.id = uuidv4();
 
-      // Apply upgrades in order: meta, plant-specific, and then adjacency
-      ["Meta", plantType, "Adjacency"].forEach((upgradeCategory) => {
+      // Apply upgrades in order: meta, plant-specific, adjacency, and then Row
+      ["Meta", plantType, "Adjacency", "Row"].forEach((upgradeCategory) => {
         upgrades.forEach((upgradeId) => {
           const upgradeFunction = UPGRADE_FUNCTIONS[upgradeCategory][upgradeId];
           if (upgradeFunction) {
