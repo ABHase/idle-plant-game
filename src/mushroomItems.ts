@@ -85,7 +85,7 @@ export const GRASS_MUSHROOM_ITEMS: MushroomItem[] = [
       "Burn the forest to the ground to rejuvenate the soil. (Reset Leaves Needed for DNA)",
     cost: 250000000000,
     effect: (dispatch, getState) => {
-      dispatch(deductSunlight(1000000000000)); // Deduct sugar cost
+      dispatch(deductSunlight(250000000000)); // Deduct sugar cost
       dispatch(resetGrassGeneticMarkerThreshold()); // Reset the succulent genetic marker threshold
     },
   },
