@@ -270,7 +270,12 @@ export const sellUpgradeThunk = createAsyncThunk<
   const state = thunkAPI.getState();
 
   // Find the right upgrade using the plant type
-  const upgrade = UPGRADES[plantType]?.find((u) => u.id === upgradeId);
+  let upgrade = UPGRADES[plantType]?.find((u) => u.id === upgradeId);
+
+  // Also check in Meta upgrades if not found
+  if (!upgrade) {
+    upgrade = UPGRADES["Meta"]?.find((u) => u.id === upgradeId);
+  }
 
   if (!upgrade) {
     throw new Error("Upgrade not found");
