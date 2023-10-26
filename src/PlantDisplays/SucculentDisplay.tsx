@@ -391,6 +391,7 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
             multiplier={plant.leafAutoGrowthMultiplier}
             isVisible={plant.grassGrowthToggle}
             plant={plant}
+            waterCost={LEAF_COST * multiplier * 100}
           />
           {/*Section for toggling root automatic production */}
           <ToggleAutoRootButton

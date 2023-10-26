@@ -6,6 +6,7 @@ import { Leaves } from "../Leaves";
 import { Grid } from "@mui/material";
 import { isSugarUpgradesUnlocked } from "../../formulas";
 import { PlantState } from "../../Slices/plantSlice";
+import { Water } from "../Water";
 
 interface ToggleButtonProps {
   isOn: boolean;
@@ -14,6 +15,7 @@ interface ToggleButtonProps {
   multiplier: number;
   isVisible: boolean;
   plant: PlantState;
+  waterCost?: number;
 }
 
 const ToggleAutoLeafButton: React.FC<ToggleButtonProps> = ({
@@ -23,6 +25,7 @@ const ToggleAutoLeafButton: React.FC<ToggleButtonProps> = ({
   multiplier,
   isVisible, // <-- Destructure the new prop
   plant,
+  waterCost,
 }) => {
   if (!isVisible) return null;
 
@@ -55,13 +58,12 @@ const ToggleAutoLeafButton: React.FC<ToggleButtonProps> = ({
           onClick={onClick}
         >
           <Sugar amount={leafCost * multiplier} />
-          /s{" "}
-          <ArrowForwardIcon
-            sx={{
-              color: isOn ? "" : "red",
-            }}
+          /s {waterCost && <Water amount={waterCost * multiplier} />}{" "}
+          {/* Show water cost if provided */}
+          <ArrowForwardIcon /> <Leaves
+            amount={plant.autoGrowthMultiplier}
           />{" "}
-          <Leaves amount={plant.autoGrowthMultiplier} /> &nbsp;
+          &nbsp;
           {isOn ? "Stop" : "Start"}
         </Button>
       </Tooltip>

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Modal, Grid, Paper, Typography, Box } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../rootReducer";
@@ -7,6 +7,7 @@ import { getAdjacentCells } from "../cellUtils";
 import ConfirmMoveDialog from "../ConfirmMoveDialog";
 import { completeCellAndDeductSugar } from "../gameActions";
 import { AnyAction, ThunkDispatch } from "@reduxjs/toolkit";
+import VictoryDialog from "../VictoryDialog";
 
 interface MapModalProps {
   open: boolean;
@@ -51,6 +52,7 @@ const MapModal: React.FC<MapModalProps> = ({ open, onClose, isMobile }) => {
 
   // Local state to manage the ConfirmMoveDialog visibility
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+  const [isVictoryDialogOpen, setIsVictoryDialogOpen] = useState(false);
 
   const [clickedCellIndex, setClickedCellIndex] = useState<number | null>(null);
 
@@ -66,6 +68,18 @@ const MapModal: React.FC<MapModalProps> = ({ open, onClose, isMobile }) => {
       dispatch(completeCellAndDeductSugar(clickedCellIndex));
     }
   }, [dispatch, clickedCellIndex]);
+
+  useEffect(() => {
+    const allCellsCompleted = Array.from({ length: 24 }, (_, i) => i).every(
+      (index) =>
+        cellCompletion.cells[index] !== null &&
+        cellCompletion.cells[index] !== undefined
+    );
+
+    if (allCellsCompleted) {
+      setIsVictoryDialogOpen(true);
+    }
+  }, [cellCompletion]);
 
   return (
     <Modal
@@ -173,6 +187,10 @@ const MapModal: React.FC<MapModalProps> = ({ open, onClose, isMobile }) => {
           onClose={() => setIsConfirmDialogOpen(false)}
           onConfirm={handleConfirmMove}
           currentPlantType={currentPlantType}
+        />
+        <VictoryDialog
+          open={isVictoryDialogOpen}
+          onClose={() => setIsVictoryDialogOpen(false)}
         />
       </div>
     </Modal>
