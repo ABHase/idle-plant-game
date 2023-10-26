@@ -348,6 +348,9 @@ export const updateFlowers = (): ThunkAction<
   return (dispatch, getState) => {
     const plant = getState().plant;
 
+    let availableSugar = plant.sugar;
+    let availableWater = plant.water;
+
     for (let i = plant.flowers.length - 1; i >= 0; i--) {
       const flower = plant.flowers[i];
 
@@ -359,28 +362,34 @@ export const updateFlowers = (): ThunkAction<
 
       if (
         !sugarThresholdMet &&
-        plant.sugar >= plant.flowerSugarConsumptionRate
+        availableSugar >= plant.flowerSugarConsumptionRate
       ) {
         dispatch(deductSugar(plant.flowerSugarConsumptionRate));
         dispatch(addSugarToFlower(i, plant.flowerSugarConsumptionRate));
         sugarAcquired = true;
+        availableSugar -= plant.flowerSugarConsumptionRate;
       }
 
       if (
         !waterThresholdMet &&
-        plant.water >= plant.flowerWaterConsumptionRate
+        availableWater >= plant.flowerWaterConsumptionRate
       ) {
         dispatch(deductWater(plant.flowerWaterConsumptionRate));
         dispatch(addWaterToFlower(i, plant.flowerWaterConsumptionRate));
         waterAcquired = true;
+        availableWater -= plant.flowerWaterConsumptionRate;
       }
 
       if (sugarThresholdMet && waterThresholdMet) {
         dispatch(addGeneticMarkersBush({ amount: plant.flowerDNA }));
         dispatch(increaseFlowerThreshold());
         dispatch(removeFlower(i));
+      } else if (
+        availableSugar < plant.flowerSugarConsumptionRate ||
+        availableWater < plant.flowerWaterConsumptionRate
+      ) {
+        dispatch(removeFlower(i));
       } else if (!(sugarAcquired && waterAcquired)) {
-        // Remove the flower if it didn't get both sugar and water
         dispatch(removeFlower(i));
       }
     }
