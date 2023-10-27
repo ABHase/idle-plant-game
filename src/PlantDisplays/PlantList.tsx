@@ -601,7 +601,9 @@ export function formatNumberWithDecimals(value: number): string {
 
   let formattedValue;
 
-  if (absValue >= 1_000_000_000_000) {
+  if (absValue >= 1_000_000_000_000_000) {
+    formattedValue = (absValue / 1_000_000_000_000_000).toFixed(2) + "Q";
+  } else if (absValue >= 1_000_000_000_000) {
     formattedValue = (absValue / 1_000_000_000_000).toFixed(2) + "T";
   } else if (absValue >= 1_000_000_000) {
     formattedValue = (absValue / 1_000_000_000).toFixed(2) + "B";
