@@ -61,6 +61,7 @@ export const updateGame = (): ThunkAction<
     const currentMinute = getState().plantTime.update_counter;
     const currentSugar = getState().plant.sugar;
     const maxResourceToSpend = getState().plant.maxResourceToSpend;
+    console.log("maxResourceToSpend", maxResourceToSpend);
     const gameState = getState().globalState;
 
     // Dispatch updateTime with newTotalTime
@@ -109,39 +110,40 @@ export const updateGame = (): ThunkAction<
       }
     }
 
-    //Genetic Marker (DNA) Production Dispatches
-
+    // Determine the required resource type based on the plant type
     const requiredResource =
       plant.type === "Grass" ? plant.leaves : plant.sugar;
-    let resourceThreshold;
 
-    switch (plant.type) {
-      case "Fern":
-        resourceThreshold = gameState.geneticMarkerThreshold;
-        break;
-      case "Moss":
-        resourceThreshold = gameState.geneticMarkerThresholdMoss;
-        break;
-      case "Succulent":
-        resourceThreshold = gameState.geneticMarkerThresholdSucculent;
-        break;
-      case "Grass":
-        resourceThreshold = gameState.geneticMarkerThresholdGrass;
-        break;
-      default:
-        resourceThreshold = gameState.geneticMarkerThreshold; // Default case if no match
-        break;
-    }
+    type PlantType = "Fern" | "Moss" | "Succulent" | "Grass";
+    type Thresholds = {
+      [key in PlantType]?: number;
+    };
 
-    // Check if the geneticMarkerUpgradeActive flag is true, and if so, quadruple the resource threshold
+    const thresholds: Thresholds = {
+      Fern: gameState.geneticMarkerThreshold,
+      Moss: gameState.geneticMarkerThresholdMoss,
+      Succulent: gameState.geneticMarkerThresholdSucculent,
+      Grass: gameState.geneticMarkerThresholdGrass,
+    };
+
+    let resourceThreshold =
+      thresholds[plant.type as PlantType] || gameState.geneticMarkerThreshold;
+
+    // If the geneticMarkerUpgradeActive flag is true, quadruple the resource threshold
     if (plant.geneticMarkerUpgradeActive) {
       resourceThreshold *= 4;
     }
 
+    // Check conditions:
+    // 1. Genetic marker production is on
+    // 2. Required resource is above or equals the threshold
+    // 3. The resource is below the maxResourceToSpend or it's not set
     if (
       plant.is_genetic_marker_production_on &&
       requiredResource >= resourceThreshold &&
-      requiredResource < (maxResourceToSpend || Infinity)
+      (typeof maxResourceToSpend === "number"
+        ? resourceThreshold < maxResourceToSpend
+        : true)
     ) {
       dispatch(produceGeneticMarkers(resourceThreshold));
       dispatch(

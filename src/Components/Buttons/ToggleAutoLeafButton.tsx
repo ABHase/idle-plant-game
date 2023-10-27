@@ -60,10 +60,12 @@ const ToggleAutoLeafButton: React.FC<ToggleButtonProps> = ({
           <Sugar amount={leafCost * multiplier} />
           /s {waterCost && <Water amount={waterCost * multiplier} />}{" "}
           {/* Show water cost if provided */}
-          <ArrowForwardIcon /> <Leaves
-            amount={plant.autoGrowthMultiplier}
+          <ArrowForwardIcon
+            sx={{
+              color: isOn ? "" : "red",
+            }}
           />{" "}
-          &nbsp;
+          <Leaves amount={plant.autoGrowthMultiplier} /> &nbsp;
           {isOn ? "Stop" : "Start"}
         </Button>
       </Tooltip>
