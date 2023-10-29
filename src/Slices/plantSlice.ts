@@ -531,7 +531,6 @@ const plantSlice = createSlice({
     },
     //Reducer to increase flower threshold by 1 %
     increaseFlowerThreshold: (state) => {
-      console.log("increaseFlowerThreshold");
       state.flowerSugarThreshold *= 1.01;
       state.flowerWaterThreshold *= 1.01;
     },

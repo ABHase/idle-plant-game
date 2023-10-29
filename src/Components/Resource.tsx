@@ -11,6 +11,7 @@ interface IProps {
 
 export const Resource = ({ icon: Icon, amount, color, format }: IProps) => (
   <Typography
+    component="span"
     style={{
       display: "flex",
       alignItems: "center",

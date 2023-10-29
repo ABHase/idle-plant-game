@@ -44,8 +44,6 @@ import {
 } from "./Slices/upgradesSlice";
 import { calculateAdjacencyUpgrades } from "./calculateAdjacencyUpgrades";
 
-//... [other imports]
-
 let ticksSinceLadybugActivation = 0;
 
 export const updateGame = (): ThunkAction<
@@ -61,7 +59,6 @@ export const updateGame = (): ThunkAction<
     const currentMinute = getState().plantTime.update_counter;
     const currentSugar = getState().plant.sugar;
     const maxResourceToSpend = getState().plant.maxResourceToSpend;
-    console.log("maxResourceToSpend", maxResourceToSpend);
     const gameState = getState().globalState;
 
     // Dispatch updateTime with newTotalTime

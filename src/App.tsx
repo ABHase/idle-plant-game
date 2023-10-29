@@ -156,11 +156,13 @@ function App() {
     if (!isPlantSelected) {
       return; // Exit early if the plant hasn't been selected yet
     }
+
     const currentTime = Date.now();
     const timeElapsed = currentTime - lastUpdateTimeRef.current;
 
     if (!isTimeBoostActive && timeElapsed >= 1000) {
       const numTicksMissed = Math.floor(timeElapsed / 1000);
+      let shouldSave = false;
 
       for (let i = 0; i < numTicksMissed; i++) {
         dispatch(updateGame());
@@ -170,12 +172,14 @@ function App() {
 
         // Check if the save counter reaches 30
         if (saveCounterRef.current === 30) {
-          // Save the state to localStorage
-          saveState(store.getState());
-
-          // Reset the counter
-          saveCounterRef.current = 0;
+          shouldSave = true;
+          saveCounterRef.current = 0; // Reset the counter
         }
+      }
+
+      // Only save to localStorage once after processing all the missed ticks
+      if (shouldSave) {
+        saveState(store.getState());
       }
 
       lastUpdateTimeRef.current = currentTime;

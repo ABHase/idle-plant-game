@@ -21,6 +21,7 @@ export const ResourceModifier = ({ icons, modifier }: IProps) => {
 
   return (
     <Typography
+      component="span"
       style={{
         display: "flex",
         alignItems: "center",

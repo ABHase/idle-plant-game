@@ -506,34 +506,36 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
             }}
           >
             <Tooltip title="Grow Needles">
-              <Button
-                fullWidth
-                sx={{
-                  border: "1px solid #aaa",
-                  borderRadius: "4px",
-                  backgroundColor: "#252b36",
-                  color: "#d0d4db",
-                  "&:active, &:focus": {
-                    backgroundColor: "#252b36", // Or any other style reset
-                  },
-                  "&.Mui-disabled": {
+              <span>
+                <Button
+                  fullWidth
+                  sx={{
+                    border: "1px solid #aaa",
+                    borderRadius: "4px",
+                    backgroundColor: "#252b36",
                     color: "#d0d4db",
-                    opacity: 1, // This resets the reduced opacity of the disabled button.
-                  },
-                }}
-                onClick={() => handleBuyNeedles()}
-                disabled={plant.rabbitImmunity}
-              >
-                {plant.rabbitImmunity ? (
-                  "Rabbits are afraid of your needles!"
-                ) : (
-                  <>
-                    Grow Needles: {multiplier}
-                    &nbsp;for{" "}
-                    <Sugar amount={plant.maturity_level * 100 * multiplier} />
-                  </>
-                )}
-              </Button>
+                    "&:active, &:focus": {
+                      backgroundColor: "#252b36", // Or any other style reset
+                    },
+                    "&.Mui-disabled": {
+                      color: "#d0d4db",
+                      opacity: 1, // This resets the reduced opacity of the disabled button.
+                    },
+                  }}
+                  onClick={() => handleBuyNeedles()}
+                  disabled={plant.rabbitImmunity}
+                >
+                  {plant.rabbitImmunity ? (
+                    "Rabbits are afraid of your needles!"
+                  ) : (
+                    <>
+                      Grow Needles: {multiplier}
+                      &nbsp;for{" "}
+                      <Sugar amount={plant.maturity_level * 100 * multiplier} />
+                    </>
+                  )}
+                </Button>
+              </span>
             </Tooltip>
           </Grid>
           <Grid

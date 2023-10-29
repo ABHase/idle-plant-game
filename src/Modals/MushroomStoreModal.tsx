@@ -44,12 +44,11 @@ const MushroomStoreModal: React.FC<MushroomStoreModalProps> = ({
   const lichenStore = useSelector(
     (state: RootState) => state.plant.lichenStoreAvailable
   );
-  const currentState = useSelector((state: RootState) => state); // Retrieve the whole state here
   const [showWarning, setShowWarning] = React.useState(false);
 
   const handlePurchase = (itemEffect: any) => {
-    itemEffect(dispatch, () => currentState);
-    setShowWarning(true); // Show the warning after making a purchase
+    itemEffect(dispatch, sugar, sunlight, water, lichenStore, plantType);
+    setShowWarning(true);
   };
 
   const plantType = useSelector((state: RootState) => state.plant.type); // Extract plant type
