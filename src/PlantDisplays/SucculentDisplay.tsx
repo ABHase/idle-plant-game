@@ -82,13 +82,6 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
     useSelector((state: RootState) => state.globalState);
   const plantState = useSelector((state: RootState) => state.plant);
 
-  useEffect(() => {
-    const maxResource = plant.maxResourceToSpend;
-    if (maxResource !== null && geneticMarkerThresholdSucculent > maxResource) {
-      dispatch(turnOffGeneticMarkerProduction());
-    }
-  }, [plant.maxResourceToSpend, geneticMarkerThresholdSucculent, dispatch]);
-
   // Extract season from state (Assuming you have access to the state here)
   const { season } = useSelector((state: RootState) => state.plantTime);
   const report = itemizedReport(plant, season);

@@ -81,13 +81,6 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({
   );
   const plantState = useSelector((state: RootState) => state.plant);
 
-  useEffect(() => {
-    const maxResource = plant.maxResourceToSpend; // Assuming `plant` is from your Redux store
-    if (maxResource !== null && geneticMarkerThresholdGrass > maxResource) {
-      dispatch(turnOffGeneticMarkerProduction());
-    }
-  }, [plant.maxResourceToSpend, geneticMarkerThresholdGrass, dispatch]);
-
   // Extract season from state (Assuming you have access to the state here)
   const { season } = useSelector((state: RootState) => state.plantTime);
   const report = itemizedReport(plant, season);

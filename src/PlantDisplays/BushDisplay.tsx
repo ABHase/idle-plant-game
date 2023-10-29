@@ -97,13 +97,6 @@ const BushDisplay: React.FC<BushDisplayProps> = ({
   );
   const plantState = useSelector((state: RootState) => state.plant);
 
-  useEffect(() => {
-    const maxResource = plant.maxResourceToSpend; // Assuming `plant` is from your Redux store
-    if (maxResource !== null && geneticMarkerThreshold > maxResource) {
-      dispatch(turnOffGeneticMarkerProduction());
-    }
-  }, [plant.maxResourceToSpend, geneticMarkerThreshold, dispatch]);
-
   // Extract season from state (Assuming you have access to the state here)
   const { season } = useSelector((state: RootState) => state.plantTime);
   const report = itemizedReport(plant, season);
