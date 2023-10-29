@@ -64,6 +64,7 @@ const MushroomStoreDesktopDisplay = () => {
   const lichenStore = useSelector(
     (state: RootState) => state.plant.lichenStoreAvailable
   );
+  const currentState = useSelector((state: RootState) => state); // Retrieve the whole state here
   const [showWarning, setShowWarning] = React.useState(false);
 
   const handleButtonClick = (
@@ -77,9 +78,10 @@ const MushroomStoreDesktopDisplay = () => {
   };
 
   const handlePurchase = (itemEffect: any) => {
-    itemEffect(dispatch, sugar, sunlight, water, lichenStore, plantType);
-    setShowWarning(true);
+    itemEffect(dispatch, () => currentState);
+    setShowWarning(true); // Show the warning after making a purchase
   };
+
   const plantType = useSelector((state: RootState) => state.plant.type); // Extract plant type
 
   const renderContent = () => {
@@ -258,9 +260,7 @@ const MushroomStoreDesktopDisplay = () => {
                   const remainingSugar =
                     plant.flowerSugarThreshold - flower.sugar;
 
-                  const timeForWater = formatTime(
-                    remainingWater / plant.flowerWaterConsumptionRate
-                  );
+                  const timeForWater = formatTime(remainingWater / 10);
 
                   return (
                     <ListItem
