@@ -32,6 +32,7 @@ interface PlantTimeProps {
 
 const PlantTimeDisplay: React.FC<PlantTimeProps> = ({ plantTime }) => {
   const plant = useSelector((state: RootState) => state.plant);
+  const boost = useSelector((state: RootState) => state.timeBoost);
   const { value: seasonModifier, resource } = getSeasonModifier(
     plantTime.season,
     plant
@@ -106,8 +107,9 @@ const PlantTimeDisplay: React.FC<PlantTimeProps> = ({ plantTime }) => {
             {plantTime.season}:{plantTime.day}/30
           </Typography>
           <Typography style={{ display: "flex", alignItems: "center" }}>
-            {renderResourceComponent()}
+            {boost ? "Time Boost" : renderResourceComponent()}
           </Typography>
+
           <IconButton onClick={togglePopup}>
             <InfoIcon sx={{ fontSize: "small", color: "white" }} />
           </IconButton>

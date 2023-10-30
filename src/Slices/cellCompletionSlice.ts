@@ -1,5 +1,5 @@
 //cellCompletionSlice.ts
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 // Export the state type
 export type CellCompletionState = {
@@ -40,6 +40,15 @@ const cellCompletionSlice = createSlice({
     );
   },
 });
+
+// A selector to get the number of completed cells
+export const selectNumberOfCompletedCells = createSelector(
+  (state: { cellCompletion: CellCompletionState }) =>
+    state.cellCompletion.cells,
+  (cells) => {
+    return Object.keys(cells).length;
+  }
+);
 
 export const { completeCell, resetCell } = cellCompletionSlice.actions;
 export default cellCompletionSlice.reducer;

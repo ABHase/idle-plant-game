@@ -3,6 +3,7 @@ import { Box, Button, Dialog } from "@mui/material";
 import { currentVersion } from "../store";
 import { useSelector } from "react-redux";
 import { RootState } from "../rootReducer";
+import { selectNumberOfCompletedCells } from "../Slices/cellCompletionSlice";
 
 interface Props {
   open: boolean;
@@ -34,6 +35,8 @@ const MenuModal: React.FC<Props> = (props) => {
     (state: RootState) => state.app.totalTime
   );
 
+  const numberOfCompletedCells = useSelector(selectNumberOfCompletedCells);
+
   return (
     <Dialog open={props.open} onClose={props.onClose}>
       <Box
@@ -47,6 +50,8 @@ const MenuModal: React.FC<Props> = (props) => {
         {/* Displaying currentVersion */}
         <div>Current Version: 0.{currentVersion}</div>
         <div>Play Time: {secondsToDHMS(playTimeSeconds)}</div>
+        {/* Display Cells Completed */}
+        <div>Cells Completed: {numberOfCompletedCells}</div>
 
         {props.isMobile && (
           <Button
