@@ -2,10 +2,12 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface AppState {
   totalTime: number;
+  score: number;
 }
 
 export const initialState: AppState = {
   totalTime: 0,
+  score: 0,
 };
 
 const appSlice = createSlice({
@@ -15,6 +17,9 @@ const appSlice = createSlice({
     resetApp: () => initialState,
     updateTime: (state, action: PayloadAction<number>) => {
       state.totalTime = action.payload;
+    },
+    incrementScore: (state, action: PayloadAction<number>) => {
+      state.score += action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -31,6 +36,6 @@ const appSlice = createSlice({
   },
 });
 
-export const { updateTime, resetApp } = appSlice.actions;
+export const { updateTime, incrementScore, resetApp } = appSlice.actions;
 
 export default appSlice.reducer;

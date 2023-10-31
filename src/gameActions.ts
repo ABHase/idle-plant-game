@@ -3,7 +3,7 @@
 import { ThunkAction } from "redux-thunk";
 import { RootState } from "./rootReducer";
 import { Action } from "@reduxjs/toolkit"; // Import Action
-import { updateTime } from "./Slices/appSlice";
+import { incrementScore, updateTime } from "./Slices/appSlice";
 import {
   evolvePlant,
   produceGeneticMarkers,
@@ -22,6 +22,7 @@ import {
   increaseFlowerThreshold,
   resetPlant,
   setPlantType,
+  setHasReceivedPoint,
 } from "./Slices/plantSlice";
 import {
   addGeneticMarkersBush,
@@ -195,6 +196,12 @@ export const updateGame = (): ThunkAction<
     }
 
     const difficulty = gameState.difficulty;
+
+    // Check if sugar hits a billion and has not received point yet
+    if (plant.sugar >= 1000000000 && !plant.hasReceivedPoint) {
+      dispatch(setHasReceivedPoint());
+      dispatch(incrementScore(difficulty));
+    }
 
     //Plant Production Dispatches
     dispatch(updateMaturityLevel());

@@ -1,7 +1,7 @@
 // ConfirmEvolveDialog.tsx
 
 import React from "react";
-import { useSelector } from "react-redux"; // <-- Add this import
+import { useSelector, useDispatch } from "react-redux"; // <-- Add this import
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -15,6 +15,8 @@ import { DNAIcon } from "./icons/dna";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import { DNA } from "./Components/DNA";
+import Slider from "@mui/material/Slider";
+import { setDifficulty } from "./Slices/gameStateSlice"; // Replace this with your actual import
 
 interface ConfirmEvolveDialogProps {
   open: boolean;
@@ -45,6 +47,18 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
     setPlantType(type);
   };
 
+  const dispatch = useDispatch();
+  const currentDifficulty = useSelector(
+    (state: RootState) => state.globalState.difficulty
+  );
+  const [localDifficulty, setLocalDifficulty] =
+    React.useState<number>(currentDifficulty);
+
+  const handleSliderChange = (event: Event, newValue: number | number[]) => {
+    const value = Array.isArray(newValue) ? newValue[0] : newValue;
+    setLocalDifficulty(value);
+  };
+
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>{"Evolve Plant?"}</DialogTitle>
@@ -69,7 +83,7 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
           <MenuItem value="Bush">Bush</MenuItem>
         </Select>
         <DialogContentText>
-          Will start a new {plantType} with the following traits::
+          Will start a new {plantType} with the following traits:
         </DialogContentText>
         {purchased.map((id) => {
           const trait = combinedUpgrades.find((upgrade) => upgrade.id === id);
@@ -80,6 +94,16 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
             </Typography>
           );
         })}
+        <div>Difficulty - Score if you achieve 1B Sugar</div>
+        <Slider
+          defaultValue={localDifficulty}
+          step={1}
+          marks
+          min={1}
+          max={100}
+          valueLabelDisplay="auto"
+          onChange={handleSliderChange}
+        />
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="primary">
@@ -87,6 +111,7 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
         </Button>
         <Button
           onClick={() => {
+            dispatch(setDifficulty({ difficulty: localDifficulty }));
             onConfirm(plantType);
             onClose();
           }}

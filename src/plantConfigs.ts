@@ -58,6 +58,7 @@ export const FERN_INITIAL_CONFIG: PlantState = {
   flowerWaterThreshold: 0,
   flowerDNA: 0,
   maxResourceToSpend: null,
+  hasReceivedPoint: false,
 };
 
 export const MOSS_INITIAL_CONFIG: PlantState = {
@@ -117,6 +118,7 @@ export const MOSS_INITIAL_CONFIG: PlantState = {
   flowerWaterThreshold: 0,
   flowerDNA: 0,
   maxResourceToSpend: null,
+  hasReceivedPoint: false,
 };
 
 export const SUCCULENT_INITIAL_CONFIG: PlantState = {
@@ -176,6 +178,7 @@ export const SUCCULENT_INITIAL_CONFIG: PlantState = {
   flowerWaterThreshold: 0,
   flowerDNA: 0,
   maxResourceToSpend: null,
+  hasReceivedPoint: false,
 };
 
 export const GRASS_INITIAL_CONFIG: PlantState = {
@@ -235,6 +238,7 @@ export const GRASS_INITIAL_CONFIG: PlantState = {
   flowerWaterThreshold: 0,
   flowerDNA: 0,
   maxResourceToSpend: null,
+  hasReceivedPoint: false,
 };
 
 export const BUSH_INITIAL_CONFIG: PlantState = {
@@ -294,6 +298,7 @@ export const BUSH_INITIAL_CONFIG: PlantState = {
   flowerWaterThreshold: 1000,
   flowerDNA: 1,
   maxResourceToSpend: null,
+  hasReceivedPoint: false,
 };
 
 export const PLANT_CONFIGS: Record<string, PlantState> = {

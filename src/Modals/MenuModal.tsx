@@ -37,13 +37,10 @@ const MenuModal: React.FC<Props> = (props) => {
   );
 
   const numberOfCompletedCells = useSelector(selectNumberOfCompletedCells);
-
-  const dispatch = useDispatch();
-
-  const handleSliderChange = (event: Event, newValue: number | number[]) => {
-    const value = Array.isArray(newValue) ? newValue[0] : newValue;
-    dispatch(setDifficulty({ difficulty: value }));
-  };
+  const score = useSelector((state: RootState) => state.app.score);
+  const difficulty = useSelector(
+    (state: RootState) => state.globalState.difficulty
+  );
 
   return (
     <Dialog open={props.open} onClose={props.onClose}>
@@ -60,6 +57,8 @@ const MenuModal: React.FC<Props> = (props) => {
         <div>Play Time: {secondsToDHMS(playTimeSeconds)}</div>
         {/* Display Cells Completed */}
         <div>Cells Completed: {numberOfCompletedCells}</div>
+        <div>Difficulty: {difficulty}</div>
+        <div>Score: {score}</div>
 
         {props.isMobile && (
           <Button
@@ -153,18 +152,6 @@ const MenuModal: React.FC<Props> = (props) => {
         >
           Import/Export Save
         </Button>
-        <div>Difficulty</div>
-        <Slider
-          defaultValue={useSelector(
-            (state: RootState) => state.globalState.difficulty
-          )}
-          step={1}
-          marks
-          min={1}
-          max={100}
-          valueLabelDisplay="auto"
-          onChange={handleSliderChange}
-        />
         <Button
           variant="contained"
           sx={{ my: 1, backgroundColor: "#942e25" }}

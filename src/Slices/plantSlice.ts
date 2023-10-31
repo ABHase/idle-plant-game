@@ -106,6 +106,7 @@ export interface PlantState {
   flowerWaterThreshold: number; //Flower water threshold, this is the number that is used to determine how much water is needed to grow a flower in a fruit
   flowerDNA: number; //Flower DNA, this is the number that is used to determine how much DNA is gained from a flower
   maxResourceToSpend: number | null;
+  hasReceivedPoint: boolean;
 }
 
 export const initialState: PlantState = PLANT_CONFIGS.Fern; // Setting Fern as the default plant
@@ -538,6 +539,10 @@ const plantSlice = createSlice({
       state.flowerSugarThreshold *= 1.01;
       state.flowerWaterThreshold *= 1.01;
     },
+    //Reducer to handle the hasReceivedPoint flag
+    setHasReceivedPoint: (state) => {
+      state.hasReceivedPoint = true;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(buyFlower, buyFlowerReducer);
@@ -600,5 +605,6 @@ export const {
   setMaxResourceToSpend,
   increaseFlowerThreshold,
   setPlantType,
+  setHasReceivedPoint,
 } = plantSlice.actions;
 export default plantSlice.reducer;
