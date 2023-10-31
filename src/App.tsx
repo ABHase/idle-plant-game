@@ -100,6 +100,9 @@ function App() {
     (state: RootState) => state.upgrades.purchased
   );
   const isTimeBoostActive = useSelector((state: RootState) => state.timeBoost);
+  const lastLeafLossReason = useSelector(
+    (state: RootState) => state.plant.lastLeafLossReason
+  );
 
   const handleDeleteConfirm = () => {
     clearState(); // Clear the state from localStorage
@@ -129,24 +132,32 @@ function App() {
   }, [isPlantSelected]);
 
   useEffect(() => {
+    console.log("useEffect running");
     // Only proceed if a plant is selected
     if (!isPlantSelected) {
       return;
     }
-    // Check if the number of leaves has decreased
+    console.log("isPlantSelected is true");
 
+    // Check if the number of leaves has decreased
     if (previousLeaves.current > totalLeaves) {
-      setShowLeafLossWarning(true);
+      console.log("Leaf loss detected!");
+      console.log("Last leaf loss reason:", lastLeafLossReason);
+      if (lastLeafLossReason === "noWater") {
+        setShowLeafLossWarning(true);
+        // Reset the reason after showing the warning
+        dispatch({ type: "plant/resetLastLeafLossReason" });
+      }
+      // Update previous leaves to current total leaves after checking
       previousLeaves.current = totalLeaves;
     }
-    // Update previous leaves to current total leaves after checking
-    previousLeaves.current = totalLeaves;
 
     // Call the update function to start the game loop
     update();
+
     // Cleanup code: stop the loop when the component unmounts
     return () => {};
-  }, [dispatch, totalLeaves, isPlantSelected]);
+  }, [dispatch, totalLeaves, isPlantSelected, lastLeafLossReason]);
 
   const lastUpdateTimeRef = useRef(Date.now());
   const saveCounterRef = useRef(0);

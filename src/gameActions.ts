@@ -132,7 +132,10 @@ export const updateGame = (): ThunkAction<
 
     // If the plant has 0 water dispatch removeLeaves with a payload of 1 every time the currentMinute is 0
     if (plant.leafWaterUsage && plant.water <= 0 && currentMinute % 30 === 0) {
-      dispatch({ type: "plant/removeLeaves", payload: 1 });
+      dispatch({
+        type: "plant/removeLeaves",
+        payload: { count: 1, reason: "noWater" },
+      });
     }
 
     // Check if the plant has more root rot than root rot threshold, if so dispatch removeRoots

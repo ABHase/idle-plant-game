@@ -107,6 +107,7 @@ export interface PlantState {
   flowerDNA: number; //Flower DNA, this is the number that is used to determine how much DNA is gained from a flower
   maxResourceToSpend: number | null;
   hasReceivedPoint: boolean;
+  lastLeafLossReason: string | null;
 }
 
 export const initialState: PlantState = PLANT_CONFIGS.Fern; // Setting Fern as the default plant
@@ -404,9 +405,20 @@ const plantSlice = createSlice({
     },
 
     //Reducer to decrease leaves by payload
-    removeLeaves: (state, action: PayloadAction<number>) => {
-      state.leaves = Math.max(0, state.leaves - action.payload);
+    removeLeaves: (
+      state,
+      action: PayloadAction<{ count: number; reason: string }>
+    ) => {
+      state.leaves = Math.max(0, state.leaves - action.payload.count);
+      console.log("Removing leaves", action.payload.reason);
+      state.lastLeafLossReason = action.payload.reason;
     },
+
+    //Reducer to reset leafLossReason to null
+    resetLeafLossReason: (state) => {
+      state.lastLeafLossReason = null;
+    },
+
     produceGeneticMarkers: (state, action: PayloadAction<number>) => {
       let neededResource = action.payload;
 
