@@ -39,6 +39,7 @@ const HelpModal: React.FC<HelpModalProps> = ({ open, onClose }) => {
     "Grass",
     "Berry Bush",
     "Succulent",
+    "Score",
   ];
 
   const pages: React.ReactNode[] = [
@@ -297,6 +298,36 @@ const HelpModal: React.FC<HelpModalProps> = ({ open, onClose }) => {
         </Typography>
       </Box>
     </div>,
+    <div>
+      <Typography variant="h6" mb={2}>
+        Score:
+      </Typography>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          {" "}
+          - Earn points by creating 1 Billion sugar!
+        </Typography>
+      </Box>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          {" "}
+          - You can onnly change the difficulty while planting a new plant.
+        </Typography>
+      </Box>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          {" "}
+          - The number of points you earn is equal to the current difficulty you
+          are playing on.
+        </Typography>
+      </Box>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          {" "}
+          - Only the first Billion sugar counts towards your score PER plant.
+        </Typography>
+      </Box>
+    </div>,
   ];
 
   return (
@@ -337,13 +368,7 @@ const HelpModal: React.FC<HelpModalProps> = ({ open, onClose }) => {
           </Typography>
           <List>
             {toc.map((item, index) => (
-              <ListItemButton
-                key={index}
-                onClick={() => setCurrentPage(index)}
-                disabled={
-                  item === "Map" && !purchasedUpgrades.includes("Bush_map")
-                }
-              >
+              <ListItemButton key={index} onClick={() => setCurrentPage(index)}>
                 <ListItemText primary={item} sx={{ color: "text.primary" }} />
               </ListItemButton>
             ))}
