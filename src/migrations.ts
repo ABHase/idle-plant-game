@@ -18,6 +18,57 @@ export const runMigrations = (
   // Determine the correct initial plant type for migration
   const plantType = state?.plant?.type || "Fern"; // Default to "Fern" if not found
   const correctInitialPlantState = PLANT_CONFIGS[plantType];
+
+  if (version < 81) {
+    const plantHistoryEntries = state?.plantHistory.entries || [];
+
+    let bestSizeReachedEntry: any = null;
+    let bestWaterAbsorbedEntry: any = null;
+    let bestSunlightAbsorbedEntry: any = null;
+    let bestSugarCreatedEntry: any = null;
+
+    plantHistoryEntries.forEach((entry) => {
+      if (
+        !bestSizeReachedEntry ||
+        entry.sizeReached > bestSizeReachedEntry.sizeReached
+      ) {
+        bestSizeReachedEntry = entry;
+      }
+      if (
+        !bestWaterAbsorbedEntry ||
+        entry.totalWaterAbsorbed > bestWaterAbsorbedEntry.totalWaterAbsorbed
+      ) {
+        bestWaterAbsorbedEntry = entry;
+      }
+      if (
+        !bestSunlightAbsorbedEntry ||
+        entry.totalSunlightAbsorbed >
+          bestSunlightAbsorbedEntry.totalSunlightAbsorbed
+      ) {
+        bestSunlightAbsorbedEntry = entry;
+      }
+      if (
+        !bestSugarCreatedEntry ||
+        entry.totalSugarCreated > bestSugarCreatedEntry.totalSugarCreated
+      ) {
+        bestSugarCreatedEntry = entry;
+      }
+    });
+
+    // Create a new list that contains only the best entries
+    const bestEntries = [
+      bestSizeReachedEntry,
+      bestWaterAbsorbedEntry,
+      bestSunlightAbsorbedEntry,
+      bestSugarCreatedEntry,
+    ];
+    const uniqueBestEntries = Array.from(new Set(bestEntries)); // This ensures uniqueness in case some entries are the best in multiple categories.
+
+    if (state && state.plantHistory) {
+      state.plantHistory.entries = uniqueBestEntries;
+    }
+  }
+
   return {
     globalState: {
       ...initialGlobalState,

@@ -4,11 +4,25 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { RootState } from "../rootReducer";
+import { PlantHistoryEntry } from "../Slices/plantHistorySlice";
 
 interface PlantHistoryModalProps {
   open: boolean;
   onClose: () => void;
 }
+
+type PlantHistoryKey =
+  | "sizeReached"
+  | "totalWaterAbsorbed"
+  | "totalSunlightAbsorbed"
+  | "totalSugarCreated";
+
+const categories: { title: string; key: PlantHistoryKey }[] = [
+  { title: "Best Size Reached", key: "sizeReached" },
+  { title: "Most Water Absorbed", key: "totalWaterAbsorbed" },
+  { title: "Most Sunlight Absorbed", key: "totalSunlightAbsorbed" },
+  { title: "Most Sugar Created", key: "totalSugarCreated" },
+];
 
 const PlantHistoryModal: React.FC<PlantHistoryModalProps> = ({
   open,
@@ -16,7 +30,20 @@ const PlantHistoryModal: React.FC<PlantHistoryModalProps> = ({
 }) => {
   const plantHistory = useSelector(
     (state: RootState) => state.plantHistory.entries
-  ); // Adjust the path if your state structure is different
+  );
+
+  const bestPlants = categories.map((category) => {
+    return {
+      ...category,
+      plant: plantHistory.reduce(
+        (best: PlantHistoryEntry | null, entry: PlantHistoryEntry) => {
+          if (!best) return entry;
+          return entry[category.key] > best[category.key] ? entry : best;
+        },
+        null as PlantHistoryEntry | null
+      ),
+    };
+  });
 
   return (
     <Modal
@@ -33,7 +60,7 @@ const PlantHistoryModal: React.FC<PlantHistoryModalProps> = ({
         sx={{
           maxWidth: "80%",
           maxHeight: "80%",
-          bgcolor: "background.paper",
+          bgcolor: "secondary.main",
           border: "2px solid #000",
           borderRadius: 3,
           boxShadow: 24,
@@ -43,31 +70,42 @@ const PlantHistoryModal: React.FC<PlantHistoryModalProps> = ({
         }}
       >
         <Typography id="plant-history-modal-title" variant="h6">
-          Plant Growth History:
+          Best Plants in Each Category:
         </Typography>
-        {plantHistory.map((entry, index) => (
+        {bestPlants.map((category, index) => (
           <Box key={index} mt={2}>
-            <Typography variant="body2">
-              Planted: {entry.datePlanted}
-            </Typography>
-            <Typography variant="body2">
-              Replaced: {entry.dayReplaced}
-            </Typography>
-            <Typography variant="body2">
-              Size Reached: {entry.sizeReached}
-            </Typography>
-            <Typography variant="body2">
-              Total Water Absorbed:{" "}
-              {formatNumberWithDecimals(entry.totalWaterAbsorbed)}
-            </Typography>
-            <Typography variant="body2">
-              Total Sunlight Absorbed:{" "}
-              {formatNumberWithDecimals(entry.totalSunlightAbsorbed)}
-            </Typography>
-            <Typography variant="body2">
-              Total Sugar Created:{" "}
-              {formatNumberWithDecimals(entry.totalSugarCreated)}
-            </Typography>
+            <Typography variant="h6">{category.title}:</Typography>
+            {category.plant ? (
+              <>
+                <Typography variant="body2">
+                  Planted: {category.plant.datePlanted}
+                </Typography>
+                <Typography variant="body2">
+                  Replaced: {category.plant.dayReplaced}
+                </Typography>
+                <Typography variant="body2">
+                  Size Reached: {category.plant.sizeReached}
+                </Typography>
+                <Typography variant="body2">
+                  Total Water Absorbed:{" "}
+                  {formatNumberWithDecimals(category.plant.totalWaterAbsorbed)}
+                </Typography>
+                <Typography variant="body2">
+                  Total Sunlight Absorbed:{" "}
+                  {formatNumberWithDecimals(
+                    category.plant.totalSunlightAbsorbed
+                  )}
+                </Typography>
+                <Typography variant="body2">
+                  Total Sugar Created:{" "}
+                  {formatNumberWithDecimals(category.plant.totalSugarCreated)}
+                </Typography>
+              </>
+            ) : (
+              <Typography variant="body2">
+                No plants available for this category.
+              </Typography>
+            )}
           </Box>
         ))}
       </Box>

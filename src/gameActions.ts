@@ -316,12 +316,12 @@ export const evolveAndRecordPlant = (
     // Get the current state of the plant and other relevant states
     const plant = getState().plant;
     const plantTime = getState().plantTime;
-    const plantHistory = getState().plantHistory.entries;
+    const plantHistoryEntries = getState().plantHistory.entries;
 
     // If there's a previous history entry, use its dayReplaced as datePlanted for current plant
     const lastPlantDayReplaced =
-      plantHistory.length > 0
-        ? plantHistory[plantHistory.length - 1].dayReplaced
+      plantHistoryEntries.length > 0
+        ? plantHistoryEntries[plantHistoryEntries.length - 1].dayReplaced
         : null;
     const datePlanted = lastPlantDayReplaced || `Year 1-Spring-1`;
 
@@ -336,8 +336,36 @@ export const evolveAndRecordPlant = (
       totalSugarCreated: plant.totalSugarCreated,
     };
 
-    // Dispatch the action to add the current state of the plant to history
-    dispatch(addPlantToHistory(historyEntry));
+    let bestSizeReached = 0;
+    let bestWaterAbsorbed = 0;
+    let bestSunlightAbsorbed = 0;
+    let bestSugarCreated = 0;
+
+    plantHistoryEntries.forEach((entry) => {
+      if (entry.sizeReached > bestSizeReached) {
+        bestSizeReached = entry.sizeReached;
+      }
+      if (entry.totalWaterAbsorbed > bestWaterAbsorbed) {
+        bestWaterAbsorbed = entry.totalWaterAbsorbed;
+      }
+      if (entry.totalSunlightAbsorbed > bestSunlightAbsorbed) {
+        bestSunlightAbsorbed = entry.totalSunlightAbsorbed;
+      }
+      if (entry.totalSugarCreated > bestSugarCreated) {
+        bestSugarCreated = entry.totalSugarCreated;
+      }
+    });
+
+    const shouldAddToHistory =
+      plant.maturity_level > bestSizeReached ||
+      plant.totalWaterAbsorbed > bestWaterAbsorbed ||
+      plant.totalSunlightAbsorbed > bestSunlightAbsorbed ||
+      plant.totalSugarCreated > bestSugarCreated;
+
+    if (shouldAddToHistory) {
+      // Dispatch the action to add the current state of the plant to history
+      dispatch(addPlantToHistory(historyEntry));
+    }
 
     // Dispatch the action to evolve the plant with the passed upgrades
     dispatch(
