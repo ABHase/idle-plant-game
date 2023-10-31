@@ -1,9 +1,10 @@
 import React from "react";
-import { Box, Button, Dialog } from "@mui/material";
+import { Box, Button, Dialog, Slider } from "@mui/material";
 import { currentVersion } from "../store";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../rootReducer";
 import { selectNumberOfCompletedCells } from "../Slices/cellCompletionSlice";
+import { setDifficulty } from "../Slices/gameStateSlice";
 
 interface Props {
   open: boolean;
@@ -36,6 +37,13 @@ const MenuModal: React.FC<Props> = (props) => {
   );
 
   const numberOfCompletedCells = useSelector(selectNumberOfCompletedCells);
+
+  const dispatch = useDispatch();
+
+  const handleSliderChange = (event: Event, newValue: number | number[]) => {
+    const value = Array.isArray(newValue) ? newValue[0] : newValue;
+    dispatch(setDifficulty({ difficulty: value }));
+  };
 
   return (
     <Dialog open={props.open} onClose={props.onClose}>
@@ -145,6 +153,18 @@ const MenuModal: React.FC<Props> = (props) => {
         >
           Import/Export Save
         </Button>
+        <div>Difficulty</div>
+        <Slider
+          defaultValue={useSelector(
+            (state: RootState) => state.globalState.difficulty
+          )}
+          step={1}
+          marks
+          min={1}
+          max={100}
+          valueLabelDisplay="auto"
+          onChange={handleSliderChange}
+        />
         <Button
           variant="contained"
           sx={{ my: 1, backgroundColor: "#942e25" }}

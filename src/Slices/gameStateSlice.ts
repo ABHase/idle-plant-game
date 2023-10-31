@@ -25,6 +25,7 @@ export interface GlobalState {
   fulvic: number;
   costModifier: number;
   currentCell: number;
+  difficulty: number;
 }
 
 export const initialState: GlobalState = {
@@ -50,6 +51,7 @@ export const initialState: GlobalState = {
   fulvic: 0,
   costModifier: 1,
   currentCell: 0,
+  difficulty: 1,
 };
 
 const globalStateSlice = createSlice({
@@ -204,6 +206,10 @@ const globalStateSlice = createSlice({
     resetGrassGeneticMarkerThreshold: (state) => {
       state.geneticMarkerThresholdGrass = 100;
     },
+    //Reducer to set the difficulty based on a payload
+    setDifficulty: (state, action: PayloadAction<{ difficulty: number }>) => {
+      state.difficulty = action.payload.difficulty;
+    },
     //Set current cell
     setCurrentCell: (state, action: PayloadAction<{ cellNumber: number }>) => {
       state.currentCell = action.payload.cellNumber;
@@ -233,7 +239,7 @@ export const {
   addGeneticMarkersBush,
   resetGrassGeneticMarkerThreshold,
   setCurrentCell,
-  // Add other exported actions...
+  setDifficulty,
 } = globalStateSlice.actions;
 
 export default globalStateSlice.reducer;

@@ -81,9 +81,13 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({
   );
   const plantState = useSelector((state: RootState) => state.plant);
 
+  const difficulty = useSelector(
+    (state: RootState) => state.globalState.difficulty
+  );
+
   // Extract season from state (Assuming you have access to the state here)
   const { season } = useSelector((state: RootState) => state.plantTime);
-  const report = itemizedReport(plant, season);
+  const report = itemizedReport(plant, season, difficulty);
 
   // State for whether the alert saying you can't disable automatic leaf growth is open
   const [showGrassWarning, setShowGrassWarning] = useState(false);
@@ -142,7 +146,8 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({
   const actualSugarPerMinute = calculateActualSugarProductionPerMinute(
     plant,
     report,
-    plantTime
+    plantTime,
+    difficulty
   );
 
   const handleSunlightAbsorption = () => {
@@ -243,6 +248,7 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({
               winterModifier={plant.winterModifier}
               agaveSugarBonus={plant.agaveSugarBonus}
               sugar={plant.sugar}
+              difficulty={difficulty}
             />
             <MaturityTooltip maturityLevel={plant.maturity_level} />
           </Grid>
@@ -251,7 +257,7 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({
             item
             xs={12}
             sx={{
-              visibility: isSugarConversionUnlocked(plant)
+              visibility: isSugarConversionUnlocked(plant, difficulty)
                 ? "visible"
                 : "hidden",
             }}
@@ -285,13 +291,15 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({
                 >
                   <Water
                     amount={calculatePhotosynthesisWaterConsumption(
-                      plant.maturity_level
+                      plant.maturity_level,
+                      difficulty
                     )}
                   />
                   /s +{" "}
                   <Sunlight
                     amount={calculatePhotosynthesisSunlightConsumption(
-                      plant.maturity_level
+                      plant.maturity_level,
+                      difficulty
                     )}
                   />
                   /s{" "}

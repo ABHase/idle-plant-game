@@ -82,9 +82,13 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
     useSelector((state: RootState) => state.globalState);
   const plantState = useSelector((state: RootState) => state.plant);
 
+  const difficulty = useSelector(
+    (state: RootState) => state.globalState.difficulty
+  );
+
   // Extract season from state (Assuming you have access to the state here)
   const { season } = useSelector((state: RootState) => state.plantTime);
-  const report = itemizedReport(plant, season);
+  const report = itemizedReport(plant, season, difficulty);
 
   // Sugar Modifier
   let sugarModifier = 1; // default
@@ -140,7 +144,8 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
   const actualSugarPerMinute = calculateActualSugarProductionPerMinute(
     plant,
     report,
-    plantTime
+    plantTime,
+    difficulty
   );
 
   const handleSunlightAbsorption = () => {
@@ -249,6 +254,7 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
               winterModifier={plant.winterModifier}
               agaveSugarBonus={plant.agaveSugarBonus}
               sugar={plant.sugar}
+              difficulty={difficulty}
             />
             <MaturityTooltip maturityLevel={plant.maturity_level} />
           </Grid>
@@ -257,7 +263,7 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
             item
             xs={12}
             sx={{
-              visibility: isSugarConversionUnlocked(plant)
+              visibility: isSugarConversionUnlocked(plant, difficulty)
                 ? "visible"
                 : "hidden",
             }}
@@ -291,13 +297,15 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
                 >
                   <Water
                     amount={calculatePhotosynthesisWaterConsumption(
-                      plant.maturity_level
+                      plant.maturity_level,
+                      difficulty
                     )}
                   />
                   /s +{" "}
                   <Sunlight
                     amount={calculatePhotosynthesisSunlightConsumption(
-                      plant.maturity_level
+                      plant.maturity_level,
+                      difficulty
                     )}
                   />
                   /s{" "}

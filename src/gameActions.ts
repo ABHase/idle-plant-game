@@ -194,10 +194,12 @@ export const updateGame = (): ThunkAction<
       }
     }
 
+    const difficulty = gameState.difficulty;
+
     //Plant Production Dispatches
     dispatch(updateMaturityLevel());
     dispatch(updateWaterAndSunlight({ season: currentSeason }));
-    dispatch(produceSugar({ season: currentSeason }));
+    dispatch(produceSugar({ season: currentSeason, difficulty: difficulty }));
     dispatch(updateFlowers());
 
     // ... [other logic and dispatches as needed]

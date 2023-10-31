@@ -97,9 +97,13 @@ const BushDisplay: React.FC<BushDisplayProps> = ({
   );
   const plantState = useSelector((state: RootState) => state.plant);
 
+  const difficulty = useSelector(
+    (state: RootState) => state.globalState.difficulty
+  );
+
   // Extract season from state (Assuming you have access to the state here)
   const { season } = useSelector((state: RootState) => state.plantTime);
-  const report = itemizedReport(plant, season);
+  const report = itemizedReport(plant, season, difficulty);
 
   // Sugar Modifier
   let sugarModifier = 1; // default
@@ -155,7 +159,8 @@ const BushDisplay: React.FC<BushDisplayProps> = ({
   const actualSugarPerMinute = calculateActualSugarProductionPerMinute(
     plant,
     report,
-    plantTime
+    plantTime,
+    difficulty
   );
 
   const handleSunlightAbsorption = () => {
@@ -260,6 +265,7 @@ const BushDisplay: React.FC<BushDisplayProps> = ({
               winterModifier={plant.winterModifier}
               agaveSugarBonus={plant.agaveSugarBonus}
               sugar={plant.sugar}
+              difficulty={difficulty}
             />
             <MaturityTooltip maturityLevel={plant.maturity_level} />
           </Grid>
@@ -268,7 +274,7 @@ const BushDisplay: React.FC<BushDisplayProps> = ({
             item
             xs={12}
             sx={{
-              visibility: isSugarConversionUnlocked(plant)
+              visibility: isSugarConversionUnlocked(plant, difficulty)
                 ? "visible"
                 : "hidden",
             }}
@@ -302,13 +308,15 @@ const BushDisplay: React.FC<BushDisplayProps> = ({
                 >
                   <Water
                     amount={calculatePhotosynthesisWaterConsumption(
-                      plant.maturity_level
+                      plant.maturity_level,
+                      difficulty
                     )}
                   />
                   /s +{" "}
                   <Sunlight
                     amount={calculatePhotosynthesisSunlightConsumption(
-                      plant.maturity_level
+                      plant.maturity_level,
+                      difficulty
                     )}
                   />
                   /s{" "}

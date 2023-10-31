@@ -258,11 +258,15 @@ const plantSlice = createSlice({
       state.water += state.water_absorption_rate;
       state.totalWaterAbsorbed += state.water_absorption_rate;
     },
-    produceSugar: (state, action: PayloadAction<{ season: string }>) => {
+    produceSugar: (
+      state,
+      action: PayloadAction<{ season: string; difficulty: number }>
+    ) => {
       if (state.is_sugar_production_on) {
         const results = calculateSugarPhotosynthesis(
           state,
-          action.payload.season
+          action.payload.season,
+          action.payload.difficulty // Here you use the difficulty
         );
 
         state.sugar = results.sugar;

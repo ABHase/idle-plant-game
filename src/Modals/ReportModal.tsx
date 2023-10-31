@@ -17,8 +17,12 @@ interface ReportModalProps {
 
 const ReportModal: React.FC<ReportModalProps> = ({ open, onClose }) => {
   const plant = useSelector((state: RootState) => state.plant);
+  const difficulty = useSelector(
+    (state: RootState) => state.globalState.difficulty
+  );
+
   const season = useSelector((state: RootState) => state.plantTime.season);
-  const report = itemizedReport(plant, season);
+  const report = itemizedReport(plant, season, difficulty);
 
   return (
     <Modal
