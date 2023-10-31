@@ -70,7 +70,7 @@ const ReportModal: React.FC<ReportModalProps> = ({ open, onClose }) => {
           <Typography variant="subtitle1">Water:</Typography>
           <Typography variant="body2">
             Base Water Increase Per Root:{" "}
-            <Water amount={report.water.rootsWaterIncrease} />
+            <Water amount={plant.water_absorption_multiplier} />
           </Typography>
           <Typography variant="body2">
             Water Increase with Seasonal Bonus:{" "}
@@ -78,7 +78,7 @@ const ReportModal: React.FC<ReportModalProps> = ({ open, onClose }) => {
           </Typography>
           <Typography variant="body2">
             Water Decreased Per Leaf:{" "}
-            <Water amount={report.water.waterDecrease} />
+            <Water amount={plant.water_efficiency_multiplier * 1} />
           </Typography>
           <Typography variant="body2">
             Water Produced after Ladybug Tax:{" "}

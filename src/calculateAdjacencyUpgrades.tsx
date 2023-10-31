@@ -27,6 +27,10 @@ export function findCompletedRowsAndColumns(
   // Check each column
   for (let col = 0; col < COLUMNS; col++) {
     const columnCells = getCellsInColumn(col);
+    console.log(
+      `Column ${col} cells:`,
+      columnCells.map((cell) => tempState.cellCompletion.cells[cell])
+    );
     const firstPlantType = tempState.cellCompletion.cells[columnCells[0]];
 
     if (
@@ -42,6 +46,10 @@ export function findCompletedRowsAndColumns(
   // Check each row
   for (let row = 0; row < ROWS; row++) {
     const rowCells = getCellsInRow(row);
+    console.log(
+      `Row ${row} cells:`,
+      rowCells.map((cell) => tempState.cellCompletion.cells[cell])
+    );
     const firstPlantType = tempState.cellCompletion.cells[rowCells[0]];
 
     if (
@@ -59,15 +67,17 @@ export function findCompletedRowsAndColumns(
 
 export function calculateAdjacencyUpgrades(
   state: RootState,
-  currentCell: number,
-  currentPlantType: string
+  targetCellIndex: number,
+  currentPlantType: string,
+  currentCell: number
 ): string[] {
-  const adjacentCells = getAdjacentCells(currentCell);
+  const adjacentCells = getAdjacentCells(targetCellIndex);
+  console.log("adjacentCells", adjacentCells);
   const adjacencyUpgrades: string[] = [];
 
-  // Filter out currentCell from adjacentCells
+  // Filter out targetCellIndex from adjacentCells
   const filteredAdjacentCells = adjacentCells.filter(
-    (cell) => cell !== currentCell
+    (cell) => cell !== targetCellIndex
   );
 
   // Handle currentCell separately

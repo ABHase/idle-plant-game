@@ -427,8 +427,9 @@ export const completeCellAndDeductSugar = (
     // Calculate adjacency upgrades (assuming a function for this)
     const adjacencyUpgrades = calculateAdjacencyUpgrades(
       state,
-      currentCell,
-      currentPlantType
+      targetCellIndex,
+      currentPlantType,
+      currentCell
     );
 
     // Set the new adjacency upgrades
