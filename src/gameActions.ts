@@ -61,37 +61,10 @@ export const updateGame = (): ThunkAction<
     const currentSugar = getState().plant.sugar;
     const maxResourceToSpend = getState().plant.maxResourceToSpend;
     const gameState = getState().globalState;
+    const plant = getState().plant;
 
     // Dispatch updateTime with newTotalTime
     dispatch(updateTime(newTotalTime));
-
-    const plant = getState().plant;
-
-    // Check if the plant has the the LEAF_COST for a leaf
-    if (
-      currentSugar >= LEAF_COST * plant.leafAutoGrowthMultiplier &&
-      plant.leafGrowthToggle
-    ) {
-      dispatch(
-        autoGrowLeaves({
-          cost: LEAF_COST * plant.leafAutoGrowthMultiplier,
-          multiplier: plant.autoGrowthMultiplier,
-        })
-      );
-    }
-
-    // Check if the plant has the ROOT_COST for a root
-    if (
-      currentSugar >= ROOT_COST * plant.rootAutoGrowthMultiplier &&
-      plant.rootGrowthToggle
-    ) {
-      dispatch(
-        autoGrowRoots({
-          cost: ROOT_COST * plant.rootAutoGrowthMultiplier,
-          multiplier: plant.autoGrowthMultiplier,
-        })
-      );
-    }
 
     // Check if ladybugs are less than 1
     if (plant.ladybugs < 1) {
@@ -208,6 +181,32 @@ export const updateGame = (): ThunkAction<
     dispatch(updateWaterAndSunlight({ season: currentSeason }));
     dispatch(produceSugar({ season: currentSeason, difficulty: difficulty }));
     dispatch(updateFlowers());
+
+    // Check if the plant has the the LEAF_COST for a leaf
+    if (
+      currentSugar >= LEAF_COST * plant.leafAutoGrowthMultiplier &&
+      plant.leafGrowthToggle
+    ) {
+      dispatch(
+        autoGrowLeaves({
+          cost: LEAF_COST * plant.leafAutoGrowthMultiplier,
+          multiplier: plant.autoGrowthMultiplier,
+        })
+      );
+    }
+
+    // Check if the plant has the ROOT_COST for a root
+    if (
+      currentSugar >= ROOT_COST * plant.rootAutoGrowthMultiplier &&
+      plant.rootGrowthToggle
+    ) {
+      dispatch(
+        autoGrowRoots({
+          cost: ROOT_COST * plant.rootAutoGrowthMultiplier,
+          multiplier: plant.autoGrowthMultiplier,
+        })
+      );
+    }
 
     // ... [other logic and dispatches as needed]
   };
