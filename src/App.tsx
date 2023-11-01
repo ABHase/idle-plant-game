@@ -15,7 +15,10 @@ import ConfirmDeleteDialog from "./ConfirmDeleteDialog";
 import ConfirmEvolveDialog from "./ConfirmEvolveDialog";
 import { Button } from "@mui/material";
 import { resetApp } from "./Slices/appSlice";
-import { resetGlobalState } from "./Slices/gameStateSlice";
+import {
+  reduceGlobalBoostedTicks,
+  resetGlobalState,
+} from "./Slices/gameStateSlice";
 import { initializeNewPlant, resetPlant } from "./Slices/plantSlice";
 import { resetPlantTime } from "./Slices/plantTimeSlice";
 import UpgradeModal from "./Modals/UpgradeModal";
@@ -170,13 +173,21 @@ function App() {
 
     const currentTime = Date.now();
     const timeElapsed = currentTime - lastUpdateTimeRef.current;
+    const gameState = store.getState().globalState; // Get the globalState
+    const tickDuration =
+      gameState.globalBoostedTicks > 1000
+        ? 5
+        : gameState.globalBoostedTicks > 0
+        ? 50
+        : 1000;
 
-    if (!isTimeBoostActive && timeElapsed >= 1000) {
-      const numTicksMissed = Math.floor(timeElapsed / 1000);
+    if (timeElapsed >= tickDuration) {
+      const numTicksMissed = Math.floor(timeElapsed / tickDuration);
       let shouldSave = false;
 
       for (let i = 0; i < numTicksMissed; i++) {
         dispatch(updateGame());
+        dispatch(reduceGlobalBoostedTicks()); // Reduce globalBoostedTicks by 1
 
         // Increment the save counter
         saveCounterRef.current += 1;

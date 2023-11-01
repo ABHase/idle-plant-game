@@ -7,6 +7,7 @@ import { updateGame } from "./gameActions";
 import {
   addGeneticMarkers,
   increaseGeneticMarkers,
+  increaseGlobalBoostedTicks,
   resetGrassGeneticMarkerThreshold,
   resetSucculentGeneticMarkerThreshold,
 } from "./Slices/gameStateSlice"; // Assume you have deductSugar function in gameStateSlice
@@ -42,19 +43,9 @@ export const MUSHROOM_ITEMS: MushroomItem[] = [
     description: "Try some fertilizer, time will just fly by.",
     cost: 1000,
     effect: (dispatch, getState) => {
-      dispatch(activateTimeBoost()); // Activate time boost
+      dispatch(increaseGlobalBoostedTicks(144)); // Add 144 ticks
       dispatch(deductSugar(1000)); // Deduct sugar cost
       dispatch(increaseRootRot(70)); // Increase root rot by 7
-
-      let counter = 0;
-      const intervalId = setInterval(() => {
-        dispatch(updateGame());
-        counter++;
-        if (counter >= 144) {
-          clearInterval(intervalId);
-          dispatch(deactivateTimeBoost()); // Deactivate time boost
-        }
-      }, 50);
     },
   },
 
@@ -139,18 +130,8 @@ export const DESERT_MUSHROOM_ITEMS: MushroomItem[] = [
       "Time travel in the Darkness of the Desert. (Around 3 minutes)",
     cost: 1000000000,
     effect: (dispatch, getState) => {
-      dispatch(activateTimeBoost()); // Activate time boost
+      dispatch(increaseGlobalBoostedTicks(144)); // Add 144 ticks
       dispatch(deductSunlight(1000000000));
-
-      let counter = 0;
-      const intervalId = setInterval(() => {
-        dispatch(updateGame());
-        counter++;
-        if (counter >= 144) {
-          clearInterval(intervalId);
-          dispatch(deactivateTimeBoost()); // Deactivate time boost
-        }
-      }, 50);
     },
   },
   {
@@ -160,18 +141,8 @@ export const DESERT_MUSHROOM_ITEMS: MushroomItem[] = [
       "Time travel in the Darkness of the Desert. (Around 150 minutes)",
     cost: 50000000000,
     effect: (dispatch, getState) => {
-      dispatch(activateTimeBoost()); // Activate time boost
+      dispatch(increaseGlobalBoostedTicks(7200));
       dispatch(deductSunlight(50000000000));
-
-      let counter = 0;
-      const intervalId = setInterval(() => {
-        dispatch(updateGame());
-        counter++;
-        if (counter >= 7200) {
-          clearInterval(intervalId);
-          dispatch(deactivateTimeBoost()); // Deactivate time boost
-        }
-      }, 50);
     },
   },
   {
@@ -180,18 +151,8 @@ export const DESERT_MUSHROOM_ITEMS: MushroomItem[] = [
     description: "Time travel in the intense Desert Rains. (Around 3 minutes)",
     cost: 1000000000,
     effect: (dispatch, getState) => {
-      dispatch(activateTimeBoost()); // Activate time boost
+      dispatch(increaseGlobalBoostedTicks(144));
       dispatch(deductWater(1000000000));
-
-      let counter = 0;
-      const intervalId = setInterval(() => {
-        dispatch(updateGame());
-        counter++;
-        if (counter >= 144) {
-          clearInterval(intervalId);
-          dispatch(deactivateTimeBoost()); // Deactivate time boost
-        }
-      }, 50);
     },
   },
   {
@@ -201,18 +162,8 @@ export const DESERT_MUSHROOM_ITEMS: MushroomItem[] = [
       "Time travel in the intense Desert Rains. (Around 150 minutes)",
     cost: 50000000000,
     effect: (dispatch, getState) => {
-      dispatch(activateTimeBoost()); // Activate time boost
+      dispatch(increaseGlobalBoostedTicks(7200));
       dispatch(deductWater(50000000000));
-
-      let counter = 0;
-      const intervalId = setInterval(() => {
-        dispatch(updateGame());
-        counter++;
-        if (counter >= 7200) {
-          clearInterval(intervalId);
-          dispatch(deactivateTimeBoost()); // Deactivate time boost
-        }
-      }, 50);
     },
   },
 ];

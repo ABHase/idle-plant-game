@@ -26,6 +26,7 @@ export interface GlobalState {
   costModifier: number;
   currentCell: number;
   difficulty: number;
+  globalBoostedTicks: number;
 }
 
 export const initialState: GlobalState = {
@@ -52,6 +53,7 @@ export const initialState: GlobalState = {
   costModifier: 1,
   currentCell: 0,
   difficulty: 1,
+  globalBoostedTicks: 0,
 };
 
 const globalStateSlice = createSlice({
@@ -214,6 +216,19 @@ const globalStateSlice = createSlice({
     setCurrentCell: (state, action: PayloadAction<{ cellNumber: number }>) => {
       state.currentCell = action.payload.cellNumber;
     },
+    // Increase global boosted ticks by payload
+    increaseGlobalBoostedTicks: (state, action: PayloadAction<number>) => {
+      state.globalBoostedTicks += action.payload;
+    },
+
+    // Your other reducer code...
+
+    //Reduce global boosted ticks by one to a minimum of 0
+    reduceGlobalBoostedTicks: (state) => {
+      if (state.globalBoostedTicks > 0) {
+        state.globalBoostedTicks -= 1;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder.addMatcher(
@@ -240,6 +255,8 @@ export const {
   resetGrassGeneticMarkerThreshold,
   setCurrentCell,
   setDifficulty,
+  increaseGlobalBoostedTicks,
+  reduceGlobalBoostedTicks,
 } = globalStateSlice.actions;
 
 export default globalStateSlice.reducer;
