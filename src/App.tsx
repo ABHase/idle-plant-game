@@ -186,16 +186,7 @@ function App() {
 
       dispatch(updateGame(timeScaleForThisUpdate));
       dispatch(reduceGlobalBoostedTicks(timeScaleForThisUpdate));
-
-      saveCounterRef.current += 1;
-      if (saveCounterRef.current === 30) {
-        shouldSave = true;
-        saveCounterRef.current = 0;
-      }
-
-      if (shouldSave) {
-        saveState(store.getState());
-      }
+      saveState(store.getState());
 
       // Save the last update time for next iteration
       localStorage.setItem("lastUpdateTime", currentTime.toString());
