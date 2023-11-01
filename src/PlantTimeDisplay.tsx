@@ -19,6 +19,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Tooltip from "@mui/material/Tooltip";
+import { formatNumberWithDecimals } from "./PlantDisplays/PlantList";
 
 interface PlantTimeProps {
   plantTime: {
@@ -109,7 +110,7 @@ const PlantTimeDisplay: React.FC<PlantTimeProps> = ({ plantTime }) => {
         >
           <Typography style={{ display: "flex", alignItems: "center" }}>
             {globalBoostedTicks > 0
-              ? `Boost: ${globalBoostedTicks}`
+              ? `Boost: ${formatNumberWithDecimals(globalBoostedTicks)}`
               : `${plantTime.season}:${plantTime.day}/30`}
           </Typography>
 
