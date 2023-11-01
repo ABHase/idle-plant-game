@@ -127,15 +127,7 @@ function App() {
     dispatch(evolveAndRecordPlant(selectedPlantType, purchasedUpgrades));
   };
 
-  // Update the lastUpdateTimeRef whenever the plant is selected
   useEffect(() => {
-    if (isPlantSelected) {
-      lastUpdateTimeRef.current = Date.now();
-    }
-  }, [isPlantSelected]);
-
-  useEffect(() => {
-    console.log("useEffect running");
     // Only proceed if a plant is selected
     if (!isPlantSelected) {
       return;
@@ -144,8 +136,6 @@ function App() {
 
     // Check if the number of leaves has decreased
     if (previousLeaves.current > totalLeaves) {
-      console.log("Leaf loss detected!");
-      console.log("Last leaf loss reason:", lastLeafLossReason);
       if (lastLeafLossReason === "noWater") {
         setShowLeafLossWarning(true);
         // Reset the reason after showing the warning
@@ -155,11 +145,12 @@ function App() {
       previousLeaves.current = totalLeaves;
     }
 
-    // Call the update function to start the game loop
-    update();
+    const intervalId = setInterval(update, 5); // Update every second
 
-    // Cleanup code: stop the loop when the component unmounts
-    return () => {};
+    // Cleanup: clear the interval when the component unmounts
+    return () => {
+      clearInterval(intervalId);
+    };
   }, [dispatch, totalLeaves, isPlantSelected, lastLeafLossReason]);
 
   const lastUpdateTimeRef = useRef(Date.now());
@@ -168,41 +159,39 @@ function App() {
 
   function update() {
     if (!isPlantSelected) {
-      return; // Exit early if the plant hasn't been selected yet
+      return;
     }
 
-    const currentTime = Date.now();
-    const timeElapsed = currentTime - lastUpdateTimeRef.current;
-    const gameState = store.getState().globalState; // Get the globalState
-    const tickDuration = gameState.globalBoostedTicks > 0 ? 50 : 1000; // Set tick duration based on globalBoostedTicks
+    const gameState = store.getState().globalState;
+    const timeScale =
+      gameState.globalBoostedTicks > 1000
+        ? 200
+        : gameState.globalBoostedTicks > 0
+        ? 40
+        : 1;
 
+    const currentTime = Date.now();
+    const timeElapsed = (currentTime - lastUpdateTimeRef.current) * timeScale;
+
+    const tickDuration = 1000;
     if (timeElapsed >= tickDuration) {
-      const numTicksMissed = Math.floor(timeElapsed / tickDuration);
       let shouldSave = false;
 
-      for (let i = 0; i < numTicksMissed; i++) {
-        dispatch(updateGame());
-        dispatch(reduceGlobalBoostedTicks()); // Reduce globalBoostedTicks by 1
+      dispatch(updateGame());
+      dispatch(reduceGlobalBoostedTicks());
 
-        // Increment the save counter
-        saveCounterRef.current += 1;
-
-        // Check if the save counter reaches 30
-        if (saveCounterRef.current === 30) {
-          shouldSave = true;
-          saveCounterRef.current = 0; // Reset the counter
-        }
+      saveCounterRef.current += 1;
+      if (saveCounterRef.current === 30) {
+        shouldSave = true;
+        saveCounterRef.current = 0;
       }
 
-      // Only save to localStorage once after processing all the missed ticks
       if (shouldSave) {
         saveState(store.getState());
       }
 
       lastUpdateTimeRef.current = currentTime;
     }
-
-    requestAnimationFrame(update);
   }
 
   const [showLeafLossWarning, setShowLeafLossWarning] = useState(false);
