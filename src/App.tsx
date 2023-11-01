@@ -174,12 +174,7 @@ function App() {
     const currentTime = Date.now();
     const timeElapsed = currentTime - lastUpdateTimeRef.current;
     const gameState = store.getState().globalState; // Get the globalState
-    const tickDuration =
-      gameState.globalBoostedTicks > 1000
-        ? 25
-        : gameState.globalBoostedTicks > 0
-        ? 50
-        : 1000;
+    const tickDuration = gameState.globalBoostedTicks > 0 ? 50 : 1000; // Set tick duration based on globalBoostedTicks
 
     if (timeElapsed >= tickDuration) {
       const numTicksMissed = Math.floor(timeElapsed / tickDuration);
