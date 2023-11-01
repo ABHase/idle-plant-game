@@ -175,9 +175,12 @@ function secondsToDHMS(seconds: number): string {
   const minutes = Math.floor(seconds / 60);
   seconds -= minutes * 60;
 
+  // Round down to the nearest integer to avoid decimals
+  const roundedSeconds = Math.floor(seconds);
+
   return `${days}d ${hours.toString().padStart(2, "0")}:${minutes
     .toString()
-    .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+    .padStart(2, "0")}:${roundedSeconds.toString().padStart(2, "0")}`;
 }
 
 export default MenuModal;
