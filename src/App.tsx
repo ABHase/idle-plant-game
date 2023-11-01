@@ -176,7 +176,7 @@ function App() {
     const gameState = store.getState().globalState; // Get the globalState
     const tickDuration =
       gameState.globalBoostedTicks > 1000
-        ? 5
+        ? 25
         : gameState.globalBoostedTicks > 0
         ? 50
         : 1000;
