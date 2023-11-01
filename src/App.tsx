@@ -45,6 +45,7 @@ import BushDisplay from "./PlantDisplays/BushDisplay";
 import BushDNADisplay from "./DNADisplays/BushDNADisplay";
 import MapModal from "./Modals/MapModal";
 import { resetCell } from "./Slices/cellCompletionSlice";
+import { resetPlantHistory } from "./Slices/plantHistorySlice";
 
 const useIsNewUser = () => {
   const isNewUser = localStorage.getItem("isNewUser");
@@ -109,6 +110,7 @@ function App() {
 
   const handleDeleteConfirm = () => {
     clearState(); // Clear the state from localStorage
+    localStorage.removeItem("lastUpdateTime");
 
     // Reset state for each slice
     dispatch(resetApp());
@@ -117,6 +119,7 @@ function App() {
     dispatch(resetPlantTime());
     dispatch(resetUpgrades());
     dispatch(resetCell());
+    dispatch(resetPlantHistory());
 
     window.location.reload();
   };
@@ -162,20 +165,27 @@ function App() {
       return;
     }
 
+    const lastSavedTimeStr = localStorage.getItem("lastUpdateTime");
+    const lastSavedTime =
+      lastSavedTimeStr !== null
+        ? parseInt(lastSavedTimeStr, 10)
+        : lastUpdateTimeRef.current;
+
     const gameState = store.getState().globalState;
-    const timeScale = gameState.globalBoostedTicks > 0 ? 40 : 1;
+    const baseTimeScale = gameState.globalBoostedTicks > 0 ? 40 : 1;
 
     const currentTime = Date.now();
-    const timeElapsed = currentTime - lastUpdateTimeRef.current;
+    const timeElapsed = currentTime - lastSavedTime;
+    const timeElapsedInSeconds = timeElapsed / 1000; // Convert to seconds
 
     const tickDuration = 1000;
+
     if (timeElapsed >= tickDuration) {
       let shouldSave = false;
+      const timeScaleForThisUpdate = baseTimeScale * timeElapsedInSeconds; // Scale by the time elapsed
 
-      // Pass timeScale to the updateGame function
-      dispatch(updateGame(timeScale));
-
-      dispatch(reduceGlobalBoostedTicks(timeScale));
+      dispatch(updateGame(timeScaleForThisUpdate));
+      dispatch(reduceGlobalBoostedTicks(timeScaleForThisUpdate));
 
       saveCounterRef.current += 1;
       if (saveCounterRef.current === 30) {
@@ -187,6 +197,8 @@ function App() {
         saveState(store.getState());
       }
 
+      // Save the last update time for next iteration
+      localStorage.setItem("lastUpdateTime", currentTime.toString());
       lastUpdateTimeRef.current = currentTime;
     }
   }
