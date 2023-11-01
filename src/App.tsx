@@ -176,17 +176,10 @@ function App() {
     const gameState = store.getState().globalState; // Get the globalState
     const tickDuration =
       gameState.globalBoostedTicks > 1000
-        ? 25
+        ? 5
         : gameState.globalBoostedTicks > 0
         ? 50
         : 1000;
-
-    const saveThreshold =
-      tickDuration === 25
-        ? 1200 // 30 seconds at 25 ms/tick
-        : tickDuration === 50
-        ? 600 // 30 seconds at 50 ms/tick
-        : 30; // 30 seconds at 1000 ms/tick
 
     if (timeElapsed >= tickDuration) {
       const numTicksMissed = Math.floor(timeElapsed / tickDuration);
@@ -199,8 +192,8 @@ function App() {
         // Increment the save counter
         saveCounterRef.current += 1;
 
-        // Check if the save counter reaches the save threshold
-        if (saveCounterRef.current === saveThreshold) {
+        // Check if the save counter reaches 30
+        if (saveCounterRef.current === 30) {
           shouldSave = true;
           saveCounterRef.current = 0; // Reset the counter
         }
