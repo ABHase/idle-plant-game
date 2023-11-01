@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { updateTime } from "./appSlice"; // Make sure the path is correct
+import { updateTime, updateTimeWithScale } from "./appSlice"; // Make sure the path is correct
 
 // PlantTime State
 export interface PlantTimeState {
@@ -28,36 +28,48 @@ const plantTimeSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(updateTime, (state, action: PayloadAction<number>) => {
-        // Increase update_counter by 5
-        state.update_counter += 5;
+      .addCase(
+        updateTimeWithScale,
+        (
+          state,
+          action: PayloadAction<{ totalTime: number; timeScale: number }>
+        ) => {
+          let additionalMinutes = 5 * action.payload.timeScale;
 
-        // Check for hour turnover
-        if (state.update_counter >= 60) {
-          state.update_counter -= 60;
-          state.hour += 1;
+          while (additionalMinutes > 0) {
+            const minutesToAdd = Math.min(
+              60 - state.update_counter,
+              additionalMinutes
+            );
 
-          // Check for day turnover
-          if (state.hour >= 24) {
-            state.hour = 0;
-            state.day += 1;
+            state.update_counter += minutesToAdd;
 
-            // Check for season turnover
-            if (state.day > 30) {
-              state.day = 1;
-              const seasons = ["Spring", "Summer", "Autumn", "Winter"];
-              const currentSeasonIndex = seasons.indexOf(state.season);
-              const nextSeasonIndex = (currentSeasonIndex + 1) % 4;
-              state.season = seasons[nextSeasonIndex];
+            additionalMinutes -= minutesToAdd;
 
-              // Check for year turnover (when rolling from Winter to Spring)
-              if (state.season === "Spring") {
-                state.year += 1;
+            if (state.update_counter >= 60) {
+              state.update_counter -= 60;
+              state.hour++;
+
+              if (state.hour >= 24) {
+                state.hour = 0;
+                state.day++;
+
+                if (state.day > 30) {
+                  state.day = 1;
+                  const seasons = ["Spring", "Summer", "Autumn", "Winter"];
+                  const currentSeasonIndex = seasons.indexOf(state.season);
+                  const nextSeasonIndex = (currentSeasonIndex + 1) % 4;
+                  state.season = seasons[nextSeasonIndex];
+
+                  if (state.season === "Spring") {
+                    state.year++;
+                  }
+                }
               }
             }
           }
         }
-      })
+      )
       .addMatcher(
         (action): action is PayloadAction<{ plantTime: PlantTimeState }> =>
           action.type === "REPLACE_STATE",

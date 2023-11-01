@@ -145,7 +145,7 @@ function App() {
       previousLeaves.current = totalLeaves;
     }
 
-    const intervalId = setInterval(update, 5); // Update every second
+    const intervalId = setInterval(update, 50); // Update every second
 
     // Cleanup: clear the interval when the component unmounts
     return () => {
@@ -163,22 +163,19 @@ function App() {
     }
 
     const gameState = store.getState().globalState;
-    const timeScale =
-      gameState.globalBoostedTicks > 1000
-        ? 200
-        : gameState.globalBoostedTicks > 0
-        ? 40
-        : 1;
+    const timeScale = gameState.globalBoostedTicks > 0 ? 40 : 1;
 
     const currentTime = Date.now();
-    const timeElapsed = (currentTime - lastUpdateTimeRef.current) * timeScale;
+    const timeElapsed = currentTime - lastUpdateTimeRef.current;
 
     const tickDuration = 1000;
     if (timeElapsed >= tickDuration) {
       let shouldSave = false;
 
-      dispatch(updateGame());
-      dispatch(reduceGlobalBoostedTicks());
+      // Pass timeScale to the updateGame function
+      dispatch(updateGame(timeScale));
+
+      dispatch(reduceGlobalBoostedTicks(timeScale));
 
       saveCounterRef.current += 1;
       if (saveCounterRef.current === 30) {

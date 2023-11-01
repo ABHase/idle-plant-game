@@ -262,13 +262,18 @@ const plantSlice = createSlice({
     },
     produceSugar: (
       state,
-      action: PayloadAction<{ season: string; difficulty: number }>
+      action: PayloadAction<{
+        season: string;
+        difficulty: number;
+        timeScale: number;
+      }>
     ) => {
       if (state.is_sugar_production_on) {
         const results = calculateSugarPhotosynthesis(
           state,
           action.payload.season,
-          action.payload.difficulty // Here you use the difficulty
+          action.payload.difficulty,
+          action.payload.timeScale
         );
 
         state.sugar = results.sugar;
@@ -277,12 +282,13 @@ const plantSlice = createSlice({
         state.sunlight = results.sunlight;
       }
     },
+
     updateWaterAndSunlight: (
       state,
-      action: PayloadAction<{ season: string }>
+      action: PayloadAction<{ season: string; timeScale: number }>
     ) => {
-      const season = action.payload.season;
-      const results = calculateWaterAndSunlight(state, season);
+      const { season, timeScale } = action.payload;
+      const results = calculateWaterAndSunlight(state, season, timeScale);
       state.water = results.water;
       state.totalWaterAbsorbed = results.totalWaterAbsorbed;
       state.sunlight = results.sunlight;
@@ -479,9 +485,9 @@ const plantSlice = createSlice({
     resetRootRot: (state) => {
       state.rootRot = 0;
     },
-    //Reducer to remove all roots
-    removeRoots: (state) => {
-      state.roots = Math.max(0, state.roots - 1);
+    removeRoots: (state, action: PayloadAction<number>) => {
+      const rootsToRemove = action.payload;
+      state.roots = Math.max(0, state.roots - rootsToRemove);
     },
     //Reducer to increase aphids by payload
     increaseAphids: (state, action: PayloadAction<number>) => {
@@ -507,12 +513,18 @@ const plantSlice = createSlice({
     addWater: (state, action: PayloadAction<number>) => {
       state.water += action.payload;
     },
-    //Reducer to simulate a rabbit attack, lose 10% water, 1 leaf and then set rabbit attack back to false
-    rabbitAttack: (state) => {
+    //Reducer to simulate a rabbit attack based on timeScale
+    rabbitAttack: (state, action: PayloadAction<number>) => {
+      const timeScale = action.payload;
       state.rabbitAttack = true;
-      state.water = Math.max(0, state.water - state.water * 0.1);
-      state.leaves = Math.max(0, state.leaves - 1);
+
+      // Lose water scaled by timeScale
+      state.water = Math.max(0, state.water - state.water * 0.1 * timeScale);
+
+      // Lose leaves scaled by timeScale
+      state.leaves = Math.max(0, state.leaves - 1 * timeScale);
     },
+
     // Set Rabbit Attack to false
     resetRabbitAttack: (state) => {
       state.rabbitAttack = false;

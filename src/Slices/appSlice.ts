@@ -5,6 +5,11 @@ export interface AppState {
   score: number;
 }
 
+export interface UpdateTimeWithScalePayload {
+  totalTime: number;
+  timeScale: number;
+}
+
 export const initialState: AppState = {
   totalTime: 0,
   score: 0,
@@ -17,6 +22,12 @@ const appSlice = createSlice({
     resetApp: () => initialState,
     updateTime: (state, action: PayloadAction<number>) => {
       state.totalTime = action.payload;
+    },
+    updateTimeWithScale: (
+      state,
+      action: PayloadAction<UpdateTimeWithScalePayload>
+    ) => {
+      state.totalTime = action.payload.totalTime;
     },
     incrementScore: (state, action: PayloadAction<number>) => {
       state.score += action.payload;
@@ -36,6 +47,7 @@ const appSlice = createSlice({
   },
 });
 
-export const { updateTime, incrementScore, resetApp } = appSlice.actions;
+export const { updateTime, incrementScore, resetApp, updateTimeWithScale } =
+  appSlice.actions;
 
 export default appSlice.reducer;

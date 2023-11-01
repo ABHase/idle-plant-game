@@ -92,9 +92,16 @@ const PlantList: React.FC<PlantListProps> = ({
     (state: RootState) => state.globalState.difficulty
   );
 
+  const globalBoostedTicks = useSelector(
+    (state: RootState) => state.globalState.globalBoostedTicks
+  );
+
+  const timeScale =
+    globalBoostedTicks > 1000 ? 200 : globalBoostedTicks > 0 ? 40 : 1;
+
   // Extract season from state (Assuming you have access to the state here)
   const { season } = useSelector((state: RootState) => state.plantTime);
-  const report = itemizedReport(plant, season, difficulty);
+  const report = itemizedReport(plant, season, difficulty, timeScale);
 
   // Sugar Modifier
   let sugarModifier = 1; // default

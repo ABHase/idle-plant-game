@@ -85,9 +85,16 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({
     (state: RootState) => state.globalState.difficulty
   );
 
+  const globalBoostedTicks = useSelector(
+    (state: RootState) => state.globalState.globalBoostedTicks
+  );
+
+  const timeScale =
+    globalBoostedTicks > 1000 ? 200 : globalBoostedTicks > 0 ? 40 : 1;
+
   // Extract season from state (Assuming you have access to the state here)
   const { season } = useSelector((state: RootState) => state.plantTime);
-  const report = itemizedReport(plant, season, difficulty);
+  const report = itemizedReport(plant, season, difficulty, timeScale);
 
   // State for whether the alert saying you can't disable automatic leaf growth is open
   const [showGrassWarning, setShowGrassWarning] = useState(false);

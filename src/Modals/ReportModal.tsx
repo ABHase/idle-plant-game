@@ -9,6 +9,7 @@ import { itemizedReport } from "../formulas";
 import { Sugar } from "../Components/Sugar";
 import { Water } from "../Components/Water";
 import { Sunlight } from "../Components/Sunlight";
+import { time } from "console";
 
 interface ReportModalProps {
   open: boolean;
@@ -22,7 +23,15 @@ const ReportModal: React.FC<ReportModalProps> = ({ open, onClose }) => {
   );
 
   const season = useSelector((state: RootState) => state.plantTime.season);
-  const report = itemizedReport(plant, season, difficulty);
+
+  const globalBoostedTicks = useSelector(
+    (state: RootState) => state.globalState.globalBoostedTicks
+  );
+
+  const timeScale =
+    globalBoostedTicks > 1000 ? 200 : globalBoostedTicks > 0 ? 40 : 1;
+
+  const report = itemizedReport(plant, season, difficulty, timeScale);
 
   return (
     <Modal

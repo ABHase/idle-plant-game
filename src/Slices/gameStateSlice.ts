@@ -117,25 +117,29 @@ const globalStateSlice = createSlice({
       action: PayloadAction<{
         geneticMarkerUpgradeActive: boolean;
         plantType: string;
+        timeScale: number;
       }>
     ) => {
-      const multiplier = action.payload.geneticMarkerUpgradeActive ? 2 : 1;
+      const multiplier =
+        (action.payload.geneticMarkerUpgradeActive ? 2 : 1) *
+        action.payload.timeScale;
+      const thresholdMultiplier = Math.pow(1.1, action.payload.timeScale);
       switch (action.payload.plantType) {
         case "Fern":
           state.geneticMarkers += multiplier;
-          state.geneticMarkerThreshold *= 1.1;
+          state.geneticMarkerThreshold *= thresholdMultiplier;
           break;
         case "Moss":
           state.geneticMarkersMoss += multiplier;
-          state.geneticMarkerThresholdMoss *= 1.1;
+          state.geneticMarkerThresholdMoss *= thresholdMultiplier;
           break;
         case "Succulent":
           state.geneticMarkersSucculent += multiplier;
-          state.geneticMarkerThresholdSucculent *= 1.1;
+          state.geneticMarkerThresholdSucculent *= thresholdMultiplier;
           break;
         case "Grass":
           state.geneticMarkersGrass += multiplier;
-          state.geneticMarkerThresholdGrass *= 1.1;
+          state.geneticMarkerThresholdGrass *= thresholdMultiplier;
           break;
         default:
           // Handle other types or default behavior if needed
@@ -223,10 +227,13 @@ const globalStateSlice = createSlice({
 
     // Your other reducer code...
 
-    //Reduce global boosted ticks by one to a minimum of 0
-    reduceGlobalBoostedTicks: (state) => {
+    // Reduce global boosted ticks by a given number to a minimum of 0
+    reduceGlobalBoostedTicks: (state, action: PayloadAction<number>) => {
       if (state.globalBoostedTicks > 0) {
-        state.globalBoostedTicks -= 1;
+        state.globalBoostedTicks = Math.max(
+          0,
+          state.globalBoostedTicks - action.payload
+        );
       }
     },
   },

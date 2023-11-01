@@ -38,14 +38,16 @@ const ResourceConversionTooltip: React.FC<ResourceConversionProps> = ({
   const sunlightConsumptionValue = calculatePhotosynthesisSunlightConsumption(
     maturityLevel,
     difficulty
-  ); // I'm using this temporarily, as you mentioned it's the same as water consumption.
+  );
   const sugarProductionValue = determinePhotosynthesisSugarProduction(
     sugarProductionRate,
     maturityLevel,
     season,
     autumnModifier,
     winterModifier,
-    agaveSugarBonus
+    agaveSugarBonus,
+    1,
+    1
   );
 
   const renderWaterComponent = () => {

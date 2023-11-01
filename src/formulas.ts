@@ -1,3 +1,4 @@
+import { time } from "console";
 import { PlantState } from "./Slices/plantSlice";
 import { PlantTimeState } from "./Slices/plantTimeSlice";
 import {
@@ -207,7 +208,9 @@ export const determinePhotosynthesisSugarProduction = (
   season: string,
   autumnModifier: number,
   winterModifier: number,
-  agaveBonus: boolean
+  agaveBonus: boolean,
+  resourceRatio: number,
+  timeScale: number
 ) => {
   const sugarModifier = getSugarModifier(
     season,
@@ -219,7 +222,11 @@ export const determinePhotosynthesisSugarProduction = (
     (1 + MATURITY_SUGAR_PRODUCTION_MODIFIER * maturity_level);
 
   const agaveMultiplier = agaveSugarBonus(agaveBonus);
-  return modifiedRate * sugarModifier * agaveMultiplier;
+
+  // Adjusting resourceRatio by multiplying it with timeScale
+  const adjustedResourceRatio = resourceRatio * timeScale;
+
+  return modifiedRate * sugarModifier * agaveMultiplier * adjustedResourceRatio;
 };
 
 export const geneticSugarConsumption = (plantState: any): number => {
@@ -227,22 +234,27 @@ export const geneticSugarConsumption = (plantState: any): number => {
   return SUGAR_THRESHOLD * costMultiplier;
 };
 
-export const calculateWaterAndSunlight = (plantState: any, season: string) => {
+export const calculateWaterAndSunlight = (
+  plantState: any,
+  season: string,
+  timeScale: number
+) => {
   const waterModifier = getWaterModifier(season, plantState);
   const sunlightModifier = getSunlightModifier(season, plantState);
 
-  const waterDecrease = calculateWaterDecrease(
-    plantState.leaves,
-    plantState.leafWaterUsage
-  );
-  const rootsWaterIncrease = calculateRootsWaterIncrease(
-    plantState.roots,
-    plantState.water_absorption_multiplier
-  );
-  const leavesSunlightIncrease = calculateLeavesSunlightIncrease(
-    plantState.leaves,
-    plantState.sunlight_absorption_multiplier
-  );
+  const waterDecrease =
+    calculateWaterDecrease(plantState.leaves, plantState.leafWaterUsage) *
+    timeScale; // Adjusted for timeScale
+  const rootsWaterIncrease =
+    calculateRootsWaterIncrease(
+      plantState.roots,
+      plantState.water_absorption_multiplier
+    ) * timeScale; // Adjusted for timeScale
+  const leavesSunlightIncrease =
+    calculateLeavesSunlightIncrease(
+      plantState.leaves,
+      plantState.sunlight_absorption_multiplier
+    ) * timeScale; // Adjusted for timeScale
 
   const seasonModifiedWaterIncrease = calculateSeasonModifiedWaterIncrease(
     rootsWaterIncrease,
@@ -275,38 +287,71 @@ export const calculateWaterAndSunlight = (plantState: any, season: string) => {
 export const calculateSugarPhotosynthesis = (
   plantState: any,
   season: string,
-  difficulty: number
+  difficulty: number,
+  timeScale: number
 ) => {
   const sugarProductionRate = plantState.sugar_production_rate;
 
-  const waterNeeded = calculatePhotosynthesisWaterConsumption(
-    plantState.maturity_level,
-    difficulty
-  );
-  const sunlightNeeded = calculatePhotosynthesisSunlightConsumption(
+  // Calculate potential water and sunlight needed based on timeScale
+  const potentialWaterNeeded =
+    calculatePhotosynthesisWaterConsumption(
+      plantState.maturity_level,
+      difficulty
+    ) * timeScale;
+
+  const potentialSunlightNeeded =
+    calculatePhotosynthesisSunlightConsumption(
+      plantState.maturity_level,
+      difficulty
+    ) * timeScale;
+
+  // Minimum resources needed for photosynthesis to occur
+  const lowestPossibleWaterNeeded = calculatePhotosynthesisWaterConsumption(
     plantState.maturity_level,
     difficulty
   );
 
+  const lowestPossibleSunlightNeeded =
+    calculatePhotosynthesisSunlightConsumption(
+      plantState.maturity_level,
+      difficulty
+    );
+
+  // Check if the plant has at least the minimum resources needed
   if (
-    plantState.water >= waterNeeded &&
-    plantState.sunlight >= sunlightNeeded
+    plantState.water >= lowestPossibleWaterNeeded &&
+    plantState.sunlight >= lowestPossibleSunlightNeeded
   ) {
-    let sugarsProduced = determinePhotosynthesisSugarProduction(
+    // Determine the actual water and sunlight consumption
+    const actualWaterNeeded = Math.min(potentialWaterNeeded, plantState.water);
+    const actualSunlightNeeded = Math.min(
+      potentialSunlightNeeded,
+      plantState.sunlight
+    );
+
+    const resourceRatio = Math.min(
+      actualWaterNeeded / potentialWaterNeeded,
+      actualSunlightNeeded / potentialSunlightNeeded
+    );
+
+    // Calculate sugarsProduced based on actual values and other factors
+    const sugarsProduced = determinePhotosynthesisSugarProduction(
       sugarProductionRate,
       plantState.maturity_level,
       season,
       plantState.autumnModifier,
       plantState.winterModifier,
-      plantState.agaveSugarBonus
+      plantState.agaveSugarBonus,
+      resourceRatio,
+      timeScale
     );
 
     return {
       sugarsProduced,
       sugar: plantState.sugar + sugarsProduced,
       totalSugarCreated: plantState.totalSugarCreated + sugarsProduced,
-      water: plantState.water - waterNeeded,
-      sunlight: plantState.sunlight - sunlightNeeded,
+      water: plantState.water - actualWaterNeeded,
+      sunlight: plantState.sunlight - actualSunlightNeeded,
     };
   } else {
     return {
@@ -322,20 +367,26 @@ export const calculateSugarPhotosynthesis = (
 export const itemizedReport = (
   plantState: any,
   season: string,
-  difficulty: number
+  difficulty: number,
+  timeScale: number
 ) => {
   // Sugar Production
   const sugarsProducedDetails = calculateSugarPhotosynthesis(
     plantState,
     season,
-    difficulty
+    difficulty,
+    timeScale
   );
 
   const totalFlowerWaterConsumption =
     plantState.flowers.length * plantState.flowerWaterConsumptionRate || 0;
 
   // Water and Sunlight Changes
-  const waterAndSunlightDetails = calculateWaterAndSunlight(plantState, season);
+  const waterAndSunlightDetails = calculateWaterAndSunlight(
+    plantState,
+    season,
+    timeScale
+  );
 
   // Photosynthesis Water and Sunlight Consumption
   const photosynthesisWaterConsumption = plantState.is_sugar_production_on
@@ -521,7 +572,9 @@ export const calculateActualSugarProductionPerMinute = (
       plantTime.season,
       plant.autumnModifier,
       plant.winterModifier,
-      plant.agaveSugarBonus
+      plant.agaveSugarBonus,
+      1,
+      1
     ) * limitingResourcePercentage;
 
   // Convert to per minute

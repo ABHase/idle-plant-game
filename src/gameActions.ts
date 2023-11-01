@@ -3,7 +3,11 @@
 import { ThunkAction } from "redux-thunk";
 import { RootState } from "./rootReducer";
 import { Action } from "@reduxjs/toolkit"; // Import Action
-import { incrementScore, updateTime } from "./Slices/appSlice";
+import {
+  incrementScore,
+  updateTime,
+  updateTimeWithScale,
+} from "./Slices/appSlice";
 import {
   evolvePlant,
   produceGeneticMarkers,
@@ -26,6 +30,7 @@ import {
 } from "./Slices/plantSlice";
 import {
   addGeneticMarkersBush,
+  reduceGlobalBoostedTicks,
   resetGlobalState,
   setCurrentCell,
   updateGeneticMarkerProgress,
@@ -47,29 +52,55 @@ import { calculateAdjacencyUpgrades } from "./calculateAdjacencyUpgrades";
 
 let ticksSinceLadybugActivation = 0;
 
-export const updateGame = (): ThunkAction<
-  void,
-  RootState,
-  unknown,
-  Action<string>
-> => {
+export const updateGame = (
+  timeScale: number
+): ThunkAction<void, RootState, unknown, Action<string>> => {
   return (dispatch, getState) => {
     const currentTotalTime = getState().app.totalTime;
-    const newTotalTime = currentTotalTime + 1;
-    const currentSeason = getState().plantTime.season;
-    const currentMinute = getState().plantTime.update_counter;
-    const currentSugar = getState().plant.sugar;
-    const maxResourceToSpend = getState().plant.maxResourceToSpend;
+    const newTotalTime = currentTotalTime + 1 * timeScale;
     const gameState = getState().globalState;
     const plant = getState().plant;
+    const currentSeason = getState().plantTime.season;
 
+    const currentSugar = getState().plant.sugar;
+    const maxResourceToSpend = getState().plant.maxResourceToSpend;
     // Dispatch updateTime with newTotalTime
-    dispatch(updateTime(newTotalTime));
+    dispatch(updateTimeWithScale({ totalTime: newTotalTime, timeScale }));
+
+    // Loop through each minute that's being incremented
+    for (let i = 0; i < timeScale; i++) {
+      // Increment and retrieve currentMinute
+      const currentMinute = (getState().plantTime.update_counter + i) % 60;
+
+      // If the plant has 0 water dispatch removeLeaves with a payload of 1 every time the currentMinute is 0
+      if (
+        plant.leafWaterUsage &&
+        plant.water <= 0 &&
+        currentMinute % 30 === 0
+      ) {
+        dispatch({
+          type: "plant/removeLeaves",
+          payload: { count: 1, reason: "noWater" },
+        });
+      }
+
+      // If the plant has more than 1000 sugar add one aphid every 12th cycle but only if ladybugs are not less than 1, and plant.type is not Succulent
+      if (
+        !plant.aphidImmunity &&
+        plant.type === "Fern" &&
+        plant.ladybugs === 1 &&
+        plant.sugar >= 1000 &&
+        currentMinute % 15 === 0
+      ) {
+        dispatch({ type: "plant/increaseAphids", payload: 1 });
+      }
+    }
 
     // Check if ladybugs are less than 1
     if (plant.ladybugs < 1) {
-      // Increment the local tick count for ladybug activation
-      ticksSinceLadybugActivation++;
+      // Increment the local tick count for ladybug activation by the timeScale
+      ticksSinceLadybugActivation += timeScale;
+
       //dispatch deductAllAphids
       dispatch({ type: "plant/deductAllAphids" });
 
@@ -105,22 +136,34 @@ export const updateGame = (): ThunkAction<
       resourceThreshold *= 4;
     }
 
+    // Calculate potential consumption based on timeScale
+    const potentialConsumption = requiredResource * timeScale;
+
+    // Determine the actual consumption
+    let actualConsumption = Math.min(potentialConsumption, requiredResource);
+
+    // If potential consumption is greater than the available resource, adjust the actual consumption
+    if (potentialConsumption > requiredResource) {
+      actualConsumption = requiredResource;
+    }
+
     // Check conditions:
     // 1. Genetic marker production is on
     // 2. Required resource is above or equals the threshold
     // 3. The resource is below the maxResourceToSpend or it's not set
     if (
       plant.is_genetic_marker_production_on &&
-      requiredResource >= resourceThreshold &&
+      actualConsumption >= resourceThreshold &&
       (typeof maxResourceToSpend === "number"
         ? resourceThreshold < maxResourceToSpend
         : true)
     ) {
-      dispatch(produceGeneticMarkers(resourceThreshold));
+      dispatch(produceGeneticMarkers(actualConsumption));
       dispatch(
         updateGeneticMarkerProgress({
           geneticMarkerUpgradeActive: plant.geneticMarkerUpgradeActive,
           plantType: plant.type,
+          timeScale: timeScale,
         })
       );
     }
@@ -130,17 +173,9 @@ export const updateGame = (): ThunkAction<
       dispatch(resetRootRot());
     }
 
-    // If the plant has 0 water dispatch removeLeaves with a payload of 1 every time the currentMinute is 0
-    if (plant.leafWaterUsage && plant.water <= 0 && currentMinute % 30 === 0) {
-      dispatch({
-        type: "plant/removeLeaves",
-        payload: { count: 1, reason: "noWater" },
-      });
-    }
-
     // Check if the plant has more root rot than root rot threshold, if so dispatch removeRoots
     if (plant.rootRot >= plant.rootRotThreshold) {
-      dispatch(removeRoots());
+      dispatch(removeRoots(timeScale));
     }
 
     // If plant type is Succulent, and plant water * 100 is greater than plant needles, dispatch rabbit attack
@@ -149,23 +184,15 @@ export const updateGame = (): ThunkAction<
       plant.water > plant.needles * 100 * plant.needleProtection &&
       !plant.rabbitImmunity
     ) {
-      dispatch({ type: "plant/rabbitAttack" });
-    }
-
-    // If the plant has more than 1000 sugar add one aphid every 12th cycle but only if ladybugs are not less than 1, and plant.type is not Succulent
-    if (
-      !plant.aphidImmunity &&
-      plant.type === "Fern" &&
-      plant.ladybugs === 1 &&
-      plant.sugar >= 1000 &&
-      currentMinute % 15 === 0
-    ) {
-      dispatch({ type: "plant/increaseAphids", payload: 1 });
+      dispatch({ type: "plant/rabbitAttack", payload: timeScale });
     }
 
     // Dispatch deduct sugar with a payload equal to the number of aphids and if the plant has 0 sugar dispatch deduct aphids with payload equal to the number of aphids
     if (plant.aphids > 0) {
-      dispatch({ type: "plant/deductSugar", payload: plant.aphids });
+      dispatch({
+        type: "plant/deductSugar",
+        payload: plant.aphids * timeScale,
+      });
       if (plant.sugar <= 0) {
         dispatch({ type: "plant/deductAllAphids" });
       }
@@ -181,32 +208,50 @@ export const updateGame = (): ThunkAction<
 
     //Plant Production Dispatches
     dispatch(updateMaturityLevel());
-    dispatch(updateWaterAndSunlight({ season: currentSeason }));
-    dispatch(produceSugar({ season: currentSeason, difficulty: difficulty }));
-    dispatch(updateFlowers());
+    dispatch(
+      updateWaterAndSunlight({ season: currentSeason, timeScale: timeScale })
+    );
 
-    // Check if the plant has the the LEAF_COST for a leaf
-    if (
-      currentSugar >= LEAF_COST * plant.leafAutoGrowthMultiplier &&
-      plant.leafGrowthToggle
-    ) {
+    dispatch(
+      produceSugar({
+        season: currentSeason,
+        difficulty: difficulty,
+        timeScale: timeScale,
+      })
+    );
+
+    dispatch(updateFlowers(timeScale));
+
+    // Calculate the maximum number of growth units that can be afforded
+    const maxLeafGrowthUnits = Math.floor(
+      currentSugar / (LEAF_COST * plant.leafAutoGrowthMultiplier)
+    );
+    const maxRootGrowthUnits = Math.floor(
+      currentSugar / (ROOT_COST * plant.rootAutoGrowthMultiplier)
+    );
+
+    // Calculate actual number of growth units, considering timeScale
+    const actualLeafGrowthUnits = Math.min(maxLeafGrowthUnits, timeScale);
+    const actualRootGrowthUnits = Math.min(maxRootGrowthUnits, timeScale);
+
+    // Check if the plant has at least the LEAF_COST for a leaf
+    if (actualLeafGrowthUnits > 0 && plant.leafGrowthToggle) {
       dispatch(
         autoGrowLeaves({
-          cost: LEAF_COST * plant.leafAutoGrowthMultiplier,
-          multiplier: plant.autoGrowthMultiplier,
+          cost:
+            LEAF_COST * plant.leafAutoGrowthMultiplier * actualLeafGrowthUnits,
+          multiplier: plant.autoGrowthMultiplier * actualLeafGrowthUnits,
         })
       );
     }
 
-    // Check if the plant has the ROOT_COST for a root
-    if (
-      currentSugar >= ROOT_COST * plant.rootAutoGrowthMultiplier &&
-      plant.rootGrowthToggle
-    ) {
+    // Check if the plant has at least the ROOT_COST for a root
+    if (actualRootGrowthUnits > 0 && plant.rootGrowthToggle) {
       dispatch(
         autoGrowRoots({
-          cost: ROOT_COST * plant.rootAutoGrowthMultiplier,
-          multiplier: plant.autoGrowthMultiplier,
+          cost:
+            ROOT_COST * plant.rootAutoGrowthMultiplier * actualRootGrowthUnits,
+          multiplier: plant.autoGrowthMultiplier * actualRootGrowthUnits,
         })
       );
     }
@@ -377,20 +422,19 @@ export const evolveAndRecordPlant = (
   };
 };
 
-export const updateFlowers = (): ThunkAction<
-  void,
-  RootState,
-  unknown,
-  Action<string>
-> => {
+export const updateFlowers = (
+  timeScale: number = 1
+): ThunkAction<void, RootState, unknown, Action<string>> => {
   return (dispatch, getState) => {
     const plant = getState().plant;
-
-    let availableSugar = plant.sugar;
-    let availableWater = plant.water;
+    const flowersToUpdate: { index: number; sugar?: number; water?: number }[] =
+      [];
+    const flowersToRemove: number[] = [];
 
     for (let i = plant.flowers.length - 1; i >= 0; i--) {
       const flower = plant.flowers[i];
+      let availableSugar = plant.sugar;
+      let availableWater = plant.water;
 
       const sugarThresholdMet = flower.sugar >= plant.flowerSugarThreshold;
       const waterThresholdMet = flower.water >= plant.flowerWaterThreshold;
@@ -398,38 +442,45 @@ export const updateFlowers = (): ThunkAction<
       let sugarAcquired = false;
       let waterAcquired = false;
 
-      if (
-        !sugarThresholdMet &&
-        availableSugar >= plant.flowerSugarConsumptionRate
-      ) {
-        dispatch(deductSugar(plant.flowerSugarConsumptionRate));
-        dispatch(addSugarToFlower(i, plant.flowerSugarConsumptionRate));
+      const scaledFlowerSugarRate =
+        plant.flowerSugarConsumptionRate * timeScale;
+      const scaledFlowerWaterRate =
+        plant.flowerWaterConsumptionRate * timeScale;
+
+      if (!sugarThresholdMet && availableSugar >= scaledFlowerSugarRate) {
+        dispatch(deductSugar(scaledFlowerSugarRate));
+        flowersToUpdate.push({ index: i, sugar: scaledFlowerSugarRate });
         sugarAcquired = true;
-        availableSugar -= plant.flowerSugarConsumptionRate;
+        availableSugar -= scaledFlowerSugarRate;
       }
 
-      if (
-        !waterThresholdMet &&
-        availableWater >= plant.flowerWaterConsumptionRate
-      ) {
-        dispatch(deductWater(plant.flowerWaterConsumptionRate));
-        dispatch(addWaterToFlower(i, plant.flowerWaterConsumptionRate));
+      if (!waterThresholdMet && availableWater >= scaledFlowerWaterRate) {
+        dispatch(deductWater(scaledFlowerWaterRate));
+        flowersToUpdate.push({ index: i, water: scaledFlowerWaterRate });
         waterAcquired = true;
-        availableWater -= plant.flowerWaterConsumptionRate;
+        availableWater -= scaledFlowerWaterRate;
       }
 
       if (sugarThresholdMet && waterThresholdMet) {
         dispatch(addGeneticMarkersBush({ amount: plant.flowerDNA }));
         dispatch(increaseFlowerThreshold());
-        dispatch(removeFlower(i));
+        flowersToRemove.push(i);
       } else if (
-        availableSugar < plant.flowerSugarConsumptionRate ||
-        availableWater < plant.flowerWaterConsumptionRate
+        availableSugar < scaledFlowerSugarRate ||
+        availableWater < scaledFlowerWaterRate ||
+        !(sugarAcquired && waterAcquired)
       ) {
-        dispatch(removeFlower(i));
-      } else if (!(sugarAcquired && waterAcquired)) {
-        dispatch(removeFlower(i));
+        flowersToRemove.push(i);
       }
+    }
+
+    // After the loop completes
+    for (const { index, sugar, water } of flowersToUpdate) {
+      if (sugar) dispatch(addSugarToFlower(index, sugar));
+      if (water) dispatch(addWaterToFlower(index, water));
+    }
+    for (const index of flowersToRemove) {
+      dispatch(removeFlower(index));
     }
   };
 };

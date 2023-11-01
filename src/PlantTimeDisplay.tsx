@@ -38,10 +38,12 @@ const PlantTimeDisplay: React.FC<PlantTimeProps> = ({ plantTime }) => {
     plantTime.season,
     plant
   );
-
   const globalBoostedTicks = useSelector(
     (state: RootState) => state.globalState.globalBoostedTicks
   );
+
+  const timeScale = globalBoostedTicks > 0 ? 40 : 1;
+
   const noDecimals = (number: number) => number.toFixed(0);
 
   const [isPopupVisible, setIsPopupVisible] = useState(false);
@@ -110,7 +112,9 @@ const PlantTimeDisplay: React.FC<PlantTimeProps> = ({ plantTime }) => {
         >
           <Typography style={{ display: "flex", alignItems: "center" }}>
             {globalBoostedTicks > 0
-              ? `Boost: ${formatNumberWithDecimals(globalBoostedTicks)}`
+              ? `Boost: ${formatNumberWithDecimals(
+                  globalBoostedTicks
+                )} ${timeScale} X`
               : `${plantTime.season}:${plantTime.day}/30`}
           </Typography>
 
