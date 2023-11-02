@@ -49,6 +49,7 @@ import {
   setPurchasedUpgrades,
 } from "./Slices/upgradesSlice";
 import { calculateAdjacencyUpgrades } from "./calculateAdjacencyUpgrades";
+import { time } from "console";
 
 let ticksSinceLadybugActivation = 0;
 
@@ -67,33 +68,22 @@ export const updateGame = (
     // Dispatch updateTime with newTotalTime
     dispatch(updateTimeWithScale({ totalTime: newTotalTime, timeScale }));
 
-    // Loop through each minute that's being incremented
-    for (let i = 0; i < timeScale; i++) {
-      // Increment and retrieve currentMinute
-      const currentMinute = (getState().plantTime.update_counter + i) % 60;
+    // If the plant has 0 water dispatch removeLeaves with a payload of 1 every time the currentMinute is 0
+    if (plant.leafWaterUsage && plant.water <= 0) {
+      dispatch({
+        type: "plant/removeLeaves",
+        payload: { count: 1, reason: "noWater" },
+      });
+    }
 
-      // If the plant has 0 water dispatch removeLeaves with a payload of 1 every time the currentMinute is 0
-      if (
-        plant.leafWaterUsage &&
-        plant.water <= 0 &&
-        currentMinute % 30 === 0
-      ) {
-        dispatch({
-          type: "plant/removeLeaves",
-          payload: { count: 1, reason: "noWater" },
-        });
-      }
-
-      // If the plant has more than 1000 sugar add one aphid every 12th cycle but only if ladybugs are not less than 1, and plant.type is not Succulent
-      if (
-        !plant.aphidImmunity &&
-        plant.type === "Fern" &&
-        plant.ladybugs === 1 &&
-        plant.sugar >= 1000 &&
-        currentMinute % 15 === 0
-      ) {
-        dispatch({ type: "plant/increaseAphids", payload: 1 });
-      }
+    // If the plant has more than 1000 sugar add one aphid every 12th cycle but only if ladybugs are not less than 1, and plant.type is not Succulent
+    if (
+      !plant.aphidImmunity &&
+      plant.type === "Fern" &&
+      plant.ladybugs === 1 &&
+      plant.sugar >= 1000
+    ) {
+      dispatch({ type: "plant/increaseAphids", payload: timeScale });
     }
 
     // Check if ladybugs are less than 1

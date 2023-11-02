@@ -172,7 +172,7 @@ function App() {
         : lastUpdateTimeRef.current;
 
     const gameState = store.getState().globalState;
-    const baseTimeScale = gameState.globalBoostedTicks > 0 ? 40 : 1;
+    const baseTimeScale = gameState.globalBoostedTicks > 0 ? 60 : 1;
 
     const currentTime = Date.now();
     const timeElapsed = currentTime - lastSavedTime;

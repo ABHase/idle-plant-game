@@ -42,7 +42,7 @@ const PlantTimeDisplay: React.FC<PlantTimeProps> = ({ plantTime }) => {
     (state: RootState) => state.globalState.globalBoostedTicks
   );
 
-  const timeScale = globalBoostedTicks > 0 ? 40 : 1;
+  const timeScale = globalBoostedTicks > 0 ? 60 : 1;
 
   const noDecimals = (number: number) => number.toFixed(0);
 

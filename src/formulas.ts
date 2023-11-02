@@ -305,7 +305,7 @@ export const calculateSugarPhotosynthesis = (
       difficulty
     ) * timeScale;
 
-  // Minimum resources needed for photosynthesis to occur
+  // Minimum resources needed for any photosynthesis to occur
   const lowestPossibleWaterNeeded = calculatePhotosynthesisWaterConsumption(
     plantState.maturity_level,
     difficulty
@@ -322,19 +322,14 @@ export const calculateSugarPhotosynthesis = (
     plantState.water >= lowestPossibleWaterNeeded &&
     plantState.sunlight >= lowestPossibleSunlightNeeded
   ) {
-    // Determine the actual water and sunlight consumption
-    const actualWaterNeeded = Math.min(potentialWaterNeeded, plantState.water);
-    const actualSunlightNeeded = Math.min(
-      potentialSunlightNeeded,
-      plantState.sunlight
-    );
+    // Calculate the individual ratios of available to needed resources
+    const waterRatio = plantState.water / potentialWaterNeeded;
+    const sunlightRatio = plantState.sunlight / potentialSunlightNeeded;
 
-    const resourceRatio = Math.min(
-      actualWaterNeeded / potentialWaterNeeded,
-      actualSunlightNeeded / potentialSunlightNeeded
-    );
+    // Determine the limiting resource ratio
+    const limitingRatio = Math.min(1, Math.min(waterRatio, sunlightRatio));
 
-    // Calculate sugarsProduced based on actual values and other factors
+    // Assuming that sugar production is linearly related to the limiting resource ratio
     const sugarsProduced = determinePhotosynthesisSugarProduction(
       sugarProductionRate,
       plantState.maturity_level,
@@ -342,18 +337,25 @@ export const calculateSugarPhotosynthesis = (
       plantState.autumnModifier,
       plantState.winterModifier,
       plantState.agaveSugarBonus,
-      resourceRatio,
+      limitingRatio,
       timeScale
     );
 
+    // Calculate the actual amounts of resources consumed based on the limiting resource
+    console.log("limitingRatio", limitingRatio);
+    const actualWaterConsumed = potentialWaterNeeded * limitingRatio;
+    const actualSunlightConsumed = potentialSunlightNeeded * limitingRatio;
+
+    // Subtract the actual resources consumed
     return {
       sugarsProduced,
       sugar: plantState.sugar + sugarsProduced,
       totalSugarCreated: plantState.totalSugarCreated + sugarsProduced,
-      water: plantState.water - actualWaterNeeded,
-      sunlight: plantState.sunlight - actualSunlightNeeded,
+      water: plantState.water - actualWaterConsumed,
+      sunlight: plantState.sunlight - actualSunlightConsumed,
     };
   } else {
+    // If the plant doesn't have the minimum resources needed, no photosynthesis occurs
     return {
       sugarsProduced: 0,
       sugar: plantState.sugar,

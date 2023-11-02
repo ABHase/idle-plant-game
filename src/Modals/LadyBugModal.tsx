@@ -55,9 +55,9 @@ const LadyBugModal: React.FC<LadyBugModalProps> = ({ open, onClose }) => {
         </Typography>
         <Typography variant="body1">
           It looks like you've managed to attract some Aphids. They are
-          consuming {aphids} Sugar per second. We can offer you protection if
-          you want to convert {(ladybugTax * 100).toFixed(0)}% of your produced
-          sunlight and water into Pheromones for 7 days...
+          consuming {aphids.toFixed(0)} Sugar per second. We can offer you
+          protection if you want to convert {(ladybugTax * 100).toFixed(0)}% of
+          your produced sunlight and water into Pheromones for 7 days...
         </Typography>
         <Stack direction="row" spacing={1} mt={2}>
           <Button
