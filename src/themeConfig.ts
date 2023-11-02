@@ -10,7 +10,7 @@ export const theme = createTheme({
     },
     background: {
       default: "#1f1107", // A very dark brown, almost black, like deep woods at night
-      paper: "#162e13", // A slightly lighter green, like forest undergrowth in moonlight
+      paper: "#070d06", // A slightly lighter green, like forest undergrowth in moonlight
     },
     text: {
       primary: "#FFFFFF", // Pure white for text to ensure good contrast against the dark background

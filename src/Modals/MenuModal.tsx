@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button, Dialog, Slider } from "@mui/material";
+import { Box, Button, Dialog, Slider, Tooltip } from "@mui/material";
 import { currentVersion } from "../store";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../rootReducer";
@@ -42,13 +42,37 @@ const MenuModal: React.FC<Props> = (props) => {
     (state: RootState) => state.globalState.difficulty
   );
 
+  // Define the style constant
+  const buttonStyle = {
+    my: 1,
+    borderRadius: 12,
+    border: "1px solid white",
+    backgroundColor: "#090924",
+    disabledBackground: "#090924",
+    color: "white",
+    width: "100%",
+    "&:disabled": {
+      backgroundColor: "#3C3C4D", // or any other suitable shade you prefer
+      color: "#black", // or any other suitable shade for text
+      cursor: "not-allowed",
+    },
+  };
+
+  const redButtonStyle = {
+    my: 1,
+    borderRadius: 12,
+    border: "1px solid white",
+    backgroundColor: "#240000",
+    color: "white",
+  };
+
   return (
     <Dialog open={props.open} onClose={props.onClose}>
       <Box
         border={1}
         borderColor="grey.300"
         borderRadius={2}
-        padding={1}
+        padding={2}
         display="flex"
         flexDirection="column"
       >
@@ -62,7 +86,7 @@ const MenuModal: React.FC<Props> = (props) => {
 
         {props.isMobile && (
           <Button
-            sx={{ my: 1 }}
+            sx={buttonStyle}
             variant="contained"
             color="primary"
             onClick={props.onPlantSeed}
@@ -72,7 +96,7 @@ const MenuModal: React.FC<Props> = (props) => {
         )}
         {props.isMobile && (
           <Button
-            sx={{ my: 1 }}
+            sx={buttonStyle}
             variant="contained"
             color="primary"
             onClick={props.onOpenUpgrade}
@@ -82,7 +106,7 @@ const MenuModal: React.FC<Props> = (props) => {
         )}
         {props.isMobile && (
           <Button
-            sx={{ my: 1 }}
+            sx={buttonStyle}
             variant="contained"
             color="primary"
             onClick={props.onOpenMushroomStore}
@@ -90,18 +114,22 @@ const MenuModal: React.FC<Props> = (props) => {
             Mushroom Store
           </Button>
         )}
-        <Button
-          sx={{ my: 1 }}
-          variant="contained"
-          color="primary"
-          onClick={props.handleOpenMapModal}
-          disabled={!purchasedUpgrades.includes("Bush_map")}
-        >
-          Map
-        </Button>
+        <Tooltip title="Unlock through Berry Bush" arrow>
+          <span>
+            <Button
+              sx={buttonStyle}
+              variant="contained"
+              color="primary"
+              onClick={props.handleOpenMapModal}
+              disabled={!purchasedUpgrades.includes("Bush_map")}
+            >
+              Map
+            </Button>
+          </span>
+        </Tooltip>
 
         <Button
-          sx={{ my: 1 }}
+          sx={buttonStyle}
           variant="contained"
           color="primary"
           onClick={props.handleOpenReportModal}
@@ -110,7 +138,7 @@ const MenuModal: React.FC<Props> = (props) => {
         </Button>
 
         <Button
-          sx={{ my: 1 }}
+          sx={buttonStyle}
           variant="contained"
           color="primary"
           onClick={props.handleOpenHistoryModal}
@@ -119,7 +147,7 @@ const MenuModal: React.FC<Props> = (props) => {
         </Button>
         <Button
           variant="contained"
-          sx={{ my: 1, backgroundColor: "#4e86e6" }}
+          sx={buttonStyle}
           onClick={props.handleOpenHelpModal}
         >
           Help
@@ -130,31 +158,27 @@ const MenuModal: React.FC<Props> = (props) => {
           rel="noopener noreferrer"
           style={{ textDecoration: "none", width: "100%" }}
         >
-          <Button
-            variant="contained"
-            sx={{ my: 1, backgroundColor: "#7289DA" }} // Discord's color
-            fullWidth
-          >
+          <Button variant="contained" sx={buttonStyle} fullWidth>
             Join Discord
           </Button>
         </a>
         <Button
           variant="contained"
-          sx={{ my: 1, backgroundColor: "#4e86e6" }}
+          sx={redButtonStyle}
           onClick={props.manualSave}
         >
           Manual Save
         </Button>
         <Button
           variant="contained"
-          sx={{ my: 1, backgroundColor: "#4e86e6" }}
+          sx={redButtonStyle}
           onClick={props.handleOpenTextboxModal}
         >
           Import/Export Save
         </Button>
         <Button
           variant="contained"
-          sx={{ my: 1, backgroundColor: "#942e25" }}
+          sx={redButtonStyle}
           onClick={() => props.setOpenDialog(true)}
         >
           Purge Save

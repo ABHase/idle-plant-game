@@ -29,6 +29,12 @@ const ConfirmMoveDialog: React.FC<ConfirmMoveDialogProps> = ({
       onClose={onClose}
       aria-labelledby="confirm-move-title"
       aria-describedby="confirm-move-description"
+      PaperProps={{
+        style: {
+          borderRadius: 12,
+          border: "1px solid white",
+        },
+      }}
     >
       <DialogTitle id="confirm-move-title">Confirm Move</DialogTitle>
       <DialogContent>
@@ -39,7 +45,16 @@ const ConfirmMoveDialog: React.FC<ConfirmMoveDialogProps> = ({
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="primary" variant="contained">
+        <Button
+          onClick={onClose}
+          sx={{
+            backgroundColor: "#090924",
+            color: "#fff",
+            borderRadius: 12,
+            border: "1px solid white",
+          }}
+          variant="contained"
+        >
           Cancel
         </Button>
         <Button
@@ -47,7 +62,17 @@ const ConfirmMoveDialog: React.FC<ConfirmMoveDialogProps> = ({
             onConfirm();
             onClose();
           }}
-          color="primary"
+          sx={{
+            backgroundColor: "#090924",
+            color: "#fff",
+            borderRadius: 12,
+            border: "1px solid white",
+            "&:disabled": {
+              backgroundColor: "#3C3C4D",
+              color: "white",
+              cursor: "not-allowed",
+            },
+          }}
           variant="contained"
           autoFocus
           disabled={sugar < 1000000000}

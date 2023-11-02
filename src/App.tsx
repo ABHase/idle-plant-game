@@ -307,6 +307,7 @@ function App() {
             <HelpModal
               open={modals.helpModalOpen}
               onClose={() => handleCloseModal("helpModalOpen")}
+              isMobile={isMobile}
             />
 
             <ConfirmEvolveDialog

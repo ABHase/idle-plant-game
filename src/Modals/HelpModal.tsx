@@ -22,9 +22,10 @@ import { RootState } from "../rootReducer";
 interface HelpModalProps {
   open: boolean;
   onClose: () => void;
+  isMobile: boolean;
 }
 
-const HelpModal: React.FC<HelpModalProps> = ({ open, onClose }) => {
+const HelpModal: React.FC<HelpModalProps> = ({ open, onClose, isMobile }) => {
   const purchasedUpgrades = useSelector(
     (state: RootState) => state.upgrades.purchased
   );
@@ -344,8 +345,9 @@ const HelpModal: React.FC<HelpModalProps> = ({ open, onClose }) => {
     >
       <Box
         sx={{
-          maxWidth: "100%",
-          maxHeight: "100%",
+          maxWidth: isMobile ? "90%" : "30%",
+          maxHeight: "60%",
+          height: "60%",
           bgcolor: "secondary.main",
           border: "2px solid #000",
           borderRadius: 3,
@@ -358,7 +360,7 @@ const HelpModal: React.FC<HelpModalProps> = ({ open, onClose }) => {
         {/* Table of contents */}
         <Box
           sx={{
-            width: "30%",
+            width: isMobile ? "50%" : "40%",
             maxHeight: "100%",
             overflow: "auto",
           }}
@@ -368,8 +370,22 @@ const HelpModal: React.FC<HelpModalProps> = ({ open, onClose }) => {
           </Typography>
           <List>
             {toc.map((item, index) => (
-              <ListItemButton key={index} onClick={() => setCurrentPage(index)}>
-                <ListItemText primary={item} sx={{ color: "text.primary" }} />
+              <ListItemButton
+                key={index}
+                onClick={() => setCurrentPage(index)}
+                sx={{
+                  my: 0.5,
+                  borderRadius: 1,
+                  border: "1px solid white",
+                  bgcolor: "#090924",
+                  alignContent: "center",
+                }}
+              >
+                <ListItemText
+                  primary={item}
+                  primaryTypographyProps={{ align: "left" }}
+                  sx={{ color: "text.primary" }}
+                />
               </ListItemButton>
             ))}
           </List>

@@ -24,6 +24,12 @@ const ConfirmDeleteDialog: React.FC<ConfirmDeleteDialogProps> = ({
       onClose={onClose}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
+      PaperProps={{
+        style: {
+          borderRadius: 12,
+          border: "1px solid white",
+        },
+      }}
     >
       <DialogTitle id="alert-dialog-title">Confirm Delete</DialogTitle>
       <DialogContent>

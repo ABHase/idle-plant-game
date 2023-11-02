@@ -27,7 +27,7 @@ const VictoryDialog: React.FC<VictoryDialogProps> = ({ open, onClose }) => {
       <DialogTitle id="victory-dialog-title">Congratulations!</DialogTitle>
       <DialogContent>
         <DialogContentText id="victory-dialog-description">
-          You have completed the game! Incredible!
+          You have completed the game! Incredible! 🫡
         </DialogContentText>
       </DialogContent>
       <DialogActions>

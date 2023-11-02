@@ -60,7 +60,16 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
   };
 
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      PaperProps={{
+        style: {
+          borderRadius: 12,
+          border: "1px solid white",
+        },
+      }}
+    >
       <DialogTitle>{"Evolve Plant?"}</DialogTitle>
       <DialogContent style={{ overflowY: "auto" }}>
         <DialogContentText>
@@ -106,7 +115,16 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="primary">
+        <Button
+          onClick={onClose}
+          color="primary"
+          sx={{
+            backgroundColor: "#090924",
+            color: "#fff",
+            borderRadius: 12,
+            border: "1px solid white",
+          }}
+        >
           Cancel
         </Button>
         <Button
@@ -116,6 +134,12 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
             onClose();
           }}
           color="primary"
+          sx={{
+            backgroundColor: "#090924",
+            color: "#fff",
+            borderRadius: 12,
+            border: "1px solid white",
+          }}
         >
           Confirm
         </Button>
