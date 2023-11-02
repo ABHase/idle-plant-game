@@ -137,7 +137,7 @@ export const updateGame = (
     }
 
     // Calculate potential consumption based on timeScale
-    const potentialConsumption = requiredResource * timeScale;
+    const potentialConsumption = Math.floor(resourceThreshold * timeScale);
 
     // Determine the actual consumption
     let actualConsumption = Math.min(potentialConsumption, requiredResource);
@@ -146,6 +146,17 @@ export const updateGame = (
     if (potentialConsumption > requiredResource) {
       actualConsumption = requiredResource;
     }
+
+    // Calculate the resource ratio
+    let resourceRatio: number;
+    if (actualConsumption === potentialConsumption) {
+      resourceRatio = 1; // If we can afford the entire resource, the ratio is 1
+    } else {
+      resourceRatio = actualConsumption / potentialConsumption;
+    }
+
+    // Modify the timeScale based on the resourceRatio
+    const adjustedTimeScale = Math.floor(timeScale * resourceRatio);
 
     // Check conditions:
     // 1. Genetic marker production is on
@@ -158,12 +169,14 @@ export const updateGame = (
         ? resourceThreshold < maxResourceToSpend
         : true)
     ) {
+      console.log("Actual consumption: ", actualConsumption);
+
       dispatch(produceGeneticMarkers(actualConsumption));
       dispatch(
         updateGeneticMarkerProgress({
           geneticMarkerUpgradeActive: plant.geneticMarkerUpgradeActive,
           plantType: plant.type,
-          timeScale: timeScale,
+          timeScale: adjustedTimeScale, // <-- Use the adjusted timeScale
         })
       );
     }

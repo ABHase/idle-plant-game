@@ -120,26 +120,35 @@ const globalStateSlice = createSlice({
         timeScale: number;
       }>
     ) => {
-      const multiplier =
+      const multiplier = Math.floor(
         (action.payload.geneticMarkerUpgradeActive ? 2 : 1) *
-        action.payload.timeScale;
+          action.payload.timeScale
+      );
       const thresholdMultiplier = Math.pow(1.1, action.payload.timeScale);
       switch (action.payload.plantType) {
         case "Fern":
           state.geneticMarkers += multiplier;
-          state.geneticMarkerThreshold *= thresholdMultiplier;
+          state.geneticMarkerThreshold = Math.floor(
+            state.geneticMarkerThreshold * thresholdMultiplier
+          );
           break;
         case "Moss":
           state.geneticMarkersMoss += multiplier;
-          state.geneticMarkerThresholdMoss *= thresholdMultiplier;
+          state.geneticMarkerThresholdMoss = Math.floor(
+            state.geneticMarkerThresholdMoss * thresholdMultiplier
+          );
           break;
         case "Succulent":
           state.geneticMarkersSucculent += multiplier;
-          state.geneticMarkerThresholdSucculent *= thresholdMultiplier;
+          state.geneticMarkerThresholdSucculent = Math.floor(
+            state.geneticMarkerThresholdSucculent * thresholdMultiplier
+          );
           break;
         case "Grass":
           state.geneticMarkersGrass += multiplier;
-          state.geneticMarkerThresholdGrass *= thresholdMultiplier;
+          state.geneticMarkerThresholdGrass = Math.floor(
+            state.geneticMarkerThresholdGrass * thresholdMultiplier
+          );
           break;
         default:
           // Handle other types or default behavior if needed
