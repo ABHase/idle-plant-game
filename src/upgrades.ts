@@ -605,7 +605,12 @@ export const UPGRADE_FUNCTIONS: Record<
       plant.leaves *= plant.leaves;
     },
     Column_Succulent: (plant) => {
-      plant.sugar_production_rate *= plant.sugar_production_rate;
+      if (plant.sugar_production_rate > 1) {
+        plant.sugar_production_rate *= plant.sugar_production_rate;
+      } else {
+        plant.sugar_production_rate =
+          1 / (plant.sugar_production_rate * plant.sugar_production_rate);
+      }
     },
     Column_Grass: (plant) => {
       plant.springModifier *= 2;
