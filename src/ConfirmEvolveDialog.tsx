@@ -110,6 +110,21 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
           value={plantType}
           onChange={(e) => handlePlantTypeChange(e.target.value as string)}
           fullWidth
+          sx={{
+            color: "white",
+            ".MuiOutlinedInput-notchedOutline": {
+              borderColor: "rgba(228, 219, 233, 0.25)",
+            },
+            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+              borderColor: "rgba(228, 219, 233, 0.25)",
+            },
+            "&:hover .MuiOutlinedInput-notchedOutline": {
+              borderColor: "rgba(228, 219, 233, 0.25)",
+            },
+            ".MuiSvgIcon-root ": {
+              fill: "white !important",
+            },
+          }}
         >
           <MenuItem value="Fern">Fern</MenuItem>
           <MenuItem value="Moss">Moss</MenuItem>

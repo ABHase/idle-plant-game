@@ -627,4 +627,27 @@ export function formatNumberWithDecimals(value: number): string {
   return value < 0 ? "-" + formattedValue : formattedValue;
 }
 
+export function formatNumberWithoutDecimals(value: number): string {
+  const absValue = Math.abs(value);
+
+  let formattedValue;
+
+  if (absValue >= 1_000_000_000_000_000) {
+    formattedValue = (absValue / 1_000_000_000_000_000).toFixed(0) + "Q";
+  } else if (absValue >= 1_000_000_000_000) {
+    formattedValue = (absValue / 1_000_000_000_000).toFixed(0) + "T";
+  } else if (absValue >= 1_000_000_000) {
+    formattedValue = (absValue / 1_000_000_000).toFixed(0) + "B";
+  } else if (absValue >= 1_000_000) {
+    formattedValue = (absValue / 1_000_000).toFixed(0) + "M";
+  } else if (absValue >= 1_000) {
+    formattedValue = (absValue / 1_000).toFixed(0) + "K";
+  } else {
+    formattedValue = absValue.toFixed(0);
+  }
+
+  // Apply the sign
+  return value < 0 ? "-" + formattedValue : formattedValue;
+}
+
 export default PlantList;

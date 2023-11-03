@@ -23,6 +23,14 @@ export interface GlobalState {
   tannins: number;
   calcium: number;
   fulvic: number;
+  silicaProgress: number;
+  tanninsProgress: number;
+  calciumProgress: number;
+  fulvicProgress: number;
+  silicaThreshold: number;
+  tanninsThreshold: number;
+  calciumThreshold: number;
+  fulvicThreshold: number;
   costModifier: number;
   currentCell: number;
   difficulty: number;
@@ -50,11 +58,29 @@ export const initialState: GlobalState = {
   tannins: 0,
   calcium: 0,
   fulvic: 0,
+  silicaProgress: 0,
+  tanninsProgress: 0,
+  calciumProgress: 0,
+  fulvicProgress: 0,
+  silicaThreshold: 100000,
+  tanninsThreshold: 100000,
+  calciumThreshold: 100000,
+  fulvicThreshold: 100000,
   costModifier: 1,
   currentCell: 0,
   difficulty: 1,
   globalBoostedTicks: 0,
 };
+
+type GlobalStateKeys =
+  | "silicaProgress"
+  | "tanninsProgress"
+  | "calciumProgress"
+  | "fulvicProgress"
+  | "silicaThreshold"
+  | "tanninsThreshold"
+  | "calciumThreshold"
+  | "fulvicThreshold";
 
 const globalStateSlice = createSlice({
   name: "gameState",
@@ -236,13 +262,64 @@ const globalStateSlice = createSlice({
 
     // Your other reducer code...
 
-    // Reduce global boosted ticks by a given number to a minimum of 0
-    reduceGlobalBoostedTicks: (state, action: PayloadAction<number>) => {
+    reduceGlobalBoostedTicks: (
+      state,
+      action: PayloadAction<{ plantType: string; ticks: number }>
+    ) => {
       if (state.globalBoostedTicks > 0) {
+        const { plantType, ticks } = action.payload;
         state.globalBoostedTicks = Math.max(
           0,
-          state.globalBoostedTicks - action.payload
+          state.globalBoostedTicks - ticks
         );
+
+        let progressKey: GlobalStateKeys;
+        let thresholdKey: GlobalStateKeys;
+        let resourceKey: keyof typeof state;
+
+        switch (plantType) {
+          case "Fern":
+            progressKey = "calciumProgress";
+            thresholdKey = "calciumThreshold";
+            resourceKey = "calcium"; // added this line
+            break;
+          case "Moss":
+            progressKey = "tanninsProgress";
+            thresholdKey = "tanninsThreshold";
+            resourceKey = "tannins"; // added this line
+            break;
+          case "Succulent":
+            progressKey = "silicaProgress";
+            thresholdKey = "silicaThreshold";
+            resourceKey = "silica"; // added this line
+            break;
+          case "Grass":
+            progressKey = "fulvicProgress";
+            thresholdKey = "fulvicThreshold";
+            resourceKey = "fulvic"; // added this line
+            break;
+          default:
+            // Handle unexpected plant type if necessary
+            return;
+        }
+
+        // Add to progress
+        state[progressKey as keyof typeof state] += ticks;
+
+        // Check if the progress exceeds or meets the threshold
+        if (
+          state[progressKey as keyof typeof state] >=
+          state[thresholdKey as keyof typeof state]
+        ) {
+          // Perform the action when the threshold is reached
+          state[resourceKey] += 1; // modified this line
+
+          // Reset the progress to zero
+          state[progressKey as keyof typeof state] = 0;
+
+          // Increase the threshold for the next cycle
+          state[thresholdKey as keyof typeof state] *= 1.1; // Increase by 10%, for example
+        }
       }
     },
   },

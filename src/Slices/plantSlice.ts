@@ -446,14 +446,27 @@ const plantSlice = createSlice({
       }
     },
 
-    produceSecondaryResource: (state) => {
+    deductPrimaryResourcesForSecondaryProduction: (
+      state,
+      action: PayloadAction<{
+        sugarCost: number;
+        sunlightCost: number;
+        waterCost: number;
+      }>
+    ) => {
       if (
-        state.is_secondary_resource_production_on &&
-        state.sugar >= SECONDARY_SUGAR_THRESHOLD
+        state.sugar >= action.payload.sugarCost &&
+        state.sunlight >= action.payload.sunlightCost &&
+        state.water >= action.payload.waterCost
       ) {
-        state.sugar -= SECONDARY_SUGAR_THRESHOLD;
+        state.sugar -= action.payload.sugarCost;
+        state.sunlight -= action.payload.sunlightCost;
+        state.water -= action.payload.waterCost;
+      } else {
+        // Handle case where there is not enough resources to deduct
       }
     },
+
     updateMaturityLevel: (state) => {
       state.maturity_level = Math.floor(Math.sqrt(state.roots + state.leaves));
     },
@@ -605,7 +618,7 @@ export const {
   growLeaves,
   updateWaterAndSunlight,
   produceGeneticMarkers,
-  produceSecondaryResource,
+  deductPrimaryResourcesForSecondaryProduction,
   updateMaturityLevel,
   resetPlant,
   evolvePlant,

@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Box, Icon, IconButton, Typography } from "@mui/material";
+import {
+  Box,
+  Icon,
+  IconButton,
+  LinearProgress,
+  Typography,
+  withStyles,
+} from "@mui/material";
 import { useSelector } from "react-redux";
 import { RootState } from "./rootReducer";
 import {
@@ -19,7 +26,10 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Tooltip from "@mui/material/Tooltip";
-import { formatNumberWithDecimals } from "./PlantDisplays/PlantList";
+import {
+  formatNumberWithDecimals,
+  formatNumberWithoutDecimals,
+} from "./PlantDisplays/PlantList";
 
 interface PlantTimeProps {
   plantTime: {
@@ -40,6 +50,51 @@ const PlantTimeDisplay: React.FC<PlantTimeProps> = ({ plantTime }) => {
   );
   const globalBoostedTicks = useSelector(
     (state: RootState) => state.globalState.globalBoostedTicks
+  );
+
+  const [isResourcesPopupVisible, setIsResourcesPopupVisible] = useState(false);
+
+  const globalState = useSelector((state: RootState) => state.globalState);
+
+  const handleResourcesPopupToggle = () => {
+    setIsResourcesPopupVisible(!isResourcesPopupVisible);
+  };
+
+  const renderProgressBar = (
+    progress: number,
+    threshold: number,
+    label: string
+  ) => (
+    <Box display="row" alignItems="center" my={2}>
+      <Typography variant="body2" color="textSecondary" mr={2}>
+        {label}
+      </Typography>
+      <Box width="100%" position="relative">
+        <LinearProgress
+          variant="determinate"
+          value={(progress / threshold) * 100}
+          sx={{
+            height: "24px",
+            borderRadius: 5,
+            backgroundColor: "#e6e6e6",
+          }}
+        />
+        <Box
+          position="absolute"
+          display="flex"
+          justifyContent="center"
+          width="100%"
+          top={0}
+          bottom={0}
+        >
+          <Typography variant="body2" color="black">
+            {`${formatNumberWithoutDecimals(
+              progress
+            )}/${formatNumberWithoutDecimals(threshold)}`}
+          </Typography>
+        </Box>
+      </Box>
+    </Box>
   );
 
   const timeScale = globalBoostedTicks > 0 ? 60 : 1;
@@ -110,6 +165,11 @@ const PlantTimeDisplay: React.FC<PlantTimeProps> = ({ plantTime }) => {
           justifyContent="space-between"
           alignItems="center"
         >
+          {globalBoostedTicks > 0 && (
+            <IconButton onClick={handleResourcesPopupToggle}>
+              <InfoIcon sx={{ fontSize: "small", color: "white" }} />
+            </IconButton>
+          )}
           <Typography style={{ display: "flex", alignItems: "center" }}>
             {globalBoostedTicks > 0
               ? `Boost: ${formatNumberWithDecimals(
@@ -136,6 +196,50 @@ const PlantTimeDisplay: React.FC<PlantTimeProps> = ({ plantTime }) => {
 
         <DialogContent>
           Next Season: {nextSeason} {renderNextResourceComponent()}
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        fullWidth={true}
+        maxWidth="md"
+        open={isResourcesPopupVisible}
+        onClose={handleResourcesPopupToggle}
+      >
+        <DialogTitle>Time Resource Progress</DialogTitle>
+        <DialogContent>
+          {renderProgressBar(
+            globalState.silicaProgress,
+            globalState.silicaThreshold,
+            "Silica"
+          )}
+          {renderProgressBar(
+            globalState.tanninsProgress,
+            globalState.tanninsThreshold,
+            "Tannins"
+          )}
+          {renderProgressBar(
+            globalState.calciumProgress,
+            globalState.calciumThreshold,
+            "Calcium"
+          )}
+          {renderProgressBar(
+            globalState.fulvicProgress,
+            globalState.fulvicThreshold,
+            "Fulvic"
+          )}
+          <Typography variant="h6">Resources</Typography>
+          <Typography>
+            Silica: {formatNumberWithDecimals(globalState.silica)}
+          </Typography>
+          <Typography>
+            Tannins: {formatNumberWithDecimals(globalState.tannins)}
+          </Typography>
+          <Typography>
+            Calcium: {formatNumberWithDecimals(globalState.calcium)}
+          </Typography>
+          <Typography>
+            Fulvic: {formatNumberWithDecimals(globalState.fulvic)}
+          </Typography>
         </DialogContent>
       </Dialog>
     </div>

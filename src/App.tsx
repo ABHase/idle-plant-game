@@ -103,7 +103,6 @@ function App() {
   const purchasedUpgrades = useSelector(
     (state: RootState) => state.upgrades.purchased
   );
-  const isTimeBoostActive = useSelector((state: RootState) => state.timeBoost);
   const lastLeafLossReason = useSelector(
     (state: RootState) => state.plant.lastLeafLossReason
   );
@@ -160,7 +159,6 @@ function App() {
   }, [dispatch, totalLeaves, isPlantSelected, lastLeafLossReason]);
 
   const lastUpdateTimeRef = useRef(Date.now());
-  const saveCounterRef = useRef(0);
   const previousLeaves = useRef(totalLeaves);
 
   function update() {
@@ -188,7 +186,13 @@ function App() {
       const timeScaleForThisUpdate = baseTimeScale * timeElapsedInSeconds; // Scale by the time elapsed
 
       dispatch(updateGame(timeScaleForThisUpdate));
-      dispatch(reduceGlobalBoostedTicks(timeScaleForThisUpdate));
+      dispatch(
+        reduceGlobalBoostedTicks({
+          plantType: plantDisplayType,
+          ticks: timeScaleForThisUpdate,
+        })
+      );
+
       saveState(store.getState());
 
       // Save the last update time for next iteration

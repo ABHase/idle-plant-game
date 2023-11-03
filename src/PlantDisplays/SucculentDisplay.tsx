@@ -11,7 +11,6 @@ import {
   buyNeedles,
   toggleLeafGrowth,
   toggleRootGrowth,
-  turnOffGeneticMarkerProduction,
   setMaxResourceToSpend,
 } from "../Slices/plantSlice";
 import {
@@ -19,10 +18,8 @@ import {
   Typography,
   Button,
   Divider,
-  IconButton,
   Tooltip,
   Box,
-  LinearProgress,
   TextField,
 } from "@mui/material";
 import { LEAF_COST, ROOT_COST } from "../constants";
@@ -39,15 +36,11 @@ import { Sunlight } from "../Components/Sunlight";
 import { Roots } from "../Components/Roots";
 import { Leaves } from "../Components/Leaves";
 import { Sugar } from "../Components/Sugar";
-import { Maturity } from "../Components/Maturity";
-import { DNAIcon } from "../icons/dna";
 import { DNA } from "../Components/DNA";
 import {
   calculateActualSugarProductionPerMinute,
   calculatePhotosynthesisSunlightConsumption,
   calculatePhotosynthesisWaterConsumption,
-  calculateSugarPhotosynthesis,
-  determinePhotosynthesisSugarProduction,
   isGeneticMarkerUpgradeUnlocked,
   isSugarConversionUnlocked,
   isSugarUpgradesUnlocked,
