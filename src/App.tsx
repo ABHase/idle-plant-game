@@ -126,8 +126,11 @@ function App() {
 
   const [evolveDialogOpen, setEvolveDialogOpen] = useState(false);
 
-  const handleEvolve = (selectedPlantType: string) => {
-    dispatch(evolveAndRecordPlant(selectedPlantType, purchasedUpgrades));
+  const handleEvolve = (
+    selectedPlantType: string,
+    selectedTraits: string[]
+  ) => {
+    dispatch(evolveAndRecordPlant(selectedPlantType, selectedTraits));
   };
 
   useEffect(() => {
@@ -313,8 +316,13 @@ function App() {
             <ConfirmEvolveDialog
               open={evolveDialogOpen}
               onClose={() => setEvolveDialogOpen(false)}
-              onConfirm={handleEvolve}
+              onConfirm={(selectedPlantType, selectedTraits) => {
+                dispatch(
+                  evolveAndRecordPlant(selectedPlantType, selectedTraits)
+                );
+              }}
             />
+
             <MenuModal
               open={modals.menuModalOpen}
               onClose={() => handleCloseModal("menuModalOpen")}

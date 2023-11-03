@@ -10,7 +10,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
 import { RootState } from "./rootReducer"; // <-- Add this import
 import { UPGRADES } from "./upgrades"; // <-- Add this import
-import { Typography } from "@mui/material";
+import { Box, Checkbox, FormControlLabel, Typography } from "@mui/material";
 import { DNAIcon } from "./icons/dna";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
@@ -21,7 +21,7 @@ import { setDifficulty } from "./Slices/gameStateSlice"; // Replace this with yo
 interface ConfirmEvolveDialogProps {
   open: boolean;
   onClose: () => void;
-  onConfirm: (plantType: string) => void;
+  onConfirm: (plantType: string, selectedTraits: string[]) => void;
 }
 
 const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
@@ -37,11 +37,27 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
     (state: RootState) => state.globalState.geneticMarkersMoss
   );
   const currentPlantType = useSelector((state: RootState) => state.plant.type);
-  const [plantType, setPlantType] = React.useState<string>(currentPlantType); // default value as Fern
+  const [plantType, setPlantType] = React.useState<string>(currentPlantType); // default value as current plant type
+
+  const [selectedTraits, setSelectedTraits] =
+    React.useState<string[]>(purchased);
+
+  React.useEffect(() => {
+    if (open) {
+      setSelectedTraits(purchased);
+    }
+  }, [open, purchased]);
 
   const typeSpecificUpgrades = UPGRADES[plantType];
+  const columnUpgrades = UPGRADES["Column"];
+  const adjacencyUpgrades = UPGRADES["Adjacency"];
   const metaUpgrades = UPGRADES["Meta"];
-  const combinedUpgrades = [...metaUpgrades, ...typeSpecificUpgrades];
+  const combinedUpgrades = [
+    ...columnUpgrades,
+    ...adjacencyUpgrades,
+    ...metaUpgrades,
+    ...typeSpecificUpgrades,
+  ];
 
   const handlePlantTypeChange = (type: string) => {
     setPlantType(type);
@@ -57,6 +73,16 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
   const handleSliderChange = (event: Event, newValue: number | number[]) => {
     const value = Array.isArray(newValue) ? newValue[0] : newValue;
     setLocalDifficulty(value);
+  };
+
+  const toggleTrait = (id: string) => {
+    setSelectedTraits((prevTraits) => {
+      if (prevTraits.includes(id)) {
+        return prevTraits.filter((trait) => trait !== id);
+      } else {
+        return [...prevTraits, id];
+      }
+    });
   };
 
   return (
@@ -96,13 +122,38 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
         </DialogContentText>
         {purchased.map((id) => {
           const trait = combinedUpgrades.find((upgrade) => upgrade.id === id);
-          if (!trait) return null; // Don't render anything if trait is not found
+          if (!trait) return null;
           return (
-            <Typography key={id} variant="body2">
-              - {trait.name} ({trait.description})
-            </Typography>
+            <Box
+              key={id}
+              sx={{
+                border: "1px solid white",
+                borderRadius: 1,
+                padding: 1,
+              }}
+            >
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={selectedTraits.includes(id)}
+                    onChange={() => {
+                      if (selectedTraits.includes(id)) {
+                        setSelectedTraits((prev) =>
+                          prev.filter((traitId) => traitId !== id)
+                        );
+                      } else {
+                        setSelectedTraits((prev) => [...prev, id]);
+                      }
+                    }}
+                    name={trait.name}
+                  />
+                }
+                label={`${trait.name} (${trait.description})`}
+              />
+            </Box>
           );
         })}
+
         <div>Difficulty - Score if you achieve 1B Sugar</div>
         <Slider
           defaultValue={localDifficulty}
@@ -130,7 +181,8 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
         <Button
           onClick={() => {
             dispatch(setDifficulty({ difficulty: localDifficulty }));
-            onConfirm(plantType);
+            onConfirm(plantType, selectedTraits);
+
             onClose();
           }}
           color="primary"

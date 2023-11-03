@@ -13,27 +13,34 @@ export const UPGRADES: Record<string, Upgrade[]> = {
   Column: [
     {
       id: "Column_Fern",
-      name: "Fern Row",
-      description: "Receive a roots and leaves boost when adjacent to a Fern.",
+      name: "Fern Column",
+      description: "Applied Last, Starting Roots^2 and Starting Leaves^2.",
       cost: 0,
     },
     {
       id: "Column_Succulent",
-      name: "Succulent Row",
-      description: "Receive a sugar boost when adjacent to a Succulent.",
+      name: "Succulent Column",
+      description: "Applied Last, Sugar Production^2.",
       cost: 0,
     },
     {
       id: "Column_Grass",
-      name: "Grass Row",
-      description: "Receive a season boost when adjacent to a Grass.",
+      name: "Grass Column",
+      description:
+        "Applied Last, Season Bonuses*2, Manual Absorbtion^2, Spread^2.",
       cost: 0,
     },
     {
       id: "Column_Moss",
-      name: "Moss Row",
+      name: "Moss Column",
+      description: "Applied Last, Passive Water and Sunlight Absorbtion^2.",
+      cost: 0,
+    },
+    {
+      id: "Column_Bush",
+      name: "Bush Column",
       description:
-        "Receive a sunlight and water boost when adjacent to a Moss.",
+        "Applied Last, Reduces Flower sugar and water thresholds significantly, Manual Absorbtion^2.",
       cost: 0,
     },
   ],
@@ -41,26 +48,32 @@ export const UPGRADES: Record<string, Upgrade[]> = {
     {
       id: "Adjacent_to_Fern",
       name: "Adjacent to Fern",
-      description: "Receive a roots and leaves boost when adjacent to a Fern.",
+      description: "Starting Roots and Leaves +100.",
       cost: 0,
     },
     {
       id: "Adjacent_to_Succulent",
       name: "Adjacent to Succulent",
-      description: "Receive a sugar boost when adjacent to a Succulent.",
+      description: "Sugar Production Rate *2.",
       cost: 0,
     },
     {
       id: "Adjacent_to_Grass",
       name: "Adjacent to Grass",
-      description: "Receive a season boost when adjacent to a Grass.",
+      description: "Season Bonuses*2, Manual Absorbtion*5, Spread*3.",
       cost: 0,
     },
     {
       id: "Adjacent_to_Moss",
       name: "Adjacent to Moss",
+      description: "Passive Water and Sunlight Absorbtion*20.",
+      cost: 0,
+    },
+    {
+      id: "Adjacent_to_Bush",
+      name: "Adjacent to Bush",
       description:
-        "Receive a sunlight and water boost when adjacent to a Moss.",
+        "Flower Sugar and Water Thresholds * 0.4, Manual Absorbtion*5.",
       cost: 0,
     },
   ],
@@ -604,9 +617,24 @@ export const UPGRADE_FUNCTIONS: Record<
       plant.autoGrowthMultiplier *= plant.autoGrowthMultiplier;
     },
     Column_Moss: (plant) => {
-      plant.sunlight_absorption_multiplier *=
-        plant.sunlight_absorption_multiplier;
-      plant.water_absorption_multiplier *= plant.water_absorption_multiplier;
+      if (plant.sunlight_absorption_multiplier > 1) {
+        plant.sunlight_absorption_multiplier *=
+          plant.sunlight_absorption_multiplier;
+      } else {
+        plant.sunlight_absorption_multiplier =
+          1 /
+          (plant.sunlight_absorption_multiplier *
+            plant.sunlight_absorption_multiplier);
+      }
+
+      if (plant.water_absorption_multiplier > 1) {
+        plant.water_absorption_multiplier *= plant.water_absorption_multiplier;
+      } else {
+        plant.water_absorption_multiplier =
+          1 /
+          (plant.water_absorption_multiplier *
+            plant.water_absorption_multiplier);
+      }
     },
     Column_Bush: (plant) => {
       plant.flowerSugarThreshold *= 0.4 * 0.4;

@@ -35,6 +35,7 @@ const HelpModal: React.FC<HelpModalProps> = ({ open, onClose, isMobile }) => {
   const toc = [
     "Basics",
     "Map",
+    "Column Bonuses",
     "Moss",
     "Fern",
     "Grass",
@@ -131,6 +132,59 @@ const HelpModal: React.FC<HelpModalProps> = ({ open, onClose, isMobile }) => {
         <Typography variant="body2">
           - Column bonuses exponentially increase some of the associated values
           for each plant.
+        </Typography>
+      </Box>
+    </div>,
+
+    <div>
+      <Typography variant="h6" mb={2}>
+        Column Bonuses:
+      </Typography>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          Column must still be filled with the plant, and only one column bonus
+          per plant can be active.
+        </Typography>
+      </Box>
+      <Typography variant="h6" mb={2}>
+        Moss Column
+      </Typography>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          Applied Last, Passive Water and Sunlight Absorption^2.
+        </Typography>
+      </Box>
+      <Typography variant="h6" mb={2}>
+        Fern Column
+      </Typography>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          Applied Last, Starting Roots^2 and Starting Leaves^2.
+        </Typography>
+      </Box>
+      <Typography variant="h6" mb={2}>
+        Succulent Column
+      </Typography>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          Applied Last, Sugar Production^2.
+        </Typography>
+      </Box>
+      <Typography variant="h6" mb={2}>
+        Grass Column
+      </Typography>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          Applied Last, Season Bonuses*2, Manual Absorbtion^2, Spread^2.
+        </Typography>
+      </Box>
+      <Typography variant="h6" mb={2}>
+        Bush Column
+      </Typography>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          Applied Last, Reduces Flower sugar and water thresholds significantly,
+          Manual Absorption^2.
         </Typography>
       </Box>
     </div>,
