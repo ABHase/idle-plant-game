@@ -567,6 +567,11 @@ const plantSlice = createSlice({
     setHasReceivedPoint: (state) => {
       state.hasReceivedPoint = true;
     },
+    //Reducer to remove all roots and leaves
+    removeAllRootsAndLeaves: (state) => {
+      state.roots = 0;
+      state.leaves = 0;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(buyFlower, buyFlowerReducer);
@@ -630,5 +635,6 @@ export const {
   increaseFlowerThreshold,
   setPlantType,
   setHasReceivedPoint,
+  removeAllRootsAndLeaves,
 } = plantSlice.actions;
 export default plantSlice.reducer;

@@ -19,6 +19,7 @@ import {
   deductSunlight,
   increaseSugar,
   deductWater,
+  removeAllRootsAndLeaves,
 } from "./Slices/plantSlice";
 import {
   activateTimeBoost,
@@ -60,6 +61,22 @@ export const MUSHROOM_ITEMS: MushroomItem[] = [
         dispatch(deductSugar(500)); // Deduct sugar cost
         dispatch(increaseRootRot(60)); // Increase root rot by 1
         dispatch(increaseGeneticMarkers({ amount: 1, plantType: "Fern" })); // Add 1 DNA
+      } else {
+        console.error("Not enough sugar to buy DNA");
+      }
+    },
+  },
+  {
+    id: "buyDNA_2",
+    name: "Buy 100 DNA",
+    description: "Blackest Market DNA.  This will remove all leaves and roots.",
+    cost: 50000, // Adjust sugar cost as necessary
+    effect: (dispatch, getState) => {
+      const sugar = getState().plant.sugar; // Get sugar from plant slice
+      if (sugar >= 500) {
+        dispatch(deductSugar(50000)); // Deduct sugar cost
+        dispatch(removeAllRootsAndLeaves()); // Remove all roots and leaves
+        dispatch(increaseGeneticMarkers({ amount: 100, plantType: "Fern" })); // Add 1 DNA
       } else {
         console.error("Not enough sugar to buy DNA");
       }
@@ -202,6 +219,10 @@ export const MUSHROOM_ITEM_FUNCTIONS: {
     getState: () => RootState
   ) => void,
   buyDNA: MUSHROOM_ITEMS.find((item) => item.id === "buyDNA")?.effect as (
+    dispatch: ThunkDispatch<RootState, unknown, Action<string>>,
+    getState: () => RootState
+  ) => void,
+  buyDNA_2: MUSHROOM_ITEMS.find((item) => item.id === "buyDNA_2")?.effect as (
     dispatch: ThunkDispatch<RootState, unknown, Action<string>>,
     getState: () => RootState
   ) => void,
