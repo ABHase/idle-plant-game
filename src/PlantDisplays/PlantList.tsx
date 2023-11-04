@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../rootReducer";
 import {
@@ -87,6 +87,36 @@ const PlantList: React.FC<PlantListProps> = ({
   const plant = useSelector((state: RootState) => state.plant);
   const plantTime = useSelector((state: RootState) => state.plantTime);
   const [multiplier, setMultiplier] = useState<number>(1);
+
+  //Handle long pressing
+
+  const [pressTimer, setPressTimer] = useState<number | null>(null);
+
+  const handleButtonPress = useCallback((action: () => void) => {
+    action();
+    // Cast the return value of setInterval directly to number
+    const id = window.setInterval(action, 100) as number;
+    setPressTimer(id);
+  }, []);
+
+  const handleButtonRelease = useCallback(() => {
+    if (pressTimer !== null) {
+      clearInterval(pressTimer);
+      setPressTimer(null);
+    }
+  }, [pressTimer]);
+
+  useEffect(() => {
+    return () => {
+      if (pressTimer !== null) {
+        clearInterval(pressTimer);
+      }
+    };
+  }, [pressTimer]); // Cleans up the interval when the component unmounts
+
+  /////////////////////////////
+
+  const paused = useSelector((state: RootState) => state.app.paused);
 
   const { geneticMarkerProgress, geneticMarkerThreshold } = useSelector(
     (state: RootState) => state.globalState
@@ -541,6 +571,7 @@ const PlantList: React.FC<PlantListProps> = ({
             sx={{ display: "flex", justifyContent: "space-evenly" }}
           >
             <Button
+              disabled={paused}
               sx={{
                 border: "1px solid #aaa",
                 borderRadius: "4px",
@@ -550,11 +581,16 @@ const PlantList: React.FC<PlantListProps> = ({
                   backgroundColor: "#0F4A52", // Or any other style reset
                 },
               }}
-              onClick={() => handleWaterAbsorption()}
+              onTouchStart={() => handleButtonPress(handleWaterAbsorption)}
+              onTouchEnd={handleButtonRelease}
+              onMouseDown={() => handleButtonPress(handleWaterAbsorption)} // for mouse devices
+              onMouseUp={handleButtonRelease}
+              onMouseLeave={handleButtonRelease} // in case the cursor leaves the button while pressing
             >
               + <Water amount={plant.water_absorption_rate} />
             </Button>
             <Button
+              disabled={paused}
               sx={{
                 border: "1px solid #aaa",
                 borderRadius: "4px",
@@ -564,7 +600,11 @@ const PlantList: React.FC<PlantListProps> = ({
                   backgroundColor: "#633912", // Or any other style reset
                 },
               }}
-              onClick={() => handleSunlightAbsorption()}
+              onTouchStart={() => handleButtonPress(handleSunlightAbsorption)}
+              onTouchEnd={handleButtonRelease}
+              onMouseDown={() => handleButtonPress(handleSunlightAbsorption)} // for mouse devices
+              onMouseUp={handleButtonRelease}
+              onMouseLeave={handleButtonRelease} // in case the cursor leaves the button while pressing
             >
               + <Sunlight amount={plant.sunlight_absorption_rate} />
             </Button>

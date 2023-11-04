@@ -437,6 +437,7 @@ function App() {
                       mr: !isMobile ? 0 : 1,
                       color: paused ? "white" : "inherit", // Text color white if paused
                       bgcolor: paused ? "#240000" : "#090924", // Background color dark red if paused
+                      border: "1px solid white", // Border color white if paused
                     }}
                   >
                     {paused ? "GAME PAUSED!" : "Open Menu"}
