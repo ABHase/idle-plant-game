@@ -528,14 +528,16 @@ const plantSlice = createSlice({
     },
     //Reducer to simulate a rabbit attack based on timeScale
     rabbitAttack: (state, action: PayloadAction<number>) => {
-      const timeScale = action.payload;
+      const timeScale = Math.floor(action.payload); // Ensure timeScale is an integer
       state.rabbitAttack = true;
 
-      // Lose water scaled by timeScale
-      state.water = Math.max(0, state.water - state.water * 0.1 * timeScale);
+      // Lose water scaled by timeScale, rounding to avoid floating point precision issues
+      const waterLoss = Math.round(state.water * 0.1 * timeScale);
+      state.water = Math.max(0, state.water - waterLoss);
 
-      // Lose leaves scaled by timeScale
-      state.leaves = Math.max(0, state.leaves - 1 * timeScale);
+      // Lose leaves scaled by timeScale, ensuring whole number
+      const leavesLoss = Math.floor(1 * timeScale);
+      state.leaves = Math.max(0, state.leaves - leavesLoss);
     },
 
     // Set Rabbit Attack to false
