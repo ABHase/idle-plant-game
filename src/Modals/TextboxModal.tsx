@@ -8,6 +8,7 @@ import {
   DialogTitle,
   TextareaAutosize,
 } from "@mui/material";
+import { buttonStyle } from "../buttonStyles";
 
 interface TextboxModalProps {
   open: boolean;
@@ -36,6 +37,14 @@ const TextboxModal: FC<TextboxModalProps> = ({ open, onClose }) => {
     setConfirmOpen(true);
   };
 
+  const redButtonStyle = {
+    my: 1,
+    borderRadius: 12,
+    border: "1px solid white",
+    backgroundColor: "#240000",
+    color: "white",
+  };
+
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Import/Export State</DialogTitle>
@@ -48,10 +57,10 @@ const TextboxModal: FC<TextboxModalProps> = ({ open, onClose }) => {
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleExport} variant="contained" color="primary">
+        <Button onClick={handleExport} variant="contained" sx={redButtonStyle}>
           Export to Textbox
         </Button>
-        <Button onClick={handleImport} variant="contained" color="secondary">
+        <Button onClick={handleImport} variant="contained" sx={redButtonStyle}>
           Import from Textbox
         </Button>
       </DialogActions>
@@ -61,17 +70,22 @@ const TextboxModal: FC<TextboxModalProps> = ({ open, onClose }) => {
           Importing will overwrite your current state. Are you sure?
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setConfirmOpen(false)} color="primary">
-            Cancel
-          </Button>
           <Button
             onClick={() => {
               handleConfirmedImport();
               setConfirmOpen(false);
             }}
-            color="secondary"
+            variant="contained"
+            sx={redButtonStyle}
           >
             Confirm
+          </Button>
+          <Button
+            onClick={() => setConfirmOpen(false)}
+            variant="contained"
+            sx={buttonStyle}
+          >
+            Cancel
           </Button>
         </DialogActions>
       </Dialog>

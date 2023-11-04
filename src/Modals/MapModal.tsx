@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Modal, Grid, Paper, Typography, Box } from "@mui/material";
+import { Modal, Grid, Paper, Typography, Box, Button } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../rootReducer";
 import GrassIcon from "../Components/Grass";
@@ -27,7 +27,7 @@ const MapModal: React.FC<MapModalProps> = ({ open, onClose, isMobile }) => {
   const currentPlantType = useSelector((state: RootState) => state.plant.type);
 
   const cellSize = 50;
-  const currentCellColor = "lightblue";
+  const currentCellColor = "#404038";
 
   type PlantColors = {
     Fern: string;
@@ -40,8 +40,8 @@ const MapModal: React.FC<MapModalProps> = ({ open, onClose, isMobile }) => {
   const plantColors = {
     Fern: "#30050d", // Red fern
     Grass: "#0c2100", // Grass green
-    Bush: "#303F9F", // Blueberry blue
-    Moss: "#795548", // Darkish brown
+    Bush: "#302b61", // Blueberry blue
+    Moss: "#44635f", // Darkish brown
     Succulent: "#47430d", // Desert yellow
   };
 
@@ -69,17 +69,16 @@ const MapModal: React.FC<MapModalProps> = ({ open, onClose, isMobile }) => {
     }
   }, [dispatch, clickedCellIndex]);
 
-  useEffect(() => {
-    const allCellsCompleted = Array.from({ length: 24 }, (_, i) => i).every(
-      (index) =>
-        cellCompletion.cells[index] !== null &&
-        cellCompletion.cells[index] !== undefined
-    );
+  const allCellsCompleted = useSelector(
+    (state: RootState) =>
+      Object.values(state.cellCompletion.cells).filter(
+        (cell) => cell !== null && cell !== undefined
+      ).length === 24
+  );
 
-    if (allCellsCompleted) {
-      setIsVictoryDialogOpen(true);
-    }
-  }, [cellCompletion]);
+  const handleVictoryButtonClick = () => {
+    setIsVictoryDialogOpen(true);
+  };
 
   return (
     <Modal
@@ -104,9 +103,32 @@ const MapModal: React.FC<MapModalProps> = ({ open, onClose, isMobile }) => {
           width: isMobile ? "80%" : "40%",
         }}
       >
-        <Typography variant="h6" gutterBottom style={{ color: "white" }}>
-          Map
-        </Typography>
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          width="100%"
+          padding="2"
+          marginBottom="6px"
+        >
+          <Typography variant="h6" gutterBottom style={{ color: "white" }}>
+            Map
+          </Typography>
+
+          {allCellsCompleted && (
+            <Button
+              variant="contained"
+              onClick={handleVictoryButtonClick}
+              style={{
+                backgroundColor: "#266641",
+                color: "white",
+                borderRadius: 12,
+              }}
+            >
+              Congratulations!
+            </Button>
+          )}
+        </Box>
 
         <Grid container spacing={0.1}>
           {[...Array(24)].map((_, index) => {
@@ -117,7 +139,10 @@ const MapModal: React.FC<MapModalProps> = ({ open, onClose, isMobile }) => {
                 ? currentCellColor
                 : cellPlantType
                 ? getColorForPlant(cellPlantType as keyof PlantColors)
-                : "grey";
+                : "#636359";
+
+            const borderColor =
+              index === currentCell ? "1px dashed white" : "2px solid black";
 
             const isAdjacentCell = adjacentCells.includes(index);
 
@@ -136,7 +161,8 @@ const MapModal: React.FC<MapModalProps> = ({ open, onClose, isMobile }) => {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    border: "2px solid black",
+                    borderRadius: "4px",
+                    border: borderColor,
                   }}
                   onClick={
                     isAdjacentCell ? () => handleMoveClick(index) : undefined
@@ -172,6 +198,7 @@ const MapModal: React.FC<MapModalProps> = ({ open, onClose, isMobile }) => {
                 width={20}
                 height={20}
                 marginRight={1}
+                sx={{ border: "1px solid white" }}
                 bgcolor={
                   label === "Current"
                     ? currentCellColor
