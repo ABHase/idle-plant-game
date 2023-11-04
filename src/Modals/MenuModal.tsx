@@ -26,6 +26,8 @@ interface Props {
   handleOpenMapModal: () => void;
   manualSave: () => void;
   isMobile: boolean;
+  handleTogglePause: () => void;
+  paused: boolean;
 }
 
 const MenuModal: React.FC<Props> = (props) => {
@@ -83,6 +85,15 @@ const MenuModal: React.FC<Props> = (props) => {
         <div>Cells Completed: {numberOfCompletedCells}</div>
         <div>Difficulty: {difficulty}</div>
         <div>Score: {score}</div>
+
+        <Button
+          sx={buttonStyle}
+          variant="contained"
+          color="primary"
+          onClick={props.handleTogglePause}
+        >
+          {props.paused ? "Unpause" : "Pause"}
+        </Button>
 
         {props.isMobile && (
           <Button

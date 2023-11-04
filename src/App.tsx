@@ -65,6 +65,12 @@ const selectSeason = createSelector(
 function App() {
   //New user setup
 
+  const paused = useSelector((state: RootState) => state.app.paused);
+
+  const handleTogglePause = () => {
+    dispatch({ type: "app/togglePause" });
+  };
+
   const isMobile = window.innerWidth <= 768;
 
   const { modals, handleOpenModal, handleCloseModal } = useModalState();
@@ -166,6 +172,16 @@ function App() {
       return;
     }
 
+    const paused = store.getState().app.paused;
+
+    const currentTime = Date.now();
+
+    if (paused) {
+      localStorage.setItem("lastUpdateTime", currentTime.toString());
+      lastUpdateTimeRef.current = currentTime;
+      return;
+    }
+
     const lastSavedTimeStr = localStorage.getItem("lastUpdateTime");
     const lastSavedTime =
       lastSavedTimeStr !== null
@@ -175,16 +191,14 @@ function App() {
     const gameState = store.getState().globalState;
     const baseTimeScale = gameState.globalBoostedTicks > 0 ? 60 : 1;
 
-    const currentTime = Date.now();
     const timeElapsed = currentTime - lastSavedTime;
-    const timeElapsedInSeconds = timeElapsed / 1000; // Convert to seconds
+    const timeElapsedInSeconds = timeElapsed / 1000;
 
     const tickDuration = 1000;
 
     if (timeElapsed >= tickDuration) {
       let shouldSave = false;
-      const timeScaleForThisUpdate = baseTimeScale * timeElapsedInSeconds; // Scale by the time elapsed
-
+      const timeScaleForThisUpdate = baseTimeScale * timeElapsedInSeconds;
       dispatch(updateGame(timeScaleForThisUpdate));
       dispatch(
         reduceGlobalBoostedTicks({
@@ -194,8 +208,6 @@ function App() {
       );
 
       saveState(store.getState());
-
-      // Save the last update time for next iteration
       localStorage.setItem("lastUpdateTime", currentTime.toString());
       lastUpdateTimeRef.current = currentTime;
     }
@@ -350,7 +362,9 @@ function App() {
               handleCloseReportModal={() => handleCloseModal("reportModalOpen")}
               handleOpenMapModal={() => handleOpenModal("mapModalOpen")}
               manualSave={() => saveState(store.getState())}
+              handleTogglePause={handleTogglePause}
               isMobile={isMobile}
+              paused={paused}
             />
             <MushroomStoreModal
               open={modals.mushroomStoreModalOpen}
@@ -421,9 +435,11 @@ function App() {
                       mb: 0,
                       ml: !isMobile ? 0 : 1,
                       mr: !isMobile ? 0 : 1,
+                      color: paused ? "white" : "inherit", // Text color white if paused
+                      bgcolor: paused ? "#240000" : "#090924", // Background color dark red if paused
                     }}
                   >
-                    Open Menu
+                    {paused ? "GAME PAUSED!" : "Open Menu"}
                   </Button>
 
                   {isMobile && (

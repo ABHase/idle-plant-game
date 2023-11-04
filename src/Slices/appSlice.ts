@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 export interface AppState {
   totalTime: number;
   score: number;
+  paused: boolean;
 }
 
 export interface UpdateTimeWithScalePayload {
@@ -13,6 +14,7 @@ export interface UpdateTimeWithScalePayload {
 export const initialState: AppState = {
   totalTime: 0,
   score: 0,
+  paused: false,
 };
 
 const appSlice = createSlice({
@@ -22,6 +24,10 @@ const appSlice = createSlice({
     resetApp: () => initialState,
     updateTime: (state, action: PayloadAction<number>) => {
       state.totalTime = action.payload;
+    },
+    //Reducer to toggle pause
+    togglePause: (state) => {
+      state.paused = !state.paused;
     },
     updateTimeWithScale: (
       state,
@@ -47,7 +53,12 @@ const appSlice = createSlice({
   },
 });
 
-export const { updateTime, incrementScore, resetApp, updateTimeWithScale } =
-  appSlice.actions;
+export const {
+  updateTime,
+  incrementScore,
+  resetApp,
+  updateTimeWithScale,
+  togglePause,
+} = appSlice.actions;
 
 export default appSlice.reducer;
