@@ -322,6 +322,24 @@ const globalStateSlice = createSlice({
         }
       }
     },
+    // Reducer to create a seed at the cost of one each tannins, silica, calcium, and fulvic
+    createSeed: (state) => {
+      // Check if there are enough resources
+      if (
+        state.tannins >= 1 &&
+        state.silica >= 1 &&
+        state.calcium >= 1 &&
+        state.fulvic >= 1
+      ) {
+        state.seeds += 1;
+        state.tannins -= 1;
+        state.silica -= 1;
+        state.calcium -= 1;
+        state.fulvic -= 1;
+      } else {
+        console.log("Not enough resources to create a Time Seed.");
+      }
+    },
   },
   extraReducers: (builder) => {
     builder.addMatcher(
@@ -350,6 +368,7 @@ export const {
   setDifficulty,
   increaseGlobalBoostedTicks,
   reduceGlobalBoostedTicks,
+  createSeed,
 } = globalStateSlice.actions;
 
 export default globalStateSlice.reducer;

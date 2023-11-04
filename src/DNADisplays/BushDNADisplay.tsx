@@ -1,21 +1,33 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../rootReducer"; // Adjust the import path if needed
-import { Box, Grid, LinearProgress, Typography } from "@mui/material";
+import { Box, Button, Grid, LinearProgress, Typography } from "@mui/material";
 import { DNA } from "../Components/DNA";
 import { isGeneticMarkerUpgradeUnlocked } from "../formulas";
+import { createSeed } from "../Slices/gameStateSlice";
+import { buttonStyle } from "../buttonStyles";
 
 const BushDNADisplay: React.FC = () => {
   const {
     geneticMarkerProgressBush,
     geneticMarkerThresholdBush,
     geneticMarkersBush,
+    fulvic,
+    tannins,
+    silica,
+    calcium,
   } = useSelector((state: RootState) => state.globalState);
   const plant = useSelector((state: RootState) => state.plant);
 
   const percentage = Math.floor(
     (geneticMarkerProgressBush / geneticMarkerThresholdBush) * 100
   );
+
+  const dispatch = useDispatch();
+
+  const handleCreateTimeSeed = () => {
+    dispatch(createSeed());
+  };
 
   return (
     <div className="bush-dna-display">
@@ -40,7 +52,17 @@ const BushDNADisplay: React.FC = () => {
             <DNA amount={geneticMarkersBush} />
           </Grid>
           <Grid item xs={9}>
-            <Typography variant="h5">You are a Berry Bush</Typography>
+            {fulvic >= 1 && tannins >= 1 && silica >= 1 && calcium >= 1 ? (
+              <Button
+                variant="contained"
+                onClick={handleCreateTimeSeed}
+                sx={buttonStyle}
+              >
+                Create a Time Seed?
+              </Button>
+            ) : (
+              <Typography variant="h5">You are a Berry Bush</Typography>
+            )}
           </Grid>
         </Grid>
       </Box>

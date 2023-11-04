@@ -33,6 +33,7 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
   const geneticMarkers = useSelector(
     (state: RootState) => state.globalState.geneticMarkers
   );
+  const timeSeeds = useSelector((state: RootState) => state.globalState.seeds);
   const geneticMarkersMoss = useSelector(
     (state: RootState) => state.globalState.geneticMarkersMoss
   );
@@ -96,7 +97,15 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
         },
       }}
     >
-      <DialogTitle>{"Evolve Plant?"}</DialogTitle>
+      <DialogTitle>
+        <span>Evolve Plant?</span>
+        {timeSeeds > 0 && (
+          <span style={{ fontWeight: "normal", fontSize: "inherit" }}>
+            {` - Time Seeds: ${timeSeeds}`}
+          </span>
+        )}
+      </DialogTitle>
+
       <DialogContent style={{ overflowY: "auto" }}>
         <DialogContentText>
           Are you sure you want to plant a new seed, <DNAIcon /> DNA progress is
