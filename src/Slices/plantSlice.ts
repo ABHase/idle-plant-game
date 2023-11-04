@@ -587,6 +587,10 @@ const plantSlice = createSlice({
       state.roots = 0;
       state.leaves = 0;
     },
+    //Reducer to remove all water
+    removeAllWater: (state) => {
+      state.water = 0;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(buyFlower, buyFlowerReducer);
@@ -651,5 +655,6 @@ export const {
   setPlantType,
   setHasReceivedPoint,
   removeAllRootsAndLeaves,
+  removeAllWater,
 } = plantSlice.actions;
 export default plantSlice.reducer;

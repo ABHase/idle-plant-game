@@ -12,6 +12,7 @@ import {
   toggleRootGrowth,
   turnOffGeneticMarkerProduction,
   setMaxResourceToSpend,
+  removeAllWater,
 } from "../Slices/plantSlice";
 import {
   Grid,
@@ -23,6 +24,10 @@ import {
   Box,
   LinearProgress,
   TextField,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 import { Add, ArrowForwardIos, Clear } from "@mui/icons-material";
 import { LEAF_COST, ROOT_COST } from "../constants";
@@ -199,6 +204,22 @@ const PlantList: React.FC<PlantListProps> = ({
     } else {
       setMultiplier(value); // Otherwise, set to the clicked value
     }
+  };
+
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpenDialog(true);
+  };
+
+  const handleClose = () => {
+    setOpenDialog(false);
+  };
+
+  const handleRemoveAllWater = () => {
+    // dispatch the removeAllWater action
+    dispatch(removeAllWater());
+    handleClose(); // Optionally close the dialog after the action
   };
 
   return (
@@ -558,37 +579,99 @@ const PlantList: React.FC<PlantListProps> = ({
               visibility: plant.rootRot > 0 ? "visible" : "hidden",
             }}
           >
-            <Box position="relative" display="inline-flex" width="100%">
-              <LinearProgress
-                variant="determinate"
-                value={(plant.rootRot / plant.rootRotThreshold) * 100}
-                sx={{
-                  width: "100%",
-                  height: "22px",
-                  marginTop: "4px",
-                  backgroundColor: "#f0a6a2", // This is a lighter red for the unfilled portion
-                  "& .MuiLinearProgress-barColorPrimary": {
-                    backgroundColor: "#942e25",
-                  },
-                }}
-              />
-
+            <Tooltip
+              title={
+                <React.Fragment>
+                  <Typography color="inherit">
+                    Remove Root Rot By Having
+                  </Typography>
+                  <Water amount={0} />
+                </React.Fragment>
+              }
+              arrow
+            >
               <Box
-                sx={{
-                  position: "absolute",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "100%",
-                  color: "white",
-                }}
+                position="relative"
+                display="inline-flex"
+                width="100%"
+                onClick={handleClickOpen} // making the box clickable
+                sx={{ cursor: "pointer" }} // changing the cursor to indicate it's clickable
               >
-                <Typography color="black">Root Rot from Fungus</Typography>
+                <LinearProgress
+                  variant="determinate"
+                  value={(plant.rootRot / plant.rootRotThreshold) * 100}
+                  sx={{
+                    width: "100%",
+                    height: "22px",
+                    marginTop: "4px",
+                    backgroundColor: "#f0a6a2",
+                    "& .MuiLinearProgress-barColorPrimary": {
+                      backgroundColor: "#942e25",
+                    },
+                  }}
+                />
+
+                <Box
+                  sx={{
+                    position: "absolute",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "100%",
+                    color: "white",
+                  }}
+                >
+                  <Typography color="black">Root Rot from Fungus</Typography>
+                </Box>
               </Box>
-            </Box>
+            </Tooltip>
           </Grid>
         </Grid>
       </Box>
+
+      {/* Dialog Component */}
+      <Dialog
+        open={openDialog}
+        onClose={handleClose}
+        sx={{
+          "& .MuiPaper-root": {
+            border: "1px solid #ccc",
+          },
+        }}
+      >
+        <DialogTitle>{"Remove Root Rot"}</DialogTitle>
+        <DialogContent>
+          <Typography gutterBottom>
+            This dialog can contain information or actions to remove the root
+            rot.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={handleRemoveAllWater}
+            color="primary"
+            autoFocus
+            sx={{
+              border: "1px solid #ccc",
+              backgroundColor: "#240000",
+              color: "#fff",
+            }}
+          >
+            Empty all water to cleanse roots
+          </Button>
+          <Button
+            onClick={handleClose}
+            sx={{
+              border: "1px solid #ccc",
+              backgroundColor: "#090924",
+              color: "#fff",
+            }}
+          >
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       {/* ... [Rest of the code for displaying other plant info] */}
     </div>
   );
