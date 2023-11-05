@@ -232,20 +232,23 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
             </Box>
           );
         })}
-
-        <div>
-          Difficulty - Score if you achieve 1B Sugar, higher rates produce Time
-          Resources Faster!
-        </div>
-        <Slider
-          value={localDifficulty}
-          step={1}
-          marks
-          min={1}
-          max={100}
-          valueLabelDisplay="auto"
-          onChange={handleSliderChange}
-        />
+        {plantType !== "Vine" && (
+          <div>
+            Difficulty - Score if you achieve 1B Sugar, higher rates produce
+            Time Resources Faster!
+          </div>
+        )}
+        {plantType !== "Vine" && (
+          <Slider
+            value={localDifficulty}
+            step={1}
+            marks
+            min={1}
+            max={100}
+            valueLabelDisplay="auto"
+            onChange={handleSliderChange}
+          />
+        )}
       </DialogContent>
       <DialogActions>
         <Button

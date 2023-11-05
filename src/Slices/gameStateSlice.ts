@@ -302,22 +302,22 @@ const globalStateSlice = createSlice({
           case "Fern":
             progressKey = "calciumProgress";
             thresholdKey = "calciumThreshold";
-            resourceKey = "calcium"; // added this line
+            resourceKey = "calcium";
             break;
           case "Moss":
             progressKey = "tanninsProgress";
             thresholdKey = "tanninsThreshold";
-            resourceKey = "tannins"; // added this line
+            resourceKey = "tannins";
             break;
           case "Succulent":
             progressKey = "silicaProgress";
             thresholdKey = "silicaThreshold";
-            resourceKey = "silica"; // added this line
+            resourceKey = "silica";
             break;
           case "Grass":
             progressKey = "fulvicProgress";
             thresholdKey = "fulvicThreshold";
-            resourceKey = "fulvic"; // added this line
+            resourceKey = "fulvic";
             break;
           default:
             // Handle unexpected plant type if necessary
@@ -325,25 +325,31 @@ const globalStateSlice = createSlice({
         }
 
         const difficultyMultiplier = Math.floor(state.difficulty / 10) + 1;
+        let progressToAdd = ticks * difficultyMultiplier;
+        let resourcesAwarded = 0;
 
-        // Add to progress
-        state[progressKey as keyof typeof state] +=
-          ticks * difficultyMultiplier;
-
-        // Check if the progress exceeds or meets the threshold
-        if (
-          state[progressKey as keyof typeof state] >=
+        // Keep adding to progress and awarding resources while progress exceeds the threshold
+        while (
+          progressToAdd + state[progressKey as keyof typeof state] >=
           state[thresholdKey as keyof typeof state]
         ) {
-          // Perform the action when the threshold is reached
-          state[resourceKey] += 1; // modified this line
-
-          // Reset the progress to zero
+          // Calculate how much progress is needed to reach the next resource
+          const progressNeeded =
+            state[thresholdKey as keyof typeof state] -
+            state[progressKey as keyof typeof state];
+          // Award one resource
+          state[resourceKey]++;
+          resourcesAwarded++;
+          // Subtract the progress needed from the progressToAdd
+          progressToAdd -= progressNeeded;
+          // Reset the progress
           state[progressKey as keyof typeof state] = 0;
-
           // Increase the threshold for the next cycle
           state[thresholdKey as keyof typeof state] *= 1.1; // Increase by 10%, for example
         }
+
+        // Add any remaining progress
+        state[progressKey as keyof typeof state] += progressToAdd;
       }
     },
     // Reducer to create a seed at the cost of one each tannins, silica, calcium, and fulvic

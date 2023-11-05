@@ -30,6 +30,7 @@ import {
   formatNumberWithDecimals,
   formatNumberWithoutDecimals,
 } from "./PlantDisplays/PlantList";
+import { ResourceProgressDialog } from "./ResourceProgressDialog";
 
 interface PlantTimeProps {
   plantTime: {
@@ -204,49 +205,11 @@ const PlantTimeDisplay: React.FC<PlantTimeProps> = ({ plantTime }) => {
         </DialogContent>
       </Dialog>
 
-      <Dialog
-        fullWidth={true}
-        maxWidth="md"
-        open={isResourcesPopupVisible}
-        onClose={handleResourcesPopupToggle}
-      >
-        <DialogTitle>Time Resource Progress</DialogTitle>
-        <DialogContent>
-          {renderProgressBar(
-            globalState.silicaProgress,
-            globalState.silicaThreshold,
-            "Silica (Succulent)"
-          )}
-          {renderProgressBar(
-            globalState.tanninsProgress,
-            globalState.tanninsThreshold,
-            "Tannins (Moss)"
-          )}
-          {renderProgressBar(
-            globalState.calciumProgress,
-            globalState.calciumThreshold,
-            "Calcium (Fern)"
-          )}
-          {renderProgressBar(
-            globalState.fulvicProgress,
-            globalState.fulvicThreshold,
-            "Fulvic (Grass)"
-          )}
-          <Typography variant="h6">Resources</Typography>
-          <Typography>
-            Silica: {formatNumberWithDecimals(globalState.silica)}
-          </Typography>
-          <Typography>
-            Tannins: {formatNumberWithDecimals(globalState.tannins)}
-          </Typography>
-          <Typography>
-            Calcium: {formatNumberWithDecimals(globalState.calcium)}
-          </Typography>
-          <Typography>
-            Fulvic: {formatNumberWithDecimals(globalState.fulvic)}
-          </Typography>
-        </DialogContent>
-      </Dialog>
+      <ResourceProgressDialog
+        globalState={globalState}
+        isOpen={isResourcesPopupVisible}
+        toggleDialog={handleResourcesPopupToggle}
+      />
     </div>
   );
 };

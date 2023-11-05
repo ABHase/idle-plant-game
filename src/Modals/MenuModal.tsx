@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Button, Dialog, Slider, Tooltip } from "@mui/material";
 import { currentVersion } from "../store";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../rootReducer";
 import { selectNumberOfCompletedCells } from "../Slices/cellCompletionSlice";
 import { setDifficulty } from "../Slices/gameStateSlice";
+import { ResourceProgressDialog } from "../ResourceProgressDialog";
 
 interface Props {
   open: boolean;
@@ -66,6 +67,14 @@ const MenuModal: React.FC<Props> = (props) => {
     border: "1px solid white",
     backgroundColor: "#240000",
     color: "white",
+  };
+
+  const [isResourcesPopupVisible, setIsResourcesPopupVisible] = useState(false);
+
+  const globalState = useSelector((state: RootState) => state.globalState);
+
+  const handleResourcesPopupToggle = () => {
+    setIsResourcesPopupVisible(!isResourcesPopupVisible);
   };
 
   return (
@@ -138,6 +147,14 @@ const MenuModal: React.FC<Props> = (props) => {
             </Button>
           </span>
         </Tooltip>
+        <Button
+          sx={buttonStyle}
+          variant="contained"
+          color="primary"
+          onClick={handleResourcesPopupToggle}
+        >
+          Time Resources
+        </Button>
 
         <Button
           sx={buttonStyle}
@@ -195,6 +212,12 @@ const MenuModal: React.FC<Props> = (props) => {
           Purge Save
         </Button>
       </Box>
+      <ResourceProgressDialog
+        globalState={globalState}
+        isOpen={isResourcesPopupVisible}
+        toggleDialog={handleResourcesPopupToggle}
+      />
+
       {/* Include the modals here, if they are to be part of MenuModal */}
     </Dialog>
   );
