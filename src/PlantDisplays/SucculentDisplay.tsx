@@ -473,7 +473,7 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
               />
               <MultiplierToggleButton
                 currentMultiplier={multiplier}
-                value={100000}
+                value={1000000000000000}
                 onClick={toggleMultiplier}
               />
             </Box>

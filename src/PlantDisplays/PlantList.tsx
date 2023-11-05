@@ -499,7 +499,7 @@ const PlantList: React.FC<PlantListProps> = ({
               />
               <MultiplierToggleButton
                 currentMultiplier={multiplier}
-                value={100000}
+                value={1000000000000000}
                 onClick={toggleMultiplier}
               />
             </Box>
