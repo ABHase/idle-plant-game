@@ -33,6 +33,7 @@ import {
   reduceGlobalBoostedTicks,
   resetGlobalState,
   setCurrentCell,
+  setVineGeneticMarkers,
   updateGeneticMarkerProgress,
 } from "./Slices/gameStateSlice";
 import { LEAF_COST, ROOT_COST } from "./constants";
@@ -106,7 +107,7 @@ export const updateGame = (
     const requiredResource =
       plant.type === "Grass" ? plant.leaves : plant.sugar;
 
-    type PlantType = "Fern" | "Moss" | "Succulent" | "Grass";
+    type PlantType = "Fern" | "Moss" | "Succulent" | "Grass" | "Vine";
     type Thresholds = {
       [key in PlantType]?: number;
     };
@@ -116,6 +117,7 @@ export const updateGame = (
       Moss: gameState.geneticMarkerThresholdMoss,
       Succulent: gameState.geneticMarkerThresholdSucculent,
       Grass: gameState.geneticMarkerThresholdGrass,
+      Vine: gameState.geneticMarkerThresholdVine,
     };
 
     let resourceThreshold =
@@ -301,6 +303,9 @@ export const purchaseUpgradeThunk = createAsyncThunk<
       break;
     case "Bush":
       availableGeneticMarkers = state.globalState.geneticMarkersBush;
+      break;
+    case "Vine":
+      availableGeneticMarkers = state.globalState.geneticMarkersVine;
       break;
     default:
       throw new Error("Invalid plant type");
@@ -495,8 +500,12 @@ export const completeCellAndDeductSugar = (
     // Get the current state
     const state = getState();
     const currentCell = state.globalState.currentCell;
+    const vineDNA = state.globalState.geneticMarkersVine;
     const currentPlantType = state.plant.type;
     const currentSugar = state.plant.sugar;
+    const vineUpgrades = state.upgrades.purchased.filter((upgrade) =>
+      upgrade.toLowerCase().startsWith("vine_")
+    );
 
     // Complete the cell with the current plant type
     dispatch(
@@ -517,7 +526,9 @@ export const completeCellAndDeductSugar = (
     );
 
     // Set the new adjacency upgrades
-    dispatch(setPurchasedUpgrades(adjacencyUpgrades));
+    dispatch(setPurchasedUpgrades([...adjacencyUpgrades, ...vineUpgrades]));
+
+    dispatch(setVineGeneticMarkers(vineDNA));
 
     dispatch(evolveAndRecordPlant(currentPlantType, adjacencyUpgrades));
   };

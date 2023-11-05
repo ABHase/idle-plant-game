@@ -52,6 +52,11 @@ const PlantTimeDisplay: React.FC<PlantTimeProps> = ({ plantTime }) => {
     (state: RootState) => state.globalState.globalBoostedTicks
   );
 
+  // Calculate the time scale factor: 2 to the power of the number of upgrades
+  const timeScaleFactor = useSelector(
+    (state: RootState) => state.plant.timeScaleBoost
+  );
+
   const [isResourcesPopupVisible, setIsResourcesPopupVisible] = useState(false);
 
   const globalState = useSelector((state: RootState) => state.globalState);
@@ -97,7 +102,7 @@ const PlantTimeDisplay: React.FC<PlantTimeProps> = ({ plantTime }) => {
     </Box>
   );
 
-  const timeScale = globalBoostedTicks > 0 ? 60 : 1;
+  const timeScale = globalBoostedTicks > 0 ? 60 * timeScaleFactor : 1;
 
   const noDecimals = (number: number) => number.toFixed(0);
 
@@ -174,7 +179,7 @@ const PlantTimeDisplay: React.FC<PlantTimeProps> = ({ plantTime }) => {
             {globalBoostedTicks > 0
               ? `Boost: ${formatNumberWithDecimals(
                   globalBoostedTicks
-                )} ${timeScale} X`
+                )} ${formatNumberWithoutDecimals(timeScale)} X`
               : `${plantTime.season}:${plantTime.day}/30`}
           </Typography>
 

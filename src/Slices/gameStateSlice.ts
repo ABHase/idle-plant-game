@@ -18,6 +18,9 @@ export interface GlobalState {
   geneticMarkerProgressBush: number;
   geneticMarkerThresholdBush: number;
   geneticMarkersBush: number;
+  geneticMarkerProgressVine: number;
+  geneticMarkerThresholdVine: number;
+  geneticMarkersVine: number;
   seeds: number;
   silica: number;
   tannins: number;
@@ -53,6 +56,9 @@ export const initialState: GlobalState = {
   geneticMarkerProgressBush: 0,
   geneticMarkerThresholdBush: 100,
   geneticMarkersBush: 0,
+  geneticMarkerProgressVine: 0,
+  geneticMarkerThresholdVine: 100,
+  geneticMarkersVine: 0,
   seeds: 0,
   silica: 0,
   tannins: 0,
@@ -107,6 +113,9 @@ const globalStateSlice = createSlice({
         case "Bush":
           state.geneticMarkersBush -= action.payload.amount;
           break;
+        case "Vine":
+          state.geneticMarkersVine -= action.payload.amount;
+          break;
         default:
           // Handle other types or default behavior if needed
           break;
@@ -131,6 +140,9 @@ const globalStateSlice = createSlice({
           break;
         case "Bush":
           state.geneticMarkersBush += action.payload.amount;
+          break;
+        case "Vine":
+          state.geneticMarkersVine += action.payload.amount;
           break;
         default:
           // Handle other types or default behavior if needed
@@ -174,6 +186,12 @@ const globalStateSlice = createSlice({
           state.geneticMarkersGrass += multiplier;
           state.geneticMarkerThresholdGrass = Math.floor(
             state.geneticMarkerThresholdGrass * thresholdMultiplier
+          );
+          break;
+        case "Vine":
+          state.geneticMarkersVine += multiplier;
+          state.geneticMarkerThresholdVine = Math.floor(
+            state.geneticMarkerThresholdVine * thresholdMultiplier
           );
           break;
         default:
@@ -223,6 +241,9 @@ const globalStateSlice = createSlice({
           break;
         case "Bush":
           state.geneticMarkersBush += action.payload.amount;
+          break;
+        case "Vine":
+          state.geneticMarkersVine += action.payload.amount;
           break;
         default:
           // Handle other types or default behavior if needed
@@ -340,6 +361,14 @@ const globalStateSlice = createSlice({
         console.log("Not enough resources to create a Time Seed.");
       }
     },
+    // Reducer to set vineGeneticMarkers to the payload's amount
+    setVineGeneticMarkers: (state, action: PayloadAction<number>) => {
+      state.geneticMarkersVine = action.payload;
+    },
+    //reducer to deduct one time seed
+    deductTimeSeed: (state) => {
+      state.seeds -= 1;
+    },
   },
   extraReducers: (builder) => {
     builder.addMatcher(
@@ -369,6 +398,8 @@ export const {
   increaseGlobalBoostedTicks,
   reduceGlobalBoostedTicks,
   createSeed,
+  setVineGeneticMarkers,
+  deductTimeSeed,
 } = globalStateSlice.actions;
 
 export default globalStateSlice.reducer;

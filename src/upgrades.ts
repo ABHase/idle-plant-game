@@ -43,6 +43,13 @@ export const UPGRADES: Record<string, Upgrade[]> = {
         "Applied Last, Reduces Flower sugar and water thresholds significantly, Manual Absorbtion^2.",
       cost: 0,
     },
+    {
+      id: "Column_Vine",
+      name: "Vine Column",
+      description:
+        "Applied Last, Amplifies the time boost effect by squaring it!",
+      cost: 0,
+    },
   ],
   Adjacency: [
     {
@@ -74,6 +81,12 @@ export const UPGRADES: Record<string, Upgrade[]> = {
       name: "Adjacent to Bush",
       description:
         "Flower Sugar and Water Thresholds * 0.4, Manual Absorbtion*5.",
+      cost: 0,
+    },
+    {
+      id: "Adjacent_to_Vine",
+      name: "Adjacent to Vine",
+      description: "Amplifies the time boost effect, 2X more.",
       cost: 0,
     },
   ],
@@ -108,6 +121,34 @@ export const UPGRADES: Record<string, Upgrade[]> = {
       name: "Unlock the Map (All Species)",
       description: "Unlock the map.",
       cost: 15000,
+    },
+    {
+      id: "Vine_scale_1",
+      name: "Vine Scale 1 (All Species)",
+      description:
+        "Amplifies the time boost effect, 1X more.  Kept on Map Moves.",
+      cost: 5,
+    },
+    {
+      id: "Vine_scale_2",
+      name: "Vine Scale 2 (All Species)",
+      description:
+        "Amplifies the time boost effect, 1X more.  Kept on Map Moves.",
+      cost: 15,
+    },
+    {
+      id: "Vine_scale_3",
+      name: "Vine Scale 3 (All Species)",
+      description:
+        "Amplifies the time boost effect, 1X more.  Kept on Map Moves.",
+      cost: 30,
+    },
+    {
+      id: "Vine_scale_4",
+      name: "Vine Scale 4 (All Species)",
+      description:
+        "Amplifies the time boost effect, 2X more.  Kept on Map Moves.",
+      cost: 60,
     },
   ],
   Fern: [
@@ -593,6 +634,56 @@ export const UPGRADES: Record<string, Upgrade[]> = {
       cost: 10000,
     },
   ],
+  Vine: [
+    {
+      id: "vine_boost_sugar",
+      name: "Cam Pathway",
+      description: "Increase base sugar production by 50%",
+      cost: 1,
+    },
+    {
+      id: "vine_boost_sugar_2",
+      name: "Cam Pathway 2",
+      description: "Increase base sugar production by 200%",
+      cost: 5,
+    },
+    {
+      id: "vine_boost_sugar_3",
+      name: "Cam Pathway 3",
+      description: "Increase base sugar production by 500%",
+      cost: 15,
+    },
+    {
+      id: "vine_boost_sugar_4",
+      name: "Cam Pathway 4",
+      description: "Increase base sugar production by 1000%",
+      cost: 50,
+    },
+    {
+      id: "vine_boost_sunlight_efficiency_multiplier",
+      name: "Extra Chlorophyll",
+      description: "Reduce the base sunlight to sugar ratio a further 50%",
+      cost: 7,
+    },
+    {
+      id: "vine_boost_water_efficiency_multiplier",
+      name: "Stomatal Regulation",
+      description: "Reduce the base water to sugar ratio a further 50%",
+      cost: 7,
+    },
+    {
+      id: "vine_boost_sunlight_efficiency_multiplier_2",
+      name: "Extra Chlorophyll 2",
+      description: "Reduce the base sunlight to sugar ratio by a further 75%",
+      cost: 30,
+    },
+    {
+      id: "vine_boost_water_efficiency_multiplier_2",
+      name: "Stomatal Regulation 2",
+      description: "Reduce the base water to sugar ratio by a further 75%",
+      cost: 30,
+    },
+  ],
 };
 
 export const UPGRADE_FUNCTIONS: Record<
@@ -647,6 +738,9 @@ export const UPGRADE_FUNCTIONS: Record<
       plant.water_absorption_rate *= plant.water_absorption_rate;
       plant.sunlight_absorption_rate *= plant.sunlight_absorption_rate;
     },
+    Column_Vine: (plant) => {
+      plant.timeScaleBoost *= plant.timeScaleBoost;
+    },
   },
   Adjacency: {
     Adjacent_to_Fern: (plant) => {
@@ -675,6 +769,9 @@ export const UPGRADE_FUNCTIONS: Record<
       plant.water_absorption_rate *= 5;
       plant.sunlight_absorption_rate *= 5;
     },
+    Adjacent_to_Vine: (plant) => {
+      plant.timeScaleBoost *= 2;
+    },
   },
   Meta: {
     Moss_leaf_bonus: (plant) => {
@@ -689,6 +786,18 @@ export const UPGRADE_FUNCTIONS: Record<
     Fern_clone_upgrade: (plant) => {
       plant.roots += 1000;
       plant.leaves += 1000;
+    },
+    Vine_scale_1: (plant) => {
+      plant.timeScaleBoost += 1;
+    },
+    Vine_scale_2: (plant) => {
+      plant.timeScaleBoost += 1;
+    },
+    Vine_scale_3: (plant) => {
+      plant.timeScaleBoost += 1;
+    },
+    Vine_scale_4: (plant) => {
+      plant.timeScaleBoost += 2;
     },
   },
   Fern: {
@@ -934,6 +1043,32 @@ export const UPGRADE_FUNCTIONS: Record<
     },
     flower_dna_upgrade_3: (plant) => {
       plant.flowerDNA += 10;
+    },
+  },
+  Vine: {
+    vine_boost_sugar: (plant) => {
+      plant.sugar_production_rate *= 1.5;
+    },
+    vine_boost_sugar_2: (plant) => {
+      plant.sugar_production_rate *= 3;
+    },
+    vine_boost_sugar_3: (plant) => {
+      plant.sugar_production_rate *= 6;
+    },
+    vine_boost_sugar_4: (plant) => {
+      plant.sugar_production_rate *= 11;
+    },
+    vine_boost_sunlight_efficiency_multiplier: (plant) => {
+      plant.sunlight_efficiency_multiplier *= 0.5;
+    },
+    vine_boost_water_efficiency_multiplier: (plant) => {
+      plant.water_efficiency_multiplier *= 0.5;
+    },
+    vine_boost_sunlight_efficiency_multiplier_2: (plant) => {
+      plant.sunlight_efficiency_multiplier *= 0.25;
+    },
+    vine_boost_water_efficiency_multiplier_2: (plant) => {
+      plant.water_efficiency_multiplier *= 0.25;
     },
   },
   // ... other upgrade functions

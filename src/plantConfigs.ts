@@ -60,6 +60,7 @@ export const FERN_INITIAL_CONFIG: PlantState = {
   maxResourceToSpend: null,
   hasReceivedPoint: false,
   lastLeafLossReason: null,
+  timeScaleBoost: 1,
 };
 
 export const MOSS_INITIAL_CONFIG: PlantState = {
@@ -121,6 +122,7 @@ export const MOSS_INITIAL_CONFIG: PlantState = {
   maxResourceToSpend: null,
   hasReceivedPoint: false,
   lastLeafLossReason: null,
+  timeScaleBoost: 1,
 };
 
 export const SUCCULENT_INITIAL_CONFIG: PlantState = {
@@ -182,6 +184,7 @@ export const SUCCULENT_INITIAL_CONFIG: PlantState = {
   maxResourceToSpend: null,
   hasReceivedPoint: false,
   lastLeafLossReason: null,
+  timeScaleBoost: 1,
 };
 
 export const GRASS_INITIAL_CONFIG: PlantState = {
@@ -243,6 +246,7 @@ export const GRASS_INITIAL_CONFIG: PlantState = {
   maxResourceToSpend: null,
   hasReceivedPoint: false,
   lastLeafLossReason: null,
+  timeScaleBoost: 1,
 };
 
 export const BUSH_INITIAL_CONFIG: PlantState = {
@@ -304,6 +308,69 @@ export const BUSH_INITIAL_CONFIG: PlantState = {
   maxResourceToSpend: null,
   hasReceivedPoint: false,
   lastLeafLossReason: null,
+  timeScaleBoost: 1,
+};
+
+export const VINE_INITIAL_CONFIG: PlantState = {
+  id: uuidv4(), // Will be overridden when initialized
+  maturity_level: 1,
+  type: "Vine",
+  sugar_production_rate: 1,
+  genetic_marker_production_rate: 1,
+  is_sugar_production_on: false,
+  is_genetic_marker_production_on: false,
+  is_secondary_resource_production_on: false,
+  sunlight: 10000,
+  sunlight_absorption_rate: 0,
+  water: 10000,
+  water_absorption_rate: 0,
+  sunlight_efficiency_multiplier: 1,
+  water_efficiency_multiplier: 1,
+  sunlight_absorption_multiplier: 0,
+  water_absorption_multiplier: 0,
+  sugar: 0,
+  ladybugs: 1,
+  ladybugTax: 0.5,
+  roots: 0,
+  leaves: 0,
+  resin: 0,
+  sugarProduced: 0,
+  lastProductionTimestamp: 0,
+  totalWaterAbsorbed: 0,
+  totalSunlightAbsorbed: 0,
+  totalSugarCreated: 0,
+  geneticMarkerUpgradeActive: false,
+  rootRot: 0,
+  rootRotThreshold: 100,
+  springModifier: 1.5,
+  summerModifier: 1.5,
+  autumnModifier: 1.5,
+  winterModifier: 0.25,
+  aphids: 0,
+  leafWaterUsage: true,
+  agaveSugarBonus: false,
+  needles: 0,
+  needleProtection: 1,
+  rabbitAttack: false,
+  grassGrowthToggle: false,
+  leafGrowthToggle: false,
+  leafAutoGrowthMultiplier: 5,
+  rootGrowthToggle: false,
+  rootAutoGrowthMultiplier: 5,
+  lichenStoreAvailable: false,
+  rabbitImmunity: true,
+  autoGrowthMultiplier: 100,
+  aphidImmunity: false,
+  flowers: [],
+  flowerSugarConsumptionRate: 0,
+  flowerWaterConsumptionRate: 0,
+  flowerSugarThreshold: 0,
+  flowerWaterThreshold: 0,
+  flowerDNA: 0,
+  maxResourceToSpend: null,
+  hasReceivedPoint: false,
+  lastLeafLossReason: null,
+  timeScaleBoost: 1,
 };
 
 export const PLANT_CONFIGS: Record<string, PlantState> = {
@@ -312,4 +379,5 @@ export const PLANT_CONFIGS: Record<string, PlantState> = {
   Succulent: SUCCULENT_INITIAL_CONFIG,
   Grass: GRASS_INITIAL_CONFIG,
   Bush: BUSH_INITIAL_CONFIG,
+  Vine: VINE_INITIAL_CONFIG,
 };

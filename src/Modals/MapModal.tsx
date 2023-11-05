@@ -43,6 +43,7 @@ const MapModal: React.FC<MapModalProps> = ({ open, onClose, isMobile }) => {
     Bush: "#302b61", // Blueberry blue
     Moss: "#44635f", // Darkish brown
     Succulent: "#47430d", // Desert yellow
+    Vine: "#570a59", // Vine purple for time
   };
 
   const getColorForPlant = (plantType: keyof PlantColors) =>

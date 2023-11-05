@@ -39,33 +39,35 @@ const PlantSelectionModal: React.FC<PlantSelectionModalProps> = ({
           justifyContent: "center",
         }}
       >
-        {Object.keys(PLANT_CONFIGS).map((plantType) => (
-          <ButtonBase
-            key={plantType}
-            onClick={() => {
-              onPlantSelect(plantType);
-              onClose();
-            }}
-            sx={{
-              width: "90%",
-              margin: "5px",
-              padding: "5px",
-              display: "block",
-              backgroundColor: "primary.main",
-              color: "black",
-              border: "1px solid white",
-              borderRadius: "8px",
-              "&:hover": {
-                backgroundColor: "primary.dark",
-              },
-            }}
-          >
-            <Typography variant="h6">{plantType}</Typography>
-            <Typography sx={{ fontSize: "16px", marginTop: "5px" }}>
-              {descriptions[plantType] || "No description available."}
-            </Typography>
-          </ButtonBase>
-        ))}
+        {Object.keys(PLANT_CONFIGS)
+          .filter((plantType) => plantType !== "Vine") // This will filter out "Vine"
+          .map((plantType) => (
+            <ButtonBase
+              key={plantType}
+              onClick={() => {
+                onPlantSelect(plantType);
+                onClose();
+              }}
+              sx={{
+                width: "90%",
+                margin: "5px",
+                padding: "5px",
+                display: "block",
+                backgroundColor: "primary.main",
+                color: "black",
+                border: "1px solid white",
+                borderRadius: "8px",
+                "&:hover": {
+                  backgroundColor: "primary.dark",
+                },
+              }}
+            >
+              <Typography variant="h6">{plantType}</Typography>
+              <Typography sx={{ fontSize: "16px", marginTop: "5px" }}>
+                {descriptions[plantType] || "No description available."}
+              </Typography>
+            </ButtonBase>
+          ))}
       </DialogContent>
     </Dialog>
   );

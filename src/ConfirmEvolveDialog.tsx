@@ -16,7 +16,7 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import { DNA } from "./Components/DNA";
 import Slider from "@mui/material/Slider";
-import { setDifficulty } from "./Slices/gameStateSlice"; // Replace this with your actual import
+import { deductTimeSeed, setDifficulty } from "./Slices/gameStateSlice"; // Replace this with your actual import
 
 interface ConfirmEvolveDialogProps {
   open: boolean;
@@ -34,11 +34,24 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
     (state: RootState) => state.globalState.geneticMarkers
   );
   const timeSeeds = useSelector((state: RootState) => state.globalState.seeds);
+
   const geneticMarkersMoss = useSelector(
     (state: RootState) => state.globalState.geneticMarkersMoss
   );
   const currentPlantType = useSelector((state: RootState) => state.plant.type);
   const [plantType, setPlantType] = React.useState<string>(currentPlantType); // default value as current plant type
+
+  const defaultPlantType =
+    timeSeeds > 0 || currentPlantType !== "Vine" ? currentPlantType : "Fern";
+
+  React.useEffect(() => {
+    if (open) {
+      setSelectedTraits(purchased);
+      if (currentPlantType === "Vine" && timeSeeds === 0) {
+        setPlantType("Fern"); // Set a default type if currently 'Vine' but no seeds
+      }
+    }
+  }, [open, purchased, currentPlantType, timeSeeds]);
 
   const [selectedTraits, setSelectedTraits] =
     React.useState<string[]>(purchased);
@@ -84,6 +97,13 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
         return [...prevTraits, id];
       }
     });
+  };
+
+  const deductSeed = () => {
+    if (plantType === "Vine" && timeSeeds > 0) {
+      // Dispatch the action to deduct one time seed here
+      dispatch(deductTimeSeed());
+    }
   };
 
   return (
@@ -139,8 +159,14 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
           <MenuItem value="Moss">Moss</MenuItem>
           <MenuItem value="Succulent">Succulent</MenuItem>
           <MenuItem value="Grass">Grass</MenuItem>
-          <MenuItem value="Bush">Bush</MenuItem>
+          <MenuItem value="Bush">Berry Bush</MenuItem>
+          {timeSeeds > 0 && <MenuItem value="Vine">Time Vine</MenuItem>}
         </Select>
+        {plantType === "Vine" && (
+          <DialogContentText style={{ color: "red" }}>
+            Warning: Evolving into a Time Vine will cost one Time Seed!
+          </DialogContentText>
+        )}
         <DialogContentText>
           Will start a new {plantType} with the following traits:
         </DialogContentText>
@@ -204,6 +230,9 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
         </Button>
         <Button
           onClick={() => {
+            if (plantType === "Vine") {
+              deductSeed();
+            }
             dispatch(setDifficulty({ difficulty: localDifficulty }));
             onConfirm(plantType, selectedTraits);
 

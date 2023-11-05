@@ -44,6 +44,10 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, onClose }) => {
     (state: RootState) => state.globalState.geneticMarkersBush
   );
 
+  const geneticMarkerVine = useSelector(
+    (state: RootState) => state.globalState.geneticMarkersVine
+  );
+
   const plantType = useSelector((state: RootState) => state.plant.type);
   let amountToPass: number;
   switch (plantType) {
@@ -61,6 +65,9 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, onClose }) => {
       break;
     case "Bush":
       amountToPass = geneticMarkersBush;
+      break;
+    case "Vine":
+      amountToPass = geneticMarkerVine;
       break;
     default:
       amountToPass = 0; // Default case, if needed
@@ -98,6 +105,7 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, onClose }) => {
     state.geneticMarkersSucculent,
     state.geneticMarkersGrass,
     state.geneticMarkersBush,
+    state.geneticMarkersVine,
     plantType,
   ]);
 

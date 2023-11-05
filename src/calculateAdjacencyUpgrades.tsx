@@ -91,6 +91,8 @@ export function calculateAdjacencyUpgrades(
     adjacencyUpgrades.push("Adjacent_to_Moss");
   } else if (currentPlantType === "Bush") {
     adjacencyUpgrades.push("Adjacent_to_Bush");
+  } else if (currentPlantType === "Vine") {
+    adjacencyUpgrades.push("Adjacent_to_Vine");
   }
 
   filteredAdjacentCells.forEach((cellIndex) => {
@@ -106,6 +108,8 @@ export function calculateAdjacencyUpgrades(
       adjacencyUpgrades.push("Adjacent_to_Moss");
     } else if (plantType === "Bush") {
       adjacencyUpgrades.push("Adjacent_to_Bush");
+    } else if (plantType === "Vine") {
+      adjacencyUpgrades.push("Adjacent_to_Vine");
     }
     // ...add other checks for other plant types and their adjacency bonuses
   });

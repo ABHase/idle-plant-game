@@ -46,6 +46,8 @@ import BushDNADisplay from "./DNADisplays/BushDNADisplay";
 import MapModal from "./Modals/MapModal";
 import { resetCell } from "./Slices/cellCompletionSlice";
 import { resetPlantHistory } from "./Slices/plantHistorySlice";
+import VineDisplay from "./PlantDisplays/VineDisplay";
+import VineDNADisplay from "./DNADisplays/VineDNADisplay";
 
 const useIsNewUser = () => {
   const isNewUser = localStorage.getItem("isNewUser");
@@ -174,6 +176,9 @@ function App() {
 
     const paused = store.getState().app.paused;
 
+    // Calculate the time scale factor: 2 to the power of the number of upgrades
+    const timeScaleFactor = store.getState().plant.timeScaleBoost;
+
     const currentTime = Date.now();
 
     if (paused) {
@@ -190,6 +195,10 @@ function App() {
 
     const gameState = store.getState().globalState;
     const baseTimeScale = gameState.globalBoostedTicks > 0 ? 60 : 1;
+    const modifiedTimeScale =
+      gameState.globalBoostedTicks > 0
+        ? baseTimeScale * timeScaleFactor
+        : baseTimeScale;
 
     const timeElapsed = currentTime - lastSavedTime;
     const timeElapsedInSeconds = timeElapsed / 1000;
@@ -198,7 +207,7 @@ function App() {
 
     if (timeElapsed >= tickDuration) {
       let shouldSave = false;
-      const timeScaleForThisUpdate = baseTimeScale * timeElapsedInSeconds;
+      const timeScaleForThisUpdate = modifiedTimeScale * timeElapsedInSeconds;
       dispatch(updateGame(timeScaleForThisUpdate));
       dispatch(
         reduceGlobalBoostedTicks({
@@ -254,6 +263,13 @@ function App() {
             isMobile={isMobile}
           />
         );
+      case "Vine":
+        return (
+          <VineDisplay
+            handleOpenModal={handleOpenModal}
+            modalName="ladybugModalOpen"
+          />
+        );
       default:
         return null; // or return a default component if desired
     }
@@ -271,6 +287,8 @@ function App() {
         return <GrassDNADisplay />;
       case "Bush":
         return <BushDNADisplay />;
+      case "Vine":
+        return <VineDNADisplay />;
       default:
         return null; // or return a default component if desired
     }

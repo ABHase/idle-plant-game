@@ -108,6 +108,7 @@ export interface PlantState {
   maxResourceToSpend: number | null;
   hasReceivedPoint: boolean;
   lastLeafLossReason: string | null;
+  timeScaleBoost: number;
 }
 
 export const initialState: PlantState = PLANT_CONFIGS.Fern; // Setting Fern as the default plant
