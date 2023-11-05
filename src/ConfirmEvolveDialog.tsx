@@ -164,7 +164,8 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
         </Select>
         {plantType === "Vine" && (
           <DialogContentText style={{ color: "red" }}>
-            Warning: Evolving into a Time Vine will cost one Time Seed!
+            Warning: Evolving into a Time Vine will cost one Time Seed! Do NOT
+            Increase Difficulty for TIME VINE!
           </DialogContentText>
         )}
         <DialogContentText>
@@ -204,7 +205,10 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
           );
         })}
 
-        <div>Difficulty - Score if you achieve 1B Sugar</div>
+        <div>
+          Difficulty - Score if you achieve 1B Sugar, higher rates produce Time
+          Resources Faster!
+        </div>
         <Slider
           defaultValue={localDifficulty}
           step={1}
