@@ -190,10 +190,6 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
             <DialogContentText style={{ color: "red" }}>
               Time Vine CAN NOT Produce More Water or Sunlight!
             </DialogContentText>
-            <DialogContentText style={{ color: "red" }}>
-              Do NOT Increase Difficulty for TIME VINE! You can softlock
-              production of sugar!
-            </DialogContentText>
           </Box>
         )}
         <DialogContentText>
