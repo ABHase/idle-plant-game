@@ -127,28 +127,28 @@ export const UPGRADES: Record<string, Upgrade[]> = {
       name: "Vine Scale 1 (All Species)",
       description:
         "Amplifies the time boost effect, 1X more.  Kept on Map Moves.",
-      cost: 5,
+      cost: 50,
     },
     {
       id: "Vine_scale_2",
       name: "Vine Scale 2 (All Species)",
       description:
         "Amplifies the time boost effect, 1X more.  Kept on Map Moves.",
-      cost: 15,
+      cost: 150,
     },
     {
       id: "Vine_scale_3",
       name: "Vine Scale 3 (All Species)",
       description:
         "Amplifies the time boost effect, 1X more.  Kept on Map Moves.",
-      cost: 30,
+      cost: 300,
     },
     {
       id: "Vine_scale_4",
       name: "Vine Scale 4 (All Species)",
       description:
         "Amplifies the time boost effect, 2X more.  Kept on Map Moves.",
-      cost: 60,
+      cost: 600,
     },
   ],
   Fern: [
@@ -639,49 +639,49 @@ export const UPGRADES: Record<string, Upgrade[]> = {
       id: "vine_boost_sugar",
       name: "Cam Pathway",
       description: "Increase base sugar production by 50%",
-      cost: 1,
+      cost: 10,
     },
     {
       id: "vine_boost_sugar_2",
       name: "Cam Pathway 2",
       description: "Increase base sugar production by 200%",
-      cost: 5,
+      cost: 50,
     },
     {
       id: "vine_boost_sugar_3",
       name: "Cam Pathway 3",
       description: "Increase base sugar production by 500%",
-      cost: 15,
+      cost: 150,
     },
     {
       id: "vine_boost_sugar_4",
       name: "Cam Pathway 4",
       description: "Increase base sugar production by 1000%",
-      cost: 50,
+      cost: 500,
     },
     {
       id: "vine_boost_sunlight_efficiency_multiplier",
       name: "Extra Chlorophyll",
       description: "Reduce the base sunlight to sugar ratio a further 50%",
-      cost: 7,
+      cost: 70,
     },
     {
       id: "vine_boost_water_efficiency_multiplier",
       name: "Stomatal Regulation",
       description: "Reduce the base water to sugar ratio a further 50%",
-      cost: 7,
+      cost: 70,
     },
     {
       id: "vine_boost_sunlight_efficiency_multiplier_2",
       name: "Extra Chlorophyll 2",
       description: "Reduce the base sunlight to sugar ratio by a further 75%",
-      cost: 30,
+      cost: 300,
     },
     {
       id: "vine_boost_water_efficiency_multiplier_2",
       name: "Stomatal Regulation 2",
       description: "Reduce the base water to sugar ratio by a further 75%",
-      cost: 30,
+      cost: 300,
     },
   ],
 };
