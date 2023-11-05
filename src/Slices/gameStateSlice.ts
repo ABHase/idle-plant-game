@@ -324,8 +324,11 @@ const globalStateSlice = createSlice({
             return;
         }
 
+        const difficultyMultiplier = Math.floor(state.difficulty / 10) + 1;
+
         // Add to progress
-        state[progressKey as keyof typeof state] += ticks;
+        state[progressKey as keyof typeof state] +=
+          ticks * difficultyMultiplier;
 
         // Check if the progress exceeds or meets the threshold
         if (
