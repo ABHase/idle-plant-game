@@ -194,6 +194,7 @@ function App() {
         : lastUpdateTimeRef.current;
 
     const gameState = store.getState().globalState;
+    const plantType = store.getState().plant.type;
     const baseTimeScale = gameState.globalBoostedTicks > 0 ? 60 : 1;
     const modifiedTimeScale =
       gameState.globalBoostedTicks > 0
@@ -211,7 +212,7 @@ function App() {
       dispatch(updateGame(timeScaleForThisUpdate));
       dispatch(
         reduceGlobalBoostedTicks({
-          plantType: plantDisplayType,
+          plantType: plantType,
           ticks: timeScaleForThisUpdate,
         })
       );

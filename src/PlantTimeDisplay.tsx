@@ -215,22 +215,22 @@ const PlantTimeDisplay: React.FC<PlantTimeProps> = ({ plantTime }) => {
           {renderProgressBar(
             globalState.silicaProgress,
             globalState.silicaThreshold,
-            "Silica"
+            "Silica (Succulent)"
           )}
           {renderProgressBar(
             globalState.tanninsProgress,
             globalState.tanninsThreshold,
-            "Tannins"
+            "Tannins (Moss)"
           )}
           {renderProgressBar(
             globalState.calciumProgress,
             globalState.calciumThreshold,
-            "Calcium"
+            "Calcium (Fern)"
           )}
           {renderProgressBar(
             globalState.fulvicProgress,
             globalState.fulvicThreshold,
-            "Fulvic"
+            "Fulvic (Grass)"
           )}
           <Typography variant="h6">Resources</Typography>
           <Typography>
