@@ -1,6 +1,6 @@
 // ConfirmEvolveDialog.tsx
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux"; // <-- Add this import
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -17,6 +17,8 @@ import MenuItem from "@mui/material/MenuItem";
 import { DNA } from "./Components/DNA";
 import Slider from "@mui/material/Slider";
 import { deductTimeSeed, setDifficulty } from "./Slices/gameStateSlice"; // Replace this with your actual import
+import { Water } from "./Components/Water";
+import { Sunlight } from "./Components/Sunlight";
 
 interface ConfirmEvolveDialogProps {
   open: boolean;
@@ -106,6 +108,13 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
     }
   };
 
+  useEffect(() => {
+    if (plantType === "Vine") {
+      setLocalDifficulty(1);
+      console.log("plantType is Vine, setting difficulty to 1");
+    }
+  }, [plantType]);
+
   return (
     <Dialog
       open={open}
@@ -162,11 +171,30 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
           <MenuItem value="Bush">Berry Bush</MenuItem>
           {timeSeeds > 0 && <MenuItem value="Vine">Time Vine</MenuItem>}
         </Select>
+
         {plantType === "Vine" && (
-          <DialogContentText style={{ color: "red" }}>
-            Warning: Evolving into a Time Vine will cost one Time Seed! Do NOT
-            Increase Difficulty for TIME VINE!
-          </DialogContentText>
+          <Box
+            sx={{
+              display: "column",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <DialogContentText style={{ color: "red" }}>
+              Warning: Evolving into a Time Vine will cost one Time Seed!
+            </DialogContentText>
+            <DialogContentText style={{ color: "red" }}>
+              Time Vine Starts with <Water amount={10000} />{" "}
+              <Sunlight amount={10000} />
+            </DialogContentText>
+            <DialogContentText style={{ color: "red" }}>
+              Time Vine CAN NOT Produce More Water or Sunlight!
+            </DialogContentText>
+            <DialogContentText style={{ color: "red" }}>
+              Do NOT Increase Difficulty for TIME VINE! You can softlock
+              production of sugar!
+            </DialogContentText>
+          </Box>
         )}
         <DialogContentText>
           Will start a new {plantType} with the following traits:
@@ -210,7 +238,7 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
           Resources Faster!
         </div>
         <Slider
-          defaultValue={localDifficulty}
+          value={localDifficulty}
           step={1}
           marks
           min={1}
