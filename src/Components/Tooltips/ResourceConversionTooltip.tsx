@@ -19,6 +19,8 @@ interface ResourceConversionProps {
   agaveSugarBonus: boolean;
   sugar: number;
   difficulty: number;
+  waterEfficiency: number;
+  sunlightEfficiency: number;
 }
 
 const ResourceConversionTooltip: React.FC<ResourceConversionProps> = ({
@@ -30,14 +32,18 @@ const ResourceConversionTooltip: React.FC<ResourceConversionProps> = ({
   agaveSugarBonus,
   sugar,
   difficulty,
+  waterEfficiency,
+  sunlightEfficiency,
 }) => {
   const waterConsumptionValue = calculatePhotosynthesisWaterConsumption(
     maturityLevel,
-    difficulty
+    difficulty,
+    waterEfficiency
   );
   const sunlightConsumptionValue = calculatePhotosynthesisSunlightConsumption(
     maturityLevel,
-    difficulty
+    difficulty,
+    sunlightEfficiency
   );
   const sugarProductionValue = determinePhotosynthesisSugarProduction(
     sugarProductionRate,

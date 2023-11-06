@@ -285,6 +285,8 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
               agaveSugarBonus={plant.agaveSugarBonus}
               sugar={plant.sugar}
               difficulty={difficulty}
+              waterEfficiency={plant.water_efficiency_multiplier}
+              sunlightEfficiency={plant.sunlight_efficiency_multiplier}
             />
             <MaturityTooltip maturityLevel={plant.maturity_level} />
           </Grid>
@@ -328,14 +330,16 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
                   <Water
                     amount={calculatePhotosynthesisWaterConsumption(
                       plant.maturity_level,
-                      difficulty
+                      difficulty,
+                      plant.water_efficiency_multiplier
                     )}
                   />
                   /s +{" "}
                   <Sunlight
                     amount={calculatePhotosynthesisSunlightConsumption(
                       plant.maturity_level,
-                      difficulty
+                      difficulty,
+                      plant.sunlight_efficiency_multiplier
                     )}
                   />
                   /s{" "}

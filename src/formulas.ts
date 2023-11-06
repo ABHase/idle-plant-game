@@ -25,9 +25,17 @@ export const isSugarConversionUnlocked = (
   difficulty: number
 ) =>
   plant.totalWaterAbsorbed >
-    calculatePhotosynthesisSunlightConsumption(1, difficulty) &&
+    calculatePhotosynthesisSunlightConsumption(
+      1,
+      difficulty,
+      plant.water_efficiency_multiplier
+    ) &&
   plant.totalWaterAbsorbed >
-    calculatePhotosynthesisWaterConsumption(1, difficulty);
+    calculatePhotosynthesisWaterConsumption(
+      1,
+      difficulty,
+      plant.sunlight_efficiency_multiplier
+    );
 
 export const isGeneticMarkerUpgradeUnlocked = (plant: PlantState) =>
   plant.totalSugarCreated > SUGAR_THRESHOLD;
@@ -127,25 +135,29 @@ export const calculateModifiedRate = (
 
 export const calculatePhotosynthesisWaterConsumption = (
   maturity_level: number,
-  difficulty: number
+  difficulty: number,
+  efficiency: number
 ) => {
   const modifiedWaterConsumption =
     getDifficultyModifiedWaterConsumption(difficulty);
   return (
     modifiedWaterConsumption *
-    (1 + MATURITY_WATER_CONSUMPTION_MODIFIER * maturity_level)
+    (1 + MATURITY_WATER_CONSUMPTION_MODIFIER * maturity_level) *
+    efficiency
   );
 };
 
 export const calculatePhotosynthesisSunlightConsumption = (
   maturity_level: number,
-  difficulty: number
+  difficulty: number,
+  efficiency: number
 ) => {
   const modifiedSunlightConsumption =
     getDifficultyModifiedSunlightConsumption(difficulty);
   return (
     modifiedSunlightConsumption *
-    (1 + MATURITY_SUNLIGHT_CONSUMPTION_MODIFIER * maturity_level)
+    (1 + MATURITY_SUNLIGHT_CONSUMPTION_MODIFIER * maturity_level) *
+    efficiency
   );
 };
 
@@ -296,25 +308,29 @@ export const calculateSugarPhotosynthesis = (
   const potentialWaterNeeded =
     calculatePhotosynthesisWaterConsumption(
       plantState.maturity_level,
-      difficulty
+      difficulty,
+      plantState.water_efficiency_multiplier
     ) * timeScale;
 
   const potentialSunlightNeeded =
     calculatePhotosynthesisSunlightConsumption(
       plantState.maturity_level,
-      difficulty
+      difficulty,
+      plantState.sunlight_efficiency_multiplier
     ) * timeScale;
 
   // Minimum resources needed for any photosynthesis to occur
   const lowestPossibleWaterNeeded = calculatePhotosynthesisWaterConsumption(
     plantState.maturity_level,
-    difficulty
+    difficulty,
+    plantState.water_efficiency_multiplier
   );
 
   const lowestPossibleSunlightNeeded =
     calculatePhotosynthesisSunlightConsumption(
       plantState.maturity_level,
-      difficulty
+      difficulty,
+      plantState.sunlight_efficiency_multiplier
     );
 
   // Check if the plant has at least the minimum resources needed
@@ -394,13 +410,15 @@ export const itemizedReport = (
   const photosynthesisWaterConsumption = plantState.is_sugar_production_on
     ? calculatePhotosynthesisWaterConsumption(
         plantState.maturity_level,
-        difficulty
+        difficulty,
+        plantState.water_efficiency_multiplier
       )
     : 0;
   const photosynthesisSunlightConsumption = plantState.is_sugar_production_on
     ? calculatePhotosynthesisSunlightConsumption(
         plantState.maturity_level,
-        difficulty
+        difficulty,
+        plantState.sunlight_efficiency_multiplier
       )
     : 0;
 
@@ -581,11 +599,13 @@ export const calculateActualSugarProductionPerMinute = (
   // Get the required resources for sugar production
   const requiredWaterPerSecond = calculatePhotosynthesisWaterConsumption(
     plant.maturity_level,
-    difficulty
+    difficulty,
+    plant.water_efficiency_multiplier
   );
   const requiredSunlightPerSecond = calculatePhotosynthesisSunlightConsumption(
     plant.maturity_level,
-    difficulty
+    difficulty,
+    plant.sunlight_efficiency_multiplier
   );
 
   // Determine the percentage of available limiting resource in terms of requirement
