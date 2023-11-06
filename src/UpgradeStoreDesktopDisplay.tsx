@@ -82,6 +82,28 @@ const UpgradeStoreDesktopDisplay: React.FC<UpgradeStoreDesktopDisplayProps> = ({
       margin="0 auto"
       width="auto"
     >
+      {/* Plant Seed Button */}
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={onPlantSeed}
+        sx={{ border: "4px solid #2a6628" }}
+      >
+        Plant Seed
+      </Button>
+      {/* Displaying total DNA */}
+      <Box
+        display="flex"
+        flexDirection="row"
+        alignItems="center"
+        width="100%"
+        sx={{}}
+      >
+        <Typography id="total-dna" variant="h6">
+          Total DNA counting all upgrades:
+        </Typography>
+        <DNA amount={totalDNA} />
+      </Box>
       <Box
         display="flex"
         flexDirection="row"
@@ -90,26 +112,10 @@ const UpgradeStoreDesktopDisplay: React.FC<UpgradeStoreDesktopDisplayProps> = ({
         width="100%"
       >
         <Typography id="upgrade-store-title" variant="h6">
-          Traits for Future Seeds:
+          Buy and Sell Traits for Future Seeds Below:
         </Typography>
-        {/* Plant Seed Button */}
-        <Button variant="contained" color="primary" onClick={onPlantSeed}>
-          Plant Seed
-        </Button>
       </Box>
-      {/* Displaying total DNA */}
-      <Box
-        display="flex"
-        flexDirection="row"
-        alignItems="center"
-        width="100%"
-        sx={{ borderTop: 1 }}
-      >
-        <Typography id="total-dna" variant="h6">
-          Total counting all upgrades:
-        </Typography>
-        <DNA amount={totalDNA} />
-      </Box>
+
       {availableUpgrades.map((upgrade) => (
         <ButtonBase
           key={upgrade.id}

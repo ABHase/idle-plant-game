@@ -6,6 +6,7 @@ import { RootState } from "../rootReducer";
 import { selectNumberOfCompletedCells } from "../Slices/cellCompletionSlice";
 import { setDifficulty } from "../Slices/gameStateSlice";
 import { ResourceProgressDialog } from "../ResourceProgressDialog";
+import { buttonStyle, redButtonStyle } from "../buttonStyles";
 
 interface Props {
   open: boolean;
@@ -44,30 +45,6 @@ const MenuModal: React.FC<Props> = (props) => {
   const difficulty = useSelector(
     (state: RootState) => state.globalState.difficulty
   );
-
-  // Define the style constant
-  const buttonStyle = {
-    my: 1,
-    borderRadius: 12,
-    border: "1px solid white",
-    backgroundColor: "#090924",
-    disabledBackground: "#090924",
-    color: "white",
-    width: "100%",
-    "&:disabled": {
-      backgroundColor: "#3C3C4D", // or any other suitable shade you prefer
-      color: "#black", // or any other suitable shade for text
-      cursor: "not-allowed",
-    },
-  };
-
-  const redButtonStyle = {
-    my: 1,
-    borderRadius: 12,
-    border: "1px solid white",
-    backgroundColor: "#240000",
-    color: "white",
-  };
 
   const [isResourcesPopupVisible, setIsResourcesPopupVisible] = useState(false);
 

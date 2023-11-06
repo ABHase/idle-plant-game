@@ -122,7 +122,7 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
       PaperProps={{
         style: {
           borderRadius: 12,
-          border: "1px solid white",
+          border: "4px solid #2a6628",
         },
       }}
     >

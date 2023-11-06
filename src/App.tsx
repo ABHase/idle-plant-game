@@ -457,6 +457,15 @@ function App() {
                       color: paused ? "white" : "inherit", // Text color white if paused
                       bgcolor: paused ? "#240000" : "#090924", // Background color dark red if paused
                       border: "1px solid white", // Border color white if paused
+                      "&:hover": {
+                        backgroundColor: "#1C1C3A", // Darker shade for hover
+                        color: "#E0E0E0", // Lighter shade for the text during hover
+                      },
+                      "&:disabled": {
+                        backgroundColor: "#3C3C4D", // or any other suitable shade you prefer
+                        color: "#black", // or any other suitable shade for text
+                        cursor: "not-allowed",
+                      },
                     }}
                   >
                     {paused ? "GAME PAUSED!" : "Open Menu"}
