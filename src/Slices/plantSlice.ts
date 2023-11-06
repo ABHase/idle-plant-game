@@ -251,6 +251,18 @@ const plantSlice = createSlice({
           }
         });
       });
+
+      // Ensure Vine plants never have roots or leaves after all upgrades are applied
+      if (plantType === "Vine") {
+        state.roots = 0;
+        state.leaves = 0;
+        state.sunlight = 10000;
+        state.sunlight_absorption_rate = 0;
+        state.water = 10000;
+        state.water_absorption_rate = 0;
+        state.sunlight_absorption_multiplier = 0;
+        state.water_absorption_multiplier = 0;
+      }
     },
 
     absorbSunlight: (state) => {
