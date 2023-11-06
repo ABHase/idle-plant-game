@@ -459,6 +459,41 @@ export const itemizedReport = (
     )
   );
 
+  // Compute base water and sunlight increase without seasonal modifiers
+  const baseWaterIncrease = calculateRootsWaterIncrease(
+    plantState.roots,
+    plantState.water_absorption_multiplier
+  );
+
+  const baseSunlightIncrease = calculateLeavesSunlightIncrease(
+    plantState.leaves,
+    plantState.sunlight_absorption_multiplier
+  );
+
+  // Define the types for season-specific calculations
+  type SeasonalIncreases = {
+    [key: string]: number;
+  };
+
+  let seasonSpecificWaterIncreases: SeasonalIncreases = {};
+  let seasonSpecificSunlightIncreases: SeasonalIncreases = {};
+
+  const seasons: string[] = ["Spring", "Summer", "Autumn", "Winter"];
+
+  seasons.forEach((seasonName) => {
+    seasonSpecificWaterIncreases[seasonName] =
+      calculateSeasonModifiedWaterIncrease(
+        baseWaterIncrease,
+        getWaterModifier(seasonName, plantState)
+      );
+
+    seasonSpecificSunlightIncreases[seasonName] =
+      calculateSeasonModifiedSunlightIncrease(
+        baseSunlightIncrease,
+        getSunlightModifier(seasonName, plantState)
+      );
+  });
+
   // Itemized breakdown
   const report = {
     sugar: {
@@ -476,13 +511,12 @@ export const itemizedReport = (
         plantState.roots,
         plantState.water_absorption_multiplier
       ),
-      seasonModifiedWaterIncrease: calculateSeasonModifiedWaterIncrease(
-        calculateRootsWaterIncrease(
-          plantState.roots,
-          plantState.water_absorption_multiplier
-        ),
+      baseWaterIncrease: baseWaterIncrease,
+      currentSeasonModifiedWaterIncrease: calculateSeasonModifiedWaterIncrease(
+        baseWaterIncrease,
         getWaterModifier(season, plantState)
       ),
+      seasonSpecificWaterIncreases: seasonSpecificWaterIncreases,
       ladybugsTaxWater: calculateLadybugsTaxWater(
         plantState.ladybugs,
         calculateSeasonModifiedWaterIncrease(
@@ -504,13 +538,13 @@ export const itemizedReport = (
         plantState.leaves,
         plantState.sunlight_absorption_multiplier
       ),
-      seasonModifiedSunlightIncrease: calculateSeasonModifiedSunlightIncrease(
-        calculateLeavesSunlightIncrease(
-          plantState.leaves,
-          plantState.sunlight_absorption_multiplier
+      baseSunlightIncrease: baseSunlightIncrease,
+      currentSeasonModifiedSunlightIncrease:
+        calculateSeasonModifiedSunlightIncrease(
+          baseSunlightIncrease,
+          getSunlightModifier(season, plantState)
         ),
-        getSunlightModifier(season, plantState)
-      ),
+      seasonSpecificSunlightIncreases: seasonSpecificSunlightIncreases,
       ladybugsTaxSunlight: calculateLadybugsTaxSunlight(
         plantState.ladybugs,
         calculateSeasonModifiedSunlightIncrease(

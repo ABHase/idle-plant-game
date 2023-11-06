@@ -392,6 +392,7 @@ function App() {
             <ReportModal
               open={modals.reportModalOpen}
               onClose={() => handleCloseModal("reportModalOpen")}
+              isMobile={isMobile}
             />
             <TextboxModal
               open={modals.textboxModalOpen}
