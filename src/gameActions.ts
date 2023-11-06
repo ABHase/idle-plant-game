@@ -129,7 +129,10 @@ export const updateGame = (
     }
 
     // Calculate potential consumption based on timeScale
-    const potentialConsumption = Math.floor(resourceThreshold * timeScale);
+    const potentialConsumption = calculateTotalPotentialConsumption(
+      resourceThreshold,
+      timeScale
+    );
 
     // Determine the actual consumption
     let actualConsumption = Math.min(potentialConsumption, requiredResource);
@@ -148,7 +151,16 @@ export const updateGame = (
     }
 
     // Modify the timeScale based on the resourceRatio
-    const adjustedTimeScale = Math.floor(timeScale * resourceRatio);
+    const adjustedTimeScale = Math.max(
+      1,
+      Math.floor(timeScale * resourceRatio)
+    );
+
+    const accurateTimeScale = calculateAdjustedTimeScale(
+      resourceThreshold,
+      timeScale,
+      actualConsumption
+    );
 
     // Check conditions:
     // 1. Genetic marker production is on
@@ -161,14 +173,12 @@ export const updateGame = (
         ? resourceThreshold < maxResourceToSpend
         : true)
     ) {
-      console.log("Actual consumption: ", actualConsumption);
-
       dispatch(produceGeneticMarkers(actualConsumption));
       dispatch(
         updateGeneticMarkerProgress({
           geneticMarkerUpgradeActive: plant.geneticMarkerUpgradeActive,
           plantType: plant.type,
-          timeScale: adjustedTimeScale, // <-- Use the adjusted timeScale
+          timeScale: accurateTimeScale, // <-- Use the adjusted timeScale
         })
       );
     }
@@ -532,4 +542,42 @@ export const completeCellAndDeductSugar = (
 
     dispatch(evolveAndRecordPlant(currentPlantType, adjacencyUpgrades));
   };
+};
+
+// Calculate the total potential consumption considering the exponential increase in cost
+const calculateTotalPotentialConsumption = (
+  threshold: number,
+  timeScale: number
+) => {
+  let totalCost = 0;
+  let currentThreshold = threshold;
+
+  for (let i = 0; i < timeScale; i++) {
+    totalCost += currentThreshold;
+    currentThreshold = Math.floor(currentThreshold * 1.1); // Apply the exponential increase
+  }
+
+  return totalCost;
+};
+
+const calculateAdjustedTimeScale = (
+  threshold: number,
+  timeScale: number,
+  actualConsumption: number
+) => {
+  let totalCost = 0;
+  let currentThreshold = threshold;
+  let adjustedTimeScale = 0;
+
+  for (let i = 0; i < timeScale; i++) {
+    if (totalCost + currentThreshold > actualConsumption) {
+      // If the next iteration exceeds the actualConsumption, break the loop
+      break;
+    }
+    totalCost += currentThreshold;
+    currentThreshold = Math.floor(currentThreshold * 1.1); // Apply the exponential increase
+    adjustedTimeScale++; // Increment the adjustedTimeScale for each iteration that's within the budget
+  }
+
+  return adjustedTimeScale; // This value will be more accurate for determining iterations
 };
