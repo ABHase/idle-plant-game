@@ -69,6 +69,15 @@ const MushroomStoreModal: React.FC<MushroomStoreModalProps> = ({
               color="primary"
               onClick={() => handlePurchase(item.effect)}
               disabled={sugar < item.cost}
+              sx={{
+                bgcolor: "#b8732e",
+                border: "1px solid #e8a766",
+                "&.Mui-disabled": {
+                  bgcolor: "secondary.light", // Disabled background color
+                  color: "#6c6c6c", // Disabled text color
+                  border: "1px solid #c0c0c0", // Disabled border color
+                },
+              }}
             >
               Buy
             </Button>
@@ -105,6 +114,15 @@ const MushroomStoreModal: React.FC<MushroomStoreModalProps> = ({
                     color="primary"
                     onClick={() => handlePurchase(item.effect)}
                     disabled={sunlight < item.cost}
+                    sx={{
+                      bgcolor: "#b8732e",
+                      border: "1px solid #e8a766",
+                      "&.Mui-disabled": {
+                        bgcolor: "secondary.light", // Disabled background color
+                        color: "#6c6c6c", // Disabled text color
+                        border: "1px solid #c0c0c0", // Disabled border color
+                      },
+                    }}
                   >
                     Buy
                   </Button>
@@ -149,6 +167,15 @@ const MushroomStoreModal: React.FC<MushroomStoreModalProps> = ({
                       (costType === "sunlight" && sunlight < item.cost) ||
                       (costType === "water" && water < item.cost)
                     }
+                    sx={{
+                      bgcolor: "#b8732e",
+                      border: "1px solid #e8a766",
+                      "&.Mui-disabled": {
+                        bgcolor: "secondary.light", // Disabled background color
+                        color: "#6c6c6c", // Disabled text color
+                        border: "1px solid #c0c0c0", // Disabled border color
+                      },
+                    }}
                   >
                     Buy
                   </Button>
@@ -173,6 +200,15 @@ const MushroomStoreModal: React.FC<MushroomStoreModalProps> = ({
                   color="primary"
                   onClick={() => handlePurchase(item.effect)}
                   disabled={sunlight < item.cost}
+                  sx={{
+                    bgcolor: "#b8732e",
+                    border: "1px solid #e8a766",
+                    "&.Mui-disabled": {
+                      bgcolor: "secondary.light", // Disabled background color
+                      color: "#6c6c6c", // Disabled text color
+                      border: "1px solid #c0c0c0", // Disabled border color
+                    },
+                  }}
                 >
                   Buy
                 </Button>
@@ -202,8 +238,8 @@ const MushroomStoreModal: React.FC<MushroomStoreModalProps> = ({
         sx={{
           maxWidth: "80%",
           maxHeight: "80%",
-          bgcolor: "background.paper",
-          border: "2px solid #000",
+          bgcolor: "#3b0a01",
+          border: "4px solid #857471",
           borderRadius: 3,
           boxShadow: 24,
           p: 2,

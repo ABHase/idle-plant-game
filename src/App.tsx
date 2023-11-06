@@ -456,7 +456,7 @@ function App() {
                       mr: !isMobile ? 0 : 1,
                       color: paused ? "white" : "inherit", // Text color white if paused
                       bgcolor: paused ? "#240000" : "#090924", // Background color dark red if paused
-                      border: "1px solid white", // Border color white if paused
+                      border: "4px solid #32518f", // Border color white if paused
                       "&:hover": {
                         backgroundColor: "#1C1C3A", // Darker shade for hover
                         color: "#E0E0E0", // Lighter shade for the text during hover
@@ -475,7 +475,16 @@ function App() {
                     <Button
                       variant="contained"
                       onClick={() => handleOpenModal("mushroomStoreModalOpen")}
-                      sx={{ width: "45%", mt: 0, mb: 0, ml: 1, mr: 1 }}
+                      sx={{
+                        width: "45%",
+                        mt: 0,
+                        mb: 0,
+                        ml: 1,
+                        mr: 1,
+                        color: "white",
+                        bgcolor: "#69291a",
+                        border: "4px solid #857471",
+                      }}
                     >
                       Mushroom
                     </Button>

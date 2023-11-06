@@ -57,9 +57,9 @@ const MenuModal: React.FC<Props> = (props) => {
   return (
     <Dialog open={props.open} onClose={props.onClose}>
       <Box
-        border={1}
-        borderColor="grey.300"
-        borderRadius={2}
+        border={4}
+        borderColor="#32518f"
+        borderRadius={4}
         padding={2}
         display="flex"
         flexDirection="column"
