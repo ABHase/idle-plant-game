@@ -164,7 +164,7 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
               </DialogContentText>
               <Slider
                 value={localDifficulty}
-                step={1}
+                step={10}
                 marks
                 min={1}
                 max={100}
