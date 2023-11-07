@@ -115,6 +115,18 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
     }
   }, [plantType]);
 
+  const calculateColor = (value: number) => {
+    // Calculate red based on value, where value=1 is white and value=100 is red
+    const red = Math.round((255 * (value - 1)) / 99);
+    const greenAndBlue = 255 - red;
+
+    return `rgb(${red}, ${greenAndBlue}, ${greenAndBlue})`;
+  };
+
+  const thumbColor = calculateColor(localDifficulty);
+  const trackColor = calculateColor(localDifficulty);
+  const railColor = "rgba(255, 255, 255, 0.5)";
+
   return (
     <Dialog
       open={open}
@@ -135,12 +147,50 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
         )}
       </DialogTitle>
 
-      <DialogContent style={{ overflowY: "auto" }}>
-        <DialogContentText>
-          Are you sure you want to plant a new seed, <DNAIcon /> DNA progress is
-          unique to each plant type and will not be reset with plant resources.
-          This action cannot be undone.
-        </DialogContentText>
+      <DialogContent
+        style={{
+          overflowY: "auto",
+          borderRadius: 12,
+          marginBottom: 0,
+        }}
+      >
+        <>
+          {plantType !== "Vine" && (
+            <>
+              <DialogContentText sx={{ color: "white" }}>
+                Difficulty: {localDifficulty} - Higher rates produce Time
+                Resources Faster! Current Bonus:{` `}
+                {Math.floor(localDifficulty / 10) + 1}X
+              </DialogContentText>
+              <Slider
+                value={localDifficulty}
+                step={1}
+                marks
+                min={1}
+                max={100}
+                valueLabelDisplay="auto"
+                onChange={handleSliderChange}
+                sx={{
+                  "& .MuiSlider-thumb": {
+                    backgroundColor: thumbColor, // Use the calculated color for the thumb
+                  },
+                  "& .MuiSlider-track": {
+                    backgroundColor: trackColor, // Use the calculated color for the track
+                  },
+                  "& .MuiSlider-rail": {
+                    backgroundColor: railColor, // Use static color for the rail
+                  },
+                }}
+              />
+            </>
+          )}
+
+          <DialogContentText>
+            Are you sure you want to plant a new seed, <DNAIcon /> DNA progress
+            is unique to each plant type and will not be reset with plant
+            resources. This action cannot be undone.
+          </DialogContentText>
+        </>
         <DialogContentText>
           Choose the type of plant to evolve to:
         </DialogContentText>
@@ -228,23 +278,6 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
             </Box>
           );
         })}
-        {plantType !== "Vine" && (
-          <div>
-            Difficulty - Score if you achieve 1B Sugar, higher rates produce
-            Time Resources Faster!
-          </div>
-        )}
-        {plantType !== "Vine" && (
-          <Slider
-            value={localDifficulty}
-            step={1}
-            marks
-            min={1}
-            max={100}
-            valueLabelDisplay="auto"
-            onChange={handleSliderChange}
-          />
-        )}
       </DialogContent>
       <DialogActions>
         <Button
