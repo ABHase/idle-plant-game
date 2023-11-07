@@ -213,7 +213,8 @@ const BushDisplay: React.FC<BushDisplayProps> = ({
   };
 
   const handleBuyFlower = () => {
-    dispatch(buyFlower(FLOWER_COST, multiplier));
+    const effectiveMultiplier = Math.min(multiplier, 100); // Caps the multiplier at 100
+    dispatch(buyFlower(FLOWER_COST, effectiveMultiplier));
   };
 
   const handleBuyRoots = () => {
@@ -671,9 +672,13 @@ export function formatNumberWithDecimals(value: number): string {
 }
 
 export function formatTime(seconds: number) {
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds - hours * 3600) / 60);
-  const secs = Math.round(seconds - hours * 3600 - minutes * 60);
+  // Ensure seconds is never negative
+  const positiveSeconds = Math.max(0, seconds);
+
+  const hours = Math.floor(positiveSeconds / 3600);
+  const minutes = Math.floor((positiveSeconds - hours * 3600) / 60);
+  const secs = Math.round(positiveSeconds - hours * 3600 - minutes * 60);
+
   return (
     (hours ? hours + "h " : "") + (minutes ? minutes + "m " : "") + secs + "s"
   );

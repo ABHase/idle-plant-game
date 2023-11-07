@@ -152,7 +152,7 @@ const PlantTimeDisplay: React.FC<PlantTimeProps> = ({ plantTime }) => {
             <Typography color="inherit">
               {hours.toString().padStart(2, "0")}:
               {minutes.toString().padStart(2, "0")}:
-              {seconds.toString().padStart(2, "0")} To Next Sseason
+              {seconds.toString().padStart(2, "0")} To Next Season
             </Typography>
             <Typography color="inherit">Next Season: {nextSeason}</Typography>
             {renderNextResourceComponent()}

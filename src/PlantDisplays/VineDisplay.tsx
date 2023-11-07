@@ -235,7 +235,7 @@ const VineDisplay: React.FC<VineDisplayProps> = ({
               sugar={plant.sugar}
               difficulty={difficulty}
               waterEfficiency={plant.water_efficiency_multiplier}
-              sunlightEfficiency={plant.sunlight_absorption_multiplier}
+              sunlightEfficiency={plant.sunlight_efficiency_multiplier}
             />
           </Grid>
 
@@ -279,7 +279,7 @@ const VineDisplay: React.FC<VineDisplayProps> = ({
                     amount={calculatePhotosynthesisSunlightConsumption(
                       plant.maturity_level,
                       difficulty,
-                      plant.sunlight_absorption_multiplier
+                      plant.sunlight_efficiency_multiplier
                     )}
                   />
                   /s{" "}
