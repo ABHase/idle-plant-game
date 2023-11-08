@@ -4,32 +4,38 @@
 export const ROWS = 4;
 export const COLUMNS = 6;
 
-// Convert a single number representation of a cell into its x, y coordinates
+// Convert a single number representation back into x, y coordinates
 export function getCoordinatesFromCellNumber(n: number): {
   x: number;
   y: number;
 } {
-  return {
-    x: Math.floor(n / COLUMNS),
-    y: n % COLUMNS,
-  };
+  const x = Math.floor(n / COLUMNS);
+  const y = n % COLUMNS;
+  return { x, y };
 }
 
-// Convert x, y coordinates back into a single number representation
+// Ensure the coordinates wrap around if they go out of bounds
+const wrap = (value: number, max: number): number =>
+  ((value % max) + max) % max;
+
+// Convert wrapped x, y coordinates back into a single number representation
 export function getCellNumberFromCoordinates(x: number, y: number): number {
-  return x * COLUMNS + y;
+  const wrappedX = wrap(x, ROWS);
+  const wrappedY = wrap(y, COLUMNS);
+  return wrappedX * COLUMNS + wrappedY;
 }
 
-// Return adjacent cell numbers given a single number representation
 export function getAdjacentCells(n: number): number[] {
+  // Get x, y coordinates from cell number
   const { x, y } = getCoordinatesFromCellNumber(n);
-  const adjacent = [
-    x * COLUMNS + (y - 1), // left
-    x * COLUMNS + (y + 1), // right
-    (x - 1) * COLUMNS + y, // top
-    (x + 1) * COLUMNS + y, // bottom
-  ];
-  return adjacent.filter((cell) => cell >= 0 && cell < ROWS * COLUMNS); // filtering out invalid cell numbers
+
+  // Calculate adjacent cells with wrapping
+  const left = getCellNumberFromCoordinates(x, wrap(y - 1, COLUMNS));
+  const right = getCellNumberFromCoordinates(x, wrap(y + 1, COLUMNS));
+  const top = getCellNumberFromCoordinates(wrap(x - 1, ROWS), y);
+  const bottom = getCellNumberFromCoordinates(wrap(x + 1, ROWS), y);
+
+  return [left, right, top, bottom];
 }
 
 // Get all cell numbers in a particular column
