@@ -100,12 +100,12 @@ const ReportModal: React.FC<ReportModalProps> = ({
         <Box
           sx={{
             maxWidth: "100%",
-            maxHeight: "90%",
+            maxHeight: "100%",
             bgcolor: "background.paper",
             border: "2px solid white",
             borderRadius: 3,
             boxShadow: 24,
-            p: 2,
+            p: 1,
             overflow: "auto",
             color: "text.primary",
             display: "flex",
@@ -143,7 +143,23 @@ const ReportModal: React.FC<ReportModalProps> = ({
             </Typography>
             <Typography variant="body2">
               Water Decreased Per Leaf:{" "}
-              <Water amount={plant.water_efficiency_multiplier * 1} />
+              <Water
+                amount={
+                  plant.leafWaterUsage
+                    ? plant.water_efficiency_multiplier * 1
+                    : 0
+                }
+              />
+            </Typography>
+            <Typography variant="body2">
+              Water Decreased All Leaves:{" "}
+              <Water
+                amount={
+                  plant.leafWaterUsage
+                    ? plant.water_efficiency_multiplier * plant.leaves
+                    : 0
+                }
+              />
             </Typography>
             <Typography variant="body2">
               Water After Ladybug Tax:{" "}
