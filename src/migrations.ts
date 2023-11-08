@@ -13,6 +13,7 @@ import { initialPlantTimeState as initialPlantTimeState } from "./Slices/plantTi
 import { initialState as initialUpgradesState } from "./Slices/upgradesSlice";
 import { initialState as initialTimeBoostState } from "./Slices/timeBoostSlice";
 import { PLANT_CONFIGS } from "./plantConfigs";
+import { currentVersion } from "./store";
 
 export const runMigrations = (
   state?: RootState,
@@ -22,7 +23,9 @@ export const runMigrations = (
   const plantType = state?.plant?.type || "Fern"; // Default to "Fern" if not found
   const correctInitialPlantState = PLANT_CONFIGS[plantType];
 
-  if (version < 81) {
+  console.log("Running migrations for version", version);
+
+  if (version < 132) {
     const plantHistoryEntries = state?.plantHistory.entries || [];
 
     let bestSizeReachedEntry: any = null;
@@ -73,11 +76,13 @@ export const runMigrations = (
   }
 
   // New migration for version 129 to set totalCellsCompleted
-  if (version < 131) {
+  if (version < 132) {
+    console.log("Running migration for version 132");
     let totalCellsCompleted = 0;
 
     // Directly calculate the number of completed cells
     if (state && state.cellCompletion && state.cellCompletion.cells) {
+      console.log("Calculating totalCellsCompleted");
       totalCellsCompleted = Object.keys(state.cellCompletion.cells).length;
     }
 
@@ -118,6 +123,6 @@ export const runMigrations = (
       ...initialCellCompletionState,
       ...state?.cellCompletion,
     },
-    version: version,
+    version: currentVersion,
   };
 };

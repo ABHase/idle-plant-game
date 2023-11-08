@@ -145,7 +145,6 @@ function App() {
     if (!isPlantSelected) {
       return;
     }
-    console.log("isPlantSelected is true");
 
     // Check if the number of leaves has decreased
     if (previousLeaves.current > totalLeaves) {

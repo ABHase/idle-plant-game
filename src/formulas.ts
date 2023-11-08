@@ -358,7 +358,6 @@ export const calculateSugarPhotosynthesis = (
     );
 
     // Calculate the actual amounts of resources consumed based on the limiting resource
-    console.log("limitingRatio", limitingRatio);
     const actualWaterConsumed = potentialWaterNeeded * limitingRatio;
     const actualSunlightConsumed = potentialSunlightNeeded * limitingRatio;
 

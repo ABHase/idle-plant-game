@@ -17,7 +17,7 @@ import { runMigrations } from "./migrations";
 
 const persistedState: RootState | undefined = loadState();
 //Should be auto incremented when there is a push
-export const currentVersion = 131;
+export const currentVersion = 132;
 
 // Check if the flag isNewUser exists in local storage
 let isNewUser = localStorage.getItem("isNewUser");
@@ -39,7 +39,10 @@ if (
   typeof persistedState.version !== "number" ||
   persistedState.version !== currentVersion
 ) {
-  const migratedState = runMigrations(persistedState, currentVersion);
+  const migratedState = runMigrations(
+    persistedState,
+    persistedState?.version || 1
+  );
   saveState(migratedState);
   window.location.reload();
 } else {
@@ -79,7 +82,7 @@ export const importState = (encodedState: string): void => {
     const { state, version } = JSON.parse(decodedString);
 
     if (version !== currentVersion) {
-      const migratedState = runMigrations(state, currentVersion);
+      const migratedState = runMigrations(state, version);
       store.dispatch({ type: "REPLACE_STATE", payload: migratedState });
       saveState(migratedState);
     } else {

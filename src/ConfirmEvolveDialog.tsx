@@ -111,7 +111,6 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
   useEffect(() => {
     if (plantType === "Vine") {
       setLocalDifficulty(1);
-      console.log("plantType is Vine, setting difficulty to 1");
     }
   }, [plantType]);
 

@@ -429,7 +429,6 @@ const plantSlice = createSlice({
       action: PayloadAction<{ count: number; reason: string }>
     ) => {
       state.leaves = Math.max(0, state.leaves - action.payload.count);
-      console.log("Removing leaves", action.payload.reason);
       state.lastLeafLossReason = action.payload.reason;
     },
 
