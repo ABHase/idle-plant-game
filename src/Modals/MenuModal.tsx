@@ -42,6 +42,9 @@ const MenuModal: React.FC<Props> = (props) => {
 
   const numberOfCompletedCells = useSelector(selectNumberOfCompletedCells);
   const score = useSelector((state: RootState) => state.app.score);
+  const totalCellsCompleted = useSelector(
+    (state: RootState) => state.app.totalCellsCompleted
+  );
   const difficulty = useSelector(
     (state: RootState) => state.globalState.difficulty
   );
@@ -68,7 +71,9 @@ const MenuModal: React.FC<Props> = (props) => {
         <div>Current Version: 0.{currentVersion}</div>
         <div>Play Time: {secondsToDHMS(playTimeSeconds)}</div>
         {/* Display Cells Completed */}
-        <div>Cells Completed: {numberOfCompletedCells}</div>
+        <div>Cells Currently Completed: {numberOfCompletedCells}</div>
+        <div>Total Cells Completed: {totalCellsCompleted}</div>
+        {/* Displaying Difficulty */}
         <div>Difficulty: {difficulty}</div>
         <div>Score: {score}</div>
 

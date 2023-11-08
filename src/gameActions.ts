@@ -5,6 +5,7 @@ import { RootState } from "./rootReducer";
 import { Action } from "@reduxjs/toolkit"; // Import Action
 import {
   incrementScore,
+  incrementTotalCellsCompleted,
   updateTime,
   updateTimeWithScale,
 } from "./Slices/appSlice";
@@ -541,6 +542,7 @@ export const completeCellAndDeductSugar = (
     dispatch(setVineGeneticMarkers(vineDNA));
 
     dispatch(evolveAndRecordPlant(currentPlantType, adjacencyUpgrades));
+    dispatch(incrementTotalCellsCompleted());
   };
 };
 

@@ -5,7 +5,10 @@ import { initialState as initialGlobalState } from "./Slices/gameStateSlice";
 import { initialState as initialAppState } from "./Slices/appSlice";
 import { initialPlantHistoryState as initialPlantHistoryState } from "./Slices/plantHistorySlice";
 import { initialState as initialPlantState } from "./Slices/plantSlice";
-import { initialState as initialCellCompletionState } from "./Slices/cellCompletionSlice";
+import {
+  initialState as initialCellCompletionState,
+  selectNumberOfCompletedCells,
+} from "./Slices/cellCompletionSlice";
 import { initialPlantTimeState as initialPlantTimeState } from "./Slices/plantTimeSlice";
 import { initialState as initialUpgradesState } from "./Slices/upgradesSlice";
 import { initialState as initialTimeBoostState } from "./Slices/timeBoostSlice";
@@ -66,6 +69,25 @@ export const runMigrations = (
 
     if (state && state.plantHistory) {
       state.plantHistory.entries = uniqueBestEntries;
+    }
+  }
+
+  // New migration for version 129 to set totalCellsCompleted
+  if (version < 129) {
+    // Initialize totalCellsCompleted with a default value
+    let totalCellsCompleted = 0;
+
+    // Check if the state and cellCompletion state are defined
+    if (state && state.cellCompletion) {
+      // Use the selector to get the number of completed cells
+      totalCellsCompleted = selectNumberOfCompletedCells({
+        cellCompletion: state.cellCompletion,
+      });
+    }
+
+    // Set the totalCellsCompleted in the app state if app state is defined
+    if (state?.app) {
+      state.app.totalCellsCompleted = totalCellsCompleted;
     }
   }
 

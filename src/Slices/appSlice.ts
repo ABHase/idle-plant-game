@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 export interface AppState {
   totalTime: number;
   score: number;
+  totalCellsCompleted: number;
   paused: boolean;
 }
 
@@ -14,6 +15,7 @@ export interface UpdateTimeWithScalePayload {
 export const initialState: AppState = {
   totalTime: 0,
   score: 0,
+  totalCellsCompleted: 0,
   paused: false,
 };
 
@@ -38,6 +40,9 @@ const appSlice = createSlice({
     incrementScore: (state, action: PayloadAction<number>) => {
       state.score += action.payload;
     },
+    incrementTotalCellsCompleted: (state) => {
+      state.totalCellsCompleted++;
+    },
   },
   extraReducers: (builder) => {
     builder.addMatcher(
@@ -59,6 +64,7 @@ export const {
   resetApp,
   updateTimeWithScale,
   togglePause,
+  incrementTotalCellsCompleted,
 } = appSlice.actions;
 
 export default appSlice.reducer;
