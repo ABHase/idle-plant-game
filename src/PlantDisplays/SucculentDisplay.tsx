@@ -323,31 +323,43 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
                 <Box
                   style={{
                     display: "flex",
-                    alignItems: "center",
-                    flexWrap: "wrap",
+                    justifyContent: "space-between", // Spread out the main axis items
                   }}
                 >
-                  <Water
-                    amount={calculatePhotosynthesisWaterConsumption(
-                      plant.maturity_level,
-                      difficulty,
-                      plant.water_efficiency_multiplier
-                    )}
-                  />
-                  /s +{" "}
-                  <Sunlight
-                    amount={calculatePhotosynthesisSunlightConsumption(
-                      plant.maturity_level,
-                      difficulty,
-                      plant.sunlight_efficiency_multiplier
-                    )}
-                  />
-                  /s{" "}
-                  <ArrowForwardIcon
-                    sx={{ color: plant.is_sugar_production_on ? "" : "red" }}
-                  />{" "}
-                  <Sugar amount={actualSugarPerMinute} />
-                  /MIN
+                  <Box
+                    style={{
+                      display: "flex",
+                      flexDirection: "column", // Stack items vertically
+                    }}
+                  >
+                    <Water
+                      amount={calculatePhotosynthesisWaterConsumption(
+                        plant.maturity_level,
+                        difficulty,
+                        plant.water_efficiency_multiplier
+                      )}
+                    />
+                    <Sunlight
+                      amount={calculatePhotosynthesisSunlightConsumption(
+                        plant.maturity_level,
+                        difficulty,
+                        plant.sunlight_efficiency_multiplier
+                      )}
+                    />
+                  </Box>
+                  <Box
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <ArrowForwardIcon
+                      sx={{ color: plant.is_sugar_production_on ? "" : "red" }}
+                    />{" "}
+                    <Sugar amount={actualSugarPerMinute} />
+                    /MIN
+                  </Box>
                 </Box>
               </Button>
             </Tooltip>
@@ -500,14 +512,24 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
                   backgroundColor: "#424532",
                   color: "#B5D404",
                   "&:active, &:focus": {
-                    backgroundColor: "#424532", // Or any other style reset
+                    backgroundColor: "#424532",
                   },
                 }}
                 onClick={() => handleBuyLeaves()}
               >
-                Leaves: <Leaves amount={multiplier} />
-                &nbsp;for <Sugar amount={LEAF_COST * multiplier} />
-                <Water amount={LEAF_COST * multiplier * 100} />
+                {multiplier > 1000 ? (
+                  "Grow Max Leaves"
+                ) : (
+                  <>
+                    Grow Leaves: <Leaves amount={multiplier} />
+                  </>
+                )}
+                {multiplier <= 1000 && (
+                  <>
+                    {" "}
+                    &nbsp;for <Sugar amount={LEAF_COST * multiplier} />
+                  </>
+                )}
               </Button>
             </Tooltip>
           </Grid>
@@ -529,13 +551,24 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
                   backgroundColor: "#363534",
                   color: "#C7B08B",
                   "&:active, &:focus": {
-                    backgroundColor: "#363534", // Or any other style reset
+                    backgroundColor: "#363534",
                   },
                 }}
                 onClick={() => handleBuyRoots()}
               >
-                Grow Roots: <Roots amount={multiplier} />
-                &nbsp;for <Sugar amount={ROOT_COST * multiplier} />
+                {multiplier > 1000 ? (
+                  "Grow Max Roots"
+                ) : (
+                  <>
+                    Grow Roots: <Roots amount={multiplier} />
+                  </>
+                )}
+                {multiplier <= 1000 && (
+                  <>
+                    {" "}
+                    &nbsp;for <Sugar amount={ROOT_COST * multiplier} />
+                  </>
+                )}
               </Button>
             </Tooltip>
           </Grid>
@@ -547,8 +580,17 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
               visibility: isSugarUpgradesUnlocked(plant) ? "visible" : "hidden",
             }}
           >
-            <Tooltip title="Grow Needles">
-              <span>
+            {/* Needles Section */}
+            <Grid
+              item
+              xs={12}
+              sx={{
+                visibility: isSugarUpgradesUnlocked(plant)
+                  ? "visible"
+                  : "hidden",
+              }}
+            >
+              <Tooltip title="Grow Needles">
                 <Button
                   fullWidth
                   sx={{
@@ -557,7 +599,7 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
                     backgroundColor: "#252b36",
                     color: "#d0d4db",
                     "&:active, &:focus": {
-                      backgroundColor: "#252b36", // Or any other style reset
+                      backgroundColor: "#252b36",
                     },
                     "&.Mui-disabled": {
                       color: "#d0d4db",
@@ -569,6 +611,8 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
                 >
                   {plant.rabbitImmunity ? (
                     "Rabbits are afraid of your needles!"
+                  ) : multiplier > 1000 ? (
+                    "Grow Max Needles"
                   ) : (
                     <>
                       Grow Needles: {multiplier}
@@ -577,8 +621,8 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
                     </>
                   )}
                 </Button>
-              </span>
-            </Tooltip>
+              </Tooltip>
+            </Grid>
           </Grid>
           <Grid
             item

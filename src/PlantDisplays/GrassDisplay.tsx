@@ -324,31 +324,43 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({
                 <Box
                   style={{
                     display: "flex",
-                    alignItems: "center",
-                    flexWrap: "wrap",
+                    justifyContent: "space-between", // Spread out the main axis items
                   }}
                 >
-                  <Water
-                    amount={calculatePhotosynthesisWaterConsumption(
-                      plant.maturity_level,
-                      difficulty,
-                      plant.water_efficiency_multiplier
-                    )}
-                  />
-                  /s +{" "}
-                  <Sunlight
-                    amount={calculatePhotosynthesisSunlightConsumption(
-                      plant.maturity_level,
-                      difficulty,
-                      plant.sunlight_efficiency_multiplier
-                    )}
-                  />
-                  /s{" "}
-                  <ArrowForwardIcon
-                    sx={{ color: plant.is_sugar_production_on ? "" : "red" }}
-                  />{" "}
-                  <Sugar amount={actualSugarPerMinute} />
-                  /Min
+                  <Box
+                    style={{
+                      display: "flex",
+                      flexDirection: "column", // Stack items vertically
+                    }}
+                  >
+                    <Water
+                      amount={calculatePhotosynthesisWaterConsumption(
+                        plant.maturity_level,
+                        difficulty,
+                        plant.water_efficiency_multiplier
+                      )}
+                    />
+                    <Sunlight
+                      amount={calculatePhotosynthesisSunlightConsumption(
+                        plant.maturity_level,
+                        difficulty,
+                        plant.sunlight_efficiency_multiplier
+                      )}
+                    />
+                  </Box>
+                  <Box
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <ArrowForwardIcon
+                      sx={{ color: plant.is_sugar_production_on ? "" : "red" }}
+                    />{" "}
+                    <Sugar amount={actualSugarPerMinute} />
+                    /MIN
+                  </Box>
                 </Box>
               </Button>
             </Tooltip>
@@ -502,13 +514,24 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({
                   backgroundColor: "#424532",
                   color: "#B5D404",
                   "&:active, &:focus": {
-                    backgroundColor: "#424532", // Or any other style reset
+                    backgroundColor: "#424532",
                   },
                 }}
                 onClick={() => handleBuyLeaves()}
               >
-                Grow Leaves: <Leaves amount={multiplier} />
-                &nbsp;for <Sugar amount={LEAF_COST * multiplier} />
+                {multiplier > 1000 ? (
+                  "Grow Max Leaves"
+                ) : (
+                  <>
+                    Grow Leaves: <Leaves amount={multiplier} />
+                  </>
+                )}
+                {multiplier <= 1000 && (
+                  <>
+                    {" "}
+                    &nbsp;for <Sugar amount={LEAF_COST * multiplier} />
+                  </>
+                )}
               </Button>
             </Tooltip>
           </Grid>
@@ -530,18 +553,26 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({
                   backgroundColor: "#363534",
                   color: "#C7B08B",
                   "&:active, &:focus": {
-                    backgroundColor: "#363534", // Or any other style reset
+                    backgroundColor: "#363534",
                   },
                 }}
                 onClick={() => handleBuyRoots()}
               >
-                Grow Roots: <Roots amount={multiplier} />
-                &nbsp;for <Sugar amount={ROOT_COST * multiplier} />
+                {multiplier > 1000 ? (
+                  "Grow Max Roots"
+                ) : (
+                  <>
+                    Grow Roots: <Roots amount={multiplier} />
+                  </>
+                )}
+                {multiplier <= 1000 && (
+                  <>
+                    {" "}
+                    &nbsp;for <Sugar amount={ROOT_COST * multiplier} />
+                  </>
+                )}
               </Button>
             </Tooltip>
-          </Grid>
-          <Grid item xs={12}>
-            <Divider sx={{ backgroundColor: "white" }} />
           </Grid>
 
           <Grid

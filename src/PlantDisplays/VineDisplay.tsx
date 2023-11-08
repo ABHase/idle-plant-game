@@ -263,31 +263,43 @@ const VineDisplay: React.FC<VineDisplayProps> = ({
                 <Box
                   style={{
                     display: "flex",
-                    alignItems: "center",
-                    flexWrap: "wrap",
+                    justifyContent: "space-between", // Spread out the main axis items
                   }}
                 >
-                  <Water
-                    amount={calculatePhotosynthesisWaterConsumption(
-                      plant.maturity_level,
-                      difficulty,
-                      plant.water_efficiency_multiplier
-                    )}
-                  />
-                  /s +{" "}
-                  <Sunlight
-                    amount={calculatePhotosynthesisSunlightConsumption(
-                      plant.maturity_level,
-                      difficulty,
-                      plant.sunlight_efficiency_multiplier
-                    )}
-                  />
-                  /s{" "}
-                  <ArrowForwardIcon
-                    sx={{ color: plant.is_sugar_production_on ? "" : "red" }}
-                  />{" "}
-                  <Sugar amount={actualSugarPerMinute} />
-                  /MIN
+                  <Box
+                    style={{
+                      display: "flex",
+                      flexDirection: "column", // Stack items vertically
+                    }}
+                  >
+                    <Water
+                      amount={calculatePhotosynthesisWaterConsumption(
+                        plant.maturity_level,
+                        difficulty,
+                        plant.water_efficiency_multiplier
+                      )}
+                    />
+                    <Sunlight
+                      amount={calculatePhotosynthesisSunlightConsumption(
+                        plant.maturity_level,
+                        difficulty,
+                        plant.sunlight_efficiency_multiplier
+                      )}
+                    />
+                  </Box>
+                  <Box
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <ArrowForwardIcon
+                      sx={{ color: plant.is_sugar_production_on ? "" : "red" }}
+                    />{" "}
+                    <Sugar amount={actualSugarPerMinute} />
+                    /MIN
+                  </Box>
                 </Box>
               </Button>
             </Tooltip>
