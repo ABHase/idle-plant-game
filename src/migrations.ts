@@ -73,16 +73,12 @@ export const runMigrations = (
   }
 
   // New migration for version 129 to set totalCellsCompleted
-  if (version < 129) {
-    // Initialize totalCellsCompleted with a default value
+  if (version < 131) {
     let totalCellsCompleted = 0;
 
-    // Check if the state and cellCompletion state are defined
-    if (state && state.cellCompletion) {
-      // Use the selector to get the number of completed cells
-      totalCellsCompleted = selectNumberOfCompletedCells({
-        cellCompletion: state.cellCompletion,
-      });
+    // Directly calculate the number of completed cells
+    if (state && state.cellCompletion && state.cellCompletion.cells) {
+      totalCellsCompleted = Object.keys(state.cellCompletion.cells).length;
     }
 
     // Set the totalCellsCompleted in the app state if app state is defined

@@ -293,6 +293,24 @@ export const UPGRADES: Record<string, Upgrade[]> = {
       description: "Unlocks the Lichen Store",
       cost: 30,
     },
+    {
+      id: "boost_sugar_moss",
+      name: "Cam Pathway",
+      description: "Increase base sugar production by 100%",
+      cost: 75,
+    },
+    {
+      id: "boost_sugar_moss_2",
+      name: "Cam Pathway 2",
+      description: "Increase base sugar production by 200%",
+      cost: 150,
+    },
+    {
+      id: "boost_sugar_moss_3",
+      name: "Cam Pathway 3",
+      description: "Increase base sugar production by 300%",
+      cost: 350,
+    },
   ],
   Succulent: [
     {
@@ -871,6 +889,15 @@ export const UPGRADE_FUNCTIONS: Record<
     },
     lichen_store: (plant) => {
       plant.lichenStoreAvailable = true;
+    },
+    boost_sugar_moss: (plant) => {
+      plant.sugar_production_rate *= 2;
+    },
+    boost_sugar_moss_2: (plant) => {
+      plant.sugar_production_rate *= 3;
+    },
+    boost_sugar_moss_3: (plant) => {
+      plant.sugar_production_rate *= 4;
     },
   },
   Succulent: {
