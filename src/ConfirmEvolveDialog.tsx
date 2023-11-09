@@ -1,22 +1,21 @@
 // ConfirmEvolveDialog.tsx
 
 import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux"; // <-- Add this import
+import { useSelector, useDispatch } from "react-redux";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
-import { RootState } from "./rootReducer"; // <-- Add this import
-import { UPGRADES } from "./upgrades"; // <-- Add this import
-import { Box, Checkbox, FormControlLabel, Typography } from "@mui/material";
+import { RootState } from "./rootReducer";
+import { UPGRADES } from "./upgrades";
+import { Box, Checkbox, FormControlLabel } from "@mui/material";
 import { DNAIcon } from "./icons/dna";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import { DNA } from "./Components/DNA";
 import Slider from "@mui/material/Slider";
-import { deductTimeSeed, setDifficulty } from "./Slices/gameStateSlice"; // Replace this with your actual import
+import { deductTimeSeed, setDifficulty } from "./Slices/gameStateSlice";
 import { Water } from "./Components/Water";
 import { Sunlight } from "./Components/Sunlight";
 
@@ -31,38 +30,58 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
   onClose,
   onConfirm,
 }) => {
+  const dispatch = useDispatch();
+
   const purchased = useSelector((state: RootState) => state.upgrades.purchased);
-  const geneticMarkers = useSelector(
-    (state: RootState) => state.globalState.geneticMarkers
-  );
+
   const timeSeeds = useSelector((state: RootState) => state.globalState.seeds);
 
-  const geneticMarkersMoss = useSelector(
-    (state: RootState) => state.globalState.geneticMarkersMoss
-  );
   const currentPlantType = useSelector((state: RootState) => state.plant.type);
-  const [plantType, setPlantType] = React.useState<string>(currentPlantType); // default value as current plant type
-
-  const defaultPlantType =
-    timeSeeds > 0 || currentPlantType !== "Vine" ? currentPlantType : "Fern";
-
-  React.useEffect(() => {
-    if (open) {
-      setSelectedTraits(purchased);
-      if (currentPlantType === "Vine" && timeSeeds === 0) {
-        setPlantType("Fern"); // Set a default type if currently 'Vine' but no seeds
-      }
-    }
-  }, [open, purchased, currentPlantType, timeSeeds]);
 
   const [selectedTraits, setSelectedTraits] =
     React.useState<string[]>(purchased);
 
+  const [traitKeys, setTraitKeys] = React.useState<Map<string, number>>(
+    new Map()
+  );
+
+  const [plantType, setPlantType] = React.useState<string>(currentPlantType);
+
   React.useEffect(() => {
     if (open) {
-      setSelectedTraits(purchased);
+      // Creating a new set to track which traits have been added
+      const uniqueTraitsSet = new Set();
+
+      // Transforming 'purchased' to an array of unique traits
+      const uniqueTraits = purchased.map((id, index) => {
+        // If the id already exists, append an index to make it unique
+        const uniqueId = uniqueTraitsSet.has(id) ? `${id}-${index}` : id;
+        uniqueTraitsSet.add(uniqueId);
+        return uniqueId;
+      });
+
+      // Updating state with unique traits
+      setSelectedTraits(uniqueTraits);
+
+      // Initializing traitKeys with the unique traits as keys
+      const newTraitKeys = new Map(
+        uniqueTraits.map((id, index) => [id, index])
+      );
+      setTraitKeys(newTraitKeys);
+
+      // Default plantType logic
+      const defaultPlantType =
+        currentPlantType === "Vine" && timeSeeds === 0
+          ? "Fern"
+          : currentPlantType;
+      setPlantType(defaultPlantType);
+
+      // If the plantType is 'Vine', we also need to set local difficulty
+      if (defaultPlantType === "Vine") {
+        setLocalDifficulty(1);
+      }
     }
-  }, [open, purchased]);
+  }, [open, purchased, currentPlantType, timeSeeds]);
 
   const typeSpecificUpgrades = UPGRADES[plantType];
   const columnUpgrades = UPGRADES["Column"];
@@ -79,7 +98,6 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
     setPlantType(type);
   };
 
-  const dispatch = useDispatch();
   const currentDifficulty = useSelector(
     (state: RootState) => state.globalState.difficulty
   );
@@ -91,14 +109,34 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
     setLocalDifficulty(value);
   };
 
-  const toggleTrait = (id: string) => {
+  // Adjust the toggleTrait function to handle unique identifiers
+  const toggleTrait = (uniqueId: string) => {
     setSelectedTraits((prevTraits) => {
-      if (prevTraits.includes(id)) {
-        return prevTraits.filter((trait) => trait !== id);
+      if (prevTraits.includes(uniqueId)) {
+        return prevTraits.filter((id) => id !== uniqueId);
       } else {
-        return [...prevTraits, id];
+        return [...prevTraits, uniqueId];
       }
     });
+  };
+
+  const handleConfirm = () => {
+    // Map the unique identifiers back to the original trait ids
+    const confirmedTraits = selectedTraits.map((uniqueId) => {
+      const [originalId] = uniqueId.split("-");
+      return originalId;
+    });
+
+    if (plantType === "Vine") {
+      deductSeed();
+    }
+
+    dispatch(setDifficulty({ difficulty: localDifficulty }));
+
+    console.log("onConfirm", confirmedTraits);
+    onConfirm(plantType, confirmedTraits);
+
+    onClose();
   };
 
   const deductSeed = () => {
@@ -244,12 +282,16 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
         <DialogContentText>
           Will start a new {plantType} with the following traits:
         </DialogContentText>
-        {purchased.map((id) => {
-          const trait = combinedUpgrades.find((upgrade) => upgrade.id === id);
+        {Array.from(traitKeys.keys()).map((uniqueId) => {
+          const index = traitKeys.get(uniqueId);
+          const id = typeof index === "number" ? purchased[index] : null;
+          const trait = id
+            ? combinedUpgrades.find((upgrade) => upgrade.id === id)
+            : null;
           if (!trait) return null;
           return (
             <Box
-              key={id}
+              key={uniqueId} // Use uniqueId for key
               sx={{
                 border: "1px solid white",
                 borderRadius: 1,
@@ -259,16 +301,8 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={selectedTraits.includes(id)}
-                    onChange={() => {
-                      if (selectedTraits.includes(id)) {
-                        setSelectedTraits((prev) =>
-                          prev.filter((traitId) => traitId !== id)
-                        );
-                      } else {
-                        setSelectedTraits((prev) => [...prev, id]);
-                      }
-                    }}
+                    checked={selectedTraits.includes(uniqueId)} // Check if the uniqueId is in the selectedTraits
+                    onChange={() => toggleTrait(uniqueId)} // Pass the uniqueId to the toggle function
                     name={trait.name}
                   />
                 }
@@ -292,15 +326,7 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
           Cancel
         </Button>
         <Button
-          onClick={() => {
-            if (plantType === "Vine") {
-              deductSeed();
-            }
-            dispatch(setDifficulty({ difficulty: localDifficulty }));
-            onConfirm(plantType, selectedTraits);
-
-            onClose();
-          }}
+          onClick={handleConfirm}
           color="primary"
           sx={{
             backgroundColor: "#090924",
