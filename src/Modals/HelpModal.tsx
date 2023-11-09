@@ -18,6 +18,8 @@ import {
 } from "@mui/material";
 import { useSelector } from "react-redux";
 import { RootState } from "../rootReducer";
+import { Maturity } from "../Components/Maturity";
+import { DNAIcon } from "../icons/dna";
 
 interface HelpModalProps {
   open: boolean;
@@ -34,6 +36,7 @@ const HelpModal: React.FC<HelpModalProps> = ({ open, onClose, isMobile }) => {
   // Table of contents items
   const toc = [
     "Basics",
+    "Strategies",
     "Map",
     "Column Bonuses",
     "Moss",
@@ -82,10 +85,89 @@ const HelpModal: React.FC<HelpModalProps> = ({ open, onClose, isMobile }) => {
         </Typography>
       </Box>
       <Box display="flex" alignItems="center" mb={1}>
+        <ParkIcon sx={{ fontSize: 22, color: "green" }} />
+        <Typography variant="body2">
+          {" "}
+          - Maturity is equal to the square root of the sum of roots and leaves.
+        </Typography>
+      </Box>
+      <Box display="flex" alignItems="center" mb={1}>
+        <GrainIcon sx={{ fontSize: 22, color: "white" }} />
+        <Typography variant="body2">
+          {" "}
+          - Sugar production increases with maturity. Excluding modifiers from
+          seasons and traits the formula is:{" "}
+        </Typography>
+      </Box>
+      <Box display="flex" alignItems="center" mb={1}>
+        <GrainIcon sx={{ fontSize: 22, color: "white" }} />
+        <Typography variant="body2">
+          {" "}
+          - Base sugar production rate * (1 + .1 * size);
+        </Typography>
+      </Box>
+      <Box display="flex" alignItems="center" mb={1}>
+        <DNAIcon />
+        <Typography variant="body2">
+          {" "}
+          - Traits can be purchased for DNA.
+        </Typography>
+      </Box>
+      <Box display="flex" alignItems="center" mb={1}>
+        <DNAIcon />
         <Typography variant="body2">
           {" "}
           - Traits can be sold back for DNA at any time for full value. Traits
           DO NOT take effect until you plant a new plant.
+        </Typography>
+      </Box>
+    </div>,
+
+    <div>
+      <Typography variant="h6" mb={1}>
+        Strategies:
+      </Typography>
+      <Typography variant="h6" mb={1}>
+        Time Boosting is important, meaning the Fern and Succulent are
+        important.
+      </Typography>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          - That said, they are the most active play style and require the most
+          attention.
+        </Typography>
+      </Box>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          - Moss requires nearly no attention if you want to do it slow and get
+          it out of the way.
+        </Typography>
+      </Box>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          - Grass is absurdly slow to get DNA on compared to any of the other
+          plants, especially if you haven't moved on the map yet. That said if
+          you don't mind waiting for days it will eventually get there,
+          especially if you did Moss first. It's not actually required though.
+        </Typography>
+      </Box>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          - Building up a massive stockpile of Time Boost is fundamental to
+          unlocking the Time Vine, but you might not even want to worry about
+          the Time Vine your first map cell.
+        </Typography>
+      </Box>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          - The Discord is a great place to get help and advice, and to report
+          bugs.
+        </Typography>
+      </Box>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          - The game is much closer to being done than it ever has been, but it
+          is still in development.
         </Typography>
       </Box>
     </div>,
