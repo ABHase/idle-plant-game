@@ -467,8 +467,7 @@ const MossDisplay: React.FC<MossDisplayProps> = ({
                   <>
                     Grow: <Leaves amount={multiplier} />&{" "}
                     <Roots amount={multiplier} />
-                    &nbsp;for{" "}
-                    <Sugar amount={(LEAF_COST + ROOT_COST) * multiplier} />
+                    &nbsp;for <Sugar amount={LEAF_COST * multiplier} />
                   </>
                 )}
               </Button>
