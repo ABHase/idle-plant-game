@@ -475,14 +475,14 @@ export const UPGRADES: Record<string, Upgrade[]> = {
       id: "auto_grow_100",
       name: "Spread 100",
       description:
-        "Auto grows 100 roots or leaves per cycle, for the same sugar.",
+        "Auto grows 100 more roots or leaves per cycle, for the same sugar.",
       cost: 50,
     },
     {
       id: "auto_grow_1000",
       name: "Spread 1000",
       description:
-        "Auto grows 1000 roots or leaves per cycle, for the same sugar.",
+        "Auto grows 1000 more roots or leaves per cycle, for the same sugar.",
       cost: 100,
     },
     {
@@ -513,7 +513,7 @@ export const UPGRADES: Record<string, Upgrade[]> = {
       id: "auto_grow_10000",
       name: "Spread 10000",
       description:
-        "Auto grows 10000 roots or leaves per cycle, for the same sugar.",
+        "Auto grows 10000 more roots or leaves per cycle, for the same sugar.",
       cost: 250,
     },
   ],
@@ -994,13 +994,13 @@ export const UPGRADE_FUNCTIONS: Record<
       plant.winterModifier *= 2;
     },
     auto_grow_100: (plant) => {
-      plant.autoGrowthMultiplier = 100;
+      plant.autoGrowthMultiplier += 100;
     },
     auto_grow_1000: (plant) => {
-      plant.autoGrowthMultiplier = 1000;
+      plant.autoGrowthMultiplier += 1000;
     },
     auto_grow_10000: (plant) => {
-      plant.autoGrowthMultiplier = 10000;
+      plant.autoGrowthMultiplier += 10000;
     },
   },
   Bush: {
