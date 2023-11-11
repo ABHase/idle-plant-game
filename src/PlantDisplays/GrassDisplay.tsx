@@ -424,9 +424,12 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({
             <TextField
               type="number"
               value={plant.maxResourceToSpend}
-              onChange={(e) =>
-                dispatch(setMaxResourceToSpend(parseFloat(e.target.value)))
-              }
+              onChange={(e) => {
+                const value = e.target.value;
+                dispatch(
+                  setMaxResourceToSpend(value === "" ? null : parseFloat(value))
+                );
+              }}
               label="Max Resource to Spend"
               inputProps={{ step: "1000" }}
             />

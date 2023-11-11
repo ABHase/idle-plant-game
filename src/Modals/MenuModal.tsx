@@ -172,6 +172,16 @@ const MenuModal: React.FC<Props> = (props) => {
             Join Discord
           </Button>
         </a>
+        <a
+          href="https://www.patreon.com/HareFootGames?utm_medium=clipboard_copy&utm_source=copyLink&utm_campaign=creatorshare_creator&utm_content=join_link"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ textDecoration: "none", width: "100%" }}
+        >
+          <Button variant="contained" sx={buttonStyle} fullWidth>
+            Join Patreon
+          </Button>
+        </a>
         <Button
           variant="contained"
           sx={redButtonStyle}

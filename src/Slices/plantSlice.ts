@@ -582,7 +582,7 @@ const plantSlice = createSlice({
     toggleRootGrowth: (state) => {
       state.rootGrowthToggle = !state.rootGrowthToggle;
     },
-    setMaxResourceToSpend: (state, action: PayloadAction<number>) => {
+    setMaxResourceToSpend: (state, action: PayloadAction<number | null>) => {
       state.maxResourceToSpend = action.payload;
     },
     //Reducer to increase flower threshold by 1 %
