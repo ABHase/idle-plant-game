@@ -32,11 +32,19 @@ import LocalFloristIcon from "@mui/icons-material/LocalFlorist";
 import { Flower } from "./Components/Flower";
 
 const getCostType = (item: MushroomItem): string => {
-  if (item.id === "desert_night") return "sunlight";
-  if (item.id === "desert_night_2") return "sunlight";
-  if (item.id === "desert_rain") return "water";
-  if (item.id === "desert_rain_2") return "water";
-  return "sugar";
+  switch (item.id) {
+    case "desert_night":
+    case "desert_night_2":
+    case "shade_for_sugar":
+    case "shade_for_sugar_2":
+      return "sunlight";
+    case "desert_rain":
+    case "desert_rain_2":
+    case "moss_rain":
+      return "water";
+    default:
+      return "sugar";
+  }
 };
 
 const MushroomStoreDesktopDisplay = () => {
@@ -115,27 +123,51 @@ const MushroomStoreDesktopDisplay = () => {
           </ButtonBase>
         ));
       case "Moss":
-        // Display the below if the lichen store is available otherwise display "No inventory available for Moss.  Check back later!"
+        // Check if the lichen store is available
         if (lichenStore) {
           return (
             <>
               <Typography mt={2}>The Lichen</Typography>
-              {LICHEN_MUSHROOM_ITEMS.map((item) => (
-                <ButtonBase
-                  onClick={() =>
-                    handleButtonClick(sunlight, item.cost, item.effect)
-                  }
-                  sx={buttonBaseStyle(sunlight, item.cost)}
-                >
-                  <Box key={item.id} mt={2}>
+              {LICHEN_MUSHROOM_ITEMS.map((item) => {
+                const costType = getCostType(item);
+                return (
+                  <ButtonBase
+                    key={item.id}
+                    onClick={() => {
+                      switch (costType) {
+                        case "sunlight":
+                          handleButtonClick(sunlight, item.cost, item.effect);
+                          break;
+                        case "water":
+                          handleButtonClick(water, item.cost, item.effect);
+                          break;
+                        default:
+                          handleButtonClick(sugar, item.cost, item.effect);
+                          break;
+                      }
+                    }}
+                    sx={buttonBaseStyle(
+                      costType === "sunlight"
+                        ? sunlight
+                        : costType === "water"
+                        ? water
+                        : sugar,
+                      item.cost
+                    )}
+                  >
                     <Typography variant="body1">{item.name}</Typography>
                     <Typography variant="body2">{item.description}</Typography>
                     <Typography variant="body2" sx={{ display: "flex" }}>
-                      Cost: <Sunlight amount={item.cost} />
+                      Cost:
+                      {costType === "sunlight" && (
+                        <Sunlight amount={item.cost} />
+                      )}
+                      {costType === "water" && <Water amount={item.cost} />}
+                      {costType === "sugar" && <Sugar amount={item.cost} />}
                     </Typography>
-                  </Box>
-                </ButtonBase>
-              ))}
+                  </ButtonBase>
+                );
+              })}
             </>
           );
         } else {

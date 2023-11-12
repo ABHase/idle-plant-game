@@ -21,11 +21,19 @@ import { Sunlight } from "../Components/Sunlight";
 import { Water } from "../Components/Water";
 
 const getCostType = (item: MushroomItem): string => {
-  if (item.id === "desert_night") return "sunlight";
-  if (item.id === "desert_night_2") return "sunlight";
-  if (item.id === "desert_rain") return "water";
-  if (item.id === "desert_rain_2") return "water";
-  return "sugar";
+  switch (item.id) {
+    case "desert_night":
+    case "desert_night_2":
+    case "shade_for_sugar":
+    case "shade_for_sugar_2":
+      return "sunlight";
+    case "desert_rain":
+    case "desert_rain_2":
+    case "moss_rain":
+      return "water";
+    default:
+      return "sugar";
+  }
 };
 
 interface MushroomStoreModalProps {
@@ -97,37 +105,48 @@ const MushroomStoreModal: React.FC<MushroomStoreModalProps> = ({
           </Box>
         ));
       case "Moss":
-        // Display the below if the lichen store is available otherwise display "No inventory available for Moss.  Check back later!"
         if (lichenStore) {
           return (
             <>
               <Typography mt={2}>The Lichen</Typography>
-              {LICHEN_MUSHROOM_ITEMS.map((item) => (
-                <Box key={item.id} mt={2}>
-                  <Typography variant="body1">{item.name}</Typography>
-                  <Typography variant="body2">{item.description}</Typography>
-                  <Typography variant="body2" sx={{ display: "flex" }}>
-                    Cost: <Sunlight amount={item.cost} />
-                  </Typography>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => handlePurchase(item.effect)}
-                    disabled={sunlight < item.cost}
-                    sx={{
-                      bgcolor: "#b8732e",
-                      border: "1px solid #e8a766",
-                      "&.Mui-disabled": {
-                        bgcolor: "secondary.light", // Disabled background color
-                        color: "#6c6c6c", // Disabled text color
-                        border: "1px solid #c0c0c0", // Disabled border color
-                      },
-                    }}
-                  >
-                    Buy
-                  </Button>
-                </Box>
-              ))}
+              {LICHEN_MUSHROOM_ITEMS.map((item) => {
+                const costType = getCostType(item);
+                return (
+                  <Box key={item.id} mt={2}>
+                    <Typography variant="body1">{item.name}</Typography>
+                    <Typography variant="body2">{item.description}</Typography>
+                    <Typography variant="body2" sx={{ display: "flex" }}>
+                      Cost:
+                      {costType === "sunlight" && (
+                        <Sunlight amount={item.cost} />
+                      )}
+                      {costType === "water" && <Water amount={item.cost} />}
+                      {costType === "sugar" && <Sugar amount={item.cost} />}
+                    </Typography>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => handlePurchase(item.effect)}
+                      disabled={
+                        (costType === "sugar" && sugar < item.cost) ||
+                        (costType === "sunlight" && sunlight < item.cost) ||
+                        (costType === "water" && water < item.cost)
+                      }
+                      sx={{
+                        bgcolor: "#b8732e",
+                        border: "1px solid #e8a766",
+                        "&.Mui-disabled": {
+                          bgcolor: "secondary.light", // Disabled background color
+                          color: "#6c6c6c", // Disabled text color
+                          border: "1px solid #c0c0c0", // Disabled border color
+                        },
+                      }}
+                    >
+                      Buy
+                    </Button>
+                  </Box>
+                );
+              })}
             </>
           );
         } else {

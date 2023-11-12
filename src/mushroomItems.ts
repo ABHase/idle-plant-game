@@ -206,6 +206,16 @@ export const LICHEN_MUSHROOM_ITEMS: MushroomItem[] = [
       dispatch(increaseSugar(5000)); // Add 150 water
     },
   },
+  {
+    id: "moss_rain",
+    name: "Waterfall",
+    description: "Time travel through the waterfall. (60 ticks)",
+    cost: 50000,
+    effect: (dispatch, getState) => {
+      dispatch(increaseGlobalBoostedTicks(60));
+      dispatch(deductWater(50000));
+    },
+  },
 ];
 
 export const MUSHROOM_ITEM_FUNCTIONS: {
