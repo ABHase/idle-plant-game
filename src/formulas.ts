@@ -589,13 +589,7 @@ export const calculateActualSugarProductionPerMinute = (
   plantTime: PlantTimeState,
   difficulty: number
 ) => {
-  // Get the limiting resource
-  const limitingResourcePerSecond = Math.min(
-    report.water.netWaterProductionBeforeSugar,
-    report.sunlight.netSunlightProductionBeforeSugar
-  );
-
-  // Get the required resources for sugar production
+  // Get the required resources for sugar production per second
   const requiredWaterPerSecond = calculatePhotosynthesisWaterConsumption(
     plant.maturity_level,
     difficulty,
@@ -607,34 +601,46 @@ export const calculateActualSugarProductionPerMinute = (
     plant.sunlight_efficiency_multiplier
   );
 
-  // Determine the percentage of available limiting resource in terms of requirement
-  const limitingResourcePercentage = Math.min(
-    1,
-    limitingResourcePerSecond === report.water.netWaterProductionBeforeSugar
-      ? limitingResourcePerSecond / requiredWaterPerSecond
-      : limitingResourcePerSecond / requiredSunlightPerSecond
-  );
-
   // Calculate total sugar consumed by flowers per minute
   const totalFlowerSugarConsumptionPerMinute =
     plant.flowers.length * plant.flowerSugarConsumptionRate * 60 || 0;
 
-  // Determine the actual sugar production per second
-  const actualSugarProductionPerSecond =
-    determinePhotosynthesisSugarProduction(
-      plant.sugar_production_rate,
-      plant.maturity_level,
-      plantTime.season,
-      plant.autumnModifier,
-      plant.winterModifier,
-      plant.agaveSugarBonus,
-      1,
-      1
-    ) * limitingResourcePercentage;
-
-  // Convert to per minute
-  return (
-    Math.max(0, actualSugarProductionPerSecond * 60) -
-    totalFlowerSugarConsumptionPerMinute
+  // Determine the actual sugar production per second without considering reserves
+  const actualSugarProductionPerSecond = determinePhotosynthesisSugarProduction(
+    plant.sugar_production_rate,
+    plant.maturity_level,
+    plantTime.season,
+    plant.autumnModifier,
+    plant.winterModifier,
+    plant.agaveSugarBonus,
+    1,
+    1
   );
+
+  // Calculate sugar production per minute, considering flower consumption
+  const sugarProduction = Math.max(
+    0,
+    actualSugarProductionPerSecond * 60 - totalFlowerSugarConsumptionPerMinute
+  );
+
+  // Determine if using reserves. This is true if either water or sunlight is less than required
+  // but there are enough reserves to maintain sugar production for at least a minute.
+  const usingReserves =
+    (report.water.netWaterProductionBeforeSugar < requiredWaterPerSecond ||
+      report.sunlight.netSunlightProductionBeforeSugar <
+        requiredSunlightPerSecond) &&
+    (plant.water >= requiredWaterPerSecond * 1 ||
+      plant.sunlight >= requiredSunlightPerSecond * 1);
+
+  // If there are not enough reserves to maintain production for a minute, production is zero
+  if (
+    !usingReserves &&
+    (plant.water < requiredWaterPerSecond * 1 ||
+      plant.sunlight < requiredSunlightPerSecond * 1)
+  ) {
+    return { sugarProduction: 0, usingReserves: false };
+  }
+
+  // Return the sugar production and the reserve usage status
+  return { sugarProduction, usingReserves };
 };

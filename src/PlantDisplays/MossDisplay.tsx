@@ -153,7 +153,7 @@ const MossDisplay: React.FC<MossDisplayProps> = ({
       sunlightModifier *
       plant.ladybugs;
 
-  const actualSugarPerMinute = calculateActualSugarProductionPerMinute(
+  const sugarInfo = calculateActualSugarProductionPerMinute(
     plant,
     report,
     plantTime,
@@ -283,53 +283,66 @@ const MossDisplay: React.FC<MossDisplayProps> = ({
                   backgroundColor: "#424532",
                   color: "#B5D404",
                   "&:active, &:focus": {
-                    backgroundColor: "#424532", // Or any other style reset
+                    backgroundColor: "#424532",
                   },
+                  padding: "5px", // Add some padding for spacing
+                  display: "flex",
+                  justifyContent: "space-between", // This will spread out the main axis items
                 }}
                 onClick={() => handleToggleSugarProduction()}
               >
                 <Box
-                  style={{
+                  sx={{
                     display: "flex",
-                    justifyContent: "space-between", // Spread out the main axis items
+                    flexDirection: "column", // Stack items vertically
+                    alignItems: "flex-start", // Align items to the start of the cross axis
                   }}
                 >
+                  <Water
+                    amount={calculatePhotosynthesisWaterConsumption(
+                      plant.maturity_level,
+                      difficulty,
+                      plant.water_efficiency_multiplier
+                    )}
+                  />
+                  <Sunlight
+                    amount={calculatePhotosynthesisSunlightConsumption(
+                      plant.maturity_level,
+                      difficulty,
+                      plant.sunlight_efficiency_multiplier
+                    )}
+                  />
+                </Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center", // Center items on the cross axis
+                    justifyContent: "center", // Center items on the main axis
+                    flexWrap: "wrap",
+                  }}
+                >
+                  {sugarInfo.usingReserves && (
+                    <Typography variant="subtitle2" sx={{ color: "#eb6d2f" }}>
+                      Using Reserves
+                    </Typography>
+                  )}
                   <Box
-                    style={{
-                      display: "flex",
-                      flexDirection: "column", // Stack items vertically
-                    }}
-                  >
-                    <Water
-                      amount={calculatePhotosynthesisWaterConsumption(
-                        plant.maturity_level,
-                        difficulty,
-                        plant.water_efficiency_multiplier
-                      )}
-                    />
-                    <Sunlight
-                      amount={calculatePhotosynthesisSunlightConsumption(
-                        plant.maturity_level,
-                        difficulty,
-                        plant.sunlight_efficiency_multiplier
-                      )}
-                    />
-                  </Box>
-                  <Box
-                    style={{
+                    sx={{
                       display: "flex",
                       alignItems: "center",
-                      flexWrap: "wrap",
+                      flexDirection: "row",
                     }}
                   >
-                    /s{" "}
-                    <ArrowForwardIcon
-                      sx={{ color: plant.is_sugar_production_on ? "" : "red" }}
-                    />{" "}
-                    <Sugar amount={actualSugarPerMinute} />
-                    /MIN
+                    <Sugar amount={sugarInfo.sugarProduction} />
+                    <Typography variant="caption">/MIN</Typography>
                   </Box>
                 </Box>
+                <ArrowForwardIcon
+                  sx={{
+                    color: plant.is_sugar_production_on ? "inherit" : "red",
+                  }}
+                />
               </Button>
             </Tooltip>
           </Grid>
