@@ -71,6 +71,10 @@ function App() {
 
   const handleTogglePause = () => {
     dispatch({ type: "app/togglePause" });
+    const currentTime = Date.now();
+
+    saveState(store.getState());
+    localStorage.setItem("lastUpdateTime", currentTime.toString());
   };
 
   const isMobile = window.innerWidth <= 768;
