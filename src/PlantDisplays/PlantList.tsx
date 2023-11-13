@@ -59,6 +59,9 @@ import {
   calculatePhotosynthesisSunlightConsumption,
   calculatePhotosynthesisWaterConsumption,
   determinePhotosynthesisSugarProduction,
+  getHalfAffordableLeaves,
+  getHalfAffordableLeavesSucculent,
+  getHalfAffordableRoots,
   isGeneticMarkerUpgradeUnlocked,
   isSugarConversionUnlocked,
   isSugarUpgradesUnlocked,
@@ -209,11 +212,28 @@ const PlantList: React.FC<PlantListProps> = ({
   };
 
   const handleBuyRoots = () => {
-    dispatch(buyRoots({ cost: ROOT_COST, multiplier: multiplier }));
+    const actualMultiplier =
+      multiplier === -1
+        ? getHalfAffordableRoots(plantState, ROOT_COST)
+        : multiplier;
+    dispatch(buyRoots({ cost: ROOT_COST, multiplier: actualMultiplier }));
   };
 
   const handleBuyLeaves = () => {
-    dispatch(buyLeaves({ cost: LEAF_COST, multiplier: multiplier }));
+    let actualMultiplier;
+    if (multiplier === -1) {
+      if (plantState.type === "Succulent") {
+        actualMultiplier = getHalfAffordableLeavesSucculent(
+          plantState,
+          LEAF_COST
+        );
+      } else {
+        actualMultiplier = getHalfAffordableLeaves(plantState, LEAF_COST);
+      }
+    } else {
+      actualMultiplier = multiplier;
+    }
+    dispatch(buyLeaves({ cost: LEAF_COST, multiplier: actualMultiplier }));
   };
 
   const handleToggleGeneticMarkerProduction = () => {
@@ -528,8 +548,8 @@ const PlantList: React.FC<PlantListProps> = ({
               />
               <MultiplierToggleButton
                 currentMultiplier={multiplier}
-                value={1000}
-                onClick={toggleMultiplier}
+                value={-1}
+                onClick={() => toggleMultiplier(-1)}
               />
               <MultiplierToggleButton
                 currentMultiplier={multiplier}
@@ -565,13 +585,35 @@ const PlantList: React.FC<PlantListProps> = ({
                   "Grow Max Leaves"
                 ) : (
                   <>
-                    Grow Leaves: <Leaves amount={multiplier} />
+                    Grow Leaves:{" "}
+                    {multiplier === -1 ? (
+                      <Leaves
+                        amount={
+                          plantState.type === "Succulent"
+                            ? getHalfAffordableLeavesSucculent(
+                                plantState,
+                                LEAF_COST
+                              )
+                            : getHalfAffordableLeaves(plantState, LEAF_COST)
+                        }
+                      />
+                    ) : (
+                      <Leaves amount={multiplier} />
+                    )}
                   </>
                 )}
                 {multiplier <= 1000 && (
                   <>
                     {" "}
-                    &nbsp;for <Sugar amount={LEAF_COST * multiplier} />
+                    &nbsp;for{" "}
+                    <Sugar
+                      amount={
+                        LEAF_COST *
+                        (multiplier === -1
+                          ? getHalfAffordableLeaves(plantState, LEAF_COST)
+                          : multiplier)
+                      }
+                    />
                   </>
                 )}
               </Button>
@@ -604,13 +646,28 @@ const PlantList: React.FC<PlantListProps> = ({
                   "Grow Max Roots"
                 ) : (
                   <>
-                    Grow Roots: <Roots amount={multiplier} />
+                    Grow Roots:{" "}
+                    {multiplier === -1 ? (
+                      <Roots
+                        amount={getHalfAffordableRoots(plantState, ROOT_COST)}
+                      />
+                    ) : (
+                      <Roots amount={multiplier} />
+                    )}
                   </>
                 )}
                 {multiplier <= 1000 && (
                   <>
                     {" "}
-                    &nbsp;for <Sugar amount={ROOT_COST * multiplier} />
+                    &nbsp;for{" "}
+                    <Sugar
+                      amount={
+                        ROOT_COST *
+                        (multiplier === -1
+                          ? getHalfAffordableRoots(plantState, ROOT_COST)
+                          : multiplier)
+                      }
+                    />
                   </>
                 )}
               </Button>

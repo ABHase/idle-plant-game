@@ -10,6 +10,48 @@ import {
   SUGAR_THRESHOLD,
 } from "./constants";
 
+export const getHalfAffordableRoots = (
+  plant: PlantState,
+  root_cost: number
+) => {
+  return Math.floor(plant.sugar / root_cost / 2);
+};
+
+export const getHalfAffordableLeaves = (
+  plant: PlantState,
+  leaf_cost: number
+) => {
+  return Math.floor(plant.sugar / leaf_cost / 2);
+};
+
+export const getHalfAffordableLeavesSucculent = (
+  plant: PlantState,
+  leaf_cost: number
+) => {
+  const affordableFromSugar = Math.floor(plant.sugar / leaf_cost);
+  const waterCostPerLeaf = 100 * leaf_cost;
+  const affordableFromWater = Math.floor(plant.water / waterCostPerLeaf);
+
+  // Calculate the minimum of the two and then take half of it
+  return Math.floor(Math.min(affordableFromSugar, affordableFromWater) / 2);
+};
+
+export const getHalfAffordableNeedles = (
+  plant: PlantState,
+  maturityLevelCostMultiplier: number
+) => {
+  const needleCost = maturityLevelCostMultiplier * 100; // Assuming this is the cost formula
+  return Math.floor(plant.sugar / needleCost / 2);
+};
+
+export const getHalfAffordableFlowers = (
+  plant: PlantState,
+  flowerCost: number
+) => {
+  const halfAffordableAmount = Math.floor(plant.sugar / flowerCost / 2);
+  return Math.min(halfAffordableAmount, 50); // Cap at 50 flowers
+};
+
 export const getDifficultyModifiedSunlightConsumption = (
   difficulty: number
 ) => {

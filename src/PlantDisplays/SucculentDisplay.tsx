@@ -41,6 +41,10 @@ import {
   calculateActualSugarProductionPerMinute,
   calculatePhotosynthesisSunlightConsumption,
   calculatePhotosynthesisWaterConsumption,
+  getHalfAffordableLeaves,
+  getHalfAffordableLeavesSucculent,
+  getHalfAffordableNeedles,
+  getHalfAffordableRoots,
   isGeneticMarkerUpgradeUnlocked,
   isSugarConversionUnlocked,
   isSugarUpgradesUnlocked,
@@ -191,18 +195,39 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
   };
 
   const handleBuyRoots = () => {
-    dispatch(buyRoots({ cost: ROOT_COST, multiplier: multiplier }));
+    const actualMultiplier =
+      multiplier === -1
+        ? getHalfAffordableRoots(plantState, ROOT_COST)
+        : multiplier;
+    dispatch(buyRoots({ cost: ROOT_COST, multiplier: actualMultiplier }));
   };
 
   const handleBuyLeaves = () => {
-    dispatch(buyLeaves({ cost: LEAF_COST, multiplier: multiplier }));
+    let actualMultiplier;
+    if (multiplier === -1) {
+      if (plantState.type === "Succulent") {
+        actualMultiplier = getHalfAffordableLeavesSucculent(
+          plantState,
+          LEAF_COST
+        );
+      } else {
+        actualMultiplier = getHalfAffordableLeaves(plantState, LEAF_COST);
+      }
+    } else {
+      actualMultiplier = multiplier;
+    }
+    dispatch(buyLeaves({ cost: LEAF_COST, multiplier: actualMultiplier }));
   };
 
   const handleBuyNeedles = () => {
+    const actualMultiplier =
+      multiplier === -1
+        ? getHalfAffordableNeedles(plantState, plantState.maturity_level)
+        : multiplier;
     dispatch(
       buyNeedles({
         cost: plantState.maturity_level * 100,
-        multiplier: multiplier,
+        multiplier: actualMultiplier,
       })
     );
   };
@@ -502,9 +527,10 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
               />
               <MultiplierToggleButton
                 currentMultiplier={multiplier}
-                value={1000}
-                onClick={toggleMultiplier}
+                value={-1}
+                onClick={() => toggleMultiplier(-1)}
               />
+
               <MultiplierToggleButton
                 currentMultiplier={multiplier}
                 value={1000000000000000}
@@ -539,15 +565,53 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
                   "Grow Max Leaves"
                 ) : (
                   <>
-                    Grow {multiplier <= 1 && "Leaves"}:{" "}
-                    <Leaves amount={multiplier} />
+                    Leaves:{" "}
+                    <Leaves
+                      amount={
+                        multiplier === -1
+                          ? plantState.type === "Succulent"
+                            ? getHalfAffordableLeavesSucculent(
+                                plantState,
+                                LEAF_COST
+                              )
+                            : getHalfAffordableLeaves(plantState, LEAF_COST)
+                          : multiplier
+                      }
+                    />
                   </>
                 )}
                 {multiplier <= 1000 && (
                   <>
                     {" "}
-                    &nbsp;for <Sugar amount={LEAF_COST * multiplier} />{" "}
-                    <Water amount={LEAF_COST * multiplier * 100} />
+                    &nbsp;for{" "}
+                    <Sugar
+                      amount={
+                        LEAF_COST *
+                        (multiplier === -1
+                          ? plantState.type === "Succulent"
+                            ? getHalfAffordableLeavesSucculent(
+                                plantState,
+                                LEAF_COST
+                              )
+                            : getHalfAffordableLeaves(plantState, LEAF_COST)
+                          : multiplier)
+                      }
+                    />{" "}
+                    {plantState.type === "Succulent" && multiplier !== -1 && (
+                      <Water amount={LEAF_COST * multiplier * 100} />
+                    )}
+                    {plantState.type === "Succulent" && multiplier === -1 && (
+                      <Water
+                        amount={
+                          getHalfAffordableLeavesSucculent(
+                            plantState,
+                            LEAF_COST
+                          ) *
+                          LEAF_COST *
+                          100
+                        }
+                      />
+                    )}
                   </>
                 )}
               </Button>
@@ -580,13 +644,28 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
                   "Grow Max Roots"
                 ) : (
                   <>
-                    Grow Roots: <Roots amount={multiplier} />
+                    Grow Roots:{" "}
+                    {multiplier === -1 ? (
+                      <Roots
+                        amount={getHalfAffordableRoots(plantState, ROOT_COST)}
+                      />
+                    ) : (
+                      <Roots amount={multiplier} />
+                    )}
                   </>
                 )}
                 {multiplier <= 1000 && (
                   <>
                     {" "}
-                    &nbsp;for <Sugar amount={ROOT_COST * multiplier} />
+                    &nbsp;for{" "}
+                    <Sugar
+                      amount={
+                        ROOT_COST *
+                        (multiplier === -1
+                          ? getHalfAffordableRoots(plantState, ROOT_COST)
+                          : multiplier)
+                      }
+                    />
                   </>
                 )}
               </Button>
@@ -635,15 +714,33 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
                     "Grow Max Needles"
                   ) : (
                     <>
-                      Grow Needles: {multiplier}
+                      Grow Needles:{" "}
+                      {multiplier === -1
+                        ? getHalfAffordableNeedles(
+                            plantState,
+                            plantState.maturity_level
+                          )
+                        : multiplier}
                       &nbsp;for{" "}
-                      <Sugar amount={plant.maturity_level * 100 * multiplier} />
+                      <Sugar
+                        amount={
+                          plantState.maturity_level *
+                          100 *
+                          (multiplier === -1
+                            ? getHalfAffordableNeedles(
+                                plantState,
+                                plantState.maturity_level
+                              )
+                            : multiplier)
+                        }
+                      />
                     </>
                   )}
                 </Button>
               </Tooltip>
             </Grid>
           </Grid>
+
           <Grid
             item
             xs={12}

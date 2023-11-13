@@ -13,7 +13,9 @@ const MultiplierToggleButton: React.FC<MultiplierToggleButtonProps> = ({
   onClick,
 }) => {
   const formatNumber = (num: number) => {
-    if (num >= 1e15) {
+    if (num === -1) {
+      return "50%";
+    } else if (num >= 1e15) {
       return "Max";
     } else if (num >= 1000) {
       return `${num / 1000}K`;

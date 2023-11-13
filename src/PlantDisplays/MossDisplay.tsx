@@ -54,6 +54,8 @@ import {
   calculatePhotosynthesisSunlightConsumption,
   calculatePhotosynthesisWaterConsumption,
   determinePhotosynthesisSugarProduction,
+  getHalfAffordableLeaves,
+  getHalfAffordableLeavesSucculent,
   isGeneticMarkerUpgradeUnlocked,
   isSugarUpgradesUnlocked,
   itemizedReport,
@@ -160,24 +162,25 @@ const MossDisplay: React.FC<MossDisplayProps> = ({
     difficulty
   );
 
-  const handleSunlightAbsorption = () => {
-    dispatch(absorbSunlight());
-  };
-
-  const handleWaterAbsorption = () => {
-    dispatch(absorbWater());
-  };
-
   const handleToggleSugarProduction = () => {
     dispatch(toggleSugarProduction());
   };
 
-  const handleBuyRoots = () => {
-    dispatch(buyRoots({ cost: ROOT_COST, multiplier: multiplier }));
-  };
-
   const handleBuyLeaves = () => {
-    dispatch(buyLeaves({ cost: LEAF_COST, multiplier: multiplier }));
+    let actualMultiplier;
+    if (multiplier === -1) {
+      if (plantState.type === "Succulent") {
+        actualMultiplier = getHalfAffordableLeavesSucculent(
+          plantState,
+          LEAF_COST
+        );
+      } else {
+        actualMultiplier = getHalfAffordableLeaves(plantState, LEAF_COST);
+      }
+    } else {
+      actualMultiplier = multiplier;
+    }
+    dispatch(buyLeaves({ cost: LEAF_COST, multiplier: actualMultiplier }));
   };
 
   const handleToggleGeneticMarkerProduction = () => {
@@ -186,10 +189,6 @@ const MossDisplay: React.FC<MossDisplayProps> = ({
 
   const handleToggleAutoLeaves = () => {
     dispatch(toggleLeafGrowth());
-  };
-
-  const handleToggleAutoRoots = () => {
-    dispatch(toggleRootGrowth());
   };
 
   const toggleMultiplier = (value: number) => {
@@ -445,8 +444,8 @@ const MossDisplay: React.FC<MossDisplayProps> = ({
               />
               <MultiplierToggleButton
                 currentMultiplier={multiplier}
-                value={1000}
-                onClick={toggleMultiplier}
+                value={-1}
+                onClick={() => toggleMultiplier(-1)}
               />
               <MultiplierToggleButton
                 currentMultiplier={multiplier}
@@ -476,15 +475,44 @@ const MossDisplay: React.FC<MossDisplayProps> = ({
                     backgroundColor: "#424532",
                   },
                 }}
-                onClick={() => handleBuyLeaves()} // Kept your original onClick handler
+                onClick={() => handleBuyLeaves()} // Keep your original onClick handler
               >
                 {multiplier > 1000 ? (
                   "Grow Max Leaves & Roots"
                 ) : (
                   <>
-                    Grow: <Leaves amount={multiplier} />&{" "}
-                    <Roots amount={multiplier} />
-                    &nbsp;for <Sugar amount={LEAF_COST * multiplier} />
+                    Grow:{" "}
+                    {multiplier === -1 ? (
+                      <>
+                        <Leaves
+                          amount={getHalfAffordableLeaves(
+                            plantState,
+                            LEAF_COST
+                          )}
+                        />
+                        &{" "}
+                        <Roots
+                          amount={getHalfAffordableLeaves(
+                            plantState,
+                            LEAF_COST
+                          )}
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <Leaves amount={multiplier} />&{" "}
+                        <Roots amount={multiplier} />
+                      </>
+                    )}
+                    &nbsp;for{" "}
+                    <Sugar
+                      amount={
+                        LEAF_COST *
+                        (multiplier === -1
+                          ? getHalfAffordableLeaves(plantState, LEAF_COST)
+                          : multiplier)
+                      }
+                    />
                   </>
                 )}
               </Button>

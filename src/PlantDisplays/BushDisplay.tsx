@@ -59,6 +59,10 @@ import {
   calculatePhotosynthesisSunlightConsumption,
   calculatePhotosynthesisWaterConsumption,
   determinePhotosynthesisSugarProduction,
+  getHalfAffordableFlowers,
+  getHalfAffordableLeaves,
+  getHalfAffordableLeavesSucculent,
+  getHalfAffordableRoots,
   isGeneticMarkerUpgradeUnlocked,
   isSugarConversionUnlocked,
   isSugarUpgradesUnlocked,
@@ -213,16 +217,36 @@ const BushDisplay: React.FC<BushDisplayProps> = ({
   };
 
   const handleBuyFlower = () => {
-    const effectiveMultiplier = Math.min(multiplier, 100); // Caps the multiplier at 100
-    dispatch(buyFlower(FLOWER_COST, effectiveMultiplier));
+    const actualMultiplier =
+      multiplier === -1
+        ? getHalfAffordableFlowers(plantState, FLOWER_COST)
+        : Math.min(multiplier, 100); // Caps the multiplier at 100 for regular purchases
+    dispatch(buyFlower(FLOWER_COST, actualMultiplier));
   };
 
   const handleBuyRoots = () => {
-    dispatch(buyRoots({ cost: ROOT_COST, multiplier: multiplier }));
+    const actualMultiplier =
+      multiplier === -1
+        ? getHalfAffordableRoots(plantState, ROOT_COST)
+        : multiplier;
+    dispatch(buyRoots({ cost: ROOT_COST, multiplier: actualMultiplier }));
   };
 
   const handleBuyLeaves = () => {
-    dispatch(buyLeaves({ cost: LEAF_COST, multiplier: multiplier }));
+    let actualMultiplier;
+    if (multiplier === -1) {
+      if (plantState.type === "Succulent") {
+        actualMultiplier = getHalfAffordableLeavesSucculent(
+          plantState,
+          LEAF_COST
+        );
+      } else {
+        actualMultiplier = getHalfAffordableLeaves(plantState, LEAF_COST);
+      }
+    } else {
+      actualMultiplier = multiplier;
+    }
+    dispatch(buyLeaves({ cost: LEAF_COST, multiplier: actualMultiplier }));
   };
 
   const handleToggleGeneticMarkerProduction = () => {
@@ -421,9 +445,22 @@ const BushDisplay: React.FC<BushDisplayProps> = ({
               }}
               onClick={() => handleBuyFlower()}
             >
-              <Sugar amount={FLOWER_COST * Math.min(multiplier, 100)} />
+              <Sugar
+                amount={
+                  FLOWER_COST *
+                  (multiplier === -1
+                    ? getHalfAffordableFlowers(plantState, FLOWER_COST)
+                    : Math.min(multiplier, 100))
+                }
+              />
               <ArrowForwardIcon sx={{ color: "green" }} />
-              <Flower amount={Math.min(multiplier, 100)} />
+              <Flower
+                amount={
+                  multiplier === -1
+                    ? getHalfAffordableFlowers(plantState, FLOWER_COST)
+                    : Math.min(multiplier, 100)
+                }
+              />
             </Button>
           </Grid>
 
@@ -480,8 +517,8 @@ const BushDisplay: React.FC<BushDisplayProps> = ({
               />
               <MultiplierToggleButton
                 currentMultiplier={multiplier}
-                value={1000}
-                onClick={toggleMultiplier}
+                value={-1}
+                onClick={() => toggleMultiplier(-1)}
               />
               <MultiplierToggleButton
                 currentMultiplier={multiplier}
@@ -517,13 +554,35 @@ const BushDisplay: React.FC<BushDisplayProps> = ({
                   "Grow Max Leaves"
                 ) : (
                   <>
-                    Grow Leaves: <Leaves amount={multiplier} />
+                    Grow Leaves:{" "}
+                    {multiplier === -1 ? (
+                      <Leaves
+                        amount={
+                          plantState.type === "Succulent"
+                            ? getHalfAffordableLeavesSucculent(
+                                plantState,
+                                LEAF_COST
+                              )
+                            : getHalfAffordableLeaves(plantState, LEAF_COST)
+                        }
+                      />
+                    ) : (
+                      <Leaves amount={multiplier} />
+                    )}
                   </>
                 )}
                 {multiplier <= 1000 && (
                   <>
                     {" "}
-                    &nbsp;for <Sugar amount={LEAF_COST * multiplier} />
+                    &nbsp;for{" "}
+                    <Sugar
+                      amount={
+                        LEAF_COST *
+                        (multiplier === -1
+                          ? getHalfAffordableLeaves(plantState, LEAF_COST)
+                          : multiplier)
+                      }
+                    />
                   </>
                 )}
               </Button>
@@ -556,13 +615,28 @@ const BushDisplay: React.FC<BushDisplayProps> = ({
                   "Grow Max Roots"
                 ) : (
                   <>
-                    Grow Roots: <Roots amount={multiplier} />
+                    Grow Roots:{" "}
+                    {multiplier === -1 ? (
+                      <Roots
+                        amount={getHalfAffordableRoots(plantState, ROOT_COST)}
+                      />
+                    ) : (
+                      <Roots amount={multiplier} />
+                    )}
                   </>
                 )}
                 {multiplier <= 1000 && (
                   <>
                     {" "}
-                    &nbsp;for <Sugar amount={ROOT_COST * multiplier} />
+                    &nbsp;for{" "}
+                    <Sugar
+                      amount={
+                        ROOT_COST *
+                        (multiplier === -1
+                          ? getHalfAffordableRoots(plantState, ROOT_COST)
+                          : multiplier)
+                      }
+                    />
                   </>
                 )}
               </Button>
