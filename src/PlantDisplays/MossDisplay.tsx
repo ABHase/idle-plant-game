@@ -285,7 +285,7 @@ const MossDisplay: React.FC<MossDisplayProps> = ({
                   "&:active, &:focus": {
                     backgroundColor: "#424532",
                   },
-                  padding: "5px", // Add some padding for spacing
+                  padding: "1px", // Add some padding for spacing
                   display: "flex",
                   justifyContent: "space-between", // This will spread out the main axis items
                 }}
@@ -334,7 +334,8 @@ const MossDisplay: React.FC<MossDisplayProps> = ({
                       flexDirection: "row",
                     }}
                   >
-                    <Sugar amount={sugarInfo.sugarProduction} />
+                    <Sugar amount={sugarInfo.sugarProduction} size="large" />
+
                     <Typography variant="caption">/MIN</Typography>
                   </Box>
                 </Box>
