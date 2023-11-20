@@ -139,6 +139,17 @@ export const updateGame = (
     // Determine the actual consumption
     let actualConsumption = Math.min(potentialConsumption, requiredResource);
 
+    // Adjust for maxResourceToSpend
+    let accurateTimeScale = timeScale;
+    if (maxResourceToSpend !== null && actualConsumption > maxResourceToSpend) {
+      actualConsumption = maxResourceToSpend;
+      accurateTimeScale = calculateAdjustedTimeScale(
+        resourceThreshold,
+        timeScale,
+        maxResourceToSpend
+      );
+    }
+
     // If potential consumption is greater than the available resource, adjust the actual consumption
     if (potentialConsumption > requiredResource) {
       actualConsumption = requiredResource;
@@ -152,23 +163,6 @@ export const updateGame = (
       resourceRatio = actualConsumption / potentialConsumption;
     }
 
-    // Modify the timeScale based on the resourceRatio
-    const adjustedTimeScale = Math.max(
-      1,
-      Math.floor(timeScale * resourceRatio)
-    );
-
-    const accurateTimeScale = calculateAdjustedTimeScale(
-      resourceThreshold,
-      timeScale,
-      actualConsumption
-    );
-
-    // Check conditions:
-    // 1. Genetic marker production is on
-    // 2. Required resource is above or equals the threshold
-    // 3. The resource is below the maxResourceToSpend or it's not set
-
     if (
       plant.is_genetic_marker_production_on &&
       actualConsumption >= resourceThreshold &&
@@ -179,7 +173,7 @@ export const updateGame = (
         updateGeneticMarkerProgress({
           geneticMarkerUpgradeActive: plant.geneticMarkerUpgradeActive,
           plantType: plant.type,
-          timeScale: accurateTimeScale, // <-- Use the adjusted timeScale
+          timeScale: accurateTimeScale,
         })
       );
     }
