@@ -168,7 +168,7 @@ export const updateGame = (
     // 1. Genetic marker production is on
     // 2. Required resource is above or equals the threshold
     // 3. The resource is below the maxResourceToSpend or it's not set
-    console.log("maxResourceToSpend", maxResourceToSpend);
+
     if (
       plant.is_genetic_marker_production_on &&
       actualConsumption >= resourceThreshold &&

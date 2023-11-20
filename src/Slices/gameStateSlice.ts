@@ -367,7 +367,7 @@ const globalStateSlice = createSlice({
         state.calcium -= 1;
         state.fulvic -= 1;
       } else {
-        console.log("Not enough resources to create a Time Seed.");
+        // Do nothing if there are not enough resources
       }
     },
     // Reducer to set vineGeneticMarkers to the payload's amount

@@ -23,8 +23,6 @@ export const runMigrations = (
   const plantType = state?.plant?.type || "Fern"; // Default to "Fern" if not found
   const correctInitialPlantState = PLANT_CONFIGS[plantType];
 
-  console.log("Running migrations for version", version);
-
   if (version < 132) {
     const plantHistoryEntries = state?.plantHistory.entries || [];
 
@@ -77,12 +75,10 @@ export const runMigrations = (
 
   // New migration for version 129 to set totalCellsCompleted
   if (version < 132) {
-    console.log("Running migration for version 132");
     let totalCellsCompleted = 0;
 
     // Directly calculate the number of completed cells
     if (state && state.cellCompletion && state.cellCompletion.cells) {
-      console.log("Calculating totalCellsCompleted");
       totalCellsCompleted = Object.keys(state.cellCompletion.cells).length;
     }
 

@@ -133,7 +133,6 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
 
     dispatch(setDifficulty({ difficulty: localDifficulty }));
 
-    console.log("onConfirm", confirmedTraits);
     onConfirm(plantType, confirmedTraits);
 
     onClose();

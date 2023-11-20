@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Button, Dialog, Slider, Tooltip } from "@mui/material";
 import { currentVersion } from "../store";
 import { useDispatch, useSelector } from "react-redux";
@@ -56,6 +56,22 @@ const MenuModal: React.FC<Props> = (props) => {
   const handleResourcesPopupToggle = () => {
     setIsResourcesPopupVisible(!isResourcesPopupVisible);
   };
+
+  const handleOpenLink = (url: string) => {
+    // Check if we're in Electron and the electron object is available on window
+    if (window.electron && typeof window.electron.openExternal === "function") {
+      // Use Electron's shell to open the link if we are
+      window.electron.openExternal(url);
+    } else {
+      // If we're not in Electron, fall back to a regular window.open call
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+  };
+
+  useEffect(() => {
+    // This code runs after the component has mounted
+    console.log(window.electron); // Check if it's defined
+  }, []);
 
   return (
     <Dialog open={props.open} onClose={props.onClose}>
@@ -162,26 +178,28 @@ const MenuModal: React.FC<Props> = (props) => {
         >
           Help
         </Button>
-        <a
-          href="https://discord.gg/2RJMbh3F4P"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ textDecoration: "none", width: "100%" }}
+        <Button
+          variant="contained"
+          sx={buttonStyle}
+          fullWidth
+          onClick={() => handleOpenLink("https://discord.gg/2RJMbh3F4P")}
         >
-          <Button variant="contained" sx={buttonStyle} fullWidth>
-            Join Discord
-          </Button>
-        </a>
-        <a
-          href="https://www.patreon.com/HareFootGames?utm_medium=clipboard_copy&utm_source=copyLink&utm_campaign=creatorshare_creator&utm_content=join_link"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ textDecoration: "none", width: "100%" }}
+          Join Discord
+        </Button>
+
+        <Button
+          variant="contained"
+          sx={buttonStyle}
+          fullWidth
+          onClick={() =>
+            handleOpenLink(
+              "https://www.patreon.com/HareFootGames?utm_medium=clipboard_copy&utm_source=copyLink&utm_campaign=creatorshare_creator&utm_content=join_link"
+            )
+          }
         >
-          <Button variant="contained" sx={buttonStyle} fullWidth>
-            Join Patreon
-          </Button>
-        </a>
+          Join Patreon
+        </Button>
+
         <Button
           variant="contained"
           sx={redButtonStyle}
