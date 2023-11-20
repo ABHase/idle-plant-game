@@ -18,6 +18,7 @@ import Slider from "@mui/material/Slider";
 import { deductTimeSeed, setDifficulty } from "./Slices/gameStateSlice";
 import { Water } from "./Components/Water";
 import { Sunlight } from "./Components/Sunlight";
+import { useTraits } from "./TraitsContext";
 
 interface ConfirmEvolveDialogProps {
   open: boolean;
@@ -38,8 +39,12 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
 
   const currentPlantType = useSelector((state: RootState) => state.plant.type);
 
-  const [selectedTraits, setSelectedTraits] =
-    React.useState<string[]>(purchased);
+  const {
+    selectedTraits,
+    setSelectedTraits,
+    unselectedTraits,
+    setUnselectedTraits,
+  } = useTraits();
 
   const [traitKeys, setTraitKeys] = React.useState<Map<string, number>>(
     new Map()
@@ -49,6 +54,8 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
 
   React.useEffect(() => {
     if (open) {
+      // Start with all purchased traits
+
       // Creating a new set to track which traits have been added
       const uniqueTraitsSet = new Set();
 
@@ -60,8 +67,14 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
         return uniqueId;
       });
 
+      let initialSelected = uniqueTraits;
+      // Remove any that have been unselected
+      initialSelected = initialSelected.filter(
+        (trait) => !unselectedTraits.includes(trait)
+      );
+
       // Updating state with unique traits
-      setSelectedTraits(uniqueTraits);
+      setSelectedTraits(initialSelected);
 
       // Initializing traitKeys with the unique traits as keys
       const newTraitKeys = new Map(
@@ -109,14 +122,19 @@ const ConfirmEvolveDialog: React.FC<ConfirmEvolveDialogProps> = ({
     setLocalDifficulty(value);
   };
 
-  // Adjust the toggleTrait function to handle unique identifiers
   const toggleTrait = (uniqueId: string) => {
     setSelectedTraits((prevTraits) => {
+      let newSelectedTraits;
       if (prevTraits.includes(uniqueId)) {
-        return prevTraits.filter((id) => id !== uniqueId);
+        newSelectedTraits = prevTraits.filter((id) => id !== uniqueId);
+        setUnselectedTraits((prevUnselected) => [...prevUnselected, uniqueId]);
       } else {
-        return [...prevTraits, uniqueId];
+        newSelectedTraits = [...prevTraits, uniqueId];
+        setUnselectedTraits((prevUnselected) =>
+          prevUnselected.filter((id) => id !== uniqueId)
+        );
       }
+      return newSelectedTraits;
     });
   };
 

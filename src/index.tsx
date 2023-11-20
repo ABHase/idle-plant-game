@@ -7,6 +7,7 @@ import { Game } from "./Game";
 import { Provider } from "react-redux";
 import store from "./store";
 import SteamPlugin from "./SteamPlugin";
+import { TraitsProvider } from "./TraitsContext";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -14,7 +15,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <Provider store={store}>
     <SteamPlugin />
-    <App />
+    <TraitsProvider>
+      <App />
+    </TraitsProvider>
   </Provider>
 );
 
