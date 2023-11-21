@@ -133,7 +133,8 @@ export const updateGame = (
     // Calculate potential consumption based on timeScale
     const potentialConsumption = calculateTotalPotentialConsumption(
       resourceThreshold,
-      timeScale
+      timeScale,
+      maxResourceToSpend || Infinity
     );
 
     // Determine the actual consumption
@@ -141,12 +142,14 @@ export const updateGame = (
 
     // Adjust for maxResourceToSpend
     let accurateTimeScale = timeScale;
-    if (maxResourceToSpend !== null && actualConsumption > maxResourceToSpend) {
-      actualConsumption = maxResourceToSpend;
+    if (maxResourceToSpend !== null) {
+      if (actualConsumption > maxResourceToSpend) {
+        actualConsumption = maxResourceToSpend;
+      }
       accurateTimeScale = calculateAdjustedTimeScale(
         resourceThreshold,
         timeScale,
-        maxResourceToSpend
+        actualConsumption // Use actualConsumption here
       );
     }
 
@@ -168,6 +171,7 @@ export const updateGame = (
       actualConsumption >= resourceThreshold &&
       (maxResourceToSpend === null || resourceThreshold < maxResourceToSpend)
     ) {
+      console.log("Actual consumption: ", actualConsumption);
       dispatch(produceGeneticMarkers(actualConsumption));
       dispatch(
         updateGeneticMarkerProgress({
@@ -543,15 +547,21 @@ export const completeCellAndDeductSugar = (
 // Calculate the total potential consumption considering the exponential increase in cost
 const calculateTotalPotentialConsumption = (
   threshold: number,
-  timeScale: number
+  timeScale: number,
+  maxResource: number
 ) => {
   let totalCost = 0;
   let currentThreshold = threshold;
 
   for (let i = 0; i < timeScale; i++) {
+    if (totalCost + currentThreshold > maxResource) {
+      break; // Stop if adding the current threshold exceeds the max resource
+    }
     totalCost += currentThreshold;
     currentThreshold = Math.floor(currentThreshold * 1.1); // Apply the exponential increase
   }
+
+  console.log("Total cost: ", totalCost);
 
   return totalCost;
 };
