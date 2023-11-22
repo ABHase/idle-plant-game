@@ -51,8 +51,6 @@ import {
   setPurchasedUpgrades,
 } from "./Slices/upgradesSlice";
 import { calculateAdjacencyUpgrades } from "./calculateAdjacencyUpgrades";
-import { time } from "console";
-
 let ticksSinceLadybugActivation = 0;
 
 export const updateGame = (
@@ -130,40 +128,37 @@ export const updateGame = (
       resourceThreshold *= 4;
     }
 
-    // Calculate potential consumption based on timeScale
+    const actualResourceAmount = requiredResource;
+
+    const resourceLimitForCalculation =
+      maxResourceToSpend !== null ? maxResourceToSpend : actualResourceAmount;
+
     const potentialConsumption = calculateTotalPotentialConsumption(
       resourceThreshold,
       timeScale,
-      maxResourceToSpend || Infinity
+      resourceLimitForCalculation // Use either maxResourceToSpend or actual resource amount
     );
 
     // Determine the actual consumption
     let actualConsumption = Math.min(potentialConsumption, requiredResource);
 
+    console.log("potential consumption", potentialConsumption);
+
     // Adjust for maxResourceToSpend
     let accurateTimeScale = timeScale;
-    if (maxResourceToSpend !== null) {
-      if (actualConsumption > maxResourceToSpend) {
-        actualConsumption = maxResourceToSpend;
-      }
-      accurateTimeScale = calculateAdjustedTimeScale(
-        resourceThreshold,
-        timeScale,
-        actualConsumption // Use actualConsumption here
-      );
+
+    if (actualConsumption > (maxResourceToSpend ?? 0)) {
+      actualConsumption = maxResourceToSpend ?? actualConsumption;
     }
+    accurateTimeScale = calculateAdjustedTimeScale(
+      resourceThreshold,
+      timeScale,
+      actualConsumption // Use actualConsumption here
+    );
 
     // If potential consumption is greater than the available resource, adjust the actual consumption
     if (potentialConsumption > requiredResource) {
       actualConsumption = requiredResource;
-    }
-
-    // Calculate the resource ratio
-    let resourceRatio: number;
-    if (actualConsumption === potentialConsumption) {
-      resourceRatio = 1; // If we can afford the entire resource, the ratio is 1
-    } else {
-      resourceRatio = actualConsumption / potentialConsumption;
     }
 
     if (
@@ -171,7 +166,8 @@ export const updateGame = (
       actualConsumption >= resourceThreshold &&
       (maxResourceToSpend === null || resourceThreshold < maxResourceToSpend)
     ) {
-      console.log("Actual consumption: ", actualConsumption);
+      console.log("dispatching produceGeneticMarkers");
+      console.log("Time Scale", timeScale);
       dispatch(produceGeneticMarkers(actualConsumption));
       dispatch(
         updateGeneticMarkerProgress({
@@ -560,9 +556,7 @@ const calculateTotalPotentialConsumption = (
     totalCost += currentThreshold;
     currentThreshold = Math.floor(currentThreshold * 1.1); // Apply the exponential increase
   }
-
-  console.log("Total cost: ", totalCost);
-
+  console.log("total cost", totalCost);
   return totalCost;
 };
 

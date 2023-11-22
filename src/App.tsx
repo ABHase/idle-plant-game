@@ -205,13 +205,15 @@ function App() {
         : baseTimeScale;
 
     const timeElapsed = currentTime - lastSavedTime;
-    const timeElapsedInSeconds = timeElapsed / 1000;
+    const timeElapsedInSeconds = Math.floor(timeElapsed / 1000);
 
     const tickDuration = 1000;
 
     if (timeElapsed >= tickDuration) {
       let shouldSave = false;
-      const timeScaleForThisUpdate = modifiedTimeScale * timeElapsedInSeconds;
+      const timeScaleForThisUpdate = Math.floor(
+        modifiedTimeScale * timeElapsedInSeconds
+      );
       dispatch(updateGame(timeScaleForThisUpdate));
       dispatch(
         reduceGlobalBoostedTicks({

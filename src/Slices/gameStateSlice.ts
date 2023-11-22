@@ -163,6 +163,9 @@ const globalStateSlice = createSlice({
           action.payload.timeScale
       );
       const thresholdMultiplier = Math.pow(1.1, action.payload.timeScale);
+
+      console.log("Multiplier from dispatch", multiplier);
+      console.log("Threshold multiplier from dispatch", thresholdMultiplier);
       switch (action.payload.plantType) {
         case "Fern":
           state.geneticMarkers += multiplier;
@@ -178,8 +181,18 @@ const globalStateSlice = createSlice({
           break;
         case "Succulent":
           state.geneticMarkersSucculent += multiplier;
-          state.geneticMarkerThresholdSucculent = Math.floor(
-            state.geneticMarkerThresholdSucculent * thresholdMultiplier
+          console.log(
+            "Succulent genetic markers",
+            state.geneticMarkersSucculent
+          );
+          let newThreshold = state.geneticMarkerThresholdSucculent;
+          for (let i = 0; i < action.payload.timeScale; i++) {
+            newThreshold *= 1.1;
+          }
+          state.geneticMarkerThresholdSucculent = Math.floor(newThreshold);
+          console.log(
+            "Succulent genetic marker threshold",
+            state.geneticMarkerThresholdSucculent
           );
           break;
         case "Grass":
