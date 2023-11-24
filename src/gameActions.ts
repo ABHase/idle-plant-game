@@ -142,8 +142,6 @@ export const updateGame = (
     // Determine the actual consumption
     let actualConsumption = Math.min(potentialConsumption, requiredResource);
 
-    console.log("potential consumption", potentialConsumption);
-
     // Adjust for maxResourceToSpend
     let accurateTimeScale = timeScale;
 
@@ -166,8 +164,6 @@ export const updateGame = (
       actualConsumption >= resourceThreshold &&
       (maxResourceToSpend === null || resourceThreshold < maxResourceToSpend)
     ) {
-      console.log("dispatching produceGeneticMarkers");
-      console.log("Time Scale", timeScale);
       dispatch(produceGeneticMarkers(actualConsumption));
       dispatch(
         updateGeneticMarkerProgress({
@@ -556,7 +552,6 @@ const calculateTotalPotentialConsumption = (
     totalCost += currentThreshold;
     currentThreshold = Math.floor(currentThreshold * 1.1); // Apply the exponential increase
   }
-  console.log("total cost", totalCost);
   return totalCost;
 };
 

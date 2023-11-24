@@ -29,12 +29,7 @@ export const TraitsProvider: React.FC<TraitsProviderProps> = ({ children }) => {
   const [selectedTraits, setSelectedTraits] = useState<string[]>([]);
   const [unselectedTraits, setUnselectedTraits] = useState<string[]>([]);
 
-  console.log("TraitsProvider Mounted");
-
-  useEffect(() => {
-    console.log("Selected Traits:", selectedTraits);
-    console.log("Unselected Traits:", unselectedTraits);
-  }, [selectedTraits, unselectedTraits]);
+  useEffect(() => {}, [selectedTraits, unselectedTraits]);
 
   const value = {
     selectedTraits,
