@@ -215,8 +215,7 @@ export const UPGRADES: Record<string, Upgrade[]> = {
     {
       id: "toggle_genetic_marker_upgrade",
       name: "Nutrient Recycling",
-      description:
-        "Double the rate of genetic marker production, and quadruple the sugar cost",
+      description: "Double the rate of genetic marker production",
       cost: 10,
     },
     {

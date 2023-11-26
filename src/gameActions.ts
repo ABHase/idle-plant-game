@@ -123,11 +123,6 @@ export const updateGame = (
     let resourceThreshold =
       thresholds[plant.type as PlantType] || gameState.geneticMarkerThreshold;
 
-    // If the geneticMarkerUpgradeActive flag is true, quadruple the resource threshold
-    if (plant.geneticMarkerUpgradeActive) {
-      resourceThreshold *= 4;
-    }
-
     const actualResourceAmount = requiredResource;
 
     const resourceLimitForCalculation =
@@ -179,9 +174,15 @@ export const updateGame = (
       dispatch(resetRootRot());
     }
 
-    // Check if the plant has more root rot than root rot threshold, if so dispatch removeRoots
     if (plant.rootRot >= plant.rootRotThreshold) {
-      dispatch(removeRoots(timeScale));
+      // Calculate 10% of the roots, adjusted by the timeScale
+      let rootsToRemove = plant.roots * 0.05 * timeScale;
+
+      // Ensure at least one root is removed and the number is a whole number
+      rootsToRemove = Math.max(1, Math.floor(rootsToRemove));
+
+      // Dispatch the removeRoots action with the calculated number of roots to remove
+      dispatch(removeRoots(rootsToRemove));
     }
 
     // If plant type is Succulent, and plant water * 100 is greater than plant needles, dispatch rabbit attack
