@@ -176,12 +176,27 @@ const PlantTimeDisplay: React.FC<PlantTimeProps> = ({ plantTime }) => {
               <InfoIcon sx={{ fontSize: "small", color: "white" }} />
             </IconButton>
           )}
-          <Typography style={{ display: "flex", alignItems: "center" }}>
-            {globalBoostedTicks > 0
-              ? `Boost: ${formatNumberWithDecimals(
-                  globalBoostedTicks
-                )} ${formatNumberWithoutDecimals(timeScale)} X`
-              : `${plantTime.season}:${plantTime.day}/30`}
+          <Typography
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            {globalBoostedTicks > 0 ? (
+              <>
+                <span>Boost:</span>
+                <span>
+                  {formatNumberWithDecimals(globalBoostedTicks)}{" "}
+                  {formatNumberWithoutDecimals(timeScale)} X
+                </span>
+              </>
+            ) : (
+              <>
+                <span>{plantTime.season}</span>
+                <span>{plantTime.day}/30</span>
+              </>
+            )}
           </Typography>
 
           <Typography style={{ display: "flex", alignItems: "center" }}>

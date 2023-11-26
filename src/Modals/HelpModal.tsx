@@ -213,6 +213,12 @@ const HelpModal: React.FC<HelpModalProps> = ({ open, onClose, isMobile }) => {
       </Box>
       <Box display="flex" alignItems="center" mb={1}>
         <Typography variant="body2">
+          - Starting next to a Time Vine: Amplifies the time boost effect, 2X
+          more.
+        </Typography>
+      </Box>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
           - Column bonuses exponentially increase some of the associated values
           for each plant.
         </Typography>
@@ -268,6 +274,14 @@ const HelpModal: React.FC<HelpModalProps> = ({ open, onClose, isMobile }) => {
         <Typography variant="body2">
           Applied Last, Reduces Flower sugar and water thresholds significantly,
           Manual Absorption^2.
+        </Typography>
+      </Box>
+      <Typography variant="h6" mb={2}>
+        Time Vine Column
+      </Typography>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          Applied Last, Squares Time Boost Effect.
         </Typography>
       </Box>
     </div>,
