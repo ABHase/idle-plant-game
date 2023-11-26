@@ -511,8 +511,8 @@ const HelpModal: React.FC<HelpModalProps> = ({ open, onClose, isMobile }) => {
       <Box display="flex" alignItems="center" mb={1}>
         <Typography variant="body2">
           {" "}
-          - You can only plant one Time Vine per Time Seed, but all upgrades
-          unlocked with the Time Vine are PERMANENT.
+          - You can only plant one Time Vine per Time Seed, but all upgrades and{" "}
+          <DNAIcon /> DNA unlocked with the Time Vine are PERMANENT.
         </Typography>
       </Box>
     </div>,
