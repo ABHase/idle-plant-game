@@ -191,13 +191,9 @@ const MenuModal: React.FC<Props> = (props) => {
           variant="contained"
           sx={buttonStyle}
           fullWidth
-          onClick={() =>
-            handleOpenLink(
-              "https://www.patreon.com/HareFootGames?utm_medium=clipboard_copy&utm_source=copyLink&utm_campaign=creatorshare_creator&utm_content=join_link"
-            )
-          }
+          onClick={() => handleOpenLink("https://ko-fi.com/footofthehare")}
         >
-          Join Patreon
+          Donate
         </Button>
 
         <Button
