@@ -441,46 +441,62 @@ export const updateFlowers = (
       [];
     const flowersToRemove: number[] = [];
 
-    for (let i = plant.flowers.length - 1; i >= 0; i--) {
-      const flower = plant.flowers[i];
-      let availableSugar = plant.sugar;
-      let availableWater = plant.water;
+    const scaledFlowerSugarRate = plant.flowerSugarConsumptionRate * timeScale;
+    const scaledFlowerWaterRate = plant.flowerWaterConsumptionRate * timeScale;
 
-      const sugarThresholdMet = flower.sugar >= plant.flowerSugarThreshold;
-      const waterThresholdMet = flower.water >= plant.flowerWaterThreshold;
+    let availableSugar = plant.sugar;
+    let availableWater = plant.water;
 
-      let sugarAcquired = false;
-      let waterAcquired = false;
+    const totalSugarNeeded = plant.flowers.length * scaledFlowerSugarRate;
 
-      const scaledFlowerSugarRate =
-        plant.flowerSugarConsumptionRate * timeScale;
-      const scaledFlowerWaterRate =
-        plant.flowerWaterConsumptionRate * timeScale;
+    if (availableSugar < totalSugarNeeded) {
+      // Distribute available sugar among flowers
+      const sugarPerFlower = availableSugar / plant.flowers.length;
+      plant.flowers.forEach((flower, index) => {
+        if (sugarPerFlower < scaledFlowerSugarRate) {
+          flowersToRemove.push(index);
+        } else {
+          dispatch(deductSugar(sugarPerFlower));
+          flowersToUpdate.push({ index, sugar: sugarPerFlower });
+          availableSugar -= sugarPerFlower;
+        }
+      });
+    } else {
+      // Existing logic for each flower
+      for (let i = plant.flowers.length - 1; i >= 0; i--) {
+        const flower = plant.flowers[i];
 
-      if (!sugarThresholdMet && availableSugar >= scaledFlowerSugarRate) {
-        dispatch(deductSugar(scaledFlowerSugarRate));
-        flowersToUpdate.push({ index: i, sugar: scaledFlowerSugarRate });
-        sugarAcquired = true;
-        availableSugar -= scaledFlowerSugarRate;
-      }
+        const sugarThresholdMet = flower.sugar >= plant.flowerSugarThreshold;
+        const waterThresholdMet = flower.water >= plant.flowerWaterThreshold;
 
-      if (!waterThresholdMet && availableWater >= scaledFlowerWaterRate) {
-        dispatch(deductWater(scaledFlowerWaterRate));
-        flowersToUpdate.push({ index: i, water: scaledFlowerWaterRate });
-        waterAcquired = true;
-        availableWater -= scaledFlowerWaterRate;
-      }
+        let sugarAcquired = false;
+        let waterAcquired = false;
 
-      if (sugarThresholdMet && waterThresholdMet) {
-        dispatch(addGeneticMarkersBush({ amount: plant.flowerDNA }));
-        dispatch(increaseFlowerThreshold());
-        flowersToRemove.push(i);
-      } else if (
-        availableSugar < scaledFlowerSugarRate ||
-        availableWater < scaledFlowerWaterRate ||
-        !(sugarAcquired && waterAcquired)
-      ) {
-        flowersToRemove.push(i);
+        if (!sugarThresholdMet && availableSugar >= scaledFlowerSugarRate) {
+          dispatch(deductSugar(scaledFlowerSugarRate));
+          flowersToUpdate.push({ index: i, sugar: scaledFlowerSugarRate });
+          sugarAcquired = true;
+          availableSugar -= scaledFlowerSugarRate;
+        }
+
+        if (!waterThresholdMet && availableWater >= scaledFlowerWaterRate) {
+          dispatch(deductWater(scaledFlowerWaterRate));
+          flowersToUpdate.push({ index: i, water: scaledFlowerWaterRate });
+          waterAcquired = true;
+          availableWater -= scaledFlowerWaterRate;
+        }
+
+        if (sugarThresholdMet && waterThresholdMet) {
+          dispatch(addGeneticMarkersBush({ amount: plant.flowerDNA }));
+          dispatch(increaseFlowerThreshold());
+          flowersToRemove.push(i);
+        } else if (
+          availableSugar < scaledFlowerSugarRate ||
+          availableWater < scaledFlowerWaterRate ||
+          !(sugarAcquired && waterAcquired)
+        ) {
+          flowersToRemove.push(i);
+        }
       }
     }
 
