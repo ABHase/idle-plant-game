@@ -48,23 +48,21 @@ import { resetCell } from "./Slices/cellCompletionSlice";
 import { resetPlantHistory } from "./Slices/plantHistorySlice";
 import VineDisplay from "./PlantDisplays/VineDisplay";
 import VineDNADisplay from "./DNADisplays/VineDNADisplay";
+import Splash from "./Components/Splash";
 
 const useIsNewUser = () => {
   const isNewUser = localStorage.getItem("isNewUser");
   return isNewUser === "true";
 };
 
-const selectPlants = createSelector(
-  (state: RootState) => state.plant,
-  (plant) => Object.values(plant)
-);
-
-const selectSeason = createSelector(
-  (state: RootState) => state.plantTime.season,
-  (season) => season
-);
-
 function App() {
+  const [showSplash, setShowSplash] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowSplash(false), 1500); // Hide splash screen after 1 second
+    return () => clearTimeout(timer);
+  }, []);
+
   //New user setup
 
   const paused = useSelector((state: RootState) => state.app.paused);
@@ -96,9 +94,17 @@ function App() {
   const handlePlantSelect = (plantType: string) => {
     dispatch(initializeNewPlant({ plantType }));
     setIsPlantSelected(true);
-    // Update localStorage to indicate that the user is no longer new.
     localStorage.setItem("isNewUser", "false");
     saveState(store.getState());
+
+    // Check if running in Electron and then call Electron-specific code
+    if (window.electron) {
+      console.log("Running in Electron!");
+      const achievementName = "TEST_ACHIEVEMENT_1"; // Replace with the actual achievement name
+
+      // Use the exposed electron object in the preload script to send a message to the main process
+      window.electron.sendAchievement(achievementName);
+    }
   };
 
   const handleClose = () => {
@@ -302,235 +308,247 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box
-        display="flex"
-        flexDirection="row"
-        width="100%"
-        justifyContent="center"
-      >
-        {/* Sidebar */}
-        {isMobile ? null : (
-          <Box
-            flex={1}
-            paddingRight={2}
-            bgcolor="background.default"
-            overflow="auto"
-            height="100vh"
-          >
-            <MushroomStoreDesktopDisplay />
-          </Box>
-        )}
-        {/* Main Content */}
+      {showSplash ? (
+        <Splash />
+      ) : (
         <Box
-          flex={2}
-          paddingRight={0}
-          bgcolor="background.default"
-          overflow="auto"
-          height="100vh"
+          display="flex"
+          flexDirection="row"
+          width="100%"
+          justifyContent="center"
         >
+          {/* Sidebar */}
+          {isMobile ? null : (
+            <Box
+              flex={1}
+              paddingRight={2}
+              bgcolor="background.default"
+              overflow="auto"
+              height="100vh"
+            >
+              <MushroomStoreDesktopDisplay />
+            </Box>
+          )}
+          {/* Main Content */}
           <Box
-            display="flex"
-            flexDirection="column"
-            justifyContent="flex-start"
-            height="100vh"
+            flex={2}
+            paddingRight={0}
             bgcolor="background.default"
-            color="text.primary"
             overflow="auto"
+            height="100vh"
           >
-            <ConfirmDeleteDialog
-              open={openDialog}
-              onClose={() => setOpenDialog(false)}
-              onConfirm={handleDeleteConfirm}
-            />
-
-            <HistoryModal
-              open={modals.historyModalOpen}
-              onClose={() => handleCloseModal("historyModalOpen")}
-            />
-            <HelpModal
-              open={modals.helpModalOpen}
-              onClose={() => handleCloseModal("helpModalOpen")}
-              isMobile={isMobile}
-            />
-
-            <ConfirmEvolveDialog
-              open={evolveDialogOpen}
-              onClose={() => setEvolveDialogOpen(false)}
-              onConfirm={(selectedPlantType, selectedTraits) => {
-                dispatch(
-                  evolveAndRecordPlant(selectedPlantType, selectedTraits)
-                );
-              }}
-            />
-
-            <MenuModal
-              open={modals.menuModalOpen}
-              onClose={() => handleCloseModal("menuModalOpen")}
-              onOpenUpgrade={() => handleOpenModal("upgradeModalOpen")}
-              onPlantSeed={() => setEvolveDialogOpen(true)}
-              historyModalOpen={modals.historyModalOpen}
-              handleOpenHistoryModal={() => handleOpenModal("historyModalOpen")}
-              handleCloseHistoryModal={() =>
-                handleCloseModal("historyModalOpen")
-              }
-              helpModalOpen={modals.helpModalOpen}
-              handleOpenHelpModal={() => handleOpenModal("helpModalOpen")}
-              handleCloseHelpModal={() => handleCloseModal("helpModalOpen")}
-              openDialog={openDialog}
-              setOpenDialog={setOpenDialog}
-              onOpenMushroomStore={() =>
-                handleOpenModal("mushroomStoreModalOpen")
-              }
-              handleOpenReportModal={() => handleOpenModal("reportModalOpen")}
-              handleOpenTextboxModal={() => handleOpenModal("textboxModalOpen")}
-              handleCloseReportModal={() => handleCloseModal("reportModalOpen")}
-              handleOpenMapModal={() => handleOpenModal("mapModalOpen")}
-              manualSave={() => saveState(store.getState())}
-              handleTogglePause={handleTogglePause}
-              isMobile={isMobile}
-              paused={paused}
-            />
-            <MushroomStoreModal
-              open={modals.mushroomStoreModalOpen}
-              onClose={() => handleCloseModal("mushroomStoreModalOpen")}
-            />
-            <ReportModal
-              open={modals.reportModalOpen}
-              onClose={() => handleCloseModal("reportModalOpen")}
-              isMobile={isMobile}
-            />
-            <TextboxModal
-              open={modals.textboxModalOpen}
-              onClose={() => handleCloseModal("textboxModalOpen")}
-            />
-            <MapModal
-              open={modals.mapModalOpen}
-              onClose={() => handleCloseModal("mapModalOpen")}
-              isMobile={isMobile}
-            />
-
-            {modals.ladybugModalOpen ? (
-              <LadyBugModal
-                open={modals.ladybugModalOpen}
-                onClose={() => handleCloseModal("ladybugModalOpen")}
-                // ... any other props you might need
+            <Box
+              display="flex"
+              flexDirection="column"
+              justifyContent="flex-start"
+              height="100vh"
+              bgcolor="background.default"
+              color="text.primary"
+              overflow="auto"
+            >
+              <ConfirmDeleteDialog
+                open={openDialog}
+                onClose={() => setOpenDialog(false)}
+                onConfirm={handleDeleteConfirm}
               />
-            ) : null}
-            <Snackbar
-              open={showLeafLossWarning}
-              autoHideDuration={3000}
-              onClose={() => setShowLeafLossWarning(false)}
-            >
-              <Alert
+
+              <HistoryModal
+                open={modals.historyModalOpen}
+                onClose={() => handleCloseModal("historyModalOpen")}
+              />
+              <HelpModal
+                open={modals.helpModalOpen}
+                onClose={() => handleCloseModal("helpModalOpen")}
+                isMobile={isMobile}
+              />
+
+              <ConfirmEvolveDialog
+                open={evolveDialogOpen}
+                onClose={() => setEvolveDialogOpen(false)}
+                onConfirm={(selectedPlantType, selectedTraits) => {
+                  dispatch(
+                    evolveAndRecordPlant(selectedPlantType, selectedTraits)
+                  );
+                }}
+              />
+
+              <MenuModal
+                open={modals.menuModalOpen}
+                onClose={() => handleCloseModal("menuModalOpen")}
+                onOpenUpgrade={() => handleOpenModal("upgradeModalOpen")}
+                onPlantSeed={() => setEvolveDialogOpen(true)}
+                historyModalOpen={modals.historyModalOpen}
+                handleOpenHistoryModal={() =>
+                  handleOpenModal("historyModalOpen")
+                }
+                handleCloseHistoryModal={() =>
+                  handleCloseModal("historyModalOpen")
+                }
+                helpModalOpen={modals.helpModalOpen}
+                handleOpenHelpModal={() => handleOpenModal("helpModalOpen")}
+                handleCloseHelpModal={() => handleCloseModal("helpModalOpen")}
+                openDialog={openDialog}
+                setOpenDialog={setOpenDialog}
+                onOpenMushroomStore={() =>
+                  handleOpenModal("mushroomStoreModalOpen")
+                }
+                handleOpenReportModal={() => handleOpenModal("reportModalOpen")}
+                handleOpenTextboxModal={() =>
+                  handleOpenModal("textboxModalOpen")
+                }
+                handleCloseReportModal={() =>
+                  handleCloseModal("reportModalOpen")
+                }
+                handleOpenMapModal={() => handleOpenModal("mapModalOpen")}
+                manualSave={() => saveState(store.getState())}
+                handleTogglePause={handleTogglePause}
+                isMobile={isMobile}
+                paused={paused}
+              />
+              <MushroomStoreModal
+                open={modals.mushroomStoreModalOpen}
+                onClose={() => handleCloseModal("mushroomStoreModalOpen")}
+              />
+              <ReportModal
+                open={modals.reportModalOpen}
+                onClose={() => handleCloseModal("reportModalOpen")}
+                isMobile={isMobile}
+              />
+              <TextboxModal
+                open={modals.textboxModalOpen}
+                onClose={() => handleCloseModal("textboxModalOpen")}
+              />
+              <MapModal
+                open={modals.mapModalOpen}
+                onClose={() => handleCloseModal("mapModalOpen")}
+                isMobile={isMobile}
+              />
+
+              {modals.ladybugModalOpen ? (
+                <LadyBugModal
+                  open={modals.ladybugModalOpen}
+                  onClose={() => handleCloseModal("ladybugModalOpen")}
+                  // ... any other props you might need
+                />
+              ) : null}
+              <Snackbar
+                open={showLeafLossWarning}
+                autoHideDuration={3000}
                 onClose={() => setShowLeafLossWarning(false)}
-                severity="warning"
-                sx={{ width: "100%" }}
               >
-                You lost a leaf!
-              </Alert>
-            </Snackbar>
-            <Snackbar
-              open={rabbitAttack}
-              autoHideDuration={3000}
-              onClose={() => {
-                dispatch({ type: "plant/resetRabbitAttack" });
-              }}
-            >
-              <Alert severity="warning">
-                Rabbits have drank your water! You lost a leaf!
-              </Alert>
-            </Snackbar>
-
-            <Box sx={{ display: { xs: "block", sm: "block" } }}>
-              <header className="App-header">
-                <Box
-                  border={1}
-                  borderColor="grey.300"
-                  borderRadius={2}
-                  width="320px"
-                  padding={1}
-                  margin="0 auto"
+                <Alert
+                  onClose={() => setShowLeafLossWarning(false)}
+                  severity="warning"
+                  sx={{ width: "100%" }}
                 >
-                  <Button
-                    variant="contained"
-                    onClick={() => handleOpenModal("menuModalOpen")}
-                    sx={{
-                      width: !isMobile ? "100%" : "45%",
-                      mt: 0,
-                      mb: 0,
-                      ml: !isMobile ? 0 : 1,
-                      mr: !isMobile ? 0 : 1,
-                      color: paused ? "white" : "inherit", // Text color white if paused
-                      bgcolor: paused ? "#240000" : "#090924", // Background color dark red if paused
-                      border: "4px solid #32518f", // Border color white if paused
-                      "&:hover": {
-                        backgroundColor: "#1C1C3A", // Darker shade for hover
-                        color: "#E0E0E0", // Lighter shade for the text during hover
-                      },
-                      "&:disabled": {
-                        backgroundColor: "#3C3C4D", // or any other suitable shade you prefer
-                        color: "#black", // or any other suitable shade for text
-                        cursor: "not-allowed",
-                      },
-                    }}
-                  >
-                    {paused ? "GAME PAUSED!" : "Open Menu"}
-                  </Button>
+                  You lost a leaf!
+                </Alert>
+              </Snackbar>
+              <Snackbar
+                open={rabbitAttack}
+                autoHideDuration={3000}
+                onClose={() => {
+                  dispatch({ type: "plant/resetRabbitAttack" });
+                }}
+              >
+                <Alert severity="warning">
+                  Rabbits have drank your water! You lost a leaf!
+                </Alert>
+              </Snackbar>
 
-                  {isMobile && (
+              <Box sx={{ display: { xs: "block", sm: "block" } }}>
+                <header className="App-header">
+                  <Box
+                    border={1}
+                    borderColor="grey.300"
+                    borderRadius={2}
+                    width="320px"
+                    padding={1}
+                    margin="0 auto"
+                  >
                     <Button
                       variant="contained"
-                      onClick={() => handleOpenModal("mushroomStoreModalOpen")}
+                      onClick={() => handleOpenModal("menuModalOpen")}
                       sx={{
-                        width: "45%",
+                        width: !isMobile ? "100%" : "45%",
                         mt: 0,
                         mb: 0,
-                        ml: 1,
-                        mr: 1,
-                        color: "white",
-                        bgcolor: "#69291a",
-                        border: "4px solid #857471",
+                        ml: !isMobile ? 0 : 1,
+                        mr: !isMobile ? 0 : 1,
+                        color: paused ? "white" : "inherit", // Text color white if paused
+                        bgcolor: paused ? "#240000" : "#090924", // Background color dark red if paused
+                        border: "4px solid #32518f", // Border color white if paused
+                        "&:hover": {
+                          backgroundColor: "#1C1C3A", // Darker shade for hover
+                          color: "#E0E0E0", // Lighter shade for the text during hover
+                        },
+                        "&:disabled": {
+                          backgroundColor: "#3C3C4D", // or any other suitable shade you prefer
+                          color: "#black", // or any other suitable shade for text
+                          cursor: "not-allowed",
+                        },
                       }}
                     >
-                      Mushroom
+                      {paused ? "GAME PAUSED!" : "Open Menu"}
                     </Button>
-                  )}
-                </Box>
 
-                <PlantTimeDisplay plantTime={plantTime} />
-                {renderDNAComponent()}
-                {renderPlantComponent()}
+                    {isMobile && (
+                      <Button
+                        variant="contained"
+                        onClick={() =>
+                          handleOpenModal("mushroomStoreModalOpen")
+                        }
+                        sx={{
+                          width: "45%",
+                          mt: 0,
+                          mb: 0,
+                          ml: 1,
+                          mr: 1,
+                          color: "white",
+                          bgcolor: "#69291a",
+                          border: "4px solid #857471",
+                        }}
+                      >
+                        Mushroom
+                      </Button>
+                    )}
+                  </Box>
 
-                <UpgradeModal
-                  open={modals.upgradeModalOpen}
-                  onClose={() => handleCloseModal("upgradeModalOpen")}
-                />
-                {isNewUser && (
-                  <PlantSelectionModal
-                    open={modalOpen}
-                    onClose={handleClose}
-                    onPlantSelect={handlePlantSelect}
+                  <PlantTimeDisplay plantTime={plantTime} />
+                  {renderDNAComponent()}
+                  {renderPlantComponent()}
+
+                  <UpgradeModal
+                    open={modals.upgradeModalOpen}
+                    onClose={() => handleCloseModal("upgradeModalOpen")}
                   />
-                )}
-              </header>
+                  {isNewUser && (
+                    <PlantSelectionModal
+                      open={modalOpen}
+                      onClose={handleClose}
+                      onPlantSelect={handlePlantSelect}
+                    />
+                  )}
+                </header>
+              </Box>
             </Box>
           </Box>
+          {/* Sidebar */}
+          {isMobile ? null : (
+            <Box
+              flex={1}
+              paddingRight={2}
+              bgcolor="background.default"
+              overflow="auto"
+              height="100vh"
+            >
+              <UpgradeStoreDesktopDisplay
+                onPlantSeed={() => setEvolveDialogOpen(true)}
+              />
+            </Box>
+          )}
         </Box>
-        {/* Sidebar */}
-        {isMobile ? null : (
-          <Box
-            flex={1}
-            paddingRight={2}
-            bgcolor="background.default"
-            overflow="auto"
-            height="100vh"
-          >
-            <UpgradeStoreDesktopDisplay
-              onPlantSeed={() => setEvolveDialogOpen(true)}
-            />
-          </Box>
-        )}
-      </Box>
+      )}
     </ThemeProvider>
   );
 }

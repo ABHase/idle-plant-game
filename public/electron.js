@@ -1,12 +1,34 @@
 const electron = require("electron");
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
+const ipcMain = electron.ipcMain;
 
 const path = require("path");
 const url = require("url");
 const isDev = require("electron-is-dev");
 
 let mainWindow;
+
+const steamworks = require("steamworks.js");
+
+const client = steamworks.init(2701250);
+
+ipcMain.on("unlock-achievement", (event, achievementName) => {
+  console.log(
+    `[main.js] Received achievement unlock request: ${achievementName}`
+  );
+  try {
+    if (client.achievement.activate(achievementName)) {
+      console.log("Achievement activated successfully." + achievementName);
+    } else {
+      console.log("Failed to activate achievement." + achievementName);
+    }
+  } catch (error) {
+    console.error(`[main.js] Error activating achievement: ${error.message}`);
+    event.reply("achievement-unlock-response", "failure");
+  }
+  event.reply("achievement-unlock-response", "success");
+});
 
 function createWindow() {
   mainWindow = new BrowserWindow({
