@@ -119,7 +119,7 @@ const MapModal: React.FC<MapModalProps> = ({ open, onClose, isMobile }) => {
           marginBottom="6px"
         >
           <Typography variant="h6" gutterBottom style={{ color: "white" }}>
-            Map
+            Map:
           </Typography>
 
           {allCellsCompleted && (
@@ -145,8 +145,8 @@ const MapModal: React.FC<MapModalProps> = ({ open, onClose, isMobile }) => {
               index === currentCell
                 ? currentCellColor
                 : cellPlantType
-                ? getColorForPlant(cellPlantType as keyof PlantColors)
-                : "#636359";
+                  ? getColorForPlant(cellPlantType as keyof PlantColors)
+                  : "#636359";
 
             const borderColor =
               index === currentCell ? "1px dashed white" : "2px solid black";
@@ -215,6 +215,9 @@ const MapModal: React.FC<MapModalProps> = ({ open, onClose, isMobile }) => {
               <Typography>{label}</Typography>
             </Box>
           ))}
+          <Typography variant="subtitle1" style={{ color: "white" }}>
+            Complete Vertical Columns For Extra Bonuses With Each Plant!
+          </Typography>
         </Box>
         <ConfirmMoveDialog
           open={isConfirmDialogOpen}
