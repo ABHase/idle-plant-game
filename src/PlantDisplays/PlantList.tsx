@@ -843,23 +843,31 @@ export function formatNumber(value: number): string {
 export function formatNumberWithDecimals(value: number): string {
   const absValue = Math.abs(value);
 
-  let formattedValue;
-
-  if (absValue >= 1_000_000_000_000_000) {
-    formattedValue = (absValue / 1_000_000_000_000_000).toFixed(2) + "Q";
-  } else if (absValue >= 1_000_000_000_000) {
-    formattedValue = (absValue / 1_000_000_000_000).toFixed(2) + "T";
-  } else if (absValue >= 1_000_000_000) {
-    formattedValue = (absValue / 1_000_000_000).toFixed(2) + "B";
-  } else if (absValue >= 1_000_000) {
-    formattedValue = (absValue / 1_000_000).toFixed(2) + "M";
-  } else if (absValue >= 1_000) {
-    formattedValue = (absValue / 1_000).toFixed(2) + "K";
-  } else {
-    formattedValue = absValue.toFixed(2);
+  if (absValue >= 1e15) {
+    // For numbers greater than or equal to a quadrillion, use scientific notation
+    return value.toExponential(2);
   }
 
-  // Apply the sign
+  // Use Intl.NumberFormat for other ranges for better precision and locale formatting
+  const formatter = new Intl.NumberFormat("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
+  let formattedValue;
+
+  if (absValue >= 1e12) {
+    formattedValue = formatter.format(absValue / 1e12) + "T";
+  } else if (absValue >= 1e9) {
+    formattedValue = formatter.format(absValue / 1e9) + "B";
+  } else if (absValue >= 1e6) {
+    formattedValue = formatter.format(absValue / 1e6) + "M";
+  } else if (absValue >= 1e3) {
+    formattedValue = formatter.format(absValue / 1e3) + "K";
+  } else {
+    formattedValue = formatter.format(absValue);
+  }
+
   return value < 0 ? "-" + formattedValue : formattedValue;
 }
 

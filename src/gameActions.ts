@@ -267,6 +267,33 @@ export const updateGame = (
   };
 };
 
+const upgradeToAchievementMap: { [key: string]: string } = {
+  Succulent_sugar_bonus: "SUGAR_PRODUCTION_ACHIEVEMENT",
+  Moss_leaf_bonus: "WATER_NEUTRAL_LEAVES_ACHIEVEMENT",
+  Grass_growth_toggle: "GROWTH_TOGGLE_ACHIEVEMENT",
+  Fern_clone_upgrade: "CLONE_UPGRADE_ACHIEVEMENT",
+  Bush_map: "MAP_UNLOCK_ACHIEVEMENT",
+  Vine_scale_1: "VINE_SCALE_1_ACHIEVEMENT",
+  Vine_scale_2: "VINE_SCALE_2_ACHIEVEMENT",
+  Vine_scale_3: "VINE_SCALE_3_ACHIEVEMENT",
+  Vine_scale_4: "VINE_SCALE_4_ACHIEVEMENT",
+  // Column achievements
+  Column_Fern: "COMPLETED_FERN_COLUMN_ACHIEVEMENT",
+  Column_Succulent: "COMPLETED_SUCCULENT_COLUMN_ACHIEVEMENT",
+  Column_Grass: "COMPLETED_GRASS_COLUMN_ACHIEVEMENT",
+  Column_Moss: "COMPLETED_MOSS_COLUMN_ACHIEVEMENT",
+  Column_Bush: "COMPLETED_BUSH_COLUMN_ACHIEVEMENT",
+  Column_Vine: "COMPLETED_VINE_COLUMN_ACHIEVEMENT",
+  // Adjacency achievements
+  Adjacent_to_Fern: "ADJACENT_TO_FERN_ACHIEVEMENT",
+  Adjacent_to_Succulent: "ADJACENT_TO_SUCCULENT_ACHIEVEMENT",
+  Adjacent_to_Grass: "ADJACENT_TO_GRASS_ACHIEVEMENT",
+  Adjacent_to_Moss: "ADJACENT_TO_MOSS_ACHIEVEMENT",
+  Adjacent_to_Bush: "ADJACENT_TO_BUSH_ACHIEVEMENT",
+  Adjacent_to_Vine: "ADJACENT_TO_VINE_ACHIEVEMENT",
+  // ... add more mappings as needed
+};
+
 export const purchaseUpgradeThunk = createAsyncThunk<
   void,
   { plantType: string; upgradeId: string },
@@ -325,6 +352,13 @@ export const purchaseUpgradeThunk = createAsyncThunk<
     },
   });
   thunkAPI.dispatch({ type: "upgrades/purchaseUpgrade", payload: upgradeId });
+
+  // Check and trigger achievement if applicable
+  // After the purchase logic
+  if (upgradeId in upgradeToAchievementMap && window.electron) {
+    const achievementName = upgradeToAchievementMap[upgradeId];
+    window.electron.sendAchievement(achievementName);
+  }
 });
 
 export const sellUpgradeThunk = createAsyncThunk<
@@ -542,6 +576,14 @@ export const completeCellAndDeductSugar = (
       currentPlantType,
       currentCell
     );
+
+    // Trigger achievements for adjacency upgrades
+    adjacencyUpgrades.forEach((upgrade) => {
+      const achievementName = upgradeToAchievementMap[upgrade];
+      if (achievementName && window.electron) {
+        window.electron.sendAchievement(achievementName);
+      }
+    });
 
     // Set the new adjacency upgrades
     dispatch(setPurchasedUpgrades([...adjacencyUpgrades, ...vineUpgrades]));

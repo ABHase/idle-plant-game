@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
@@ -92,12 +92,44 @@ const MushroomStoreDesktopDisplay = () => {
 
   const plantType = useSelector((state: RootState) => state.plant.type); // Extract plant type
 
+  //Handle long pressing
+
+  const [pressTimer, setPressTimer] = useState<number | null>(null);
+
+  const handleButtonPress = useCallback((action: () => void) => {
+    action();
+    // Cast the return value of setInterval directly to number
+    const id = window.setInterval(action, 500) as number;
+    setPressTimer(id);
+  }, []);
+
+  const handleButtonRelease = useCallback(() => {
+    if (pressTimer !== null) {
+      clearInterval(pressTimer);
+      setPressTimer(null);
+    }
+  }, [pressTimer]);
+
+  useEffect(() => {
+    return () => {
+      if (pressTimer !== null) {
+        clearInterval(pressTimer);
+      }
+    };
+  }, [pressTimer]); // Cleans up the interval when the component unmounts
+
   const renderContent = () => {
     switch (plantType) {
       case "Fern":
         return MUSHROOM_ITEMS.map((item) => (
           <ButtonBase
-            onClick={() => handleButtonClick(sugar, item.cost, item.effect)}
+            onMouseDown={() =>
+              handleButtonPress(() =>
+                handleButtonClick(sugar, item.cost, item.effect)
+              )
+            }
+            onMouseUp={handleButtonRelease}
+            onMouseLeave={handleButtonRelease}
             sx={buttonBaseStyle(sugar, item.cost)}
           >
             <Box key={item.id} mt={2}>
@@ -133,19 +165,23 @@ const MushroomStoreDesktopDisplay = () => {
                 return (
                   <ButtonBase
                     key={item.id}
-                    onClick={() => {
-                      switch (costType) {
-                        case "sunlight":
-                          handleButtonClick(sunlight, item.cost, item.effect);
-                          break;
-                        case "water":
-                          handleButtonClick(water, item.cost, item.effect);
-                          break;
-                        default:
-                          handleButtonClick(sugar, item.cost, item.effect);
-                          break;
-                      }
-                    }}
+                    onMouseDown={() =>
+                      handleButtonPress(() => {
+                        switch (costType) {
+                          case "sunlight":
+                            handleButtonClick(sunlight, item.cost, item.effect);
+                            break;
+                          case "water":
+                            handleButtonClick(water, item.cost, item.effect);
+                            break;
+                          default:
+                            handleButtonClick(sugar, item.cost, item.effect);
+                            break;
+                        }
+                      })
+                    }
+                    onMouseUp={handleButtonRelease}
+                    onMouseLeave={handleButtonRelease}
                     sx={buttonBaseStyle(
                       costType === "sunlight"
                         ? sunlight
@@ -185,19 +221,23 @@ const MushroomStoreDesktopDisplay = () => {
           return (
             <ButtonBase
               key={item.id}
-              onClick={() => {
-                switch (costType) {
-                  case "sunlight":
-                    handleButtonClick(sunlight, item.cost, item.effect);
-                    break;
-                  case "water":
-                    handleButtonClick(water, item.cost, item.effect);
-                    break;
-                  default:
-                    handleButtonClick(sugar, item.cost, item.effect);
-                    break;
-                }
-              }}
+              onMouseDown={() =>
+                handleButtonPress(() => {
+                  switch (costType) {
+                    case "sunlight":
+                      handleButtonClick(sunlight, item.cost, item.effect);
+                      break;
+                    case "water":
+                      handleButtonClick(water, item.cost, item.effect);
+                      break;
+                    default:
+                      handleButtonClick(sugar, item.cost, item.effect);
+                      break;
+                  }
+                })
+              }
+              onMouseUp={handleButtonRelease}
+              onMouseLeave={handleButtonRelease}
               sx={buttonBaseStyle(
                 costType === "sunlight"
                   ? sunlight
@@ -225,9 +265,13 @@ const MushroomStoreDesktopDisplay = () => {
             <Typography mt={2}>The Flame</Typography>
             {GRASS_MUSHROOM_ITEMS.map((item) => (
               <ButtonBase
-                onClick={() =>
-                  handleButtonClick(sunlight, item.cost, item.effect)
+                onMouseDown={() =>
+                  handleButtonPress(() =>
+                    handleButtonClick(sugar, item.cost, item.effect)
+                  )
                 }
+                onMouseUp={handleButtonRelease}
+                onMouseLeave={handleButtonRelease}
                 sx={buttonBaseStyle(sunlight, item.cost)}
               >
                 <Box key={item.id} mt={2}>

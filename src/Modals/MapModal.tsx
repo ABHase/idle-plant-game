@@ -77,10 +77,16 @@ const MapModal: React.FC<MapModalProps> = ({ open, onClose, isMobile }) => {
       ).length === 24
   );
 
+  const VICTORY_ACHIEVEMENT_NAME = "GAME_VICTORY_ACHIEVEMENT";
+
   const handleVictoryButtonClick = () => {
     setIsVictoryDialogOpen(true);
-  };
 
+    // Trigger the victory achievement
+    if (window.electron) {
+      window.electron.sendAchievement(VICTORY_ACHIEVEMENT_NAME);
+    }
+  };
   return (
     <Modal
       open={open}
