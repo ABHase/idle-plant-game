@@ -267,7 +267,7 @@ const MushroomStoreDesktopDisplay = () => {
               <ButtonBase
                 onMouseDown={() =>
                   handleButtonPress(() =>
-                    handleButtonClick(sugar, item.cost, item.effect)
+                    handleButtonClick(sunlight, item.cost, item.effect)
                   )
                 }
                 onMouseUp={handleButtonRelease}
