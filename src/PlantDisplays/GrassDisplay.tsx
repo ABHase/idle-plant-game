@@ -64,6 +64,11 @@ import SunlightTooltip from "../Components/Tooltips/SunlightTooltip";
 import WaterTooltip from "../Components/Tooltips/WaterTooltip";
 import RootsTooltip from "../Components/Tooltips/RootsTooltip";
 import MultiplierToggleButton from "../Components/Buttons/MultiplierToggleButton";
+import springSong from "../assets/music/Spring_-_Grass.mp3";
+import summerSong from "../assets/music/Summer_-_Grass.mp3";
+import autumnSong from "../assets/music/Autumn_-_Grass.mp3";
+import winterSong from "../assets/music/Winter_-_Grass.mp3";
+import MusicPlayer from "../Components/MusicPlayer";
 
 type GrassDisplayProps = {
   handleOpenModal: (modalName: string) => void;
@@ -77,6 +82,8 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({
   const dispatch = useDispatch();
   const plant = useSelector((state: RootState) => state.plant);
   const plantTime = useSelector((state: RootState) => state.plantTime);
+  const day = useSelector((state: RootState) => state.plantTime.day);
+
   const [multiplier, setMultiplier] = useState<number>(1);
 
   //Handle long pressing
@@ -127,6 +134,7 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({
 
   // Extract season from state (Assuming you have access to the state here)
   const { season } = useSelector((state: RootState) => state.plantTime);
+  const songSeason = useSelector((state: RootState) => state.plantTime.season);
   const report = itemizedReport(plant, season, difficulty, timeScale);
 
   // State for whether the alert saying you can't disable automatic leaf growth is open
@@ -248,6 +256,17 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({
     }
   };
 
+  type Season = "Spring" | "Summer" | "Autumn" | "Winter";
+
+  const songs: Record<Season, typeof springSong> = {
+    Spring: springSong,
+    Summer: summerSong,
+    Autumn: autumnSong,
+    Winter: winterSong,
+  };
+
+  const songToPlay = songs[songSeason as Season];
+
   return (
     <div key={plant.id} className="plant-container">
       <Box
@@ -259,6 +278,10 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({
         margin="0 auto"
       >
         <Grid container spacing={1} alignItems="center">
+          <Grid item xs={12}>
+            {/* Music Player Component */}
+            <MusicPlayer song={songToPlay} />
+          </Grid>
           {plant.aphids > 1 ? (
             <Grid item xs={12}>
               <Button

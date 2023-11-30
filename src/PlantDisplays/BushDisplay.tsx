@@ -79,6 +79,11 @@ import WaterTooltip from "../Components/Tooltips/WaterTooltip";
 import MultiplierToggleButton from "../Components/Buttons/MultiplierToggleButton";
 import LocalFloristIcon from "@mui/icons-material/LocalFlorist";
 import { Flower } from "../Components/Flower";
+import springSong from "../assets/music/Spring_-_Berry_Bush.mp3";
+import summerSong from "../assets/music/Summer_-_Berry_Bush.mp3";
+import autumnSong from "../assets/music/Autumn_-_Berry_Bush.mp3";
+import winterSong from "../assets/music/Winter_-_Berry_Bush.mp3";
+import MusicPlayer from "../Components/MusicPlayer";
 
 type BushDisplayProps = {
   handleOpenModal: (modalName: string) => void;
@@ -94,6 +99,7 @@ const BushDisplay: React.FC<BushDisplayProps> = ({
   const dispatch = useDispatch();
   const plant = useSelector((state: RootState) => state.plant);
   const plantTime = useSelector((state: RootState) => state.plantTime);
+
   const [multiplier, setMultiplier] = useState<number>(1);
 
   //Handle long pressing
@@ -144,6 +150,7 @@ const BushDisplay: React.FC<BushDisplayProps> = ({
 
   // Extract season from state (Assuming you have access to the state here)
   const { season } = useSelector((state: RootState) => state.plantTime);
+  const songSeason = useSelector((state: RootState) => state.plantTime.season);
   const report = itemizedReport(plant, season, difficulty, timeScale);
 
   // Sugar Modifier
@@ -269,6 +276,17 @@ const BushDisplay: React.FC<BushDisplayProps> = ({
     }
   };
 
+  type Season = "Spring" | "Summer" | "Autumn" | "Winter";
+
+  const songs: Record<Season, typeof springSong> = {
+    Spring: springSong,
+    Summer: summerSong,
+    Autumn: autumnSong,
+    Winter: winterSong,
+  };
+
+  const songToPlay = songs[songSeason as Season];
+
   return (
     <div key={plant.id} className="plant-container">
       <Box
@@ -280,6 +298,10 @@ const BushDisplay: React.FC<BushDisplayProps> = ({
         margin="0 auto"
       >
         <Grid container spacing={1} alignItems="center">
+          <Grid item xs={12}>
+            {/* Music Player Component */}
+            <MusicPlayer song={songToPlay} />
+          </Grid>
           {plant.aphids > 1 ? (
             <Grid item xs={12}>
               <Button

@@ -60,6 +60,11 @@ import WaterTooltip from "../Components/Tooltips/WaterTooltip";
 import MaturityTooltip from "../Components/Tooltips/MaturityTooltip";
 import ProtectionInfo from "../Components/ProtectionInfo";
 import MultiplierToggleButton from "../Components/Buttons/MultiplierToggleButton";
+import MusicPlayer from "../Components/MusicPlayer";
+import springSong from "../assets/music/Spring_-_Succulent.mp3";
+import summerSong from "../assets/music/Summer_-_Succulent.mp3";
+import autumnSong from "../assets/music/Autumn_-_Succulent.mp3";
+import winterSong from "../assets/music/Winter_-_Succulent.mp3";
 
 type SucculentDisplayProps = {
   handleOpenModal: (modalName: string) => void;
@@ -122,6 +127,7 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
 
   // Extract season from state (Assuming you have access to the state here)
   const { season } = useSelector((state: RootState) => state.plantTime);
+  const songSeason = useSelector((state: RootState) => state.plantTime.season);
   const report = itemizedReport(plant, season, difficulty, timeScale);
 
   // Sugar Modifier
@@ -251,6 +257,17 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
     }
   };
 
+  type Season = "Spring" | "Summer" | "Autumn" | "Winter";
+
+  const songs: Record<Season, typeof springSong> = {
+    Spring: springSong,
+    Summer: summerSong,
+    Autumn: autumnSong,
+    Winter: winterSong,
+  };
+
+  const songToPlay = songs[songSeason as Season];
+
   return (
     <div key={plant.id} className="plant-container">
       <Box
@@ -262,6 +279,10 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
         margin="0 auto"
       >
         <Grid container spacing={1} alignItems="center">
+          <Grid item xs={12}>
+            {/* Music Player Component */}
+            <MusicPlayer song={songToPlay} />
+          </Grid>
           {plant.aphids > 1 ? (
             <Grid item xs={12}>
               <Button
