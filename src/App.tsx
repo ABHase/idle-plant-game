@@ -22,7 +22,7 @@ import {
 import { initializeNewPlant, resetPlant } from "./Slices/plantSlice";
 import { resetPlantTime } from "./Slices/plantTimeSlice";
 import UpgradeModal from "./Modals/UpgradeModal";
-import { resetUpgrades } from "./Slices/upgradesSlice";
+import { resetUpgrades, setActiveUpgrades } from "./Slices/upgradesSlice";
 import HistoryModal from "./Modals/HistoryModal";
 import HelpModal from "./Modals/HelpModal";
 import MenuModal from "./Modals/MenuModal";
@@ -369,6 +369,7 @@ function App() {
                   dispatch(
                     evolveAndRecordPlant(selectedPlantType, selectedTraits)
                   );
+                  dispatch(setActiveUpgrades(selectedTraits));
                 }}
               />
 

@@ -28,6 +28,7 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, onClose }) => {
   const state = useSelector((state: RootState) => state.globalState);
 
   const purchased = useSelector((state: RootState) => state.upgrades.purchased);
+  const active = useSelector((state: RootState) => state.upgrades.active);
   const geneticMarkers = useSelector(
     (state: RootState) => state.globalState.geneticMarkers
   );
@@ -194,7 +195,10 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, onClose }) => {
               }}
             >
               <Box>
-                <Typography variant="body1">{upgrade.name}</Typography>
+                <Typography variant="body1">
+                  {upgrade.name}
+                  {active.includes(upgrade.id) ? " (Active)" : ""}
+                </Typography>
                 <Typography variant="body2" sx={{ display: "flex" }}>
                   Cost: <DNA amount={upgrade.cost} />
                 </Typography>

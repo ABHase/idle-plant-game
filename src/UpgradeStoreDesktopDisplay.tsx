@@ -20,6 +20,7 @@ const UpgradeStoreDesktopDisplay: React.FC<UpgradeStoreDesktopDisplayProps> = ({
 }) => {
   const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
   const purchased = useSelector((state: RootState) => state.upgrades.purchased);
+  const active = useSelector((state: RootState) => state.upgrades.active);
   const state = useSelector((state: RootState) => state.globalState);
   const plantType = useSelector((state: RootState) => state.plant.type);
 
@@ -163,7 +164,10 @@ const UpgradeStoreDesktopDisplay: React.FC<UpgradeStoreDesktopDisplayProps> = ({
           }
         >
           <Box>
-            <Typography variant="body1">{upgrade.name}</Typography>
+            <Typography variant="body1">
+              {upgrade.name}
+              {active.includes(upgrade.id) ? " (Active)" : ""}
+            </Typography>
             <Typography variant="body2" sx={{ display: "flex" }}>
               Cost: <DNA amount={upgrade.cost} />
             </Typography>

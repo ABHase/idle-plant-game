@@ -11,12 +11,14 @@ type Upgrade = {
 
 export interface UpgradesState {
   available: Upgrade[];
-  purchased: string[]; // array of upgrade IDs
+  purchased: string[];
+  active: string[];
 }
 
 export const initialState: UpgradesState = {
   available: UPGRADES.Fern,
   purchased: [],
+  active: [],
 };
 
 const upgradesSlice = createSlice({
@@ -25,6 +27,9 @@ const upgradesSlice = createSlice({
   reducers: {
     setPurchasedUpgrades: (state, action: PayloadAction<string[]>) => {
       state.purchased = action.payload;
+    },
+    setActiveUpgrades: (state, action: PayloadAction<string[]>) => {
+      state.active = action.payload;
     },
     purchaseUpgrade: (state, action: PayloadAction<string>) => {
       const upgradeId = action.payload;
@@ -67,5 +72,6 @@ export const {
   sellUpgrade,
   changeAvailableUpgrades,
   setPurchasedUpgrades,
+  setActiveUpgrades,
 } = upgradesSlice.actions;
 export default upgradesSlice.reducer;
