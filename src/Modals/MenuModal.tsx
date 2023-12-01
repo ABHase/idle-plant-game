@@ -73,6 +73,27 @@ const MenuModal: React.FC<Props> = (props) => {
     console.log(window.electron); // Check if it's defined
   }, []);
 
+  // Determine if the app is running in Electron
+  const isElectron =
+    window.electron && typeof window.electron.openExternal === "function";
+
+  // Set the button text and URL based on the environment
+  const buttonText = isElectron ? "Play Online" : "Play on Steam";
+  const gameUrl = isElectron
+    ? "https://idleplantgame.com/"
+    : "https://store.steampowered.com/app/2701250/Idle_Plant_Game/";
+
+  // Function to handle opening the link
+  const handleOpenGameLink = () => {
+    if (isElectron) {
+      // Use Electron's shell to open the link if we are in Electron
+      window.electron.openExternal(gameUrl);
+    } else {
+      // If we're not in Electron, open the link in a new browser tab
+      window.open(gameUrl, "_blank", "noopener,noreferrer");
+    }
+  };
+
   return (
     <Dialog open={props.open} onClose={props.onClose}>
       <Box
@@ -194,6 +215,15 @@ const MenuModal: React.FC<Props> = (props) => {
           onClick={() => handleOpenLink("https://ko-fi.com/footofthehare")}
         >
           Donate
+        </Button>
+
+        <Button
+          variant="contained"
+          sx={buttonStyle}
+          fullWidth
+          onClick={handleOpenGameLink}
+        >
+          {buttonText}
         </Button>
 
         <Button
