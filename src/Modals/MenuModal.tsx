@@ -208,14 +208,16 @@ const MenuModal: React.FC<Props> = (props) => {
           Join Discord
         </Button>
 
-        <Button
-          variant="contained"
-          sx={buttonStyle}
-          fullWidth
-          onClick={() => handleOpenLink("https://ko-fi.com/footofthehare")}
-        >
-          Donate
-        </Button>
+        {!isElectron && (
+          <Button
+            variant="contained"
+            sx={buttonStyle}
+            fullWidth
+            onClick={() => handleOpenLink("https://ko-fi.com/footofthehare")}
+          >
+            Donate
+          </Button>
+        )}
 
         <Button
           variant="contained"

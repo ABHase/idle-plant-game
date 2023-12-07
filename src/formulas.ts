@@ -676,9 +676,8 @@ export const calculateActualSugarProductionPerMinute = (
 
   // If there are not enough reserves to maintain production for a minute, production is zero
   if (
-    !usingReserves &&
-    (plant.water < requiredWaterPerSecond * 1 ||
-      plant.sunlight < requiredSunlightPerSecond * 1)
+    plant.water < requiredWaterPerSecond * 1 ||
+    plant.sunlight < requiredSunlightPerSecond * 1
   ) {
     return { sugarProduction: 0, usingReserves: false };
   }
