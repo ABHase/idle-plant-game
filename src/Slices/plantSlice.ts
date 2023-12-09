@@ -109,6 +109,7 @@ export interface PlantState {
   hasReceivedPoint: boolean;
   lastLeafLossReason: string | null;
   timeScaleBoost: number;
+  ladyBugTicks: number;
 }
 
 export const initialState: PlantState = PLANT_CONFIGS.Fern; // Setting Fern as the default plant
@@ -529,10 +530,16 @@ const plantSlice = createSlice({
     //Reduccer to set ladybugs to state.ladybugtax
     setLadybugs: (state) => {
       state.ladybugs = state.ladybugTax;
+      state.ladyBugTicks += 2016;
     },
     //Reducer to reset ladybugs to 1
     resetLadybugs: (state) => {
       state.ladybugs = 1;
+    },
+    //Reudcer to decrease ladyBugTicks by payload
+    decreaseLadyBugTicks: (state, action: PayloadAction<number>) => {
+      console.log("decreaseLadyBugTicks");
+      state.ladyBugTicks -= action.payload;
     },
     //Reducer to add an amount of water to the plant from the payload
     addWater: (state, action: PayloadAction<number>) => {
@@ -668,5 +675,6 @@ export const {
   setHasReceivedPoint,
   removeAllRootsAndLeaves,
   removeAllWater,
+  decreaseLadyBugTicks,
 } = plantSlice.actions;
 export default plantSlice.reducer;

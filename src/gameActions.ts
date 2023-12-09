@@ -28,6 +28,7 @@ import {
   resetPlant,
   setPlantType,
   setHasReceivedPoint,
+  decreaseLadyBugTicks,
 } from "./Slices/plantSlice";
 import {
   addGeneticMarkersBush,
@@ -88,18 +89,17 @@ export const updateGame = (
     }
 
     // Check if ladybugs are less than 1
-    if (plant.ladybugs < 1) {
-      // Increment the local tick count for ladybug activation by the timeScale
-      ticksSinceLadybugActivation += timeScale;
+    if (plant.ladyBugTicks > 0) {
+      console.log("Ladybug ticks: ", plant.ladyBugTicks);
+      // Decrement the local tick count for ladybug activation by the timeScale
+      dispatch(decreaseLadyBugTicks(timeScale));
 
       //dispatch deductAllAphids
       dispatch({ type: "plant/deductAllAphids" });
 
       // Check if 7 days (2016 ticks) have passed
-      if (ticksSinceLadybugActivation >= 2016) {
+      if (plant.ladyBugTicks < 1) {
         dispatch({ type: "plant/resetLadybugs" });
-        // Reset the local tick count
-        ticksSinceLadybugActivation = 0;
       }
     }
 

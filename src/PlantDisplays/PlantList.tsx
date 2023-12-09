@@ -81,6 +81,7 @@ import springSong from "../assets/music/Spring_-_Fern.mp3";
 import summerSong from "../assets/music/Summer_-_Fern.mp3";
 import autumnSong from "../assets/music/Autumn_-_Fern.mp3";
 import winterSong from "../assets/music/Winter_-_Fern.mp3";
+import { formatTime } from "./BushDisplay";
 
 type PlantListProps = {
   handleOpenModal: (modalName: string) => void;
@@ -326,6 +327,31 @@ const PlantList: React.FC<PlantListProps> = ({
                 onClick={() => handleOpenModal(modalName)}
               >
                 <Typography variant="h5">You Have Aphids!</Typography>
+              </Button>
+            </Grid>
+          ) : null}
+
+          {plant.ladyBugTicks > 0 ? (
+            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                size="medium"
+                fullWidth
+                sx={{
+                  backgroundColor: "#630200",
+                  color: "#FFFFFF",
+                  "&:hover": {
+                    backgroundColor: "#940300", // This is a lighter shade of orange
+                  },
+                  "&:active, &:focus": {
+                    backgroundColor: "#630200", // Or any other style reset
+                  },
+                }}
+                onClick={() => handleOpenModal(modalName)}
+              >
+                <Typography>
+                  Protection Remaining: {formatTime(plant.ladyBugTicks)}
+                </Typography>
               </Button>
             </Grid>
           ) : null}

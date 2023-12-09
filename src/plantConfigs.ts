@@ -61,6 +61,7 @@ export const FERN_INITIAL_CONFIG: PlantState = {
   hasReceivedPoint: false,
   lastLeafLossReason: null,
   timeScaleBoost: 1,
+  ladyBugTicks: 0,
 };
 
 export const MOSS_INITIAL_CONFIG: PlantState = {
@@ -123,6 +124,7 @@ export const MOSS_INITIAL_CONFIG: PlantState = {
   hasReceivedPoint: false,
   lastLeafLossReason: null,
   timeScaleBoost: 1,
+  ladyBugTicks: 0,
 };
 
 export const SUCCULENT_INITIAL_CONFIG: PlantState = {
@@ -185,6 +187,7 @@ export const SUCCULENT_INITIAL_CONFIG: PlantState = {
   hasReceivedPoint: false,
   lastLeafLossReason: null,
   timeScaleBoost: 1,
+  ladyBugTicks: 0,
 };
 
 export const GRASS_INITIAL_CONFIG: PlantState = {
@@ -247,6 +250,7 @@ export const GRASS_INITIAL_CONFIG: PlantState = {
   hasReceivedPoint: false,
   lastLeafLossReason: null,
   timeScaleBoost: 1,
+  ladyBugTicks: 0,
 };
 
 export const BUSH_INITIAL_CONFIG: PlantState = {
@@ -309,6 +313,7 @@ export const BUSH_INITIAL_CONFIG: PlantState = {
   hasReceivedPoint: false,
   lastLeafLossReason: null,
   timeScaleBoost: 1,
+  ladyBugTicks: 0,
 };
 
 export const VINE_INITIAL_CONFIG: PlantState = {
@@ -371,6 +376,7 @@ export const VINE_INITIAL_CONFIG: PlantState = {
   hasReceivedPoint: false,
   lastLeafLossReason: null,
   timeScaleBoost: 1,
+  ladyBugTicks: 0,
 };
 
 export const PLANT_CONFIGS: Record<string, PlantState> = {
