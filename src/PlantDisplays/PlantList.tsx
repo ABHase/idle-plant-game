@@ -13,6 +13,7 @@ import {
   turnOffGeneticMarkerProduction,
   setMaxResourceToSpend,
   removeAllWater,
+  resetRootRot,
 } from "../Slices/plantSlice";
 import {
   Grid,
@@ -131,6 +132,10 @@ const PlantList: React.FC<PlantListProps> = ({
     (state: RootState) => state.globalState
   );
   const plantState = useSelector((state: RootState) => state.plant);
+
+  const rootRotConfirm = useSelector(
+    (state: RootState) => state.plantTime.rootRotConfirm
+  );
 
   const difficulty = useSelector(
     (state: RootState) => state.globalState.difficulty
@@ -275,6 +280,7 @@ const PlantList: React.FC<PlantListProps> = ({
 
   const handleRemoveAllWater = () => {
     // dispatch the removeAllWater action
+    dispatch(resetRootRot());
     dispatch(removeAllWater());
     handleClose(); // Optionally close the dialog after the action
   };
@@ -797,7 +803,9 @@ const PlantList: React.FC<PlantListProps> = ({
                 position="relative"
                 display="inline-flex"
                 width="100%"
-                onClick={handleClickOpen} // making the box clickable
+                onClick={
+                  rootRotConfirm ? handleClickOpen : handleRemoveAllWater
+                }
                 sx={{ cursor: "pointer" }} // changing the cursor to indicate it's clickable
               >
                 <LinearProgress

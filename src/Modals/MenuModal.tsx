@@ -30,6 +30,7 @@ interface Props {
   isMobile: boolean;
   handleTogglePause: () => void;
   paused: boolean;
+  handleOpenOptionsModal: () => void;
 }
 
 const MenuModal: React.FC<Props> = (props) => {
@@ -121,6 +122,15 @@ const MenuModal: React.FC<Props> = (props) => {
           onClick={props.handleTogglePause}
         >
           {props.paused ? "Unpause" : "Pause"}
+        </Button>
+
+        <Button
+          sx={buttonStyle}
+          variant="contained"
+          color="primary"
+          onClick={props.handleOpenOptionsModal}
+        >
+          Options
         </Button>
 
         {props.isMobile && (

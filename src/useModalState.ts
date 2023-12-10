@@ -11,6 +11,7 @@ export const useModalState = () => {
     reportModalOpen: false,
     textboxModalOpen: false,
     mapModalOpen: false,
+    optionsModalOpen: false,
     // ... any other modal states
   });
 

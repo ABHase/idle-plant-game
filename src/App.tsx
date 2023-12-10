@@ -49,6 +49,7 @@ import { resetPlantHistory } from "./Slices/plantHistorySlice";
 import VineDisplay from "./PlantDisplays/VineDisplay";
 import VineDNADisplay from "./DNADisplays/VineDNADisplay";
 import Splash from "./Components/Splash";
+import OptionsModal from "./Modals/OptionsModal";
 
 const useIsNewUser = () => {
   const isNewUser = localStorage.getItem("isNewUser");
@@ -405,6 +406,9 @@ function App() {
                 handleTogglePause={handleTogglePause}
                 isMobile={isMobile}
                 paused={paused}
+                handleOpenOptionsModal={() =>
+                  handleOpenModal("optionsModalOpen")
+                }
               />
               <MushroomStoreModal
                 open={modals.mushroomStoreModalOpen}
@@ -422,6 +426,11 @@ function App() {
               <MapModal
                 open={modals.mapModalOpen}
                 onClose={() => handleCloseModal("mapModalOpen")}
+                isMobile={isMobile}
+              />
+              <OptionsModal
+                open={modals.optionsModalOpen}
+                onClose={() => handleCloseModal("optionsModalOpen")}
                 isMobile={isMobile}
               />
 
