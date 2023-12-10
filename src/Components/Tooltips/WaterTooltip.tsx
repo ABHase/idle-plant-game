@@ -1,6 +1,8 @@
 import { Tooltip, Box, Typography } from "@mui/material";
 import { Water } from "../Water";
 import { formatNumberWithDecimals } from "../../PlantDisplays/PlantList";
+import { useSelector } from "react-redux";
+import { RootState } from "../../rootReducer";
 
 interface WaterTooltipProps {
   productionRate: number;
@@ -11,6 +13,10 @@ const WaterTooltip: React.FC<WaterTooltipProps> = ({
   productionRate,
   amount,
 }) => {
+  const showProductionRate = useSelector(
+    (state: RootState) => state.plantTime.showProductionRate
+  );
+
   return (
     <Tooltip
       title={
@@ -21,8 +27,17 @@ const WaterTooltip: React.FC<WaterTooltipProps> = ({
       }
       placement="top"
     >
-      <Box>
-        <Water amount={amount} />
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          flexWrap: "nowrap",
+          gap: "4px",
+        }}
+      >
+        <Water amount={showProductionRate ? productionRate : amount} />
+        {showProductionRate && <Typography variant="body2">/s</Typography>}
       </Box>
     </Tooltip>
   );

@@ -5,7 +5,10 @@ import Typography from "@mui/material/Typography";
 import { FormControlLabel, Checkbox, styled } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../rootReducer";
-import { toggleRootRotConfirm } from "../Slices/plantTimeSlice";
+import {
+  toggleRootRotConfirm,
+  toggleshowProductionRate,
+} from "../Slices/plantTimeSlice";
 
 interface OptionsModalProps {
   open: boolean;
@@ -22,14 +25,29 @@ const OptionsModal: React.FC<OptionsModalProps> = ({
   const rootRotConfirm = useSelector(
     (state: RootState) => state.plantTime.rootRotConfirm
   );
+  const showProductionRate = useSelector(
+    (state: RootState) => state.plantTime.showProductionRate
+  );
 
-  // Initialize checkbox state from the Redux store
-  const [optionChecked, setOptionChecked] = React.useState(rootRotConfirm);
+  // Initialize checkbox states from the Redux store
+  const [rootRotChecked, setRootRotChecked] = React.useState(rootRotConfirm);
+  const [productionRateChecked, setProductionRateChecked] =
+    React.useState(showProductionRate);
 
-  // Update Redux state and local state when checkbox is toggled
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setOptionChecked(event.target.checked);
+  // Update Redux state and local state when root rot checkbox is toggled
+  const handleRootRotCheckboxChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setRootRotChecked(event.target.checked);
     dispatch(toggleRootRotConfirm());
+  };
+
+  // Update Redux state and local state when production rate checkbox is toggled
+  const handleProductionRateCheckboxChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setProductionRateChecked(event.target.checked);
+    dispatch(toggleshowProductionRate());
   };
 
   const flexDirection = isMobile ? "column" : "row";
@@ -76,21 +94,36 @@ const OptionsModal: React.FC<OptionsModalProps> = ({
         </Typography>
         <Box
           display="flex"
-          flexDirection={flexDirection}
+          flexDirection="column"
           justifyContent="space-between"
           alignItems="center"
         >
           <FormControlLabel
             control={
-              <StyledCheckbox // Use the styled checkbox here
-                checked={optionChecked}
-                onChange={handleCheckboxChange}
-                name="optionCheckbox"
+              <StyledCheckbox
+                checked={rootRotChecked}
+                onChange={handleRootRotCheckboxChange}
+                name="rootRotCheckbox"
               />
             }
             label="Ask for confirmation before draining water for Root Rot?"
             sx={{
               color: "white", // Set the label text color to white
+              border: "1px solid white",
+            }}
+          />
+          <FormControlLabel
+            control={
+              <StyledCheckbox
+                checked={productionRateChecked}
+                onChange={handleProductionRateCheckboxChange}
+                name="productionRateCheckbox"
+              />
+            }
+            label="Show production rate instead of total water and sunlight?"
+            sx={{
+              color: "white",
+              border: "1px solid white",
             }}
           />
         </Box>

@@ -1,6 +1,8 @@
 import { Tooltip, Box, Typography } from "@mui/material";
 import { Sunlight } from "../Sunlight";
 import { formatNumberWithDecimals } from "../../PlantDisplays/PlantList";
+import { useSelector } from "react-redux";
+import { RootState } from "../../rootReducer";
 
 interface SunlightTooltipProps {
   productionRate: number;
@@ -11,6 +13,9 @@ const SunlightTooltip: React.FC<SunlightTooltipProps> = ({
   productionRate,
   amount,
 }) => {
+  const showProductionRate = useSelector(
+    (state: RootState) => state.plantTime.showProductionRate
+  );
   return (
     <Tooltip
       title={
@@ -21,8 +26,17 @@ const SunlightTooltip: React.FC<SunlightTooltipProps> = ({
       }
       placement="top"
     >
-      <Box>
-        <Sunlight amount={amount} />
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          flexWrap: "nowrap",
+          gap: "4px",
+        }}
+      >
+        <Sunlight amount={showProductionRate ? productionRate : amount} />
+        {showProductionRate && <Typography variant="body2">/s</Typography>}
       </Box>
     </Tooltip>
   );
