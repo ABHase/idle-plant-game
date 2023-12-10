@@ -23,12 +23,10 @@ const MusicPlayer: React.FC<{ song: string }> = ({ song }) => {
     if (howl) {
       howl.unload();
     }
-    // Initialize Howl with the onend event
     const sound = new Howl({
       src: [song],
       volume: volume,
       mute: isMuted,
-      // Only play automatically if isPlaying is true
       autoplay: isPlaying,
       onend: function () {
         console.log("Song ended.");
@@ -39,22 +37,23 @@ const MusicPlayer: React.FC<{ song: string }> = ({ song }) => {
 
     // Cleanup
     return () => {
-      sound.stop(); // Stop the sound from playing
-      sound.unload(); // Unload the sound from memory
+      sound.stop();
+      sound.unload();
     };
-  }, [song, volume, isMuted, isPlaying]); // Re-run this effect if song, volume, or isMuted changes
+  }, [song]); // Only re-run this effect if the song changes
 
   useEffect(() => {
-    // Save volume, mute, and isPlaying state to localStorage whenever they are updated
     localStorage.setItem("volume", volume.toString());
     localStorage.setItem("isMuted", isMuted.toString());
     localStorage.setItem("isPlaying", isPlaying.toString());
 
+    // Directly update the volume and mute state of the Howler sound engine
     Howler.volume(volume);
     if (howl) {
+      howl.volume(volume);
       howl.mute(isMuted);
     }
-  }, [volume, isMuted, isPlaying, howl]);
+  }, [volume, isMuted]);
 
   const handleVolumeChange = (event: Event, newValue: number | number[]) => {
     if (typeof newValue === "number") {
