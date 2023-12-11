@@ -30,6 +30,7 @@ import { formatTime } from "./PlantDisplays/BushDisplay";
 import { DNA } from "./Components/DNA";
 import LocalFloristIcon from "@mui/icons-material/LocalFlorist";
 import { Flower } from "./Components/Flower";
+import MultiplierToggleButton from "./Components/Buttons/MultiplierToggleButton";
 
 const getCostType = (item: MushroomItem): string => {
   switch (item.id) {
@@ -75,13 +76,17 @@ const MushroomStoreDesktopDisplay = () => {
   const currentState = useSelector((state: RootState) => state); // Retrieve the whole state here
   const [showWarning, setShowWarning] = React.useState(false);
 
+  const [currentMultiplier, setCurrentMultiplier] = useState(1);
+
   const handleButtonClick = (
     resource: number,
     itemCost: number,
     itemEffect: any
   ) => {
     if (resource >= itemCost) {
-      handlePurchase(itemEffect);
+      for (let i = 0; i < currentMultiplier; i++) {
+        handlePurchase(itemEffect);
+      }
     }
   };
 
@@ -136,7 +141,7 @@ const MushroomStoreDesktopDisplay = () => {
               <Typography variant="body1">{item.name}</Typography>
               <Typography variant="body2">{item.description}</Typography>
               <Typography variant="body2" sx={{ display: "flex" }}>
-                Cost: <Sugar amount={item.cost} />
+                Cost: <Sugar amount={item.cost * currentMultiplier} />
               </Typography>
               <Snackbar
                 open={showWarning}
@@ -196,10 +201,14 @@ const MushroomStoreDesktopDisplay = () => {
                     <Typography variant="body2" sx={{ display: "flex" }}>
                       Cost:
                       {costType === "sunlight" && (
-                        <Sunlight amount={item.cost} />
+                        <Sunlight amount={item.cost * currentMultiplier} />
                       )}
-                      {costType === "water" && <Water amount={item.cost} />}
-                      {costType === "sugar" && <Sugar amount={item.cost} />}
+                      {costType === "water" && (
+                        <Water amount={item.cost * currentMultiplier} />
+                      )}
+                      {costType === "sugar" && (
+                        <Sugar amount={item.cost * currentMultiplier} />
+                      )}
                     </Typography>
                   </ButtonBase>
                 );
@@ -251,9 +260,15 @@ const MushroomStoreDesktopDisplay = () => {
               <Typography variant="body2">{item.description}</Typography>
               <Typography variant="body2" sx={{ display: "flex" }}>
                 Cost:
-                {costType === "sunlight" && <Sunlight amount={item.cost} />}
-                {costType === "water" && <Water amount={item.cost} />}
-                {costType === "sugar" && <Sugar amount={item.cost} />}
+                {costType === "sunlight" && (
+                  <Sunlight amount={item.cost * currentMultiplier} />
+                )}
+                {costType === "water" && (
+                  <Water amount={item.cost * currentMultiplier} />
+                )}
+                {costType === "sugar" && (
+                  <Sugar amount={item.cost * currentMultiplier} />
+                )}
               </Typography>
             </ButtonBase>
           );
@@ -278,7 +293,7 @@ const MushroomStoreDesktopDisplay = () => {
                   <Typography variant="body1">{item.name}</Typography>
                   <Typography variant="body2">{item.description}</Typography>
                   <Typography variant="body2" sx={{ display: "flex" }}>
-                    Cost: <Sunlight amount={item.cost} />
+                    Cost: <Sunlight amount={item.cost * currentMultiplier} />
                   </Typography>
                 </Box>
               </ButtonBase>
@@ -394,9 +409,36 @@ const MushroomStoreDesktopDisplay = () => {
       width="auto"
     >
       {plantType !== "Bush" && (
-        <Typography id="mushroom-store-modal-title" variant="h6">
-          Mushroom Store:
-        </Typography>
+        <>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              flexDirection: "row",
+            }}
+          >
+            <Typography id="mushroom-store-modal-title" variant="h6">
+              Mushroom Store:
+            </Typography>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                margin: "8px 0",
+                padding: "0 8px",
+              }}
+            >
+              {[1, 5, 10].map((multiplier) => (
+                <MultiplierToggleButton
+                  key={multiplier}
+                  currentMultiplier={currentMultiplier}
+                  value={multiplier}
+                  onClick={setCurrentMultiplier}
+                />
+              ))}
+            </Box>
+          </Box>
+        </>
       )}
       {renderContent()}
     </Box>
