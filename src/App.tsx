@@ -50,6 +50,7 @@ import VineDisplay from "./PlantDisplays/VineDisplay";
 import VineDNADisplay from "./DNADisplays/VineDNADisplay";
 import Splash from "./Components/Splash";
 import OptionsModal from "./Modals/OptionsModal";
+import mainImage from "./assets/background.png";
 
 const useIsNewUser = () => {
   const isNewUser = localStorage.getItem("isNewUser");
@@ -124,6 +125,10 @@ function App() {
   );
   const lastLeafLossReason = useSelector(
     (state: RootState) => state.plant.lastLeafLossReason
+  );
+
+  const nightMode = useSelector(
+    (state: RootState) => state.plantTime.nightMode
   );
 
   const handleDeleteConfirm = () => {
@@ -317,13 +322,21 @@ function App() {
           flexDirection="row"
           width="100%"
           justifyContent="center"
+          style={{
+            backgroundImage: nightMode ? "none" : `url(${mainImage})`,
+            backgroundSize: "cover", // Ensures the background covers the entire Box
+            backgroundPosition: "center", // Centers the background image
+            backgroundRepeat: "no-repeat", // Prevents repeating the image
+            height: "100vh", // Adjust the height as needed
+          }}
+          bgcolor="black"
         >
           {/* Sidebar */}
           {isMobile ? null : (
             <Box
               flex={1}
               paddingRight={2}
-              bgcolor="background.default"
+              bgcolor="transparent"
               overflow="auto"
               height="100vh"
             >
@@ -334,7 +347,7 @@ function App() {
           <Box
             flex={2}
             paddingRight={0}
-            bgcolor="background.default"
+            bgcolor="transparent"
             overflow="auto"
             height="100vh"
           >
@@ -343,7 +356,7 @@ function App() {
               flexDirection="column"
               justifyContent="flex-start"
               height="100vh"
-              bgcolor="background.default"
+              bgcolor="transparent"
               color="text.primary"
               overflow="auto"
             >
@@ -475,6 +488,7 @@ function App() {
                     width="320px"
                     padding={1}
                     margin="0 auto"
+                    bgcolor="rgba(0, 0, 0, 0.75)"
                   >
                     <Button
                       variant="contained"
@@ -548,7 +562,7 @@ function App() {
             <Box
               flex={1}
               paddingRight={2}
-              bgcolor="background.default"
+              bgcolor="transparent"
               overflow="auto"
               height="100vh"
             >

@@ -27,6 +27,7 @@ const MossDNADisplay: React.FC = () => {
         width="320px"
         padding={1}
         margin="0 auto"
+        bgcolor="rgba(0, 0, 0, 0.9)"
       >
         <Grid container spacing={0} alignItems="center">
           <Grid

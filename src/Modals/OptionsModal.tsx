@@ -6,6 +6,7 @@ import { FormControlLabel, Checkbox, styled } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../rootReducer";
 import {
+  toggleNightMode,
   toggleRootRotConfirm,
   toggleshowProductionRate,
 } from "../Slices/plantTimeSlice";
@@ -28,11 +29,15 @@ const OptionsModal: React.FC<OptionsModalProps> = ({
   const showProductionRate = useSelector(
     (state: RootState) => state.plantTime.showProductionRate
   );
+  const nightMode = useSelector(
+    (state: RootState) => state.plantTime.nightMode
+  );
 
   // Initialize checkbox states from the Redux store
   const [rootRotChecked, setRootRotChecked] = React.useState(rootRotConfirm);
   const [productionRateChecked, setProductionRateChecked] =
     React.useState(showProductionRate);
+  const [nightModeChecked, setNightModeChecked] = React.useState(nightMode);
 
   // Update Redux state and local state when root rot checkbox is toggled
   const handleRootRotCheckboxChange = (
@@ -48,6 +53,13 @@ const OptionsModal: React.FC<OptionsModalProps> = ({
   ) => {
     setProductionRateChecked(event.target.checked);
     dispatch(toggleshowProductionRate());
+  };
+
+  const handleNightModeCheckboxChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setNightModeChecked(event.target.checked);
+    dispatch(toggleNightMode());
   };
 
   const flexDirection = isMobile ? "column" : "row";
@@ -110,6 +122,7 @@ const OptionsModal: React.FC<OptionsModalProps> = ({
             sx={{
               color: "white", // Set the label text color to white
               border: "1px solid white",
+              width: "100%",
             }}
           />
           <FormControlLabel
@@ -124,6 +137,22 @@ const OptionsModal: React.FC<OptionsModalProps> = ({
             sx={{
               color: "white",
               border: "1px solid white",
+              width: "100%",
+            }}
+          />
+          <FormControlLabel
+            control={
+              <StyledCheckbox
+                checked={nightModeChecked}
+                onChange={handleNightModeCheckboxChange}
+                name="nightModeCheckbox"
+              />
+            }
+            label="Night Mode"
+            sx={{
+              color: "white",
+              border: "1px solid white",
+              width: "100%",
             }}
           />
         </Box>

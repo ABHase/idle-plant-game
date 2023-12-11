@@ -225,6 +225,7 @@ const MossDisplay: React.FC<MossDisplayProps> = ({
         width="320px"
         padding={1}
         margin="0 auto"
+        bgcolor="rgba(0, 0, 0, 0.75)"
       >
         <Grid container spacing={1} alignItems="center">
           <Grid item xs={12}>

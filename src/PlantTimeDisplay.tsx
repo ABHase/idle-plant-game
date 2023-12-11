@@ -170,6 +170,7 @@ const PlantTimeDisplay: React.FC<PlantTimeProps> = ({ plantTime }) => {
           display="flex"
           justifyContent="space-between"
           alignItems="center"
+          bgcolor="rgba(0, 0, 0, 0.9)"
         >
           {globalBoostedTicks > 0 && (
             <IconButton onClick={handleResourcesPopupToggle}>

@@ -73,7 +73,7 @@ const UpgradeStoreDesktopDisplay: React.FC<UpgradeStoreDesktopDisplayProps> = ({
       display="flex"
       flexDirection="column"
       justifyContent="flex-start"
-      bgcolor="background.default"
+      bgcolor="rgba(0, 0, 0, 0.75)"
       color="text.primary"
       overflow="auto"
       border={1}
@@ -88,7 +88,7 @@ const UpgradeStoreDesktopDisplay: React.FC<UpgradeStoreDesktopDisplayProps> = ({
         variant="contained"
         color="primary"
         onClick={onPlantSeed}
-        sx={{ border: "4px solid #2a6628" }}
+        sx={{ border: "4px solid #2a6628", marginBottom: 2 }} // Add margin bottom to separate from the text below
       >
         Plant Seed
       </Button>
@@ -97,10 +97,12 @@ const UpgradeStoreDesktopDisplay: React.FC<UpgradeStoreDesktopDisplayProps> = ({
         display="flex"
         flexDirection="row"
         alignItems="center"
+        justifyContent="center" // Center the items horizontally
         width="100%"
-        sx={{}}
+        bgcolor="transparent"
+        padding={0} // Optional: adds padding inside this Box, can be adjusted as needed
       >
-        <Typography id="total-dna" variant="h6">
+        <Typography id="total-dna" variant="h6" textAlign="center">
           Total DNA counting all upgrades:
         </Typography>
         <DNA amount={totalDNA} />
@@ -108,11 +110,13 @@ const UpgradeStoreDesktopDisplay: React.FC<UpgradeStoreDesktopDisplayProps> = ({
       <Box
         display="flex"
         flexDirection="row"
-        justifyContent="space-between"
+        justifyContent="center" // Center the items horizontally
         alignItems="center"
         width="100%"
+        bgcolor="transparent"
+        padding={0} // Optional: adds padding inside this Box, can be adjusted as needed
       >
-        <Typography id="upgrade-store-title" variant="h6">
+        <Typography id="upgrade-store-title" variant="h6" textAlign="center">
           Buy and Sell Traits for Future Seeds Below:
         </Typography>
       </Box>
@@ -140,24 +144,9 @@ const UpgradeStoreDesktopDisplay: React.FC<UpgradeStoreDesktopDisplayProps> = ({
             mt: 2,
             p: 1,
             bgcolor: purchased.includes(upgrade.id)
-              ? "#4d2d17"
-              : "secondary.main",
-            pointerEvents:
-              !purchased.includes(upgrade.id) && geneticMarkers < upgrade.cost
-                ? "none"
-                : "auto",
-
-            opacity:
-              !purchased.includes(upgrade.id) && geneticMarkers < upgrade.cost
-                ? 0.5
-                : 1,
-            "&:hover": {
-              bgcolor:
-                !purchased.includes(upgrade.id) && geneticMarkers < upgrade.cost
-                  ? "secondary.light"
-                  : "#38200f",
-              color: "text.primary",
-            },
+              ? "#4d2d17" // Non-transparent background for purchased items
+              : "secondary.main", // Non-transparent background for unpurchased items
+            // Other styles...
           }}
           disabled={
             !purchased.includes(upgrade.id) && geneticMarkers < upgrade.cost

@@ -383,7 +383,7 @@ const MushroomStoreDesktopDisplay = () => {
       display="flex"
       flexDirection="column"
       justifyContent="flex-start"
-      bgcolor="background.default"
+      bgcolor="rgba(0, 0, 0, 0.75)"
       color="text.primary"
       overflow="auto"
       border={1}
