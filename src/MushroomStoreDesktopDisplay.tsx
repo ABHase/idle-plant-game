@@ -83,8 +83,18 @@ const MushroomStoreDesktopDisplay = () => {
     itemCost: number,
     itemEffect: any
   ) => {
-    if (resource >= itemCost) {
+    // Calculate the total cost based on the multiplier
+    const totalCost = itemCost * currentMultiplier;
+
+    // Check if the player can afford the total cost
+    if (resource >= totalCost) {
       for (let i = 0; i < currentMultiplier; i++) {
+        handlePurchase(itemEffect);
+      }
+    } else {
+      // If the player cannot afford the total cost, purchase as many as possible
+      const maxAffordable = Math.floor(resource / itemCost);
+      for (let i = 0; i < maxAffordable; i++) {
         handlePurchase(itemEffect);
       }
     }
