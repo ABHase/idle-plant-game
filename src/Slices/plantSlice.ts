@@ -536,11 +536,17 @@ const plantSlice = createSlice({
     resetLadybugs: (state) => {
       state.ladybugs = 1;
     },
-    //Reudcer to decrease ladyBugTicks by payload
     decreaseLadyBugTicks: (state, action: PayloadAction<number>) => {
-      console.log("decreaseLadyBugTicks");
-      state.ladyBugTicks -= action.payload;
+      // Check if the subtraction would result in a negative value
+      if (state.ladyBugTicks - action.payload < 0) {
+        // Set ladyBugTicks to 0 if the result is negative
+        state.ladyBugTicks = 0;
+      } else {
+        // Proceed with the subtraction if the result is not negative
+        state.ladyBugTicks -= action.payload;
+      }
     },
+
     //Reducer to add an amount of water to the plant from the payload
     addWater: (state, action: PayloadAction<number>) => {
       state.water += action.payload;

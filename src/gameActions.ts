@@ -90,13 +90,20 @@ export const updateGame = (
 
     // Check if ladybugs are less than 1
     if (plant.ladyBugTicks > 0) {
-      console.log("Ladybug ticks: ", plant.ladyBugTicks);
       // Decrement the local tick count for ladybug activation by the timeScale
       dispatch(decreaseLadyBugTicks(timeScale));
 
       //dispatch deductAllAphids
       dispatch({ type: "plant/deductAllAphids" });
 
+      // Check if 7 days (2016 ticks) have passed
+      if (plant.ladyBugTicks < 1) {
+        dispatch({ type: "plant/resetLadybugs" });
+      }
+    }
+
+    if (plant.ladyBugTicks < 0) {
+      dispatch(decreaseLadyBugTicks(timeScale));
       // Check if 7 days (2016 ticks) have passed
       if (plant.ladyBugTicks < 1) {
         dispatch({ type: "plant/resetLadybugs" });
