@@ -125,21 +125,7 @@ const OptionsModal: React.FC<OptionsModalProps> = ({
               width: "100%",
             }}
           />
-          <FormControlLabel
-            control={
-              <StyledCheckbox
-                checked={productionRateChecked}
-                onChange={handleProductionRateCheckboxChange}
-                name="productionRateCheckbox"
-              />
-            }
-            label="Show production rate instead of total water and sunlight?"
-            sx={{
-              color: "white",
-              border: "1px solid white",
-              width: "100%",
-            }}
-          />
+
           <FormControlLabel
             control={
               <StyledCheckbox

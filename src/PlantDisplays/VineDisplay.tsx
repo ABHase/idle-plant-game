@@ -216,6 +216,7 @@ const VineDisplay: React.FC<VineDisplayProps> = ({
             <WaterTooltip
               productionRate={report.water.netWaterProduction}
               amount={plant.water}
+              displayMode="amount"
             />
           </Grid>
 
@@ -223,6 +224,7 @@ const VineDisplay: React.FC<VineDisplayProps> = ({
             <SunlightTooltip
               productionRate={report.sunlight.netSunlightProduction}
               amount={plant.sunlight}
+              displayMode="amount"
             />
           </Grid>
           <Grid item xs={4}>

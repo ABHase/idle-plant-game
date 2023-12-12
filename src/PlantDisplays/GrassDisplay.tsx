@@ -69,6 +69,7 @@ import summerSong from "../assets/music/Summer_-_Grass.mp3";
 import autumnSong from "../assets/music/Autumn_-_Grass.mp3";
 import winterSong from "../assets/music/Winter_-_Grass.mp3";
 import MusicPlayer from "../Components/MusicPlayer";
+import SugarProductionRate from "../Components/Tooltips/SugarProductionRate";
 
 type GrassDisplayProps = {
   handleOpenModal: (modalName: string) => void;
@@ -309,6 +310,41 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({
             <WaterTooltip
               productionRate={report.water.netWaterProduction}
               amount={plant.water}
+              displayMode="productionRate"
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <SunlightTooltip
+              productionRate={report.sunlight.netSunlightProduction}
+              amount={plant.sunlight}
+              displayMode="productionRate"
+            />
+          </Grid>
+
+          <Grid item xs={4}>
+            <SugarProductionRate
+              maturityLevel={plant.maturity_level}
+              sugarProductionRate={plant.sugar_production_rate}
+              season={season}
+              autumnModifier={plant.autumnModifier}
+              winterModifier={plant.winterModifier}
+              agaveSugarBonus={plant.agaveSugarBonus}
+              sugar={plant.sugar}
+              difficulty={difficulty}
+              waterEfficiency={plant.water_efficiency_multiplier}
+              sunlightEfficiency={plant.sunlight_efficiency_multiplier}
+            />
+          </Grid>
+
+          <Grid item xs={12}>
+            <Divider sx={{ backgroundColor: "white" }} />
+          </Grid>
+
+          <Grid item xs={4}>
+            <WaterTooltip
+              productionRate={report.water.netWaterProduction}
+              amount={plant.water}
+              displayMode="amount"
             />
             <RootsTooltip amount={plant.roots} />
           </Grid>
@@ -317,6 +353,7 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({
             <SunlightTooltip
               productionRate={report.sunlight.netSunlightProduction}
               amount={plant.sunlight}
+              displayMode="amount"
             />
             <LeavesTooltip amount={plant.leaves} />
           </Grid>

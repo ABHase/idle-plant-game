@@ -7,15 +7,21 @@ import { RootState } from "../../rootReducer";
 interface WaterTooltipProps {
   productionRate: number;
   amount: number;
+  displayMode: "productionRate" | "amount"; // Added prop for display mode
 }
 
 const WaterTooltip: React.FC<WaterTooltipProps> = ({
   productionRate,
   amount,
+  displayMode, // Using the new prop
 }) => {
   const showProductionRate = useSelector(
     (state: RootState) => state.plantTime.showProductionRate
   );
+
+  // Determine which value to display based on the displayMode prop
+  const displayValue =
+    displayMode === "productionRate" ? productionRate : amount;
 
   return (
     <Tooltip
@@ -36,8 +42,10 @@ const WaterTooltip: React.FC<WaterTooltipProps> = ({
           gap: "4px",
         }}
       >
-        <Water amount={showProductionRate ? productionRate : amount} />
-        {showProductionRate && <Typography variant="body2">/s</Typography>}
+        <Water amount={displayValue} />
+        {displayMode === "productionRate" && (
+          <Typography variant="body2">/s</Typography>
+        )}
       </Box>
     </Tooltip>
   );
