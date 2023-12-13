@@ -8,7 +8,6 @@ import { RootState } from "../rootReducer";
 import {
   toggleNightMode,
   toggleRootRotConfirm,
-  toggleshowProductionRate,
 } from "../Slices/plantTimeSlice";
 
 interface OptionsModalProps {
@@ -26,17 +25,12 @@ const OptionsModal: React.FC<OptionsModalProps> = ({
   const rootRotConfirm = useSelector(
     (state: RootState) => state.plantTime.rootRotConfirm
   );
-  const showProductionRate = useSelector(
-    (state: RootState) => state.plantTime.showProductionRate
-  );
   const nightMode = useSelector(
     (state: RootState) => state.plantTime.nightMode
   );
 
   // Initialize checkbox states from the Redux store
   const [rootRotChecked, setRootRotChecked] = React.useState(rootRotConfirm);
-  const [productionRateChecked, setProductionRateChecked] =
-    React.useState(showProductionRate);
   const [nightModeChecked, setNightModeChecked] = React.useState(nightMode);
 
   // Update Redux state and local state when root rot checkbox is toggled
@@ -47,22 +41,12 @@ const OptionsModal: React.FC<OptionsModalProps> = ({
     dispatch(toggleRootRotConfirm());
   };
 
-  // Update Redux state and local state when production rate checkbox is toggled
-  const handleProductionRateCheckboxChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setProductionRateChecked(event.target.checked);
-    dispatch(toggleshowProductionRate());
-  };
-
   const handleNightModeCheckboxChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setNightModeChecked(event.target.checked);
     dispatch(toggleNightMode());
   };
-
-  const flexDirection = isMobile ? "column" : "row";
 
   // Styling the Checkbox with a border
   const StyledCheckbox = styled(Checkbox)(({ theme }) => ({

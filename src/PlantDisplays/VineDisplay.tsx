@@ -1,72 +1,39 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../rootReducer";
 import {
-  absorbSunlight,
-  absorbWater,
   toggleSugarProduction,
   buyLeaves,
   buyRoots,
   toggleGeneticMarkerProduction,
   toggleRootGrowth,
   toggleLeafGrowth,
-  turnOffGeneticMarkerProduction,
   setMaxResourceToSpend,
 } from "../Slices/plantSlice";
 import {
   Grid,
   Typography,
   Button,
-  Divider,
-  IconButton,
   Tooltip,
   Box,
-  LinearProgress,
   TextField,
 } from "@mui/material";
-import { Add, ArrowForwardIos, Clear } from "@mui/icons-material";
 import { LEAF_COST, ROOT_COST } from "../constants";
-import WbSunnyIcon from "@mui/icons-material/WbSunny";
-import OpacityIcon from "@mui/icons-material/Opacity";
-import GrainIcon from "@mui/icons-material/Grain";
-import GrassIcon from "@mui/icons-material/Grass";
-import SpaIcon from "@mui/icons-material/Spa";
-import ParkIcon from "@mui/icons-material/Park";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import CloseIcon from "@mui/icons-material/Close";
-import {
-  MATURITY_SUGAR_PRODUCTION_MODIFIER,
-  MATURITY_WATER_CONSUMPTION_MODIFIER,
-  MATURITY_SUNLIGHT_CONSUMPTION_MODIFIER,
-  BASE_WATER_CONSUMPTION,
-  BASE_SUNLIGHT_CONSUMPTION,
-} from "../constants";
+
 import { Water } from "../Components/Water";
 import { Sunlight } from "../Components/Sunlight";
-import { Roots } from "../Components/Roots";
-import { Leaves } from "../Components/Leaves";
 import { Sugar } from "../Components/Sugar";
-import { Maturity } from "../Components/Maturity";
-import { DNAIcon } from "../icons/dna";
 import { DNA } from "../Components/DNA";
 import {
   calculateActualSugarProductionPerMinute,
   calculatePhotosynthesisSunlightConsumption,
   calculatePhotosynthesisWaterConsumption,
-  determinePhotosynthesisSugarProduction,
-  isGeneticMarkerUpgradeUnlocked,
-  isSugarUpgradesUnlocked,
   itemizedReport,
 } from "../formulas";
-import ToggleAutoLeafButton from "../Components/Buttons/ToggleAutoLeafButton";
-import ToggleAutoRootButton from "../Components/Buttons/ToggleAutoRootButton";
-import MaturityTooltip from "../Components/Tooltips/MaturityTooltip";
 import ResourceConversionTooltip from "../Components/Tooltips/ResourceConversionTooltip";
 import SunlightTooltip from "../Components/Tooltips/SunlightTooltip";
-import RootsTooltip from "../Components/Tooltips/RootsTooltip";
-import LeavesTooltip from "../Components/Tooltips/LeavesTooltip";
 import WaterTooltip from "../Components/Tooltips/WaterTooltip";
-import MultiplierToggleButton from "../Components/Buttons/MultiplierToggleButton";
 
 type VineDisplayProps = {
   handleOpenModal: (modalName: string) => void;
@@ -82,10 +49,9 @@ const VineDisplay: React.FC<VineDisplayProps> = ({
   const plantTime = useSelector((state: RootState) => state.plantTime);
   const [multiplier, setMultiplier] = useState<number>(1);
 
-  const { geneticMarkerProgressVine, geneticMarkerThresholdVine } = useSelector(
+  const { geneticMarkerThresholdVine } = useSelector(
     (state: RootState) => state.globalState
   );
-  const plantState = useSelector((state: RootState) => state.plant);
 
   const difficulty = useSelector(
     (state: RootState) => state.globalState.difficulty
@@ -102,57 +68,6 @@ const VineDisplay: React.FC<VineDisplayProps> = ({
   const { season } = useSelector((state: RootState) => state.plantTime);
   const report = itemizedReport(plant, season, difficulty, timeScale);
 
-  // Sugar Modifier
-  let sugarModifier = 1; // default
-  if (season === "Autumn") {
-    sugarModifier = plantState.autumnModifier;
-  } else if (season === "Winter") {
-    sugarModifier = plantState.winterModifier;
-  }
-
-  // Water Modifier
-  let waterModifier = 1; // default
-  if (season === "Spring") {
-    waterModifier = plantState.springModifier;
-  } else if (season === "Winter") {
-    waterModifier = plantState.winterModifier;
-  }
-
-  // Sunlight Modifier
-  let sunlightModifier = 1; // default
-  if (season === "Summer") {
-    sunlightModifier = plantState.summerModifier;
-  } else if (season === "Winter") {
-    sunlightModifier = plantState.winterModifier;
-  }
-
-  const baseRate = plantState.sugar_production_rate;
-  const modifiedRate =
-    baseRate *
-    (1 + MATURITY_SUGAR_PRODUCTION_MODIFIER * plantState.maturity_level) *
-    sugarModifier;
-  const waterConsumption =
-    BASE_WATER_CONSUMPTION *
-    (1 + MATURITY_WATER_CONSUMPTION_MODIFIER * plantState.maturity_level);
-  const sunlightConsumption =
-    BASE_SUNLIGHT_CONSUMPTION *
-    (1 + MATURITY_SUNLIGHT_CONSUMPTION_MODIFIER * plantState.maturity_level);
-
-  const isSugarProductionPossible =
-    plantState.is_sugar_production_on &&
-    plantState.water > waterConsumption &&
-    plantState.sunlight > sunlightConsumption;
-
-  const netSunlightRate = isSugarProductionPossible
-    ? (plantState.leaves - sunlightConsumption) *
-      plantState.sunlight_absorption_multiplier *
-      sunlightModifier *
-      plant.ladybugs
-    : plantState.leaves *
-      plantState.sunlight_absorption_multiplier *
-      sunlightModifier *
-      plant.ladybugs;
-
   const sugarInfo = calculateActualSugarProductionPerMinute(
     plant,
     report,
@@ -160,44 +75,12 @@ const VineDisplay: React.FC<VineDisplayProps> = ({
     difficulty
   );
 
-  const handleSunlightAbsorption = () => {
-    dispatch(absorbSunlight());
-  };
-
-  const handleWaterAbsorption = () => {
-    dispatch(absorbWater());
-  };
-
   const handleToggleSugarProduction = () => {
     dispatch(toggleSugarProduction());
   };
 
-  const handleBuyRoots = () => {
-    dispatch(buyRoots({ cost: ROOT_COST, multiplier: multiplier }));
-  };
-
-  const handleBuyLeaves = () => {
-    dispatch(buyLeaves({ cost: LEAF_COST, multiplier: multiplier }));
-  };
-
   const handleToggleGeneticMarkerProduction = () => {
     dispatch(toggleGeneticMarkerProduction());
-  };
-
-  const handleToggleAutoLeaves = () => {
-    dispatch(toggleLeafGrowth());
-  };
-
-  const handleToggleAutoRoots = () => {
-    dispatch(toggleRootGrowth());
-  };
-
-  const toggleMultiplier = (value: number) => {
-    if (multiplier === value) {
-      setMultiplier(1); // If the clicked multiplier is the same as the current multiplier, reset to 1
-    } else {
-      setMultiplier(value); // Otherwise, set to the clicked value
-    }
   };
 
   return (
@@ -337,6 +220,7 @@ const VineDisplay: React.FC<VineDisplayProps> = ({
                   border: "1px solid #aaa",
                   borderRadius: "4px",
                   backgroundColor: "#332932",
+                  padding: "12px",
                   color: "#DEA4FC",
                   "&:active, &:focus": {
                     backgroundColor: "#332932", // Or any other style reset

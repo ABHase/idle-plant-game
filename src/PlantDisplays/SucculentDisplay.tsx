@@ -24,13 +24,7 @@ import {
 } from "@mui/material";
 import { LEAF_COST, ROOT_COST } from "../constants";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import {
-  MATURITY_SUGAR_PRODUCTION_MODIFIER,
-  MATURITY_WATER_CONSUMPTION_MODIFIER,
-  MATURITY_SUNLIGHT_CONSUMPTION_MODIFIER,
-  BASE_WATER_CONSUMPTION,
-  BASE_SUNLIGHT_CONSUMPTION,
-} from "../constants";
+
 import { Water } from "../Components/Water";
 import { Sunlight } from "../Components/Sunlight";
 import { Roots } from "../Components/Roots";
@@ -111,8 +105,9 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
 
   const paused = useSelector((state: RootState) => state.app.paused);
 
-  const { geneticMarkerProgress, geneticMarkerThresholdSucculent } =
-    useSelector((state: RootState) => state.globalState);
+  const { geneticMarkerThresholdSucculent } = useSelector(
+    (state: RootState) => state.globalState
+  );
   const plantState = useSelector((state: RootState) => state.plant);
 
   const difficulty = useSelector(
@@ -130,57 +125,6 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
   const { season } = useSelector((state: RootState) => state.plantTime);
   const songSeason = useSelector((state: RootState) => state.plantTime.season);
   const report = itemizedReport(plant, season, difficulty, timeScale);
-
-  // Sugar Modifier
-  let sugarModifier = 1; // default
-  if (season === "Autumn") {
-    sugarModifier = plantState.autumnModifier;
-  } else if (season === "Winter") {
-    sugarModifier = plantState.winterModifier;
-  }
-
-  // Water Modifier
-  let waterModifier = 1; // default
-  if (season === "Spring") {
-    waterModifier = plantState.springModifier;
-  } else if (season === "Winter") {
-    waterModifier = plantState.winterModifier;
-  }
-
-  // Sunlight Modifier
-  let sunlightModifier = 1; // default
-  if (season === "Summer") {
-    sunlightModifier = plantState.summerModifier;
-  } else if (season === "Winter") {
-    sunlightModifier = plantState.winterModifier;
-  }
-
-  const baseRate = plantState.sugar_production_rate;
-  const modifiedRate =
-    baseRate *
-    (1 + MATURITY_SUGAR_PRODUCTION_MODIFIER * plantState.maturity_level) *
-    sugarModifier;
-  const waterConsumption =
-    BASE_WATER_CONSUMPTION *
-    (1 + MATURITY_WATER_CONSUMPTION_MODIFIER * plantState.maturity_level);
-  const sunlightConsumption =
-    BASE_SUNLIGHT_CONSUMPTION *
-    (1 + MATURITY_SUNLIGHT_CONSUMPTION_MODIFIER * plantState.maturity_level);
-
-  const isSugarProductionPossible =
-    plantState.is_sugar_production_on &&
-    plantState.water > waterConsumption &&
-    plantState.sunlight > sunlightConsumption;
-
-  const netSunlightRate = isSugarProductionPossible
-    ? (plantState.leaves - sunlightConsumption) *
-      plantState.sunlight_absorption_multiplier *
-      sunlightModifier *
-      plant.ladybugs
-    : plantState.leaves *
-      plantState.sunlight_absorption_multiplier *
-      sunlightModifier *
-      plant.ladybugs;
 
   const sugarInfo = calculateActualSugarProductionPerMinute(
     plant,
@@ -285,28 +229,6 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
             {/* Music Player Component */}
             <MusicPlayer song={songToPlay} />
           </Grid>
-          {plant.aphids > 1 ? (
-            <Grid item xs={12}>
-              <Button
-                variant="contained"
-                size="medium"
-                fullWidth
-                sx={{
-                  backgroundColor: "#e6842e",
-                  color: "#000000",
-                  "&:hover": {
-                    backgroundColor: "#ba671e", // This is a lighter shade of orange
-                  },
-                  "&:active, &:focus": {
-                    backgroundColor: "#e6842e", // Or any other style reset
-                  },
-                }}
-                onClick={() => handleOpenModal(modalName)}
-              >
-                <Typography variant="h5">You Have Aphids!</Typography>
-              </Button>
-            </Grid>
-          ) : null}
 
           <Grid item xs={4}>
             <WaterTooltip
@@ -486,6 +408,7 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
                   border: "1px solid #aaa",
                   borderRadius: "4px",
                   backgroundColor: "#332932",
+                  padding: "12px",
                   color: "#DEA4FC",
                   "&:active, &:focus": {
                     backgroundColor: "#332932", // Or any other style reset

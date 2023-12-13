@@ -165,46 +165,16 @@ export const UPGRADES: Record<string, Upgrade[]> = {
       cost: 1,
     },
     {
-      id: "boost_sunlight_absorption",
-      name: "Trichomes",
-      description: "Increase manual sunlight absorption by 50%",
-      cost: 1,
-    },
-    {
-      id: "boost_water_absorption",
-      name: "Aquaporins",
-      description: "Increase manual water absorption by 50%",
-      cost: 1,
-    },
-    {
-      id: "boost_sunlight_multiplier",
-      name: "Heliotropism",
-      description: "Increase passive sunlight absorption efficiency by 20%",
-      cost: 3,
-    },
-    {
-      id: "boost_water_multiplier",
-      name: "Root Hairs",
-      description: "Increase passive water absorption efficiency by 20%",
-      cost: 3,
-    },
-    {
-      id: "boost_sunlight_efficiency_multiplier",
-      name: "Extra Chlorophyll",
-      description: "Reduce the base sunlight to sugar ratio by 10%",
-      cost: 7,
-    },
-    {
-      id: "boost_water_efficiency_multiplier",
-      name: "Stomatal Regulation",
-      description: "Reduce the base water to sugar ratio by 10%",
-      cost: 7,
-    },
-    {
       id: "boost_sugar_tier_2",
       name: "Cam Pathway Tier 2",
       description: "Increase base sugar production by 100%",
       cost: 10,
+    },
+    {
+      id: "boost_sunlight_absorption",
+      name: "Trichomes",
+      description: "Increase manual sunlight absorption by 50%",
+      cost: 1,
     },
     {
       id: "boost_sunlight_absorption_tier_2",
@@ -213,10 +183,10 @@ export const UPGRADES: Record<string, Upgrade[]> = {
       cost: 10,
     },
     {
-      id: "toggle_genetic_marker_upgrade",
-      name: "Nutrient Recycling",
-      description: "Double the rate of genetic marker production",
-      cost: 10,
+      id: "boost_water_absorption",
+      name: "Aquaporins",
+      description: "Increase manual water absorption by 50%",
+      cost: 1,
     },
     {
       id: "boost_water_absorption_tier_2",
@@ -225,10 +195,22 @@ export const UPGRADES: Record<string, Upgrade[]> = {
       cost: 10,
     },
     {
+      id: "boost_sunlight_multiplier",
+      name: "Heliotropism",
+      description: "Increase passive sunlight absorption efficiency by 20%",
+      cost: 3,
+    },
+    {
       id: "boost_sunlight_multiplier_tier_2",
       name: "Heliotropism Tier 2",
       description: "Increase passive sunlight absorption efficiency by 40%",
       cost: 20,
+    },
+    {
+      id: "boost_water_multiplier",
+      name: "Root Hairs",
+      description: "Increase passive water absorption efficiency by 20%",
+      cost: 3,
     },
     {
       id: "boost_water_multiplier_tier_2",
@@ -237,10 +219,22 @@ export const UPGRADES: Record<string, Upgrade[]> = {
       cost: 20,
     },
     {
+      id: "boost_sunlight_efficiency_multiplier",
+      name: "Extra Chlorophyll",
+      description: "Reduce the base sunlight to sugar ratio by 10%",
+      cost: 7,
+    },
+    {
       id: "boost_sunlight_efficiency_multiplier_tier_2",
       name: "Extra Chlorophyll Tier 2",
       description: "Reduce the base sunlight to sugar ratio by 20%",
       cost: 50,
+    },
+    {
+      id: "boost_water_efficiency_multiplier",
+      name: "Stomatal Regulation",
+      description: "Reduce the base water to sugar ratio by 10%",
+      cost: 7,
     },
     {
       id: "boost_water_efficiency_multiplier_tier_2",
@@ -248,6 +242,14 @@ export const UPGRADES: Record<string, Upgrade[]> = {
       description: "Reduce the base water to sugar ratio by 20%",
       cost: 50,
     },
+
+    {
+      id: "toggle_genetic_marker_upgrade",
+      name: "Nutrient Recycling",
+      description: "Double the rate of genetic marker production",
+      cost: 10,
+    },
+
     {
       id: "increase_root_rot_threshold",
       name: "Symboisis",
@@ -349,17 +351,18 @@ export const UPGRADES: Record<string, Upgrade[]> = {
       cost: 30,
     },
     {
-      id: "boost_water_multiplier_succulent",
-      name: "Root Hairs",
-      description: "Increase passive water absorption efficiency by 20%",
-      cost: 30,
-    },
-    {
       id: "boost_sunlight_multiplier_succulent_2",
       name: "Heliotropism 2",
       description: "Increase passive sunlight absorption efficiency by 40%",
       cost: 100,
     },
+    {
+      id: "boost_water_multiplier_succulent",
+      name: "Root Hairs",
+      description: "Increase passive water absorption efficiency by 20%",
+      cost: 30,
+    },
+
     {
       id: "boost_water_multiplier_succulent_2",
       name: "Root Hairs 2",
@@ -373,17 +376,18 @@ export const UPGRADES: Record<string, Upgrade[]> = {
       cost: 70,
     },
     {
-      id: "boost_water_efficiency_multiplier_succulent",
-      name: "Stomatal Regulation",
-      description: "Reduce the base water to sugar ratio by 10%",
-      cost: 70,
-    },
-    {
       id: "boost_sunlight_efficiency_multiplier_succulent_2",
       name: "Extra Chlorophyll 2",
       description: "Reduce the base sunlight to sugar ratio by 20%",
       cost: 200,
     },
+    {
+      id: "boost_water_efficiency_multiplier_succulent",
+      name: "Stomatal Regulation",
+      description: "Reduce the base water to sugar ratio by 10%",
+      cost: 70,
+    },
+
     {
       id: "boost_water_efficiency_multiplier_succulent_2",
       name: "Stomatal Regulation 2",
@@ -429,17 +433,18 @@ export const UPGRADES: Record<string, Upgrade[]> = {
       cost: 3,
     },
     {
-      id: "boost_water_multiplier_grass",
-      name: "Root Hairs",
-      description: "Increase passive water absorption efficiency by 20%",
-      cost: 3,
-    },
-    {
       id: "boost_sunlight_multiplier_grass_2",
       name: "Heliotropism 2",
       description: "Increase passive sunlight absorption efficiency by 40%",
       cost: 10,
     },
+    {
+      id: "boost_water_multiplier_grass",
+      name: "Root Hairs",
+      description: "Increase passive water absorption efficiency by 20%",
+      cost: 3,
+    },
+
     {
       id: "boost_water_multiplier_grass_2",
       name: "Root Hairs 2",
@@ -453,17 +458,18 @@ export const UPGRADES: Record<string, Upgrade[]> = {
       cost: 7,
     },
     {
-      id: "boost_water_efficiency_multiplier_grass",
-      name: "Stomatal Regulation",
-      description: "Reduce the base water to sugar ratio by 10%",
-      cost: 7,
-    },
-    {
       id: "boost_sunlight_efficiency_multiplier_grass_2",
       name: "Extra Chlorophyll 2",
       description: "Reduce the base sunlight to sugar ratio by 20%",
       cost: 20,
     },
+    {
+      id: "boost_water_efficiency_multiplier_grass",
+      name: "Stomatal Regulation",
+      description: "Reduce the base water to sugar ratio by 10%",
+      cost: 7,
+    },
+
     {
       id: "boost_water_efficiency_multiplier_grass_2",
       name: "Stomatal Regulation 2",
@@ -483,6 +489,13 @@ export const UPGRADES: Record<string, Upgrade[]> = {
       description:
         "Auto grows 1000 more roots or leaves per cycle, for the same sugar.",
       cost: 100,
+    },
+    {
+      id: "auto_grow_10000",
+      name: "Spread 10000",
+      description:
+        "Auto grows 10000 more roots or leaves per cycle, for the same sugar.",
+      cost: 250,
     },
     {
       id: "bloom_grass",
@@ -508,87 +521,8 @@ export const UPGRADES: Record<string, Upgrade[]> = {
       description: "Reduce Winter penalty by 50%",
       cost: 200,
     },
-    {
-      id: "auto_grow_10000",
-      name: "Spread 10000",
-      description:
-        "Auto grows 10000 more roots or leaves per cycle, for the same sugar.",
-      cost: 250,
-    },
   ],
   Bush: [
-    {
-      id: "boost_sugar_bush",
-      name: "Cam Pathway",
-      description: "Increase base sugar production by 50%",
-      cost: 10,
-    },
-    {
-      id: "boost_sunlight_absorption_bush",
-      name: "Trichomes",
-      description: "Increase manual sunlight absorption by 50%",
-      cost: 10,
-    },
-    {
-      id: "boost_water_absorption_bush",
-      name: "Aquaporins",
-      description: "Increase manual water absorption by 50%",
-      cost: 10,
-    },
-    {
-      id: "boost_sunlight_multiplier_bush",
-      name: "Heliotropism",
-      description: "Increase passive sunlight absorption efficiency by 20%",
-      cost: 30,
-    },
-    {
-      id: "boost_water_multiplier_bush",
-      name: "Root Hairs",
-      description: "Increase passive water absorption efficiency by 20%",
-      cost: 30,
-    },
-    {
-      id: "boost_sunlight_efficiency_multiplier_bush",
-      name: "Extra Chlorophyll",
-      description: "Reduce the base sunlight to sugar ratio by 10%",
-      cost: 70,
-    },
-    {
-      id: "boost_water_efficiency_multiplier_bush",
-      name: "Stomatal Regulation",
-      description: "Reduce the base water to sugar ratio by 10%",
-      cost: 70,
-    },
-    {
-      id: "boost_sugar_tier_2_bush",
-      name: "Cam Pathway Tier 2",
-      description: "Increase base sugar production by 100%",
-      cost: 100,
-    },
-    {
-      id: "boost_sunlight_absorption_tier_2_bush",
-      name: "Trichomes Tier 2",
-      description: "Increase manual sunlight absorption by 100%",
-      cost: 100,
-    },
-    {
-      id: "boost_water_absorption_tier_2_bush",
-      name: "Aquaporins Tier 2",
-      description: "Increase manual water absorption by 100%",
-      cost: 100,
-    },
-    {
-      id: "boost_sunlight_multiplier_tier_2_bush",
-      name: "Heliotropism Tier 2",
-      description: "Increase passive sunlight absorption efficiency by 40%",
-      cost: 200,
-    },
-    {
-      id: "boost_water_multiplier_tier_2_bush",
-      name: "Root Hairs Tier 2",
-      description: "Increase passive water absorption efficiency by 40%",
-      cost: 200,
-    },
     {
       id: "flower_dna_upgrade",
       name: "Flower DNA",
@@ -602,10 +536,77 @@ export const UPGRADES: Record<string, Upgrade[]> = {
       cost: 500,
     },
     {
-      id: "boost_sunlight_efficiency_multiplier_tier_2_bush",
-      name: "Extra Chlorophyll Tier 2",
-      description: "Reduce the base sunlight to sugar ratio by 20%",
-      cost: 500,
+      id: "flower_dna_upgrade_3",
+      name: "Flower DNA 3",
+      description: "Flowers now give 10 more DNA when they mature",
+      cost: 1000,
+    },
+    {
+      id: "boost_sugar_bush",
+      name: "Cam Pathway",
+      description: "Increase base sugar production by 50%",
+      cost: 10,
+    },
+    {
+      id: "boost_sugar_tier_2_bush",
+      name: "Cam Pathway Tier 2",
+      description: "Increase base sugar production by 100%",
+      cost: 100,
+    },
+    {
+      id: "boost_sunlight_absorption_bush",
+      name: "Trichomes",
+      description: "Increase manual sunlight absorption by 50%",
+      cost: 10,
+    },
+    {
+      id: "boost_sunlight_absorption_tier_2_bush",
+      name: "Trichomes Tier 2",
+      description: "Increase manual sunlight absorption by 100%",
+      cost: 100,
+    },
+    {
+      id: "boost_water_absorption_bush",
+      name: "Aquaporins",
+      description: "Increase manual water absorption by 50%",
+      cost: 10,
+    },
+    {
+      id: "boost_water_absorption_tier_2_bush",
+      name: "Aquaporins Tier 2",
+      description: "Increase manual water absorption by 100%",
+      cost: 100,
+    },
+    {
+      id: "boost_sunlight_multiplier_bush",
+      name: "Heliotropism",
+      description: "Increase passive sunlight absorption efficiency by 20%",
+      cost: 30,
+    },
+    {
+      id: "boost_sunlight_multiplier_tier_2_bush",
+      name: "Heliotropism Tier 2",
+      description: "Increase passive sunlight absorption efficiency by 40%",
+      cost: 200,
+    },
+    {
+      id: "boost_water_multiplier_bush",
+      name: "Root Hairs",
+      description: "Increase passive water absorption efficiency by 20%",
+      cost: 30,
+    },
+    {
+      id: "boost_water_multiplier_tier_2_bush",
+      name: "Root Hairs Tier 2",
+      description: "Increase passive water absorption efficiency by 40%",
+      cost: 200,
+    },
+
+    {
+      id: "boost_water_efficiency_multiplier_bush",
+      name: "Stomatal Regulation",
+      description: "Reduce the base water to sugar ratio by 10%",
+      cost: 70,
     },
     {
       id: "boost_water_efficiency_multiplier_tier_2_bush",
@@ -614,11 +615,19 @@ export const UPGRADES: Record<string, Upgrade[]> = {
       cost: 500,
     },
     {
-      id: "flower_dna_upgrade_3",
-      name: "Flower DNA 3",
-      description: "Flowers now give 10 more DNA when they mature",
-      cost: 1000,
+      id: "boost_sunlight_efficiency_multiplier_bush",
+      name: "Extra Chlorophyll",
+      description: "Reduce the base sunlight to sugar ratio by 10%",
+      cost: 70,
     },
+
+    {
+      id: "boost_sunlight_efficiency_multiplier_tier_2_bush",
+      name: "Extra Chlorophyll Tier 2",
+      description: "Reduce the base sunlight to sugar ratio by 20%",
+      cost: 500,
+    },
+
     {
       id: "flower_turbo_consumption",
       name: "Turbo Flowers",

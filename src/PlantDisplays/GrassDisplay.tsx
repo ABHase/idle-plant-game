@@ -9,7 +9,6 @@ import {
   buyRoots,
   toggleGeneticMarkerProduction,
   toggleRootGrowth,
-  turnOffGeneticMarkerProduction,
   setMaxResourceToSpend,
 } from "../Slices/plantSlice";
 import {
@@ -20,33 +19,23 @@ import {
   IconButton,
   Tooltip,
   Box,
-  LinearProgress,
   Snackbar,
   TextField,
 } from "@mui/material";
 import { LEAF_COST, ROOT_COST } from "../constants";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import CloseIcon from "@mui/icons-material/Close";
-import {
-  MATURITY_SUGAR_PRODUCTION_MODIFIER,
-  MATURITY_WATER_CONSUMPTION_MODIFIER,
-  MATURITY_SUNLIGHT_CONSUMPTION_MODIFIER,
-  BASE_WATER_CONSUMPTION,
-  BASE_SUNLIGHT_CONSUMPTION,
-} from "../constants";
+
 import { Water } from "../Components/Water";
 import { Sunlight } from "../Components/Sunlight";
 import { Roots } from "../Components/Roots";
 import { Leaves } from "../Components/Leaves";
 import { Sugar } from "../Components/Sugar";
-import { Maturity } from "../Components/Maturity";
-import { DNAIcon } from "../icons/dna";
 import { DNA } from "../Components/DNA";
 import {
   calculateActualSugarProductionPerMinute,
   calculatePhotosynthesisSunlightConsumption,
   calculatePhotosynthesisWaterConsumption,
-  determinePhotosynthesisSugarProduction,
   getHalfAffordableLeaves,
   getHalfAffordableLeavesSucculent,
   getHalfAffordableRoots,
@@ -83,7 +72,6 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({
   const dispatch = useDispatch();
   const plant = useSelector((state: RootState) => state.plant);
   const plantTime = useSelector((state: RootState) => state.plantTime);
-  const day = useSelector((state: RootState) => state.plantTime.day);
 
   const [multiplier, setMultiplier] = useState<number>(1);
 
@@ -117,7 +105,7 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({
 
   const paused = useSelector((state: RootState) => state.app.paused);
 
-  const { geneticMarkerProgress, geneticMarkerThresholdGrass } = useSelector(
+  const { geneticMarkerThresholdGrass } = useSelector(
     (state: RootState) => state.globalState
   );
   const plantState = useSelector((state: RootState) => state.plant);
@@ -140,57 +128,6 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({
 
   // State for whether the alert saying you can't disable automatic leaf growth is open
   const [showGrassWarning, setShowGrassWarning] = useState(false);
-
-  // Sugar Modifier
-  let sugarModifier = 1; // default
-  if (season === "Autumn") {
-    sugarModifier = plantState.autumnModifier;
-  } else if (season === "Winter") {
-    sugarModifier = plantState.winterModifier;
-  }
-
-  // Water Modifier
-  let waterModifier = 1; // default
-  if (season === "Spring") {
-    waterModifier = plantState.springModifier;
-  } else if (season === "Winter") {
-    waterModifier = plantState.winterModifier;
-  }
-
-  // Sunlight Modifier
-  let sunlightModifier = 1; // default
-  if (season === "Summer") {
-    sunlightModifier = plantState.summerModifier;
-  } else if (season === "Winter") {
-    sunlightModifier = plantState.winterModifier;
-  }
-
-  const baseRate = plantState.sugar_production_rate;
-  const modifiedRate =
-    baseRate *
-    (1 + MATURITY_SUGAR_PRODUCTION_MODIFIER * plantState.maturity_level) *
-    sugarModifier;
-  const waterConsumption =
-    BASE_WATER_CONSUMPTION *
-    (1 + MATURITY_WATER_CONSUMPTION_MODIFIER * plantState.maturity_level);
-  const sunlightConsumption =
-    BASE_SUNLIGHT_CONSUMPTION *
-    (1 + MATURITY_SUNLIGHT_CONSUMPTION_MODIFIER * plantState.maturity_level);
-
-  const isSugarProductionPossible =
-    plantState.is_sugar_production_on &&
-    plantState.water > waterConsumption &&
-    plantState.sunlight > sunlightConsumption;
-
-  const netSunlightRate = isSugarProductionPossible
-    ? (plantState.leaves - sunlightConsumption) *
-      plantState.sunlight_absorption_multiplier *
-      sunlightModifier *
-      plant.ladybugs
-    : plantState.leaves *
-      plantState.sunlight_absorption_multiplier *
-      sunlightModifier *
-      plant.ladybugs;
 
   const sugarInfo = calculateActualSugarProductionPerMinute(
     plant,
@@ -484,6 +421,7 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({
                   border: "1px solid #aaa",
                   borderRadius: "4px",
                   backgroundColor: "#332932",
+                  padding: "12px",
                   color: "#DEA4FC",
                   "&:active, &:focus": {
                     backgroundColor: "#332932", // Or any other style reset

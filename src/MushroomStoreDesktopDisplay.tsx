@@ -1,9 +1,7 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
 import {
   DESERT_MUSHROOM_ITEMS,
   GRASS_MUSHROOM_ITEMS,
@@ -29,7 +27,6 @@ import { Water } from "./Components/Water";
 import { formatTime } from "./PlantDisplays/BushDisplay";
 import { DNA } from "./Components/DNA";
 import LocalFloristIcon from "@mui/icons-material/LocalFlorist";
-import { Flower } from "./Components/Flower";
 import MultiplierToggleButton from "./Components/Buttons/MultiplierToggleButton";
 
 const getCostType = (item: MushroomItem): string => {
@@ -358,8 +355,6 @@ const MushroomStoreDesktopDisplay = () => {
                 {plant.flowers.map((flower, index) => {
                   const remainingWater =
                     plant.flowerWaterThreshold - flower.water;
-                  const remainingSugar =
-                    plant.flowerSugarThreshold - flower.sugar;
 
                   const timeForWater = formatTime(remainingWater / 10);
 
@@ -438,18 +433,20 @@ const MushroomStoreDesktopDisplay = () => {
                 padding: "0 8px",
               }}
             >
-              {[1, 5, 10].map((multiplier) => (
-                <MultiplierToggleButton
-                  key={multiplier}
-                  currentMultiplier={currentMultiplier}
-                  value={multiplier}
-                  onClick={setCurrentMultiplier}
-                />
-              ))}
+              {plantType !== "Grass" &&
+                [1, 5, 10].map((multiplier) => (
+                  <MultiplierToggleButton
+                    key={multiplier}
+                    currentMultiplier={currentMultiplier}
+                    value={multiplier}
+                    onClick={setCurrentMultiplier}
+                  />
+                ))}
             </Box>
           </Box>
         </>
       )}
+
       {renderContent()}
     </Box>
   );
