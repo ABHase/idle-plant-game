@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import "./App.css";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "./rootReducer";
-import { createSelector } from "reselect";
 import { evolveAndRecordPlant, updateGame } from "./gameActions";
 import store, { AppDispatch } from "./store";
 import GlobalStateDisplay from "./DNADisplays/GlobalStateDisplay";
@@ -51,6 +50,7 @@ import VineDNADisplay from "./DNADisplays/VineDNADisplay";
 import Splash from "./Components/Splash";
 import OptionsModal from "./Modals/OptionsModal";
 import mainImage from "./assets/background.png";
+import vineImage from "./assets/vine.jpg";
 
 const useIsNewUser = () => {
   const isNewUser = localStorage.getItem("isNewUser");
@@ -127,6 +127,8 @@ function App() {
     (state: RootState) => state.plant.lastLeafLossReason
   );
 
+  const season = useSelector((state: RootState) => state.plantTime.season);
+
   const nightMode = useSelector(
     (state: RootState) => state.plantTime.nightMode
   );
@@ -148,13 +150,6 @@ function App() {
   };
 
   const [evolveDialogOpen, setEvolveDialogOpen] = useState(false);
-
-  const handleEvolve = (
-    selectedPlantType: string,
-    selectedTraits: string[]
-  ) => {
-    dispatch(evolveAndRecordPlant(selectedPlantType, selectedTraits));
-  };
 
   useEffect(() => {
     // Only proceed if a plant is selected
@@ -209,7 +204,7 @@ function App() {
         : lastUpdateTimeRef.current;
 
     const gameState = store.getState().globalState;
-    const plantType = store.getState().plant.type;
+
     const baseTimeScale = gameState.globalBoostedTicks > 0 ? 60 : 1;
     const modifiedTimeScale =
       gameState.globalBoostedTicks > 0
@@ -241,7 +236,7 @@ function App() {
   }
 
   const [showLeafLossWarning, setShowLeafLossWarning] = useState(false);
-  const [plantType] = React.useState<string>("Fern");
+  //const [plantType] = React.useState<string>("Fern");
 
   const renderPlantComponent = () => {
     switch (plantDisplayType) {
@@ -312,6 +307,29 @@ function App() {
     }
   };
 
+  function getPlantBackgroundImage(
+    plantType: string,
+    season: string,
+    nightMode: boolean
+  ): string {
+    if (nightMode) return "none";
+
+    const imageMap: { [key: string]: { [key: string]: string } } = {
+      Vine: {
+        Spring: vineImage,
+        Summer: vineImage,
+        Autumn: vineImage,
+        Winter: vineImage,
+      },
+      // ... similar mappings for other plant types
+    };
+
+    // Default to a general image if specific type-season combination is not found
+    return imageMap[plantType]?.[season] || mainImage;
+  }
+
+  const plantType = store.getState().plant.type;
+
   return (
     <ThemeProvider theme={theme}>
       {showSplash ? (
@@ -323,7 +341,11 @@ function App() {
           width="100%"
           justifyContent="center"
           style={{
-            backgroundImage: nightMode ? "none" : `url(${mainImage})`,
+            backgroundImage: `url(${getPlantBackgroundImage(
+              plantType,
+              season,
+              nightMode
+            )})`,
             backgroundSize: "cover", // Ensures the background covers the entire Box
             backgroundPosition: "center", // Centers the background image
             backgroundRepeat: "no-repeat", // Prevents repeating the image
@@ -340,7 +362,7 @@ function App() {
               overflow="auto"
               height="100vh"
             >
-              <MushroomStoreDesktopDisplay />
+              <>{plantType !== "Vine" && <MushroomStoreDesktopDisplay />}</>
             </Box>
           )}
           {/* Main Content */}

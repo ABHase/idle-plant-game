@@ -59,7 +59,7 @@ export const initialState: GlobalState = {
   geneticMarkerProgressVine: 0,
   geneticMarkerThresholdVine: 100,
   geneticMarkersVine: 0,
-  seeds: 0,
+  seeds: 1,
   silica: 0,
   tannins: 0,
   calcium: 0,

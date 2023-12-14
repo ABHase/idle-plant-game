@@ -104,6 +104,12 @@ const MushroomStoreDesktopDisplay = () => {
 
   const plantType = useSelector((state: RootState) => state.plant.type); // Extract plant type
 
+  useEffect(() => {
+    if (plantType === "Grass") {
+      setCurrentMultiplier(1);
+    }
+  }, [plantType]);
+
   //Handle long pressing
 
   const [pressTimer, setPressTimer] = useState<number | null>(null);
