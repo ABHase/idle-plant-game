@@ -78,8 +78,18 @@ const MushroomStoreDesktopDisplay = () => {
   const handleButtonClick = (
     resource: number,
     itemCost: number,
-    itemEffect: any
+    itemEffect: any,
+    itemId: string
   ) => {
+    // Check if the item should only be purchased one at a time
+    if (itemId === "reset_succulent_threshold") {
+      if (resource >= itemCost) {
+        handlePurchase(itemEffect);
+      }
+      // Early return to prevent multiple purchases
+      return;
+    }
+
     // Calculate the total cost based on the multiplier
     const totalCost = itemCost * currentMultiplier;
 
@@ -143,7 +153,7 @@ const MushroomStoreDesktopDisplay = () => {
           <ButtonBase
             onMouseDown={() =>
               handleButtonPress(() =>
-                handleButtonClick(sugar, item.cost, item.effect)
+                handleButtonClick(sugar, item.cost, item.effect, item.id)
               )
             }
             onMouseUp={handleButtonRelease}
@@ -153,6 +163,9 @@ const MushroomStoreDesktopDisplay = () => {
             <Box key={item.id} mt={2}>
               <Typography variant="body1">{item.name}</Typography>
               <Typography variant="body2">{item.description}</Typography>
+              <Typography variant="body2" sx={{ display: "flex" }}>
+                Buying up to: {currentMultiplier}
+              </Typography>
               <Typography variant="body2" sx={{ display: "flex" }}>
                 Cost: <Sugar amount={item.cost * currentMultiplier} />
               </Typography>
@@ -187,13 +200,28 @@ const MushroomStoreDesktopDisplay = () => {
                       handleButtonPress(() => {
                         switch (costType) {
                           case "sunlight":
-                            handleButtonClick(sunlight, item.cost, item.effect);
+                            handleButtonClick(
+                              sunlight,
+                              item.cost,
+                              item.effect,
+                              item.id
+                            );
                             break;
                           case "water":
-                            handleButtonClick(water, item.cost, item.effect);
+                            handleButtonClick(
+                              water,
+                              item.cost,
+                              item.effect,
+                              item.id
+                            );
                             break;
                           default:
-                            handleButtonClick(sugar, item.cost, item.effect);
+                            handleButtonClick(
+                              sugar,
+                              item.cost,
+                              item.effect,
+                              item.id
+                            );
                             break;
                         }
                       })
@@ -211,6 +239,9 @@ const MushroomStoreDesktopDisplay = () => {
                   >
                     <Typography variant="body1">{item.name}</Typography>
                     <Typography variant="body2">{item.description}</Typography>
+                    <Typography variant="body2" sx={{ display: "flex" }}>
+                      Buying up to: {currentMultiplier}
+                    </Typography>
                     <Typography variant="body2" sx={{ display: "flex" }}>
                       Cost:
                       {costType === "sunlight" && (
@@ -247,13 +278,18 @@ const MushroomStoreDesktopDisplay = () => {
                 handleButtonPress(() => {
                   switch (costType) {
                     case "sunlight":
-                      handleButtonClick(sunlight, item.cost, item.effect);
+                      handleButtonClick(
+                        sunlight,
+                        item.cost,
+                        item.effect,
+                        item.id
+                      );
                       break;
                     case "water":
-                      handleButtonClick(water, item.cost, item.effect);
+                      handleButtonClick(water, item.cost, item.effect, item.id);
                       break;
                     default:
-                      handleButtonClick(sugar, item.cost, item.effect);
+                      handleButtonClick(sugar, item.cost, item.effect, item.id);
                       break;
                   }
                 })
@@ -272,15 +308,30 @@ const MushroomStoreDesktopDisplay = () => {
               <Typography variant="body1">{item.name}</Typography>
               <Typography variant="body2">{item.description}</Typography>
               <Typography variant="body2" sx={{ display: "flex" }}>
+                {item.id === "reset_succulent_threshold"
+                  ? "Will always buy: 1"
+                  : `Buying up to: ${currentMultiplier}`}
+              </Typography>
+              <Typography variant="body2" sx={{ display: "flex" }}>
                 Cost:
-                {costType === "sunlight" && (
-                  <Sunlight amount={item.cost * currentMultiplier} />
-                )}
-                {costType === "water" && (
-                  <Water amount={item.cost * currentMultiplier} />
-                )}
-                {costType === "sugar" && (
-                  <Sugar amount={item.cost * currentMultiplier} />
+                {item.id === "reset_succulent_threshold" ? (
+                  <>
+                    {costType === "sunlight" && <Sunlight amount={item.cost} />}
+                    {costType === "water" && <Water amount={item.cost} />}
+                    {costType === "sugar" && <Sugar amount={item.cost} />}
+                  </>
+                ) : (
+                  <>
+                    {costType === "sunlight" && (
+                      <Sunlight amount={item.cost * currentMultiplier} />
+                    )}
+                    {costType === "water" && (
+                      <Water amount={item.cost * currentMultiplier} />
+                    )}
+                    {costType === "sugar" && (
+                      <Sugar amount={item.cost * currentMultiplier} />
+                    )}
+                  </>
                 )}
               </Typography>
             </ButtonBase>
@@ -295,7 +346,7 @@ const MushroomStoreDesktopDisplay = () => {
               <ButtonBase
                 onMouseDown={() =>
                   handleButtonPress(() =>
-                    handleButtonClick(sunlight, item.cost, item.effect)
+                    handleButtonClick(sunlight, item.cost, item.effect, item.id)
                   )
                 }
                 onMouseUp={handleButtonRelease}
@@ -440,7 +491,7 @@ const MushroomStoreDesktopDisplay = () => {
               }}
             >
               {plantType !== "Grass" &&
-                [1, 5, 10].map((multiplier) => (
+                [1, 10, 100].map((multiplier) => (
                   <MultiplierToggleButton
                     key={multiplier}
                     currentMultiplier={currentMultiplier}

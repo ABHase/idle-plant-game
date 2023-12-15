@@ -31,6 +31,7 @@ interface Props {
   handleTogglePause: () => void;
   paused: boolean;
   handleOpenOptionsModal: () => void;
+  handleOpenScoreStoreModal: () => void;
 }
 
 const MenuModal: React.FC<Props> = (props) => {
@@ -122,6 +123,15 @@ const MenuModal: React.FC<Props> = (props) => {
           onClick={props.handleTogglePause}
         >
           {props.paused ? "Unpause" : "Pause"}
+        </Button>
+
+        <Button
+          sx={buttonStyle}
+          variant="contained"
+          color="primary"
+          onClick={props.handleOpenScoreStoreModal}
+        >
+          Score Store
         </Button>
 
         <Button

@@ -49,6 +49,7 @@ import autumnSong from "../assets/music/Autumn_-_Moss.mp3";
 import winterSong from "../assets/music/Winter_-_Moss.mp3";
 import MusicPlayer from "../Components/MusicPlayer";
 import SugarProductionRate from "../Components/Tooltips/SugarProductionRate";
+import Jukebox from "../Components/Jukebox";
 
 type MossDisplayProps = {
   handleOpenModal: (modalName: string) => void;
@@ -75,6 +76,10 @@ const MossDisplay: React.FC<MossDisplayProps> = ({
 
   const globalBoostedTicks = useSelector(
     (state: RootState) => state.globalState.globalBoostedTicks
+  );
+
+  const jukeboxUnlocked = useSelector(
+    (state: RootState) => state.app.jukeboxUnlocked
   );
 
   const timeScale =
@@ -153,34 +158,8 @@ const MossDisplay: React.FC<MossDisplayProps> = ({
       >
         <Grid container spacing={1} alignItems="center">
           <Grid item xs={12}>
-            {/* Music Player Component */}
-            <MusicPlayer song={songToPlay} />
+            {jukeboxUnlocked ? <Jukebox /> : <MusicPlayer song={songToPlay} />}
           </Grid>
-          {plant.aphids > 1 ? (
-            <Grid item xs={12}>
-              <Button
-                variant="contained"
-                size="medium"
-                fullWidth
-                sx={{
-                  backgroundColor: "#e6842e",
-                  color: "#000000",
-                  "&:hover": {
-                    backgroundColor: "#ba671e", // This is a lighter shade of orange
-                  },
-                  "&:active, &:focus": {
-                    backgroundColor: "#e6842e", // Or any other style reset
-                  },
-                }}
-                onClick={() => handleOpenModal(modalName)}
-              >
-                <Typography variant="h5" align="center">
-                  You Have Aphids!
-                </Typography>
-              </Button>
-            </Grid>
-          ) : null}
-
           <Grid item xs={4}>
             <WaterTooltip
               productionRate={report.water.netWaterProduction}

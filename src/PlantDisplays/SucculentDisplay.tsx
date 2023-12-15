@@ -60,6 +60,7 @@ import summerSong from "../assets/music/Summer_-_Succulent.mp3";
 import autumnSong from "../assets/music/Autumn_-_Succulent.mp3";
 import winterSong from "../assets/music/Winter_-_Succulent.mp3";
 import SugarProductionRate from "../Components/Tooltips/SugarProductionRate";
+import Jukebox from "../Components/Jukebox";
 
 type SucculentDisplayProps = {
   handleOpenModal: (modalName: string) => void;
@@ -116,6 +117,10 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
 
   const globalBoostedTicks = useSelector(
     (state: RootState) => state.globalState.globalBoostedTicks
+  );
+
+  const jukeboxUnlocked = useSelector(
+    (state: RootState) => state.app.jukeboxUnlocked
   );
 
   const timeScale =
@@ -226,8 +231,7 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
       >
         <Grid container spacing={1} alignItems="center">
           <Grid item xs={12}>
-            {/* Music Player Component */}
-            <MusicPlayer song={songToPlay} />
+            {jukeboxUnlocked ? <Jukebox /> : <MusicPlayer song={songToPlay} />}
           </Grid>
 
           <Grid item xs={4}>

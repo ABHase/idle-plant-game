@@ -65,6 +65,7 @@ import autumnSong from "../assets/music/Autumn_-_Fern.mp3";
 import winterSong from "../assets/music/Winter_-_Fern.mp3";
 import { formatTime } from "./BushDisplay";
 import SugarProductionRate from "../Components/Tooltips/SugarProductionRate";
+import Jukebox from "../Components/Jukebox";
 
 type PlantListProps = {
   handleOpenModal: (modalName: string) => void;
@@ -125,6 +126,10 @@ const PlantList: React.FC<PlantListProps> = ({
 
   const globalBoostedTicks = useSelector(
     (state: RootState) => state.globalState.globalBoostedTicks
+  );
+
+  const jukeboxUnlocked = useSelector(
+    (state: RootState) => state.app.jukeboxUnlocked
   );
 
   const timeScale =
@@ -240,8 +245,7 @@ const PlantList: React.FC<PlantListProps> = ({
       >
         <Grid container spacing={1} alignItems="center">
           <Grid item xs={12}>
-            {/* Music Player Component */}
-            <MusicPlayer song={songToPlay} />
+            {jukeboxUnlocked ? <Jukebox /> : <MusicPlayer song={songToPlay} />}
           </Grid>
           <Grid item xs={12}>
             <Divider sx={{ backgroundColor: "white" }} />

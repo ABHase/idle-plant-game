@@ -59,6 +59,7 @@ import autumnSong from "../assets/music/Autumn_-_Grass.mp3";
 import winterSong from "../assets/music/Winter_-_Grass.mp3";
 import MusicPlayer from "../Components/MusicPlayer";
 import SugarProductionRate from "../Components/Tooltips/SugarProductionRate";
+import Jukebox from "../Components/Jukebox";
 
 type GrassDisplayProps = {
   handleOpenModal: (modalName: string) => void;
@@ -116,6 +117,10 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({
 
   const globalBoostedTicks = useSelector(
     (state: RootState) => state.globalState.globalBoostedTicks
+  );
+
+  const jukeboxUnlocked = useSelector(
+    (state: RootState) => state.app.jukeboxUnlocked
   );
 
   const timeScale =
@@ -218,8 +223,7 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({
       >
         <Grid container spacing={1} alignItems="center">
           <Grid item xs={12}>
-            {/* Music Player Component */}
-            <MusicPlayer song={songToPlay} />
+            {jukeboxUnlocked ? <Jukebox /> : <MusicPlayer song={songToPlay} />}
           </Grid>
           {plant.aphids > 1 ? (
             <Grid item xs={12}>

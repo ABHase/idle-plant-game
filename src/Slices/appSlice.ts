@@ -5,6 +5,8 @@ export interface AppState {
   score: number;
   totalCellsCompleted: number;
   paused: boolean;
+  unlockedSongs: { [key: string]: boolean };
+  jukeboxUnlocked: boolean;
 }
 
 export interface UpdateTimeWithScalePayload {
@@ -17,6 +19,8 @@ export const initialState: AppState = {
   score: 0,
   totalCellsCompleted: 0,
   paused: false,
+  unlockedSongs: {},
+  jukeboxUnlocked: false,
 };
 
 const appSlice = createSlice({
@@ -40,8 +44,17 @@ const appSlice = createSlice({
     incrementScore: (state, action: PayloadAction<number>) => {
       state.score += action.payload;
     },
+    deductScore: (state, action: PayloadAction<number>) => {
+      state.score -= action.payload;
+    },
     incrementTotalCellsCompleted: (state) => {
       state.totalCellsCompleted++;
+    },
+    unlockSong: (state, action: PayloadAction<string>) => {
+      state.unlockedSongs[action.payload] = true;
+    },
+    toggleJukeboxUnlock: (state) => {
+      state.jukeboxUnlocked = !state.jukeboxUnlocked;
     },
   },
   extraReducers: (builder) => {
@@ -65,6 +78,9 @@ export const {
   updateTimeWithScale,
   togglePause,
   incrementTotalCellsCompleted,
+  unlockSong,
+  toggleJukeboxUnlock,
+  deductScore,
 } = appSlice.actions;
 
 export default appSlice.reducer;

@@ -85,6 +85,7 @@ import autumnSong from "../assets/music/Autumn_-_Berry_Bush.mp3";
 import winterSong from "../assets/music/Winter_-_Berry_Bush.mp3";
 import MusicPlayer from "../Components/MusicPlayer";
 import SugarProductionRate from "../Components/Tooltips/SugarProductionRate";
+import Jukebox from "../Components/Jukebox";
 
 type BushDisplayProps = {
   handleOpenModal: (modalName: string) => void;
@@ -144,6 +145,10 @@ const BushDisplay: React.FC<BushDisplayProps> = ({
 
   const globalBoostedTicks = useSelector(
     (state: RootState) => state.globalState.globalBoostedTicks
+  );
+
+  const jukeboxUnlocked = useSelector(
+    (state: RootState) => state.app.jukeboxUnlocked
   );
 
   const timeScale =
@@ -301,8 +306,7 @@ const BushDisplay: React.FC<BushDisplayProps> = ({
       >
         <Grid container spacing={1} alignItems="center">
           <Grid item xs={12}>
-            {/* Music Player Component */}
-            <MusicPlayer song={songToPlay} />
+            {jukeboxUnlocked ? <Jukebox /> : <MusicPlayer song={songToPlay} />}
           </Grid>
           {plant.aphids > 1 ? (
             <Grid item xs={12}>

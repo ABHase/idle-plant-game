@@ -51,6 +51,8 @@ import Splash from "./Components/Splash";
 import OptionsModal from "./Modals/OptionsModal";
 import mainImage from "./assets/background.png";
 import vineImage from "./assets/vine.jpg";
+import { Score } from "@mui/icons-material";
+import ScoreStoreModal from "./Modals/ScoreStoreModal";
 
 const useIsNewUser = () => {
   const isNewUser = localStorage.getItem("isNewUser");
@@ -444,6 +446,9 @@ function App() {
                 handleOpenOptionsModal={() =>
                   handleOpenModal("optionsModalOpen")
                 }
+                handleOpenScoreStoreModal={() =>
+                  handleOpenModal("scoreStoreModalOpen")
+                }
               />
               <MushroomStoreModal
                 open={modals.mushroomStoreModalOpen}
@@ -466,6 +471,11 @@ function App() {
               <OptionsModal
                 open={modals.optionsModalOpen}
                 onClose={() => handleCloseModal("optionsModalOpen")}
+                isMobile={isMobile}
+              />
+              <ScoreStoreModal
+                open={modals.scoreStoreModalOpen}
+                onClose={() => handleCloseModal("scoreStoreModalOpen")}
                 isMobile={isMobile}
               />
 

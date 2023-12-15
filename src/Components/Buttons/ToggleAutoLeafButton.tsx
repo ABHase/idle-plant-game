@@ -7,6 +7,7 @@ import { Grid } from "@mui/material";
 import { isSugarUpgradesUnlocked } from "../../formulas";
 import { PlantState } from "../../Slices/plantSlice";
 import { Water } from "../Water";
+import { Roots } from "../Roots";
 
 interface ToggleButtonProps {
   isOn: boolean;
@@ -66,6 +67,10 @@ const ToggleAutoLeafButton: React.FC<ToggleButtonProps> = ({
             }}
           />{" "}
           <Leaves amount={plant.autoGrowthMultiplier} /> &nbsp;
+          {plant.type === "Moss" && (
+            <Roots amount={plant.autoGrowthMultiplier} />
+          )}{" "}
+          &nbsp;
           {isOn ? "Stop" : "Start"}
         </Button>
       </Tooltip>

@@ -95,6 +95,7 @@ const MusicPlayer: React.FC<{ song: string }> = ({ song }) => {
       bgcolor={"#474643"}
       borderRadius={2}
       p={0}
+      border={1}
     >
       <Typography
         color="white"

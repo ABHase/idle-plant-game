@@ -12,6 +12,7 @@ export const useModalState = () => {
     textboxModalOpen: false,
     mapModalOpen: false,
     optionsModalOpen: false,
+    scoreStoreModalOpen: false,
     // ... any other modal states
   });
 
