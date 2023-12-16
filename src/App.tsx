@@ -51,6 +51,7 @@ import Splash from "./Components/Splash";
 import OptionsModal from "./Modals/OptionsModal";
 import mainImage from "./assets/background.png";
 import vineImage from "./assets/vine.jpg";
+import mossImage from "./assets/moss.png";
 import { Score } from "@mui/icons-material";
 import ScoreStoreModal from "./Modals/ScoreStoreModal";
 
@@ -322,6 +323,12 @@ function App() {
         Summer: vineImage,
         Autumn: vineImage,
         Winter: vineImage,
+      },
+      Moss: {
+        Spring: mossImage,
+        Summer: mossImage,
+        Autumn: mossImage,
+        Winter: mossImage,
       },
       // ... similar mappings for other plant types
     };

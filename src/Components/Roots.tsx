@@ -7,5 +7,5 @@ interface IProps {
 }
 
 export const Roots = ({ amount }: IProps): React.ReactElement => (
-  <Resource icon={GrassIcon} color="grey" amount={amount} />
+  <Resource icon={GrassIcon} color="#a87a48" amount={amount} />
 );

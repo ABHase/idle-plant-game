@@ -304,13 +304,13 @@ export const UPGRADES: Record<string, Upgrade[]> = {
       id: "boost_sugar_moss_2",
       name: "Cam Pathway 2",
       description: "Increase base sugar production by 200%",
-      cost: 150,
+      cost: 100,
     },
     {
       id: "boost_sugar_moss_3",
       name: "Cam Pathway 3",
       description: "Increase base sugar production by 300%",
-      cost: 350,
+      cost: 110,
     },
   ],
   Succulent: [

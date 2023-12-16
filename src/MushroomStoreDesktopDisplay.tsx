@@ -78,37 +78,31 @@ const MushroomStoreDesktopDisplay = () => {
   const handleButtonClick = (
     resource: number,
     itemCost: number,
-    itemEffect: any,
+    itemEffect: (
+      dispatch: ThunkDispatch<RootState, unknown, AnyAction>,
+      getState: () => RootState,
+      quantity: number
+    ) => void,
     itemId: string
   ) => {
-    // Check if the item should only be purchased one at a time
-    if (itemId === "reset_succulent_threshold") {
-      if (resource >= itemCost) {
-        handlePurchase(itemEffect);
-      }
-      // Early return to prevent multiple purchases
-      return;
-    }
-
-    // Calculate the total cost based on the multiplier
     const totalCost = itemCost * currentMultiplier;
-
-    // Check if the player can afford the total cost
     if (resource >= totalCost) {
-      for (let i = 0; i < currentMultiplier; i++) {
-        handlePurchase(itemEffect);
-      }
+      handlePurchase(itemEffect, currentMultiplier);
     } else {
-      // If the player cannot afford the total cost, purchase as many as possible
       const maxAffordable = Math.floor(resource / itemCost);
-      for (let i = 0; i < maxAffordable; i++) {
-        handlePurchase(itemEffect);
-      }
+      handlePurchase(itemEffect, maxAffordable);
     }
   };
 
-  const handlePurchase = (itemEffect: any) => {
-    itemEffect(dispatch, () => currentState);
+  const handlePurchase = (
+    itemEffect: (
+      dispatch: ThunkDispatch<RootState, unknown, AnyAction>,
+      getState: () => RootState,
+      quantity: number
+    ) => void,
+    quantity: number
+  ) => {
+    itemEffect(dispatch, () => currentState, quantity);
     setShowWarning(true); // Show the warning after making a purchase
   };
 

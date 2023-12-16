@@ -394,8 +394,14 @@ const BushDisplay: React.FC<BushDisplayProps> = ({
               difficulty={difficulty}
               waterEfficiency={plant.water_efficiency_multiplier}
               sunlightEfficiency={plant.sunlight_efficiency_multiplier}
+              baseSugarProductionRate={plant.sugar_production_rate}
+              plantType={plant.type}
             />
-            <MaturityTooltip maturityLevel={plant.maturity_level} />
+            <MaturityTooltip
+              leaves={plant.leaves}
+              roots={plant.roots}
+              maturityLevel={plant.maturity_level}
+            />
           </Grid>
 
           <Grid

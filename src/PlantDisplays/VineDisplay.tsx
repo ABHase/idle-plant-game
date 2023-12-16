@@ -122,6 +122,8 @@ const VineDisplay: React.FC<VineDisplayProps> = ({
               difficulty={difficulty}
               waterEfficiency={plant.water_efficiency_multiplier}
               sunlightEfficiency={plant.sunlight_efficiency_multiplier}
+              baseSugarProductionRate={plant.sugar_production_rate}
+              plantType={plant.type}
             />
           </Grid>
 
