@@ -61,6 +61,9 @@ import autumnSong from "../assets/music/Autumn_-_Succulent.mp3";
 import winterSong from "../assets/music/Winter_-_Succulent.mp3";
 import SugarProductionRate from "../Components/Tooltips/SugarProductionRate";
 import Jukebox from "../Components/Jukebox";
+import NeedleTooltip from "../Components/Tooltips/NeedleTooltip";
+import LeafTooltip from "../Components/Tooltips/LeafButtonTooltip";
+import RootTooltip from "../Components/Tooltips/RootButtonTooltip";
 
 type SucculentDisplayProps = {
   handleOpenModal: (modalName: string) => void;
@@ -539,7 +542,7 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
               visibility: isSugarUpgradesUnlocked(plant) ? "visible" : "hidden",
             }}
           >
-            <Tooltip title="Grow Leaves">
+            <LeafTooltip leafWaterUsage={plant.leafWaterUsage}>
               <Button
                 fullWidth
                 sx={{
@@ -607,7 +610,7 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
                   </>
                 )}
               </Button>
-            </Tooltip>
+            </LeafTooltip>
           </Grid>
 
           {/* Roots Section */}
@@ -618,7 +621,7 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
               visibility: isSugarUpgradesUnlocked(plant) ? "visible" : "hidden",
             }}
           >
-            <Tooltip title="Grow Roots">
+            <RootTooltip>
               <Button
                 fullWidth
                 sx={{
@@ -661,7 +664,7 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
                   </>
                 )}
               </Button>
-            </Tooltip>
+            </RootTooltip>
           </Grid>
           {/* Needles Section */}
           <Grid
@@ -681,7 +684,7 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
                   : "hidden",
               }}
             >
-              <Tooltip title="Grow Needles">
+              <NeedleTooltip plantState={plantState} multiplier={multiplier}>
                 <Button
                   fullWidth
                   sx={{
@@ -729,7 +732,7 @@ const SucculentDisplay: React.FC<SucculentDisplayProps> = ({
                     </>
                   )}
                 </Button>
-              </Tooltip>
+              </NeedleTooltip>
             </Grid>
           </Grid>
 

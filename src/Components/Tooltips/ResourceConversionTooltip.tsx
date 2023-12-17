@@ -1,7 +1,4 @@
 import {
-  calculatePhotosynthesisSunlightConsumption,
-  calculatePhotosynthesisWaterConsumption,
-  determinePhotosynthesisSugarProduction,
   getDifficultyModifiedSunlightConsumption,
   getDifficultyModifiedWaterConsumption,
 } from "../../formulas";
@@ -47,88 +44,12 @@ const ResourceConversionTooltip: React.FC<ResourceConversionProps> = ({
   baseSugarProductionRate,
   plantType,
 }) => {
-  const waterConsumptionValue = calculatePhotosynthesisWaterConsumption(
-    maturityLevel,
-    difficulty,
-    waterEfficiency
-  );
-  const sunlightConsumptionValue = calculatePhotosynthesisSunlightConsumption(
-    maturityLevel,
-    difficulty,
-    sunlightEfficiency
-  );
-
-  const baseWaterConsumptionValue = calculatePhotosynthesisWaterConsumption(
-    1,
-    difficulty,
-    waterEfficiency
-  );
-
-  const baseSunlightConsumptionValue =
-    calculatePhotosynthesisSunlightConsumption(
-      1,
-      difficulty,
-      sunlightEfficiency
-    );
-
-  const sugarProductionValue = determinePhotosynthesisSugarProduction(
-    sugarProductionRate,
-    maturityLevel,
-    season,
-    autumnModifier,
-    winterModifier,
-    agaveSugarBonus,
-    1,
-    1
-  );
-
-  const renderConsumptionFormula = (
-    baseConsumption: number,
-    modifier: number,
-    label: string
-  ) => {
-    return (
-      <Stack direction="row" alignItems="center" spacing={1}>
-        <span>{label} Consumption</span>
-        <span>*</span>
-        <span>(1 + {modifier} *</span>
-        {renderMaturityComponent()}
-        <span>)*</span>
-        <span>Efficiency</span>
-      </Stack>
-    );
-  };
-
-  const renderBaseWaterConsumptionComponent = () => {
-    return <Water amount={baseWaterConsumptionValue} />;
-  };
-
-  const renderBaseSunlightConsumptionComponent = () => {
-    return <Sunlight amount={baseSunlightConsumptionValue} />;
-  };
-
-  const renderWaterComponent = () => {
-    return <Water amount={waterConsumptionValue} />;
-  };
-
-  const renderSunlightComponent = () => {
-    return <Sunlight amount={sunlightConsumptionValue} />;
-  };
-
   const renderSugarComponent = () => {
     return <Sugar amount={sugar} />;
   };
 
-  const renderProducingSugarComponent = () => {
-    return <Sugar amount={sugarProductionValue} />;
-  };
-
   const renderMaturityComponent = () => {
     return <Maturity amount={maturityLevel} />;
-  };
-
-  const renderOneMaturityComponent = () => {
-    return <Maturity amount={1} />;
   };
 
   const renderDifficultyWaterComponent = () => {
@@ -141,27 +62,22 @@ const ResourceConversionTooltip: React.FC<ResourceConversionProps> = ({
     );
   };
 
-  const waterConsumptionModifierValue = (
-    1 + MATURITY_WATER_CONSUMPTION_MODIFIER
-  ).toFixed(2);
-
   const renderWaterFormulaComponent = () => {
+    const efficiencyPart = waterEfficiency !== 1 ? `*${waterEfficiency}` : "";
     return (
       <Stack direction="row" alignItems="center" spacing={1}>
         {renderDifficultyWaterComponent()}
         <span>* (1 + </span>
         <span>{MATURITY_WATER_CONSUMPTION_MODIFIER.toFixed(2)} *</span>
         {renderMaturityComponent()}
-        <span>)*{waterEfficiency}</span>
+        <span>){efficiencyPart}</span>
       </Stack>
     );
   };
 
   const renderSunlightFormulaComponent = () => {
-    // Calculate the modifier value
-    const sunlightConsumptionModifierValue = (
-      1 + MATURITY_SUNLIGHT_CONSUMPTION_MODIFIER
-    ).toFixed(2);
+    const efficiencyPart =
+      sunlightEfficiency !== 1 ? `*${sunlightEfficiency}` : "";
 
     return (
       <Stack direction="row" alignItems="center" spacing={1}>
@@ -169,19 +85,18 @@ const ResourceConversionTooltip: React.FC<ResourceConversionProps> = ({
         <span>* (1 + </span>
         <span>{MATURITY_SUNLIGHT_CONSUMPTION_MODIFIER.toFixed(2)} *</span>
         {renderMaturityComponent()}
-        <span>)*{sunlightEfficiency}</span>
+        <span>){efficiencyPart}</span>
       </Stack>
     );
   };
 
-  const sugarProductionFormula = ` ${baseSugarProductionRate} * (1 + 0.1 * ${maturityLevel})`;
-
   const renderFormulaComponent = (baseRate: number) => {
-    const waterFormula = `${renderDifficultyWaterComponent()} * (1 + ${MATURITY_WATER_CONSUMPTION_MODIFIER} * Maturity) * ${waterEfficiency}`;
-
-    const sunlightFormula = `${getDifficultyModifiedSunlightConsumption(
-      difficulty
-    )} * (1 + ${MATURITY_SUNLIGHT_CONSUMPTION_MODIFIER} * Maturity) * ${sunlightEfficiency}`;
+    let seasonModifier = 1;
+    if (season === "Autumn") {
+      seasonModifier *= autumnModifier;
+    } else if (season === "Winter") {
+      seasonModifier *= winterModifier;
+    }
 
     return (
       <Stack direction="column" alignItems="center" spacing={1}>
@@ -198,7 +113,12 @@ const ResourceConversionTooltip: React.FC<ResourceConversionProps> = ({
         <Stack direction="row" alignItems="center" spacing={1}>
           <span>{baseRate} * (1 + 0.1 * </span>
           {renderMaturityComponent()}
-          <span>)</span>
+          <span>
+            )
+            {season === "Autumn" || season === "Winter"
+              ? ` * ${seasonModifier}`
+              : ""}
+          </span>
         </Stack>
       </Stack>
     );

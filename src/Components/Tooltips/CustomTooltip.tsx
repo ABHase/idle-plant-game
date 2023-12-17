@@ -3,7 +3,7 @@ import { Tooltip, Typography, Box } from "@mui/material";
 
 interface CustomTooltipProps {
   title: string | JSX.Element;
-  children: JSX.Element | JSX.Element[];
+  children?: JSX.Element | JSX.Element[]; // Make children optional
   placement?: "left" | "right" | "top" | "bottom"; // Add more if necessary
 }
 
@@ -14,14 +14,10 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
 }) => {
   return (
     <Tooltip
-      title={
-        <>
-          <Typography color="inherit">{title}</Typography>
-        </>
-      }
+      title={<Typography color="inherit">{title}</Typography>}
       placement={placement}
     >
-      <Box>{children}</Box>
+      {children ? <Box>{children}</Box> : <Box />}
     </Tooltip>
   );
 };
