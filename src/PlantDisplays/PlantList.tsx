@@ -66,6 +66,7 @@ import winterSong from "../assets/music/Winter_-_Fern.mp3";
 import { formatTime } from "./BushDisplay";
 import SugarProductionRate from "../Components/Tooltips/SugarProductionRate";
 import Jukebox from "../Components/Jukebox";
+import LeafTooltip from "../Components/Tooltips/LeafButtonTooltip";
 
 type PlantListProps = {
   handleOpenModal: (modalName: string) => void;
@@ -602,7 +603,7 @@ const PlantList: React.FC<PlantListProps> = ({
               visibility: isSugarUpgradesUnlocked(plant) ? "visible" : "hidden",
             }}
           >
-            <Tooltip title="Grow Leaves">
+            <LeafTooltip leafWaterUsage={plant.leafWaterUsage}>
               <Button
                 fullWidth
                 sx={{
@@ -652,7 +653,7 @@ const PlantList: React.FC<PlantListProps> = ({
                   </>
                 )}
               </Button>
-            </Tooltip>
+            </LeafTooltip>
           </Grid>
 
           {/* Roots Section */}

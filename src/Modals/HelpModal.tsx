@@ -46,6 +46,7 @@ const HelpModal: React.FC<HelpModalProps> = ({ open, onClose, isMobile }) => {
     "Succulent",
     "Score",
     "Time Vine",
+    "Credits",
   ];
 
   const pages: React.ReactNode[] = [
@@ -528,6 +529,35 @@ const HelpModal: React.FC<HelpModalProps> = ({ open, onClose, isMobile }) => {
           - You can only plant one Time Vine per Time Seed, but all upgrades and{" "}
           <DNAIcon /> DNA unlocked with the Time Vine are PERMANENT.
         </Typography>
+      </Box>
+    </div>,
+    <div>
+      <Typography variant="h6" mb={2}>
+        Credits:
+      </Typography>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          {" "}
+          - Creator: FootoftheHare, AKA u/Content_Audience690
+        </Typography>
+      </Box>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2"> - Composer: Theargh</Typography>
+      </Box>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2"> - Art Director: Vlora</Typography>
+      </Box>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2">
+          {" "}
+          - Special Thanks to: Hydroflame
+        </Typography>
+      </Box>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2"> - Special Thanks to: Ben</Typography>
+      </Box>
+      <Box display="flex" alignItems="center" mb={1}>
+        <Typography variant="body2"> - Special Thanks to: Termt</Typography>
       </Box>
     </div>,
   ];

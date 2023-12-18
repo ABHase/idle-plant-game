@@ -52,6 +52,7 @@ import OptionsModal from "./Modals/OptionsModal";
 import mainImage from "./assets/background.png";
 import vineImage from "./assets/vine.jpg";
 import mossImage from "./assets/moss.png";
+import succulentImage from "./assets/succulent.png";
 import { Score } from "@mui/icons-material";
 import ScoreStoreModal from "./Modals/ScoreStoreModal";
 
@@ -330,6 +331,12 @@ function App() {
         Autumn: mossImage,
         Winter: mossImage,
       },
+      Succulent: {
+        Spring: succulentImage,
+        Summer: succulentImage,
+        Autumn: succulentImage,
+        Winter: succulentImage,
+      },
       // ... similar mappings for other plant types
     };
 
@@ -356,7 +363,7 @@ function App() {
               nightMode
             )})`,
             backgroundSize: "cover", // Ensures the background covers the entire Box
-            backgroundPosition: "center", // Centers the background image
+            backgroundPosition: isMobile ? "-180px" : "center",
             backgroundRepeat: "no-repeat", // Prevents repeating the image
             height: "100vh", // Adjust the height as needed
           }}

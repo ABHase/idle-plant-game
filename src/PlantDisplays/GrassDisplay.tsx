@@ -60,6 +60,7 @@ import winterSong from "../assets/music/Winter_-_Grass.mp3";
 import MusicPlayer from "../Components/MusicPlayer";
 import SugarProductionRate from "../Components/Tooltips/SugarProductionRate";
 import Jukebox from "../Components/Jukebox";
+import LeafTooltip from "../Components/Tooltips/LeafButtonTooltip";
 
 type GrassDisplayProps = {
   handleOpenModal: (modalName: string) => void;
@@ -552,7 +553,7 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({
               visibility: isSugarUpgradesUnlocked(plant) ? "visible" : "hidden",
             }}
           >
-            <Tooltip title="Grow Leaves">
+            <LeafTooltip leafWaterUsage={plant.leafWaterUsage}>
               <Button
                 fullWidth
                 sx={{
@@ -602,7 +603,7 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({
                   </>
                 )}
               </Button>
-            </Tooltip>
+            </LeafTooltip>
           </Grid>
 
           {/* Roots Section */}
