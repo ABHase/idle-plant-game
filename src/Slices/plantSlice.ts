@@ -228,18 +228,6 @@ const plantSlice = createSlice({
         return;
       }
 
-      const availableUpgrades = {
-        ...UPGRADES.Meta,
-        ...UPGRADES[plantType],
-        ...UPGRADES.Adjacency,
-        ...UPGRADES.Column,
-      }; // Combine adjacency, meta, specific plant, and Row upgrades
-
-      if (!availableUpgrades) {
-        console.error(`No upgrades available for plant type: ${plantType}`);
-        return;
-      }
-
       Object.assign(state, plantConfig);
       state.id = uuidv4();
 
@@ -440,11 +428,6 @@ const plantSlice = createSlice({
 
     produceGeneticMarkers: (state, action: PayloadAction<number>) => {
       let neededResource = action.payload;
-
-      // If the geneticMarkerUpgradeActive flag is true, quadruple the needed resources
-      if (state.geneticMarkerUpgradeActive) {
-        neededResource *= 4;
-      }
 
       if (state.type === "Grass") {
         // Consume leaves for grass

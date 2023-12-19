@@ -295,6 +295,12 @@ export const UPGRADES: Record<string, Upgrade[]> = {
       cost: 30,
     },
     {
+      id: "boost_sugar_moss_first",
+      name: "Proto Cam Pathway",
+      description: "Increase base sugar production by 100%",
+      cost: 7,
+    },
+    {
       id: "boost_sugar_moss",
       name: "Cam Pathway",
       description: "Increase base sugar production by 100%",
@@ -897,6 +903,9 @@ export const UPGRADE_FUNCTIONS: Record<
     },
     lichen_store: (plant) => {
       plant.lichenStoreAvailable = true;
+    },
+    boost_sugar_moss_first: (plant) => {
+      plant.sugar_production_rate *= 2;
     },
     boost_sugar_moss: (plant) => {
       plant.sugar_production_rate *= 2;

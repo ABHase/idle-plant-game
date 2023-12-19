@@ -8,6 +8,7 @@ import { RootState } from "../rootReducer";
 import {
   toggleNightMode,
   toggleRootRotConfirm,
+  toggleRabbitWarning,
 } from "../Slices/plantTimeSlice";
 
 interface OptionsModalProps {
@@ -28,10 +29,15 @@ const OptionsModal: React.FC<OptionsModalProps> = ({
   const nightMode = useSelector(
     (state: RootState) => state.plantTime.nightMode
   );
+  const rabbitWarning = useSelector(
+    (state: RootState) => state.plantTime.rabbitWarning
+  );
 
   // Initialize checkbox states from the Redux store
   const [rootRotChecked, setRootRotChecked] = React.useState(rootRotConfirm);
   const [nightModeChecked, setNightModeChecked] = React.useState(nightMode);
+  const [rabbitWarningChecked, setRabbitWarningChecked] =
+    React.useState(rabbitWarning);
 
   // Update Redux state and local state when root rot checkbox is toggled
   const handleRootRotCheckboxChange = (
@@ -46,6 +52,13 @@ const OptionsModal: React.FC<OptionsModalProps> = ({
   ) => {
     setNightModeChecked(event.target.checked);
     dispatch(toggleNightMode());
+  };
+
+  const handleRabbitWarningCheckboxChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setRabbitWarningChecked(event.target.checked);
+    dispatch(toggleRabbitWarning());
   };
 
   // Styling the Checkbox with a border
@@ -76,12 +89,12 @@ const OptionsModal: React.FC<OptionsModalProps> = ({
         sx={{
           width: "300px",
           bgcolor: "background.paper",
-          border: "2px solid #000",
+          border: "2px solid #32518f",
           boxShadow: 24,
           p: 4,
           display: "flex",
           flexDirection: "column",
-          borderRadius: 2,
+          borderRadius: 4,
           color: "white", // Set the text color to white for all child components
         }}
       >
@@ -119,6 +132,21 @@ const OptionsModal: React.FC<OptionsModalProps> = ({
               />
             }
             label="Night Mode"
+            sx={{
+              color: "white",
+              border: "1px solid white",
+              width: "100%",
+            }}
+          />
+          <FormControlLabel
+            control={
+              <StyledCheckbox
+                checked={rabbitWarningChecked}
+                onChange={handleRabbitWarningCheckboxChange}
+                name="rabbitWarningCheckbox"
+              />
+            }
+            label="Show warning for rabbit attacks?"
             sx={{
               color: "white",
               border: "1px solid white",

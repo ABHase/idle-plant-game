@@ -491,13 +491,7 @@ const PlantList: React.FC<PlantListProps> = ({
                 }}
                 onClick={() => handleToggleGeneticMarkerProduction()}
               >
-                <Sugar
-                  amount={
-                    plant.geneticMarkerUpgradeActive
-                      ? geneticMarkerThreshold * 4
-                      : geneticMarkerThreshold
-                  }
-                />
+                <Sugar amount={geneticMarkerThreshold} />
                 <ArrowForwardIcon
                   sx={{
                     color: plant.is_genetic_marker_production_on ? "" : "red",

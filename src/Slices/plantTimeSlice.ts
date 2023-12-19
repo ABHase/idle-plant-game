@@ -12,6 +12,7 @@ export interface PlantTimeState {
   rootRotConfirm: boolean;
   showProductionRate: boolean;
   nightMode: boolean;
+  rabbitWarning: boolean;
 }
 
 export const initialPlantTimeState: PlantTimeState = {
@@ -24,6 +25,7 @@ export const initialPlantTimeState: PlantTimeState = {
   rootRotConfirm: true,
   showProductionRate: false,
   nightMode: false,
+  rabbitWarning: true,
 };
 
 const plantTimeSlice = createSlice({
@@ -39,6 +41,9 @@ const plantTimeSlice = createSlice({
     },
     toggleNightMode: (state) => {
       state.nightMode = !state.nightMode;
+    },
+    toggleRabbitWarning: (state) => {
+      state.rabbitWarning = !state.rabbitWarning;
     },
   },
   extraReducers: (builder) => {
@@ -103,5 +108,6 @@ export const {
   toggleRootRotConfirm,
   toggleshowProductionRate,
   toggleNightMode,
+  toggleRabbitWarning,
 } = plantTimeSlice.actions;
 export default plantTimeSlice.reducer;

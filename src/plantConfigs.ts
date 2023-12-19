@@ -68,7 +68,7 @@ export const MOSS_INITIAL_CONFIG: PlantState = {
   id: uuidv4(), // Will be overridden when initialized
   maturity_level: 1,
   type: "Moss",
-  sugar_production_rate: 0.1,
+  sugar_production_rate: 1,
   genetic_marker_production_rate: 1,
   is_sugar_production_on: false,
   is_genetic_marker_production_on: false,

@@ -35,6 +35,7 @@ const getCostType = (item: MushroomItem): string => {
     case "desert_night_2":
     case "shade_for_sugar":
     case "shade_for_sugar_2":
+    case "shade_for_truth":
       return "sunlight";
     case "desert_rain":
     case "desert_rain_2":
@@ -234,18 +235,32 @@ const MushroomStoreDesktopDisplay = () => {
                     <Typography variant="body1">{item.name}</Typography>
                     <Typography variant="body2">{item.description}</Typography>
                     <Typography variant="body2" sx={{ display: "flex" }}>
-                      Buying up to: {currentMultiplier}
+                      {item.id === "shade_for_truth"
+                        ? "Will always buy: 1"
+                        : `Buying up to: ${currentMultiplier}`}
                     </Typography>
                     <Typography variant="body2" sx={{ display: "flex" }}>
                       Cost:
-                      {costType === "sunlight" && (
-                        <Sunlight amount={item.cost * currentMultiplier} />
-                      )}
-                      {costType === "water" && (
-                        <Water amount={item.cost * currentMultiplier} />
-                      )}
-                      {costType === "sugar" && (
-                        <Sugar amount={item.cost * currentMultiplier} />
+                      {item.id === "shade_for_truth" ? (
+                        <>
+                          {costType === "sunlight" && (
+                            <Sunlight amount={item.cost} />
+                          )}
+                          {costType === "water" && <Water amount={item.cost} />}
+                          {costType === "sugar" && <Sugar amount={item.cost} />}
+                        </>
+                      ) : (
+                        <>
+                          {costType === "sunlight" && (
+                            <Sunlight amount={item.cost * currentMultiplier} />
+                          )}
+                          {costType === "water" && (
+                            <Water amount={item.cost * currentMultiplier} />
+                          )}
+                          {costType === "sugar" && (
+                            <Sugar amount={item.cost * currentMultiplier} />
+                          )}
+                        </>
                       )}
                     </Typography>
                   </ButtonBase>

@@ -131,6 +131,10 @@ function App() {
     (state: RootState) => state.plant.lastLeafLossReason
   );
 
+  const rabbitWartning = useSelector(
+    (state: RootState) => state.plantTime.rabbitWarning
+  );
+
   const season = useSelector((state: RootState) => state.plantTime.season);
 
   const nightMode = useSelector(
@@ -514,7 +518,7 @@ function App() {
                 </Alert>
               </Snackbar>
               <Snackbar
-                open={rabbitAttack}
+                open={rabbitAttack && rabbitWartning}
                 autoHideDuration={3000}
                 onClose={() => {
                   dispatch({ type: "plant/resetRabbitAttack" });

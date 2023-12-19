@@ -272,6 +272,10 @@ const globalStateSlice = createSlice({
     resetGrassGeneticMarkerThreshold: (state) => {
       state.geneticMarkerThresholdGrass = 100;
     },
+
+    resetMossGeneticMarkerThreshold: (state) => {
+      state.geneticMarkerThresholdMoss = 10;
+    },
     //Reducer to set the difficulty based on a payload
     setDifficulty: (state, action: PayloadAction<{ difficulty: number }>) => {
       state.difficulty = action.payload.difficulty;
@@ -413,6 +417,7 @@ export const {
   createSeed,
   setVineGeneticMarkers,
   deductTimeSeed,
+  resetMossGeneticMarkerThreshold,
 } = globalStateSlice.actions;
 
 export default globalStateSlice.reducer;

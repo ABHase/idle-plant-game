@@ -9,6 +9,7 @@ import {
   increaseGeneticMarkers,
   increaseGlobalBoostedTicks,
   resetGrassGeneticMarkerThreshold,
+  resetMossGeneticMarkerThreshold,
   resetSucculentGeneticMarkerThreshold,
 } from "./Slices/gameStateSlice"; // Assume you have deductSugar function in gameStateSlice
 import {
@@ -207,6 +208,16 @@ export const LICHEN_MUSHROOM_ITEMS: MushroomItem[] = [
     },
   },
   {
+    id: "shade_for_truth",
+    name: "Shadiest Protection Racket",
+    description: "Reset DNA Threshold.",
+    cost: 5000000,
+    effect: (dispatch, getState, quantity) => {
+      dispatch(deductSunlight(5000000)); // Deduct sugar cost
+      dispatch(resetMossGeneticMarkerThreshold());
+    },
+  },
+  {
     id: "moss_rain",
     name: "Waterfall",
     description: "Time travel through the waterfall. (60 ticks)",
@@ -297,5 +308,11 @@ export const MUSHROOM_ITEM_FUNCTIONS: {
     dispatch: ThunkDispatch<RootState, unknown, Action<string>>,
     getState: () => RootState,
     quantity: number
+  ) => void,
+  shade_for_truth: LICHEN_MUSHROOM_ITEMS.find(
+    (item) => item.id === "shade_for_truth"
+  )?.effect as (
+    dispatch: ThunkDispatch<RootState, unknown, Action<string>>,
+    getState: () => RootState
   ) => void,
 };
