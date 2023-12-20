@@ -36,6 +36,9 @@ import {
   calculateActualSugarProductionPerMinute,
   calculatePhotosynthesisSunlightConsumption,
   calculatePhotosynthesisWaterConsumption,
+  getAffordableLeaves,
+  getAffordableLeavesSucculent,
+  getAffordableRoots,
   getHalfAffordableLeaves,
   getHalfAffordableLeavesSucculent,
   getHalfAffordableRoots,
@@ -568,7 +571,21 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({
                 onClick={() => handleBuyLeaves()}
               >
                 {multiplier > 1000 ? (
-                  "Grow Max Leaves"
+                  <>
+                    Leaves:{" "}
+                    <Leaves
+                      amount={
+                        multiplier > 1000
+                          ? plantState.type === "Succulent"
+                            ? getAffordableLeavesSucculent(
+                                plantState,
+                                LEAF_COST
+                              )
+                            : getAffordableLeaves(plantState, LEAF_COST)
+                          : multiplier
+                      }
+                    />
+                  </>
                 ) : (
                   <>
                     Grow Leaves:{" "}
@@ -629,7 +646,16 @@ const GrassDisplay: React.FC<GrassDisplayProps> = ({
                 onClick={() => handleBuyRoots()}
               >
                 {multiplier > 1000 ? (
-                  "Grow Max Roots"
+                  <>
+                    Grow Roots:{" "}
+                    {multiplier > 1000 ? (
+                      <Roots
+                        amount={getAffordableRoots(plantState, ROOT_COST)}
+                      />
+                    ) : (
+                      <Roots amount={multiplier} />
+                    )}
+                  </>
                 ) : (
                   <>
                     Grow Roots:{" "}

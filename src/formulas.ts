@@ -17,6 +17,25 @@ export const getHalfAffordableRoots = (
   return Math.floor(plant.sugar / root_cost / 2);
 };
 
+export const getAffordableRoots = (plant: PlantState, root_cost: number) => {
+  return Math.floor(plant.sugar / root_cost);
+};
+
+export const getAffordableLeaves = (plant: PlantState, leaf_cost: number) => {
+  return Math.floor(plant.sugar / leaf_cost);
+};
+
+export const getAffordableLeavesSucculent = (
+  plant: PlantState,
+  leaf_cost: number
+) => {
+  const affordableFromSugar = Math.floor(plant.sugar / leaf_cost);
+  const waterCostPerLeaf = 100 * leaf_cost;
+  const affordableFromWater = Math.floor(plant.water / waterCostPerLeaf);
+
+  return Math.min(affordableFromSugar, affordableFromWater);
+};
+
 export const getHalfAffordableLeaves = (
   plant: PlantState,
   leaf_cost: number

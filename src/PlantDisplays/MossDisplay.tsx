@@ -30,6 +30,7 @@ import {
   calculateActualSugarProductionPerMinute,
   calculatePhotosynthesisSunlightConsumption,
   calculatePhotosynthesisWaterConsumption,
+  getAffordableLeaves,
   getHalfAffordableLeaves,
   getHalfAffordableLeavesSucculent,
   isSugarUpgradesUnlocked,
@@ -446,7 +447,15 @@ const MossDisplay: React.FC<MossDisplayProps> = ({
                 onClick={() => handleBuyLeaves()} // Keep your original onClick handler
               >
                 {multiplier > 1000 ? (
-                  "Grow Max Leaves & Roots"
+                  <>
+                    <Leaves
+                      amount={getAffordableLeaves(plantState, LEAF_COST)}
+                    />
+                    &{" "}
+                    <Roots
+                      amount={getAffordableLeaves(plantState, LEAF_COST)}
+                    />
+                  </>
                 ) : (
                   <>
                     Grow:{" "}
