@@ -23,6 +23,7 @@ const MusicPlayer: React.FC<{ song: string }> = ({ song }) => {
     if (howl) {
       howl.unload();
     }
+
     const sound = new Howl({
       src: [song],
       volume: volume,
@@ -34,6 +35,11 @@ const MusicPlayer: React.FC<{ song: string }> = ({ song }) => {
     });
 
     setHowl(sound);
+
+    // Handle the playing state
+    if (isPlaying) {
+      sound.play();
+    }
 
     // Cleanup
     return () => {
@@ -47,13 +53,20 @@ const MusicPlayer: React.FC<{ song: string }> = ({ song }) => {
     localStorage.setItem("isMuted", isMuted.toString());
     localStorage.setItem("isPlaying", isPlaying.toString());
 
-    // Directly update the volume and mute state of the Howler sound engine
+    // Update Howler global volume and mute
     Howler.volume(volume);
     if (howl) {
       howl.volume(volume);
       howl.mute(isMuted);
+
+      // Control playback based on isPlaying state
+      if (isPlaying) {
+        howl.play();
+      } else {
+        howl.pause();
+      }
     }
-  }, [volume, isMuted]);
+  }, [volume, isMuted, isPlaying, howl]);
 
   const handleVolumeChange = (event: Event, newValue: number | number[]) => {
     if (typeof newValue === "number") {
