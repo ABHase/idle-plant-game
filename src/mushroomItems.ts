@@ -62,7 +62,9 @@ export const MUSHROOM_ITEMS: MushroomItem[] = [
       if (sugar >= 500) {
         dispatch(deductSugar(500 * quantity)); // Deduct sugar cost
         dispatch(increaseRootRot(60 * quantity)); // Increase root rot by 1
-        dispatch(increaseGeneticMarkers({ amount: 1, plantType: "Fern" })); // Add 1 DNA
+        dispatch(
+          increaseGeneticMarkers({ amount: 1 * quantity, plantType: "Fern" })
+        ); // Add 1 DNA
       } else {
         console.error("Not enough sugar to buy DNA");
       }
