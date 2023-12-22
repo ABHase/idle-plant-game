@@ -159,8 +159,11 @@ const MushroomStoreDesktopDisplay = () => {
               <Typography variant="body1">{item.name}</Typography>
               <Typography variant="body2">{item.description}</Typography>
               <Typography variant="body2" sx={{ display: "flex" }}>
-                Buying up to: {currentMultiplier}
+                {currentMultiplier <= 1000
+                  ? `Buying up to: ${currentMultiplier}`
+                  : "Buying max possible"}
               </Typography>
+
               <Typography variant="body2" sx={{ display: "flex" }}>
                 Cost: <Sugar amount={item.cost * currentMultiplier} />
               </Typography>
@@ -237,8 +240,11 @@ const MushroomStoreDesktopDisplay = () => {
                     <Typography variant="body2" sx={{ display: "flex" }}>
                       {item.id === "shade_for_truth"
                         ? "Will always buy: 1"
-                        : `Buying up to: ${currentMultiplier}`}
+                        : currentMultiplier <= 1000
+                        ? `Buying up to: ${currentMultiplier}`
+                        : "Buying max possible"}
                     </Typography>
+
                     <Typography variant="body2" sx={{ display: "flex" }}>
                       Cost:
                       {item.id === "shade_for_truth" ? (
@@ -319,8 +325,11 @@ const MushroomStoreDesktopDisplay = () => {
               <Typography variant="body2" sx={{ display: "flex" }}>
                 {item.id === "reset_succulent_threshold"
                   ? "Will always buy: 1"
-                  : `Buying up to: ${currentMultiplier}`}
+                  : currentMultiplier <= 1000
+                  ? `Buying up to: ${currentMultiplier}`
+                  : "Buying max possible"}
               </Typography>
+
               <Typography variant="body2" sx={{ display: "flex" }}>
                 Cost:
                 {item.id === "reset_succulent_threshold" ? (
@@ -500,7 +509,7 @@ const MushroomStoreDesktopDisplay = () => {
               }}
             >
               {plantType !== "Grass" &&
-                [1, 10, 100].map((multiplier) => (
+                [1, 100, 1000000000000000].map((multiplier) => (
                   <MultiplierToggleButton
                     key={multiplier}
                     currentMultiplier={currentMultiplier}
